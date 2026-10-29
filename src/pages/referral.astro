@@ -1,0 +1,43 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import Section from '@/components/Section.astro';
+import Button from '@/components/Button.astro';
+import Placeholder from '@/components/Placeholder.astro';
+---
+
+<BaseLayout
+  title="Referral Program"
+  description="Refer a business to MuzMesh Creative. Clients get 50% off a month; partners earn 10% of the first three months."
+>
+  <PageHeader
+    title="Know someone who needs a better website?"
+    intro="Refer a business and get rewarded once they become a client."
+  />
+  <Section>
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="rounded-2xl border border-line p-6">
+        <h2 class="text-2xl font-bold">For clients</h2>
+        <p class="mt-2 text-muted">Get 50% off one month of your plan when a business you refer pays their first invoice.</p>
+        <ul class="mt-4 list-disc space-y-2 pl-5 text-sm">
+          <li>You must have an active retainer.</li>
+          <li>The discount applies after the referred client pays their first invoice.</li>
+          <li>One discounted month per billing cycle. Extra referrals roll forward as credit.</li>
+          <li>Credit has no cash value and cannot be transferred.</li>
+          <li>Full rules are in your contract.</li>
+        </ul>
+      </div>
+      <div class="rounded-2xl border border-line p-6">
+        <h2 class="text-2xl font-bold">For partners</h2>
+        <p class="mt-2 text-muted">Freelancers, agencies and consultants earn 10% of the referred client's first 3 months of fees.</p>
+        <ul class="mt-4 list-disc space-y-2 pl-5 text-sm">
+          <li>Introduce the client to us by email before the first call.</li>
+          <li>Paid monthly, as each of the first 3 invoices is paid.</li>
+          <li>No commission on businesses already talking to us.</li>
+        </ul>
+      </div>
+    </div>
+    <Placeholder note="Confirm: referral value cap, what happens to credit when a retainer ends, and partner payout method." />
+    <div class="mt-8"><Button href="/contact">Refer a business</Button></div>
+  </Section>
+</BaseLayout>

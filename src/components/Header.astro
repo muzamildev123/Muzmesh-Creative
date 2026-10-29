@@ -1,0 +1,35 @@
+---
+import { nav, site } from '@/data/site';
+import Button from './Button.astro';
+
+const path = Astro.url.pathname;
+---
+
+<header class="border-b border-line">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-4">
+    <a href="/" class="text-lg font-bold tracking-tight">{site.name}</a>
+    <nav aria-label="Main" class="hidden md:block">
+      <ul class="flex gap-6 text-sm">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class:list={['hover:text-brand', path.startsWith(item.href) && 'font-semibold text-brand']}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <Button href={site.bookingUrl} size="sm">Book a call</Button>
+  </div>
+  <!-- Mobile nav: simple scrollable row, no JS needed. -->
+  <nav aria-label="Main mobile" class="overflow-x-auto border-t border-line md:hidden">
+    <ul class="flex gap-5 px-4 py-3 text-sm whitespace-nowrap">
+      {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+    </ul>
+  </nav>
+</header>

@@ -1,0 +1,15 @@
+---
+// Visible marker for unverified content. Must be gone before launch:
+// `grep -r "Placeholder" src/pages` should return nothing on the launch branch.
+interface Props {
+  note?: string;
+}
+
+const { note = 'Placeholder content. Not verified. Replace before launch.' } = Astro.props;
+---
+
+<div role="note" class="my-4 rounded-lg border border-dashed border-warn bg-amber-50 px-4 py-3 text-sm text-warn">
+  <strong>Placeholder:</strong>{" "}
+  {note}
+  <slot />
+</div>

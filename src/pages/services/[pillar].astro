@@ -1,0 +1,24 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import Section from '@/components/Section.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import CallToAction from '@/components/CallToAction.astro';
+import { pillars } from '@/data/site';
+
+export const getStaticPaths = (() => pillars.map((p) => ({ params: { pillar: p.slug }, props: { pillar: p } }))) satisfies GetStaticPaths;
+
+const { pillar } = Astro.props;
+---
+
+<BaseLayout title={pillar.name} description={pillar.summary}>
+  <PageHeader title={pillar.name} intro={pillar.summary} />
+  <Section heading="What's included">
+    <ul class="grid gap-4 md:grid-cols-2">
+      {pillar.includes.map((i) => <li class="rounded-xl border border-line p-4">{i}</li>)}
+    </ul>
+    <Placeholder note="Full service page copy, FAQs and related case studies to come from the Figma design." />
+  </Section>
+  <CallToAction />
+</BaseLayout>

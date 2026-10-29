@@ -1,0 +1,32 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import Section from '@/components/Section.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import CallToAction from '@/components/CallToAction.astro';
+import { team } from '@/data/site';
+---
+
+<BaseLayout
+  title="About"
+  description="MuzMesh Creative is a three-person studio covering design, development, social content and automation."
+>
+  <PageHeader
+    title="Small team. Senior work."
+    intro="Three people covering design, development, social content and automation. You talk to the people doing the work."
+  />
+  <Section heading="The team">
+    <ul class="grid gap-6 md:grid-cols-3">
+      {
+        team.map((m) => (
+          <li class="rounded-2xl border border-line p-6">
+            <p class="text-lg font-bold">{m.name}</p>
+            <p class="text-muted">{m.role}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <Placeholder note="Team bios, photos, and where we are based / who we work with." />
+  </Section>
+  <CallToAction />
+</BaseLayout>
