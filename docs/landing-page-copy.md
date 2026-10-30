@@ -18,7 +18,7 @@ Finished, section-by-section copy for the new homepage (`/`). It expands [positi
 2. Hero
 3. Built for the AI era (three-up strip)
 4. Problem
-5. The offer
+5. The offer (AI Starter Kit)
 6. What's included
 7. How it works
 8. Proof
@@ -46,7 +46,7 @@ Note: "Plan my launch" links to `/contact`. On mobile, keep the button visible n
 
 ## 2. Hero
 
-**Eyebrow:** Launch kit for AI startups
+**Eyebrow:** The AI Starter Kit
 
 **Heading:** Launch your AI startup like it's already a real company.
 
@@ -58,12 +58,12 @@ Note: "Plan my launch" links to `/contact`. On mobile, keep the button visible n
 
 **Small print under the buttons:** One price, published. No calls to "discuss budget".
 
-Note: the secondary button scrolls to section 6. If the hero needs a visual, use a real screenshot of a site we built (Topklik.ai, with permission) or our design system in Figma. No purple gradients, glowing orbs or stock 3D shapes: the hero has to prove the "not AI slop" point on its own.
+Note: "AI Starter Kit" is the name of the whole offer ($500 setup + $200/month). Always write it with these capitals, never "AI starter kit" or "Starter Pack". The secondary button scrolls to section 6. If the hero needs a visual, use a real screenshot of a site we built (Topklik.ai, with permission) or our design system in Figma. No purple gradients, glowing orbs or stock 3D shapes: the hero has to prove the "not AI slop" point on its own.
 
 **Alternative headings** (for A/B testing later, not for launch):
 
 - Your AI startup, ready for the AI era. Launched in weeks.
-- The launch kit for AI startups. Designed by people, found by AI.
+- The AI Starter Kit. Designed by people, found by AI.
 
 ---
 
@@ -101,12 +101,12 @@ Note: three short paragraphs, no list. If the design wants a visual, a side-by-s
 
 ## 5. The offer
 
-**Eyebrow:** The offer
+**Eyebrow:** The AI Starter Kit
 
 **Heading:** Everything you need to launch. One team. One price.
 
 **Body:**
-We set up your landing page, social media, AI search visibility, tracking, CRM and CMS in one go, for $500. Then for $200 a month we keep it all running: site updates, social posts, support and a monthly report. You stay focused on the product.
+The AI Starter Kit is everything a new AI startup needs to show up online. We set up your landing page, social media, AI search visibility, tracking, CRM and CMS in one go, for $500. Then for $200 a month we keep it all running: site updates, social posts, support and a monthly report. You stay focused on the product.
 
 **Button:** See the pricing
 
@@ -211,7 +211,7 @@ Note: two cards side by side on desktop, stacked on mobile. Prices exactly as wr
 
 ### Card 1
 
-**Label:** Launch setup
+**Label:** AI Starter Kit setup
 **Price:** $500
 **Price note:** one-time, paid before we start `[CONFIRM: or 50% to start, 50% before launch]`
 
@@ -227,7 +227,7 @@ Note: two cards side by side on desktop, stacked on mobile. Prices exactly as wr
 
 ### Card 2
 
-**Label:** Monthly retainer
+**Label:** AI Starter Kit monthly
 **Price:** $200 / month
 **Price note:** starts the month after launch. `[CONFIRM: 3-month minimum]`, then cancel any time with 30 days' notice.
 
@@ -378,7 +378,7 @@ Note: every bracket in the confirmation and email is filled from the form. Never
 
 ## 14. Footer
 
-**Tagline:** MuzMesh Creative gets AI startups launched online. Designed by people, ready for the AI era.
+**Tagline:** MuzMesh Creative makes the AI Starter Kit: everything AI startups need to launch online. Designed by people, ready for the AI era.
 
 **Columns:**
 - **Offer:** What's included · Pricing · How we work · Referral
@@ -397,13 +397,13 @@ Note: every bracket in the confirmation and email is filled from the form. Never
 
 ## 15. SEO and schema
 
-**Title tag:** MuzMesh Creative | Launch Kit for AI Startups: Landing Page, Social, AEO & CRM
+**Title tag:** AI Starter Kit for AI Startups: Landing Page, Social, AEO & CRM | MuzMesh Creative
 
 **Meta description:** Hand-designed landing page, social media, AI search visibility, tracking and CRM for AI startups. $500 to set up, $200 a month to keep it running.
 
 **Open Graph title:** Launch your AI startup like it's already a real company.
 
-**Open Graph description:** Landing page, social, AEO, tracking and CRM for AI startups. Designed by people, ready for the AI era. $500 setup, $200/month.
+**Open Graph description:** The AI Starter Kit: landing page, social, AEO, tracking and CRM for AI startups. Designed by people, ready for the AI era. $500 setup, $200/month.
 
 **Schema on this page:**
 - `Organization` (name, logo, URL, real social profiles only)
@@ -411,7 +411,7 @@ Note: every bracket in the confirmation and email is filled from the form. Never
 - `FAQPage` built from section 12
 
 **One-paragraph summary for `llms.txt`:**
-MuzMesh Creative is a small studio that launches AI startups online. For a $500 one-time setup it designs and builds a landing page (designed by people in Figma, not AI-generated), sets up a Sanity headless CMS, AEO/GEO for AI search, analytics with conversion tracking, a CRM-connected lead form and 2 social media profiles. For $200 a month it maintains the site, posts on social media, provides support and sends a monthly report. Clients who refer another startup get 40% off their next monthly bill once the referred startup pays its setup.
+MuzMesh Creative is a small studio that launches AI startups online with its AI Starter Kit. For a $500 one-time setup it designs and builds a landing page (designed by people in Figma, not AI-generated), sets up a Sanity headless CMS, AEO/GEO for AI search, analytics with conversion tracking, a CRM-connected lead form and 2 social media profiles. For $200 a month it maintains the site, posts on social media, provides support and sends a monthly report. Clients who refer another startup get 40% off their next monthly bill once the referred startup pays its setup.
 
 ---
 
