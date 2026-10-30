@@ -17,7 +17,7 @@ This is the single source of truth for what we sell, how we say it, and how the 
 What a founder should understand in five seconds:
 
 1. We do the whole launch kit for AI startups: landing page, social media, AI search visibility, tracking and CRM.
-2. It is hand-designed, not AI slop.
+2. It is built for the AI era (found by AI search, structured for AI tools) but designed by people, not AI slop.
 3. The price is simple and published: $500 once, then $200 a month.
 4. After launch we keep the site and social running, so the founders can focus on the product.
 
@@ -149,10 +149,16 @@ Draft copy, ready for Figma. Everything marked `[PLACEHOLDER]` must be replaced 
 
 **Headline:** Launch your AI startup like it's already a real company.
 
-**Subheadline:** A landing page that doesn't look AI-generated, social media, AI search visibility, tracking and CRM, set up for $500. Then we keep it running for $200 a month.
+**Subheadline:** A hand-designed landing page that's built for the AI era: found in ChatGPT and Google AI answers, tracked, and connected to your CRM. $500 to set up, $200 a month.
 
 **Primary CTA:** Book a 15-minute call
 **Secondary CTA:** See what's included
+
+### Built for the AI era (three-up strip under the hero)
+
+- **Found by AI.** Show up when people ask ChatGPT and Perplexity about your category.
+- **Built for AI.** Your content is structured so chatbots and agents can use it later.
+- **Not made by AI.** Designed by people, so it doesn't look like every other AI startup.
 
 ### Problem
 
