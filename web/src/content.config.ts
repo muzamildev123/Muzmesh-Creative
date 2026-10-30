@@ -1,13 +1,18 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { sanityLoader } from '@/lib/sanity';
 
 // `placeholder: true` shows a visible "not verified" banner on the page.
 // Anything with invented or unconfirmed content must keep it set.
 const placeholder = z.boolean().default(false);
 
+// Blog posts and case studies are edited in Sanity Studio (../studio).
 const blog = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
+  loader: sanityLoader(`*[_type == "post" && defined(slug.current)]{
+    "slug": slug.current, title, description, "author": author->name,
+    "image": coverImage.asset->url, pubDate, updatedDate, body, placeholder
+  }`),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -20,7 +25,10 @@ const blog = defineCollection({
 });
 
 const work = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/work' }),
+  loader: sanityLoader(`*[_type == "caseStudy" && defined(slug.current)]{
+    "slug": slug.current, title, client, description, industry, pillars, stack,
+    "results": results[]{label, value}, liveUrl, order, body, placeholder
+  }`),
   schema: z.object({
     title: z.string(),
     client: z.string(),
@@ -36,6 +44,7 @@ const work = defineCollection({
   }),
 });
 
+// Industry pages are sales pages with designed sections, so they stay in code.
 const industries = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/industries' }),
   schema: z.object({
