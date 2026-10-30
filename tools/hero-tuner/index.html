@@ -6,7 +6,7 @@
 <title>MuzMesh Hero Tuner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100,400;100,500;100,700;125,700;125,800&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100,400;100,500;100,700;125,700;125,800;125,900&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
   :root {
     --ink: #0e0e10;
@@ -37,67 +37,69 @@
   .bar .spacer { flex: 1; }
   .canvas-wrap {
     flex: 1; min-height: 0; display: grid; place-items: center;
-    padding: 24px; overflow: auto; background: #08080a;
+    padding: 24px; overflow: hidden; background: #08080a;
   }
+  /* The frame is drawn at real pixel size, then scaled down to fit. */
+  .frame { transform-origin: center; flex: none; box-shadow: 0 0 0 1px var(--line-ink); }
 
-  /* The hero itself. Everything uses container units, so the same numbers work on the site. */
+  /* ---------- The hero itself (same class names as the site) ---------- */
   .hero {
     container-type: inline-size;
     position: relative; overflow: hidden;
-    width: 100%; aspect-ratio: var(--hero-ratio);
-    background: var(--ink);
-    box-shadow: 0 0 0 1px var(--line-ink);
+    width: 100%; height: 100%;
+    background: var(--hero-bg);
+    display: flex; flex-direction: column; justify-content: flex-end;
   }
-  .hero__photo {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover;
-    object-position: var(--photo-focus-x) var(--photo-focus-y);
-    transform: scale(var(--photo-zoom));
-    filter: blur(var(--photo-blur));
-  }
-  .hero__overlay {
-    position: absolute; inset: 0; background: var(--ink); opacity: var(--overlay-opacity);
+  /* Padding lives here, not on .hero, so cqw measures the hero's width */
+  .hero__inner {
+    width: 100%; max-width: var(--content-width); margin-inline: var(--content-align);
+    padding: 0 var(--hero-pad-x) var(--hero-pad-bottom);
   }
   .hero__headline {
-    position: absolute; margin: 0;
-    left: var(--headline-x); top: var(--headline-y);
-    width: var(--headline-width);
+    margin: 0 0 var(--headline-gap);
     font-family: 'Archivo', sans-serif;
     font-stretch: var(--headline-stretch);
     font-weight: var(--headline-weight);
     font-size: var(--headline-size);
     line-height: var(--headline-leading);
     letter-spacing: var(--headline-tracking);
-    text-align: var(--headline-align);
+    text-transform: var(--headline-case);
     color: var(--headline-color);
-    z-index: var(--headline-z);
-    text-wrap: balance;
+    max-width: var(--headline-width);
   }
-  .hero__cutout {
-    position: absolute;
-    left: var(--cutout-x); top: var(--cutout-y);
-    width: var(--cutout-width);
-    z-index: var(--cutout-z);
-    transform: translate(-50%, -50%) rotate(var(--cutout-rotate));
-    filter: drop-shadow(0 var(--cutout-shadow-y) var(--cutout-shadow-blur) rgb(0 0 0 / var(--cutout-shadow-opacity)));
+  .hero__accent { color: var(--accent-color); }
+  .hero__cards {
+    display: grid;
+    grid-template-columns: repeat(var(--card-count), minmax(0, 1fr));
+    gap: var(--card-gap);
   }
-  .hero__accent { color: var(--yellow); }
+  .hero__card {
+    margin: 0; overflow: hidden; position: relative;
+    aspect-ratio: var(--card-ratio);
+    border-radius: var(--card-radius);
+    background: var(--ink-2);
+  }
+  .hero__card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* Phone: the cards can sit in a sideways swipe row instead of shrinking */
+  .hero[data-cards="swipe"] .hero__cards {
+    grid-template-columns: none; grid-auto-flow: column;
+    grid-auto-columns: var(--card-swipe-width);
+    overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+    margin-right: calc(var(--hero-pad-x) * -1); padding-right: var(--hero-pad-x);
+  }
+  .hero[data-cards="swipe"] .hero__card { scroll-snap-align: start; }
+  .hero[data-cards="stack"] .hero__cards { grid-template-columns: 1fr; }
 
-  /* Placeholders shown until you upload real images */
-  .ph-photo {
-    position: absolute; inset: 0;
-    background:
-      repeating-linear-gradient(90deg, transparent 0 7cqw, rgb(255 255 255 / .04) 7cqw 7.2cqw),
-      radial-gradient(80% 70% at 70% 60%, #2a2a31, var(--ink));
+  /* Tuner-only: placeholder cards and click-to-upload */
+  .hero__card.ph {
+    display: grid; place-items: center; cursor: pointer;
+    background: linear-gradient(135deg, #24242b, #141418);
+    color: var(--mist); font: 600 12px 'JetBrains Mono', monospace;
   }
-  .ph-cutout {
-    aspect-ratio: 4 / 3; border-radius: 10%;
-    background: var(--yellow);
-    display: grid; place-items: center;
-    color: var(--ink); font: 600 1.2cqw 'JetBrains Mono', monospace;
-  }
+  .hero__card.ph.hot { background: linear-gradient(135deg, #ffe45c, var(--yellow)); color: var(--ink); }
+  .hero__card:not(.ph) { cursor: pointer; }
 
-  /* Panel */
+  /* ---------- Panel ---------- */
   .panel {
     border-left: 1px solid var(--line-ink); background: var(--ink-2);
     overflow-y: auto; padding-bottom: 24px;
@@ -119,23 +121,22 @@
   .row label { display: flex; justify-content: space-between; color: var(--mist); }
   .row label output { color: var(--paper); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
   input[type=range] { width: 100%; accent-color: var(--yellow); }
-  input[type=text], textarea, select {
+  textarea {
     width: 100%; background: var(--ink); color: var(--paper);
     border: 1px solid var(--line-ink); border-radius: 6px; padding: 7px 8px; font: inherit;
+    resize: vertical; min-height: 56px;
   }
-  textarea { resize: vertical; min-height: 56px; }
   .seg { display: flex; border: 1px solid var(--line-ink); border-radius: 6px; overflow: hidden; }
-  .seg button { flex: 1; border: 0; border-radius: 0; }
+  .seg button { flex: 1; border: 0; border-radius: 0; padding-inline: 4px; }
   .seg button + button { border-left: 1px solid var(--line-ink); }
   button, .file {
     background: var(--ink); color: var(--paper); border: 1px solid var(--line-ink);
-    border-radius: 6px; padding: 7px 10px; font: inherit; cursor: pointer;
+    border-radius: 6px; padding: 7px 10px; font: inherit; cursor: pointer; text-align: center;
   }
   button:hover, .file:hover { border-color: var(--mist); }
   button.on { background: var(--yellow); color: var(--ink); border-color: var(--yellow); font-weight: 700; }
   button.primary { background: var(--yellow); color: var(--ink); border-color: var(--yellow); font-weight: 700; }
   .file input { display: none; }
-  .files { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
   .hint { color: var(--mist); font-size: 12px; margin: 0; }
   .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 12px 16px; }
   .actions .wide { grid-column: 1 / -1; }
@@ -152,7 +153,7 @@
   .toast.show { opacity: 1; }
 
   @media (max-width: 860px) {
-    body { grid-template-columns: 1fr; grid-template-rows: 55vh 1fr; height: auto; min-height: 100vh; overflow: auto; }
+    body { grid-template-columns: 1fr; grid-template-rows: 60vh auto; height: auto; min-height: 100vh; overflow: auto; }
     .panel { border-left: 0; border-top: 1px solid var(--line-ink); }
     .canvas-wrap { padding: 16px; }
   }
@@ -163,24 +164,22 @@
 <main class="stage">
   <div class="bar">
     <div class="seg" id="viewport">
-      <button data-w="1440" class="on">Desktop</button>
-      <button data-w="820">Tablet</button>
-      <button data-w="390">Phone</button>
+      <button data-w="1440" data-h="900" class="on">Desktop</button>
+      <button data-w="1024" data-h="1180">Tablet</button>
+      <button data-w="390" data-h="844">Phone</button>
     </div>
     <span class="spacer"></span>
     <span class="hint" id="sizeLabel"></span>
   </div>
-  <div class="canvas-wrap">
-    <section class="hero" id="hero">
-      <div class="ph-photo" id="phPhoto"></div>
-      <img class="hero__photo" id="photo" alt="" hidden>
-      <div class="hero__overlay"></div>
-      <h1 class="hero__headline" id="headline"></h1>
-      <div class="hero__cutout" id="cutoutBox">
-        <div class="ph-cutout" id="phCutout">cutout PNG</div>
-        <img id="cutout" alt="" hidden style="width:100%;display:block">
-      </div>
-    </section>
+  <div class="canvas-wrap" id="wrap">
+    <div class="frame" id="frame">
+      <section class="hero" id="hero">
+        <div class="hero__inner">
+          <h1 class="hero__headline" id="headline"></h1>
+          <div class="hero__cards" id="cards"></div>
+        </div>
+      </section>
+    </div>
   </div>
 </main>
 
@@ -188,20 +187,10 @@
   <h1>Hero <span>tuner</span></h1>
 
   <details open>
-    <summary>Images</summary>
-    <div class="group">
-      <div class="files">
-        <label class="file">Photo…<input type="file" accept="image/*" id="photoFile"></label>
-        <label class="file">Cutout PNG…<input type="file" accept="image/*" id="cutoutFile"></label>
-      </div>
-      <p class="hint">The cutout is the yellow suitcase or cookie on its own, with a see-through background. You can also drop files onto the preview.</p>
-      <p class="hint">Desktop and Tablet share one set of settings. Phone has its own, so pick Phone at the top to tune the small screen.</p>
+    <summary>Text</summary>
+    <div class="group" id="g-text">
+      <p class="hint">Click a card in the preview to put your own image in it, or drop images onto the preview.</p>
     </div>
-  </details>
-
-  <details open>
-    <summary>Concept and text</summary>
-    <div class="group" id="g-text"></div>
   </details>
 
   <details open>
@@ -209,93 +198,95 @@
     <div class="group" id="g-headline"></div>
   </details>
 
-  <details>
-    <summary>Cutout</summary>
-    <div class="group" id="g-cutout"></div>
+  <details open>
+    <summary>Image cards</summary>
+    <div class="group" id="g-cards"></div>
   </details>
 
   <details>
-    <summary>Photo</summary>
-    <div class="group" id="g-photo"></div>
+    <summary>Spacing and page</summary>
+    <div class="group" id="g-page">
+      <p class="hint">Desktop and Tablet share one set of settings. Pick Phone at the top to tune the phone on its own.</p>
+    </div>
   </details>
 
   <div class="actions">
     <button class="primary wide" id="copyCss">Copy CSS for the site</button>
     <button id="copyJson">Copy JSON</button>
     <button id="downloadJson">Download JSON</button>
-    <label class="file" style="text-align:center">Load JSON…<input type="file" accept=".json,application/json" id="loadJson"></label>
+    <label class="file">Load JSON…<input type="file" accept=".json,application/json" id="loadJson"></label>
     <button id="reset">Reset all</button>
   </div>
   <pre id="out"></pre>
 </aside>
 
+<input type="file" accept="image/*" id="cardFile" hidden>
 <div class="toast" id="toast"></div>
 
 <script>
-// Every tunable value. Units are chosen so the numbers work at any hero width:
-// cqw = % of the hero's width, % = % of the hero box.
+// Every tunable value. cqw = % of the hero's width, so numbers hold at any screen size.
 const CONTROLS = [
   // group, key, label, type, options
-  ['text', 'concept', 'Concept', 'seg', { options: [['baggage', 'Baggage'], ['cookie', 'Cookie'], ['custom', 'Custom']] }],
-  ['text', 'headline', 'Headline (wrap a word in *stars* to make it yellow)', 'textarea'],
-  ['text', 'ratio', 'Hero shape', 'seg', { options: [['16/10', '16:10'], ['16/9', '16:9'], ['4/5', '4:5'], ['1/1', '1:1']] }],
+  ['text', 'concept', 'Headline idea', 'seg', { options: [['guide', 'Brand'], ['baggage', 'Baggage'], ['cookie', 'Cookie'], ['custom', 'Custom']] }],
+  ['text', 'headline', 'Headline (*stars* make a word yellow, Enter makes a new line)', 'textarea'],
 
-  ['headline', 'headlineSize', 'Size', 'range', { min: 2, max: 14, step: 0.1, unit: 'cqw' }],
-  ['headline', 'headlineLeading', 'Line height', 'range', { min: 0.75, max: 1.4, step: 0.01, unit: '' }],
-  ['headline', 'headlineTracking', 'Letter spacing', 'range', { min: -0.08, max: 0.08, step: 0.002, unit: 'em' }],
-  ['headline', 'headlineWeight', 'Weight', 'range', { min: 400, max: 800, step: 100, unit: '' }],
+  ['headline', 'headlineSize', 'Size', 'range', { min: 3, max: 20, step: 0.1, unit: 'cqw' }],
+  ['headline', 'headlineLeading', 'Line height', 'range', { min: 0.7, max: 1.3, step: 0.01, unit: '' }],
+  ['headline', 'headlineTracking', 'Letter spacing', 'range', { min: -0.1, max: 0.06, step: 0.002, unit: 'em' }],
+  ['headline', 'headlineWeight', 'Weight', 'range', { min: 400, max: 900, step: 100, unit: '' }],
   ['headline', 'headlineStretch', 'Width', 'range', { min: 100, max: 125, step: 1, unit: '%' }],
-  ['headline', 'headlineX', 'Left', 'range', { min: 0, max: 80, step: 0.5, unit: '%' }],
-  ['headline', 'headlineY', 'Top', 'range', { min: 0, max: 85, step: 0.5, unit: '%' }],
-  ['headline', 'headlineWidth', 'Max width', 'range', { min: 20, max: 100, step: 0.5, unit: '%' }],
-  ['headline', 'headlineAlign', 'Align', 'seg', { options: [['left', 'Left'], ['center', 'Center'], ['right', 'Right']] }],
-  ['headline', 'headlineColor', 'Colour', 'seg', { options: [['paper', 'Paper'], ['ink', 'Ink'], ['yellow', 'Yellow']] }],
-  ['headline', 'layerOrder', 'Layer order', 'seg', { options: [['behind', 'Behind cutout'], ['front', 'In front']] }],
+  ['headline', 'headlineWidth', 'Max width', 'range', { min: 30, max: 100, step: 0.5, unit: '%' }],
+  ['headline', 'headlineCase', 'Case', 'seg', { options: [['uppercase', 'CAPS'], ['none', 'As typed']] }],
+  ['headline', 'headlineColor', 'Colour', 'seg', { options: [['paper', 'Paper'], ['yellow', 'Yellow']] }],
 
-  ['cutout', 'cutoutWidth', 'Size', 'range', { min: 5, max: 100, step: 0.5, unit: '%' }],
-  ['cutout', 'cutoutX', 'Centre left', 'range', { min: -20, max: 120, step: 0.5, unit: '%' }],
-  ['cutout', 'cutoutY', 'Centre top', 'range', { min: -20, max: 120, step: 0.5, unit: '%' }],
-  ['cutout', 'cutoutRotate', 'Rotate', 'range', { min: -45, max: 45, step: 0.5, unit: 'deg' }],
-  ['cutout', 'cutoutShadowBlur', 'Shadow softness', 'range', { min: 0, max: 6, step: 0.1, unit: 'cqw' }],
-  ['cutout', 'cutoutShadowY', 'Shadow drop', 'range', { min: 0, max: 4, step: 0.1, unit: 'cqw' }],
-  ['cutout', 'cutoutShadowOpacity', 'Shadow strength', 'range', { min: 0, max: 1, step: 0.01, unit: '' }],
+  ['cards', 'cardCount', 'How many', 'seg', { options: [[1, '1'], [2, '2'], [3, '3'], [4, '4']] }],
+  ['cards', 'cardLayout', 'Arrange', 'seg', { options: [['row', 'Row'], ['swipe', 'Swipe row'], ['stack', 'Stack']] }],
+  ['cards', 'cardRatio', 'Card shape', 'seg', { options: [['3/2', '3:2'], ['16/10', '16:10'], ['4/3', '4:3'], ['1/1', '1:1'], ['4/5', '4:5']] }],
+  ['cards', 'cardGap', 'Gap between', 'range', { min: 0, max: 4, step: 0.05, unit: 'cqw' }],
+  ['cards', 'cardRadius', 'Corner round', 'range', { min: 0, max: 32, step: 1, unit: 'px' }],
+  ['cards', 'cardSwipeWidth', 'Card width (swipe row)', 'range', { min: 40, max: 95, step: 1, unit: '%' }],
 
-  ['photo', 'overlayOpacity', 'Darken', 'range', { min: 0, max: 0.9, step: 0.01, unit: '' }],
-  ['photo', 'photoBlur', 'Blur', 'range', { min: 0, max: 20, step: 0.5, unit: 'px' }],
-  ['photo', 'photoZoom', 'Zoom', 'range', { min: 1, max: 1.6, step: 0.01, unit: '' }],
-  ['photo', 'photoFocusX', 'Focus left/right', 'range', { min: 0, max: 100, step: 1, unit: '%' }],
-  ['photo', 'photoFocusY', 'Focus up/down', 'range', { min: 0, max: 100, step: 1, unit: '%' }],
+  ['page', 'padX', 'Side space', 'range', { min: 0, max: 25, step: 0.25, unit: 'cqw' }],
+  ['page', 'padBottom', 'Bottom space', 'range', { min: 0, max: 15, step: 0.25, unit: 'cqw' }],
+  ['page', 'headlineGap', 'Headline to cards', 'range', { min: 0, max: 8, step: 0.05, unit: 'cqw' }],
+  ['page', 'contentWidth', 'Content max width', 'range', { min: 50, max: 100, step: 0.5, unit: '%' }],
+  ['page', 'contentAlign', 'Content sits', 'seg', { options: [['0 auto', 'Left'], ['auto', 'Centre']] }],
+  ['page', 'bg', 'Background', 'seg', { options: [['black', 'Black'], ['ink', 'Ink']] }],
 ];
 
 const HEADLINES = {
-  baggage: 'Easy to spot. *Hard to forget.*',
-  cookie: 'Your brand isn’t a *cookie-cutter.*',
+  guide: 'Brands that\n*stand out.*',
+  baggage: 'Easy to spot.\n*Hard to forget.*',
+  cookie: 'Your brand isn’t a\n*cookie-cutter.*',
 };
 
 // Concept and headline are shared. Everything else has a desktop set and a phone set.
 const SHARED_KEYS = ['concept', 'headline'];
 const LAYOUT_DEFAULTS = {
-  ratio: '16/10',
-  headlineSize: 6.4, headlineLeading: 0.95, headlineTracking: -0.02, headlineWeight: 800, headlineStretch: 125,
-  headlineX: 6, headlineY: 9, headlineWidth: 52, headlineAlign: 'left', headlineColor: 'paper', layerOrder: 'behind',
-  cutoutWidth: 34, cutoutX: 66, cutoutY: 62, cutoutRotate: 0,
-  cutoutShadowBlur: 2, cutoutShadowY: 1.2, cutoutShadowOpacity: 0.45,
-  overlayOpacity: 0.2, photoBlur: 0, photoZoom: 1, photoFocusX: 50, photoFocusY: 50,
+  headlineSize: 7.4, headlineLeading: 0.86, headlineTracking: -0.045, headlineWeight: 900, headlineStretch: 112,
+  headlineWidth: 100, headlineCase: 'uppercase', headlineColor: 'paper',
+  cardCount: 3, cardLayout: 'row', cardRatio: '3/2', cardGap: 1, cardRadius: 4, cardSwipeWidth: 80,
+  padX: 14, padBottom: 3.5, headlineGap: 1.6, contentWidth: 100, contentAlign: '0 auto', bg: 'black',
 };
 const PHONE_DEFAULTS = {
-  ...LAYOUT_DEFAULTS, ratio: '4/5',
-  headlineSize: 11, headlineX: 7, headlineY: 6, headlineWidth: 86,
-  cutoutWidth: 70, cutoutX: 50, cutoutY: 68,
+  ...LAYOUT_DEFAULTS,
+  headlineSize: 13.5, headlineWidth: 100,
+  cardLayout: 'swipe', cardRatio: '4/5', cardGap: 3, cardSwipeWidth: 78,
+  padX: 5, padBottom: 6, headlineGap: 5,
 };
 const DEFAULTS = {
-  concept: 'baggage', headline: HEADLINES.baggage,
+  concept: 'guide', headline: HEADLINES.guide,
   desktop: { ...LAYOUT_DEFAULTS }, phone: { ...PHONE_DEFAULTS },
 };
 const PHONE_BREAKPOINT = 640;
+const MAX_CARDS = 4;
 
-const STORE_KEY = 'muzmesh-hero-tuner-v2';
+const STORE_KEY = 'muzmesh-hero-tuner-v3';
 // Site brand token names, with fallbacks so the colours also work in this page.
-const COLORS = { paper: 'var(--color-paper, #f2f2ee)', ink: 'var(--color-ink, #0e0e10)', yellow: 'var(--color-marker, #ffd60a)' };
+const COLORS = {
+  paper: 'var(--color-paper, #f2f2ee)', ink: 'var(--color-ink, #0e0e10)',
+  yellow: 'var(--color-marker, #ffd60a)', black: '#000',
+};
 const $ = (id) => document.getElementById(id);
 const hero = $('hero');
 const inputs = {};
@@ -308,14 +299,15 @@ function merge(s) {
   };
 }
 let state = merge({});
-let layout = 'desktop';  // which set the sliders edit
-const L = () => state[layout];
-const get = (k) => (SHARED_KEYS.includes(k) ? state[k] : L()[k]);
-const defaultFor = (k) => (SHARED_KEYS.includes(k) ? DEFAULTS[k] : (layout === 'phone' ? PHONE_DEFAULTS : LAYOUT_DEFAULTS)[k]);
 try {
   const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
   if (saved) state = merge(saved);
 } catch (e) { /* storage blocked: start from defaults */ }
+
+let layout = 'desktop';  // which set the sliders edit
+const L = () => state[layout];
+const get = (k) => (SHARED_KEYS.includes(k) ? state[k] : L()[k]);
+const defaultFor = (k) => (SHARED_KEYS.includes(k) ? DEFAULTS[k] : (layout === 'phone' ? PHONE_DEFAULTS : LAYOUT_DEFAULTS)[k]);
 
 function fmt(v, unit) { return `${+(+v).toFixed(3)}${unit}`; }
 
@@ -335,7 +327,7 @@ function buildControls() {
       el.addEventListener('input', () => set(key, +el.value));
       el.addEventListener('dblclick', () => set(key, defaultFor(key)));
       row.append(el);
-      inputs[key] = { sync: () => { el.value = get(key); out.textContent = fmt(get(key), opt.unit); } };
+      inputs[key] = { row, sync: () => { el.value = get(key); out.textContent = fmt(get(key), opt.unit); } };
     } else if (type === 'seg') {
       const seg = document.createElement('div');
       seg.className = 'seg';
@@ -347,7 +339,7 @@ function buildControls() {
         return [val, b];
       });
       row.append(seg);
-      inputs[key] = { sync: () => buttons.forEach(([v, b]) => b.classList.toggle('on', v === get(key))) };
+      inputs[key] = { row, sync: () => buttons.forEach(([v, b]) => b.classList.toggle('on', v === get(key))) };
     } else {
       const el = document.createElement('textarea');
       el.addEventListener('input', () => {
@@ -356,7 +348,7 @@ function buildControls() {
         render();
       });
       row.append(el);
-      inputs[key] = { sync: () => { if (document.activeElement !== el) el.value = state[key]; } };
+      inputs[key] = { row, sync: () => { if (document.activeElement !== el) el.value = state[key]; } };
     }
     $('g-' + group).append(row);
   }
@@ -372,31 +364,26 @@ function cssVars(s) {
   const u = Object.fromEntries(CONTROLS.map(([, k, , , o = {}]) => [k, o.unit ?? '']));
   const v = (k) => fmt(s[k], u[k]);
   return {
-    '--hero-ratio': s.ratio.replace('/', ' / '),
+    '--hero-bg': COLORS[s.bg],
+    '--hero-pad-x': v('padX'),
+    '--hero-pad-bottom': v('padBottom'),
+    '--content-width': v('contentWidth'),
+    '--content-align': s.contentAlign,
     '--headline-size': v('headlineSize'),
     '--headline-leading': v('headlineLeading'),
     '--headline-tracking': v('headlineTracking'),
     '--headline-weight': v('headlineWeight'),
     '--headline-stretch': v('headlineStretch'),
-    '--headline-x': v('headlineX'),
-    '--headline-y': v('headlineY'),
     '--headline-width': v('headlineWidth'),
-    '--headline-align': s.headlineAlign,
+    '--headline-case': s.headlineCase,
     '--headline-color': COLORS[s.headlineColor],
-    '--headline-z': s.layerOrder === 'front' ? 3 : 1,
-    '--cutout-z': 2,
-    '--cutout-width': v('cutoutWidth'),
-    '--cutout-x': v('cutoutX'),
-    '--cutout-y': v('cutoutY'),
-    '--cutout-rotate': v('cutoutRotate'),
-    '--cutout-shadow-blur': v('cutoutShadowBlur'),
-    '--cutout-shadow-y': v('cutoutShadowY'),
-    '--cutout-shadow-opacity': v('cutoutShadowOpacity'),
-    '--overlay-opacity': v('overlayOpacity'),
-    '--photo-blur': v('photoBlur'),
-    '--photo-zoom': v('photoZoom'),
-    '--photo-focus-x': v('photoFocusX'),
-    '--photo-focus-y': v('photoFocusY'),
+    '--accent-color': COLORS[s.headlineColor === 'yellow' ? 'paper' : 'yellow'],
+    '--headline-gap': v('headlineGap'),
+    '--card-count': s.cardCount,
+    '--card-ratio': s.cardRatio.replace('/', ' / '),
+    '--card-gap': v('cardGap'),
+    '--card-radius': v('cardRadius'),
+    '--card-swipe-width': v('cardSwipeWidth'),
   };
 }
 
@@ -410,60 +397,88 @@ function cssText() {
   const phone = cssVars(state.phone);
   const deskLines = Object.entries(desk).map(([k, v]) => `  ${k}: ${v};`);
   const phoneLines = Object.entries(phone).filter(([k, v]) => desk[k] !== v).map(([k, v]) => `    ${k}: ${v};`);
-  let css = `/* MuzMesh hero settings: ${state.concept} */\n.hero {\n${deskLines.join('\n')}\n}`;
+  let css = `/* MuzMesh hero settings */\n.hero {\n${deskLines.join('\n')}\n}`;
   if (phoneLines.length) css += `\n@media (max-width: ${PHONE_BREAKPOINT}px) {\n  .hero {\n${phoneLines.join('\n')}\n  }\n}`;
-  return css;
+  const layouts = `\n/* Card arrangement: put data-cards="${state.desktop.cardLayout}" on the hero`
+    + (state.phone.cardLayout !== state.desktop.cardLayout ? `, and "${state.phone.cardLayout}" on phones` : '') + ' */';
+  return css + layouts;
 }
+
+// Card images live in memory only (they are not saved)
+const cardImages = Array(MAX_CARDS).fill(null);
+function renderCards() {
+  const n = L().cardCount;
+  const box = $('cards');
+  box.replaceChildren();
+  for (let i = 0; i < n; i++) {
+    const fig = document.createElement('figure');
+    fig.className = 'hero__card';
+    if (cardImages[i]) {
+      const img = document.createElement('img');
+      img.src = cardImages[i]; img.alt = '';
+      fig.append(img);
+    } else {
+      fig.classList.add('ph');
+      if (i === Math.floor((n - 1) / 2) && n > 1) fig.classList.add('hot');
+      fig.textContent = `Image ${i + 1} · click to add`;
+    }
+    fig.addEventListener('click', () => { pickFor = i; $('cardFile').click(); });
+    box.append(fig);
+  }
+}
+let pickFor = 0;
+$('cardFile').addEventListener('change', (e) => {
+  const f = e.target.files[0];
+  if (f) { cardImages[pickFor] = URL.createObjectURL(f); renderCards(); }
+  e.target.value = '';
+});
+hero.addEventListener('dragover', (e) => e.preventDefault());
+hero.addEventListener('drop', (e) => {
+  e.preventDefault();
+  let slot = 0;
+  for (const f of e.dataTransfer.files) {
+    if (!f.type.startsWith('image/')) continue;
+    while (slot < MAX_CARDS && cardImages[slot]) slot++;
+    if (slot >= MAX_CARDS) break;
+    cardImages[slot] = URL.createObjectURL(f);
+  }
+  renderCards();
+});
 
 function render() {
   for (const [k, v] of Object.entries(cssVars(L()))) hero.style.setProperty(k, v);
+  hero.dataset.cards = L().cardLayout;
+  inputs.cardSwipeWidth.row.hidden = L().cardLayout !== 'swipe';
   $('headline').innerHTML = headlineHtml(state.headline);
   Object.values(inputs).forEach((i) => i.sync());
+  renderCards();
   $('out').textContent = cssText();
   try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
 }
 
-// Viewport preview
-let frameW = 1440;
+// Viewport preview: draw at the real screen size, then scale to fit
+let frame = { w: 1440, h: 900 };
 function fitFrame() {
-  const wrap = hero.parentElement;
-  const avail = wrap.clientWidth - 48;
-  hero.style.width = Math.min(frameW, avail) + 'px';
-  const scale = Math.min(1, avail / frameW);
-  $('sizeLabel').textContent = `${frameW}px wide · editing ${layout} settings` + (scale < 1 ? ` · shown at ${Math.round(scale * 100)}%` : '');
+  const wrap = $('wrap');
+  const availW = wrap.clientWidth - 48, availH = wrap.clientHeight - 48;
+  const scale = Math.min(1, availW / frame.w, availH / frame.h);
+  const el = $('frame');
+  el.style.width = frame.w + 'px';
+  el.style.height = frame.h + 'px';
+  el.style.transform = `scale(${scale})`;
+  el.style.margin = `${-(frame.h * (1 - scale)) / 2}px ${-(frame.w * (1 - scale)) / 2}px`;
+  $('sizeLabel').textContent = `${frame.w} × ${frame.h} · editing ${layout} settings · shown at ${Math.round(scale * 100)}%`;
 }
 $('viewport').addEventListener('click', (e) => {
   const b = e.target.closest('button');
   if (!b) return;
-  frameW = +b.dataset.w;
-  layout = frameW <= PHONE_BREAKPOINT ? 'phone' : 'desktop';
-  render();
+  frame = { w: +b.dataset.w, h: +b.dataset.h };
+  layout = frame.w <= PHONE_BREAKPOINT ? 'phone' : 'desktop';
   $('viewport').querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b));
+  render();
   fitFrame();
 });
 addEventListener('resize', fitFrame);
-
-// Images (kept in memory only; they are not saved)
-function loadImage(file, which) {
-  if (!file || !file.type.startsWith('image/')) return;
-  const url = URL.createObjectURL(file);
-  if (which === 'photo') {
-    $('photo').src = url; $('photo').hidden = false; $('phPhoto').hidden = true;
-  } else {
-    $('cutout').src = url; $('cutout').hidden = false; $('phCutout').hidden = true;
-  }
-}
-$('photoFile').addEventListener('change', (e) => loadImage(e.target.files[0], 'photo'));
-$('cutoutFile').addEventListener('change', (e) => loadImage(e.target.files[0], 'cutout'));
-hero.addEventListener('dragover', (e) => e.preventDefault());
-hero.addEventListener('drop', (e) => {
-  e.preventDefault();
-  // A PNG goes to the cutout first if it is still empty; anything else is the photo.
-  for (const f of e.dataTransfer.files) {
-    const toCutout = f.type === 'image/png' && $('cutout').hidden;
-    loadImage(f, toCutout ? 'cutout' : 'photo');
-  }
-});
 
 // Output
 function toast(msg) {
@@ -480,7 +495,7 @@ $('copyJson').addEventListener('click', () => copy(JSON.stringify(state, null, 2
 $('downloadJson').addEventListener('click', () => {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' }));
-  a.download = `hero-settings-${state.concept}.json`;
+  a.download = 'hero-settings.json';
   a.click();
 });
 $('loadJson').addEventListener('change', async (e) => {
