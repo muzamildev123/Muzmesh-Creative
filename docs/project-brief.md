@@ -48,11 +48,15 @@ Full detail (exact limits, what is not included, homepage copy): [positioning.md
 
 **Who it is for:** AI startups, pre-launch to seed `[CONFIRM: include Series A?]`, with no designer, marketer or web developer.
 
-**Price (decided 30 Oct 2026): $500 one-time setup + $200/month, everything included.** Setup paid upfront. Retainer starts the month after launch, 3-month minimum `[CONFIRM]`.
+**Offer name: AI Starter Kit.**
+
+**Price (decided 30 Oct 2026): $500 one-time setup + $200/month, everything included.** Setup paid upfront.
+
+**Promise: "Get AI-ready in 5 days."** 5 business days from when we have payment, logo, copy draft and account access. Prove it on 1-2 real clients before putting it on the site; until then say "in about a week". Retainer starts the month after launch, 3-month minimum `[CONFIRM]`.
 
 | $500 setup | $200/month |
 |---|---|
-| One landing page designed in Figma (not AI slop), 2 revision rounds | Up to `[CONFIRM: 2]` hours of site edits, updates, backups |
+| One landing page designed in Figma (not AI slop), 1 revision round before launch, 1 after | Up to `[CONFIRM: 2]` hours of site edits, updates, backups |
 | Sanity headless CMS (copy, blog, changelog) | Up to `[CONFIRM: 8]` social posts on 2 platforms |
 | AEO/GEO: schema, FAQ, `llms.txt`, sitemap, Search Console | Support on one channel, reply within 2 business days |
 | Tracking with conversion events | One-page monthly report |
