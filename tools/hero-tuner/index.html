@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MuzMesh Hero Tuner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100,400;100,500;100,700;125,700;125,800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root {
+    --ink: #0e0e10;
+    --ink-2: #17171d;
+    --paper: #f2f2ee;
+    --mist: #a1a1aa;
+    --line-ink: #2c2c35;
+    --yellow: #ffd60a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font: 13px/1.4 'Archivo', system-ui, sans-serif;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Stage */
+  .stage { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+  .bar {
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    padding: 10px 16px; border-bottom: 1px solid var(--line-ink);
+  }
+  .bar .spacer { flex: 1; }
+  .canvas-wrap {
+    flex: 1; min-height: 0; display: grid; place-items: center;
+    padding: 24px; overflow: auto; background: #08080a;
+  }
+
+  /* The hero itself. Everything uses container units, so the same numbers work on the site. */
+  .hero {
+    container-type: inline-size;
+    position: relative; overflow: hidden;
+    width: 100%; aspect-ratio: var(--hero-ratio);
+    background: var(--ink);
+    box-shadow: 0 0 0 1px var(--line-ink);
+  }
+  .hero__photo {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: var(--photo-focus-x) var(--photo-focus-y);
+    transform: scale(var(--photo-zoom));
+    filter: blur(var(--photo-blur));
+  }
+  .hero__overlay {
+    position: absolute; inset: 0; background: var(--ink); opacity: var(--overlay-opacity);
+  }
+  .hero__headline {
+    position: absolute; margin: 0;
+    left: var(--headline-x); top: var(--headline-y);
+    width: var(--headline-width);
+    font-family: 'Archivo', sans-serif;
+    font-stretch: var(--headline-stretch);
+    font-weight: var(--headline-weight);
+    font-size: var(--headline-size);
+    line-height: var(--headline-leading);
+    letter-spacing: var(--headline-tracking);
+    text-align: var(--headline-align);
+    color: var(--headline-color);
+    z-index: var(--headline-z);
+    text-wrap: balance;
+  }
+  .hero__cutout {
+    position: absolute;
+    left: var(--cutout-x); top: var(--cutout-y);
+    width: var(--cutout-width);
+    z-index: var(--cutout-z);
+    transform: translate(-50%, -50%) rotate(var(--cutout-rotate));
+    filter: drop-shadow(0 var(--cutout-shadow-y) var(--cutout-shadow-blur) rgb(0 0 0 / var(--cutout-shadow-opacity)));
+  }
+  .hero__accent { color: var(--yellow); }
+
+  /* Placeholders shown until you upload real images */
+  .ph-photo {
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 7cqw, rgb(255 255 255 / .04) 7cqw 7.2cqw),
+      radial-gradient(80% 70% at 70% 60%, #2a2a31, var(--ink));
+  }
+  .ph-cutout {
+    aspect-ratio: 4 / 3; border-radius: 10%;
+    background: var(--yellow);
+    display: grid; place-items: center;
+    color: var(--ink); font: 600 1.2cqw 'JetBrains Mono', monospace;
+  }
+
+  /* Panel */
+  .panel {
+    border-left: 1px solid var(--line-ink); background: var(--ink-2);
+    overflow-y: auto; padding-bottom: 24px;
+  }
+  .panel h1 {
+    font-size: 14px; font-stretch: 125%; font-weight: 800; letter-spacing: .02em;
+    margin: 0; padding: 14px 16px; border-bottom: 1px solid var(--line-ink);
+  }
+  .panel h1 span { color: var(--yellow); }
+  details { border-bottom: 1px solid var(--line-ink); }
+  summary {
+    cursor: pointer; padding: 11px 16px; font-weight: 700; list-style: none;
+    display: flex; justify-content: space-between;
+  }
+  summary::after { content: '+'; color: var(--mist); }
+  details[open] summary::after { content: '−'; }
+  .group { padding: 0 16px 12px; display: grid; gap: 10px; }
+  .row { display: grid; gap: 4px; }
+  .row label { display: flex; justify-content: space-between; color: var(--mist); }
+  .row label output { color: var(--paper); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  input[type=range] { width: 100%; accent-color: var(--yellow); }
+  input[type=text], textarea, select {
+    width: 100%; background: var(--ink); color: var(--paper);
+    border: 1px solid var(--line-ink); border-radius: 6px; padding: 7px 8px; font: inherit;
+  }
+  textarea { resize: vertical; min-height: 56px; }
+  .seg { display: flex; border: 1px solid var(--line-ink); border-radius: 6px; overflow: hidden; }
+  .seg button { flex: 1; border: 0; border-radius: 0; }
+  .seg button + button { border-left: 1px solid var(--line-ink); }
+  button, .file {
+    background: var(--ink); color: var(--paper); border: 1px solid var(--line-ink);
+    border-radius: 6px; padding: 7px 10px; font: inherit; cursor: pointer;
+  }
+  button:hover, .file:hover { border-color: var(--mist); }
+  button.on { background: var(--yellow); color: var(--ink); border-color: var(--yellow); font-weight: 700; }
+  button.primary { background: var(--yellow); color: var(--ink); border-color: var(--yellow); font-weight: 700; }
+  .file input { display: none; }
+  .files { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .hint { color: var(--mist); font-size: 12px; margin: 0; }
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 12px 16px; }
+  .actions .wide { grid-column: 1 / -1; }
+  pre {
+    margin: 0 16px; padding: 10px; background: var(--ink); border: 1px solid var(--line-ink);
+    border-radius: 6px; font: 11px/1.5 'JetBrains Mono', monospace; color: var(--mist);
+    max-height: 220px; overflow: auto; white-space: pre-wrap;
+  }
+  .toast {
+    position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+    background: var(--yellow); color: var(--ink); padding: 8px 14px; border-radius: 6px;
+    font-weight: 700; opacity: 0; transition: opacity .2s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+
+  @media (max-width: 860px) {
+    body { grid-template-columns: 1fr; grid-template-rows: 55vh 1fr; height: auto; min-height: 100vh; overflow: auto; }
+    .panel { border-left: 0; border-top: 1px solid var(--line-ink); }
+    .canvas-wrap { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<main class="stage">
+  <div class="bar">
+    <div class="seg" id="viewport">
+      <button data-w="1440" class="on">Desktop</button>
+      <button data-w="820">Tablet</button>
+      <button data-w="390">Phone</button>
+    </div>
+    <span class="spacer"></span>
+    <span class="hint" id="sizeLabel"></span>
+  </div>
+  <div class="canvas-wrap">
+    <section class="hero" id="hero">
+      <div class="ph-photo" id="phPhoto"></div>
+      <img class="hero__photo" id="photo" alt="" hidden>
+      <div class="hero__overlay"></div>
+      <h1 class="hero__headline" id="headline"></h1>
+      <div class="hero__cutout" id="cutoutBox">
+        <div class="ph-cutout" id="phCutout">cutout PNG</div>
+        <img id="cutout" alt="" hidden style="width:100%;display:block">
+      </div>
+    </section>
+  </div>
+</main>
+
+<aside class="panel">
+  <h1>Hero <span>tuner</span></h1>
+
+  <details open>
+    <summary>Images</summary>
+    <div class="group">
+      <div class="files">
+        <label class="file">Photo…<input type="file" accept="image/*" id="photoFile"></label>
+        <label class="file">Cutout PNG…<input type="file" accept="image/*" id="cutoutFile"></label>
+      </div>
+      <p class="hint">The cutout is the yellow suitcase or cookie on its own, with a see-through background. You can also drop files onto the preview.</p>
+      <p class="hint">Desktop and Tablet share one set of settings. Phone has its own, so pick Phone at the top to tune the small screen.</p>
+    </div>
+  </details>
+
+  <details open>
+    <summary>Concept and text</summary>
+    <div class="group" id="g-text"></div>
+  </details>
+
+  <details open>
+    <summary>Headline</summary>
+    <div class="group" id="g-headline"></div>
+  </details>
+
+  <details>
+    <summary>Cutout</summary>
+    <div class="group" id="g-cutout"></div>
+  </details>
+
+  <details>
+    <summary>Photo</summary>
+    <div class="group" id="g-photo"></div>
+  </details>
+
+  <div class="actions">
+    <button class="primary wide" id="copyCss">Copy CSS for the site</button>
+    <button id="copyJson">Copy JSON</button>
+    <button id="downloadJson">Download JSON</button>
+    <label class="file" style="text-align:center">Load JSON…<input type="file" accept=".json,application/json" id="loadJson"></label>
+    <button id="reset">Reset all</button>
+  </div>
+  <pre id="out"></pre>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// Every tunable value. Units are chosen so the numbers work at any hero width:
+// cqw = % of the hero's width, % = % of the hero box.
+const CONTROLS = [
+  // group, key, label, type, options
+  ['text', 'concept', 'Concept', 'seg', { options: [['baggage', 'Baggage'], ['cookie', 'Cookie'], ['custom', 'Custom']] }],
+  ['text', 'headline', 'Headline (wrap a word in *stars* to make it yellow)', 'textarea'],
+  ['text', 'ratio', 'Hero shape', 'seg', { options: [['16/10', '16:10'], ['16/9', '16:9'], ['4/5', '4:5'], ['1/1', '1:1']] }],
+
+  ['headline', 'headlineSize', 'Size', 'range', { min: 2, max: 14, step: 0.1, unit: 'cqw' }],
+  ['headline', 'headlineLeading', 'Line height', 'range', { min: 0.75, max: 1.4, step: 0.01, unit: '' }],
+  ['headline', 'headlineTracking', 'Letter spacing', 'range', { min: -0.08, max: 0.08, step: 0.002, unit: 'em' }],
+  ['headline', 'headlineWeight', 'Weight', 'range', { min: 400, max: 800, step: 100, unit: '' }],
+  ['headline', 'headlineStretch', 'Width', 'range', { min: 100, max: 125, step: 1, unit: '%' }],
+  ['headline', 'headlineX', 'Left', 'range', { min: 0, max: 80, step: 0.5, unit: '%' }],
+  ['headline', 'headlineY', 'Top', 'range', { min: 0, max: 85, step: 0.5, unit: '%' }],
+  ['headline', 'headlineWidth', 'Max width', 'range', { min: 20, max: 100, step: 0.5, unit: '%' }],
+  ['headline', 'headlineAlign', 'Align', 'seg', { options: [['left', 'Left'], ['center', 'Center'], ['right', 'Right']] }],
+  ['headline', 'headlineColor', 'Colour', 'seg', { options: [['paper', 'Paper'], ['ink', 'Ink'], ['yellow', 'Yellow']] }],
+  ['headline', 'layerOrder', 'Layer order', 'seg', { options: [['behind', 'Behind cutout'], ['front', 'In front']] }],
+
+  ['cutout', 'cutoutWidth', 'Size', 'range', { min: 5, max: 100, step: 0.5, unit: '%' }],
+  ['cutout', 'cutoutX', 'Centre left', 'range', { min: -20, max: 120, step: 0.5, unit: '%' }],
+  ['cutout', 'cutoutY', 'Centre top', 'range', { min: -20, max: 120, step: 0.5, unit: '%' }],
+  ['cutout', 'cutoutRotate', 'Rotate', 'range', { min: -45, max: 45, step: 0.5, unit: 'deg' }],
+  ['cutout', 'cutoutShadowBlur', 'Shadow softness', 'range', { min: 0, max: 6, step: 0.1, unit: 'cqw' }],
+  ['cutout', 'cutoutShadowY', 'Shadow drop', 'range', { min: 0, max: 4, step: 0.1, unit: 'cqw' }],
+  ['cutout', 'cutoutShadowOpacity', 'Shadow strength', 'range', { min: 0, max: 1, step: 0.01, unit: '' }],
+
+  ['photo', 'overlayOpacity', 'Darken', 'range', { min: 0, max: 0.9, step: 0.01, unit: '' }],
+  ['photo', 'photoBlur', 'Blur', 'range', { min: 0, max: 20, step: 0.5, unit: 'px' }],
+  ['photo', 'photoZoom', 'Zoom', 'range', { min: 1, max: 1.6, step: 0.01, unit: '' }],
+  ['photo', 'photoFocusX', 'Focus left/right', 'range', { min: 0, max: 100, step: 1, unit: '%' }],
+  ['photo', 'photoFocusY', 'Focus up/down', 'range', { min: 0, max: 100, step: 1, unit: '%' }],
+];
+
+const HEADLINES = {
+  baggage: 'Easy to spot. *Hard to forget.*',
+  cookie: 'Your brand isn’t a *cookie-cutter.*',
+};
+
+// Concept and headline are shared. Everything else has a desktop set and a phone set.
+const SHARED_KEYS = ['concept', 'headline'];
+const LAYOUT_DEFAULTS = {
+  ratio: '16/10',
+  headlineSize: 6.4, headlineLeading: 0.95, headlineTracking: -0.02, headlineWeight: 800, headlineStretch: 125,
+  headlineX: 6, headlineY: 9, headlineWidth: 52, headlineAlign: 'left', headlineColor: 'paper', layerOrder: 'behind',
+  cutoutWidth: 34, cutoutX: 66, cutoutY: 62, cutoutRotate: 0,
+  cutoutShadowBlur: 2, cutoutShadowY: 1.2, cutoutShadowOpacity: 0.45,
+  overlayOpacity: 0.2, photoBlur: 0, photoZoom: 1, photoFocusX: 50, photoFocusY: 50,
+};
+const PHONE_DEFAULTS = {
+  ...LAYOUT_DEFAULTS, ratio: '4/5',
+  headlineSize: 11, headlineX: 7, headlineY: 6, headlineWidth: 86,
+  cutoutWidth: 70, cutoutX: 50, cutoutY: 68,
+};
+const DEFAULTS = {
+  concept: 'baggage', headline: HEADLINES.baggage,
+  desktop: { ...LAYOUT_DEFAULTS }, phone: { ...PHONE_DEFAULTS },
+};
+const PHONE_BREAKPOINT = 640;
+
+const STORE_KEY = 'muzmesh-hero-tuner-v2';
+// Site brand token names, with fallbacks so the colours also work in this page.
+const COLORS = { paper: 'var(--color-paper, #f2f2ee)', ink: 'var(--color-ink, #0e0e10)', yellow: 'var(--color-marker, #ffd60a)' };
+const $ = (id) => document.getElementById(id);
+const hero = $('hero');
+const inputs = {};
+
+function merge(s) {
+  return {
+    ...DEFAULTS, ...s,
+    desktop: { ...LAYOUT_DEFAULTS, ...(s.desktop || {}) },
+    phone: { ...PHONE_DEFAULTS, ...(s.phone || {}) },
+  };
+}
+let state = merge({});
+let layout = 'desktop';  // which set the sliders edit
+const L = () => state[layout];
+const get = (k) => (SHARED_KEYS.includes(k) ? state[k] : L()[k]);
+const defaultFor = (k) => (SHARED_KEYS.includes(k) ? DEFAULTS[k] : (layout === 'phone' ? PHONE_DEFAULTS : LAYOUT_DEFAULTS)[k]);
+try {
+  const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
+  if (saved) state = merge(saved);
+} catch (e) { /* storage blocked: start from defaults */ }
+
+function fmt(v, unit) { return `${+(+v).toFixed(3)}${unit}`; }
+
+function buildControls() {
+  for (const [group, key, label, type, opt = {}] of CONTROLS) {
+    const row = document.createElement('div');
+    row.className = 'row';
+    const lab = document.createElement('label');
+    lab.textContent = label;
+    row.append(lab);
+
+    if (type === 'range') {
+      const out = document.createElement('output');
+      lab.append(out);
+      const el = document.createElement('input');
+      Object.assign(el, { type: 'range', min: opt.min, max: opt.max, step: opt.step });
+      el.addEventListener('input', () => set(key, +el.value));
+      el.addEventListener('dblclick', () => set(key, defaultFor(key)));
+      row.append(el);
+      inputs[key] = { sync: () => { el.value = get(key); out.textContent = fmt(get(key), opt.unit); } };
+    } else if (type === 'seg') {
+      const seg = document.createElement('div');
+      seg.className = 'seg';
+      const buttons = opt.options.map(([val, text]) => {
+        const b = document.createElement('button');
+        b.textContent = text;
+        b.addEventListener('click', () => set(key, val));
+        seg.append(b);
+        return [val, b];
+      });
+      row.append(seg);
+      inputs[key] = { sync: () => buttons.forEach(([v, b]) => b.classList.toggle('on', v === get(key))) };
+    } else {
+      const el = document.createElement('textarea');
+      el.addEventListener('input', () => {
+        state.headline = el.value;
+        state.concept = 'custom';
+        render();
+      });
+      row.append(el);
+      inputs[key] = { sync: () => { if (document.activeElement !== el) el.value = state[key]; } };
+    }
+    $('g-' + group).append(row);
+  }
+}
+
+function set(key, val) {
+  if (SHARED_KEYS.includes(key)) state[key] = val; else L()[key] = val;
+  if (key === 'concept' && HEADLINES[val]) state.headline = HEADLINES[val];
+  render();
+}
+
+function cssVars(s) {
+  const u = Object.fromEntries(CONTROLS.map(([, k, , , o = {}]) => [k, o.unit ?? '']));
+  const v = (k) => fmt(s[k], u[k]);
+  return {
+    '--hero-ratio': s.ratio.replace('/', ' / '),
+    '--headline-size': v('headlineSize'),
+    '--headline-leading': v('headlineLeading'),
+    '--headline-tracking': v('headlineTracking'),
+    '--headline-weight': v('headlineWeight'),
+    '--headline-stretch': v('headlineStretch'),
+    '--headline-x': v('headlineX'),
+    '--headline-y': v('headlineY'),
+    '--headline-width': v('headlineWidth'),
+    '--headline-align': s.headlineAlign,
+    '--headline-color': COLORS[s.headlineColor],
+    '--headline-z': s.layerOrder === 'front' ? 3 : 1,
+    '--cutout-z': 2,
+    '--cutout-width': v('cutoutWidth'),
+    '--cutout-x': v('cutoutX'),
+    '--cutout-y': v('cutoutY'),
+    '--cutout-rotate': v('cutoutRotate'),
+    '--cutout-shadow-blur': v('cutoutShadowBlur'),
+    '--cutout-shadow-y': v('cutoutShadowY'),
+    '--cutout-shadow-opacity': v('cutoutShadowOpacity'),
+    '--overlay-opacity': v('overlayOpacity'),
+    '--photo-blur': v('photoBlur'),
+    '--photo-zoom': v('photoZoom'),
+    '--photo-focus-x': v('photoFocusX'),
+    '--photo-focus-y': v('photoFocusY'),
+  };
+}
+
+function headlineHtml(text) {
+  const esc = text.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  return esc.replace(/\*(.+?)\*/g, '<span class="hero__accent">$1</span>').replace(/\n/g, '<br>');
+}
+
+function cssText() {
+  const desk = cssVars(state.desktop);
+  const phone = cssVars(state.phone);
+  const deskLines = Object.entries(desk).map(([k, v]) => `  ${k}: ${v};`);
+  const phoneLines = Object.entries(phone).filter(([k, v]) => desk[k] !== v).map(([k, v]) => `    ${k}: ${v};`);
+  let css = `/* MuzMesh hero settings: ${state.concept} */\n.hero {\n${deskLines.join('\n')}\n}`;
+  if (phoneLines.length) css += `\n@media (max-width: ${PHONE_BREAKPOINT}px) {\n  .hero {\n${phoneLines.join('\n')}\n  }\n}`;
+  return css;
+}
+
+function render() {
+  for (const [k, v] of Object.entries(cssVars(L()))) hero.style.setProperty(k, v);
+  $('headline').innerHTML = headlineHtml(state.headline);
+  Object.values(inputs).forEach((i) => i.sync());
+  $('out').textContent = cssText();
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+}
+
+// Viewport preview
+let frameW = 1440;
+function fitFrame() {
+  const wrap = hero.parentElement;
+  const avail = wrap.clientWidth - 48;
+  hero.style.width = Math.min(frameW, avail) + 'px';
+  const scale = Math.min(1, avail / frameW);
+  $('sizeLabel').textContent = `${frameW}px wide · editing ${layout} settings` + (scale < 1 ? ` · shown at ${Math.round(scale * 100)}%` : '');
+}
+$('viewport').addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  frameW = +b.dataset.w;
+  layout = frameW <= PHONE_BREAKPOINT ? 'phone' : 'desktop';
+  render();
+  $('viewport').querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b));
+  fitFrame();
+});
+addEventListener('resize', fitFrame);
+
+// Images (kept in memory only; they are not saved)
+function loadImage(file, which) {
+  if (!file || !file.type.startsWith('image/')) return;
+  const url = URL.createObjectURL(file);
+  if (which === 'photo') {
+    $('photo').src = url; $('photo').hidden = false; $('phPhoto').hidden = true;
+  } else {
+    $('cutout').src = url; $('cutout').hidden = false; $('phCutout').hidden = true;
+  }
+}
+$('photoFile').addEventListener('change', (e) => loadImage(e.target.files[0], 'photo'));
+$('cutoutFile').addEventListener('change', (e) => loadImage(e.target.files[0], 'cutout'));
+hero.addEventListener('dragover', (e) => e.preventDefault());
+hero.addEventListener('drop', (e) => {
+  e.preventDefault();
+  // A PNG goes to the cutout first if it is still empty; anything else is the photo.
+  for (const f of e.dataTransfer.files) {
+    const toCutout = f.type === 'image/png' && $('cutout').hidden;
+    loadImage(f, toCutout ? 'cutout' : 'photo');
+  }
+});
+
+// Output
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1400);
+}
+async function copy(text, msg) {
+  try { await navigator.clipboard.writeText(text); toast(msg); }
+  catch (e) { toast('Copy blocked: select the text below instead'); }
+}
+$('copyCss').addEventListener('click', () => copy(cssText(), 'CSS copied'));
+$('copyJson').addEventListener('click', () => copy(JSON.stringify(state, null, 2), 'JSON copied'));
+$('downloadJson').addEventListener('click', () => {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' }));
+  a.download = `hero-settings-${state.concept}.json`;
+  a.click();
+});
+$('loadJson').addEventListener('change', async (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  try { state = merge(JSON.parse(await f.text())); render(); toast('Settings loaded'); }
+  catch (err) { toast('That file is not valid JSON'); }
+  e.target.value = '';
+});
+$('reset').addEventListener('click', () => { state = merge({}); render(); toast('Reset'); });
+
+buildControls();
+render();
+fitFrame();
+</script>
+</body>
+</html>
