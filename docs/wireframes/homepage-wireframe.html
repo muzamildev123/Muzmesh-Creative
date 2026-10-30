@@ -1,0 +1,773 @@
+<title>AI Starter Kit Homepage Wireframe</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a toolbar over one wireframe "frame"; the frame switches between desktop and phone width,
+   and every section reflows with container queries so both views use the same markup. */
+:root {
+  --bg: #e9eaec;          /* canvas around the frame */
+  --paper: #ffffff;       /* the page being wireframed */
+  --ink: #1d1f23;         /* headings, primary text */
+  --mute: #6b6f78;        /* body copy, labels */
+  --line: #c4c7cd;        /* box outlines */
+  --fill: #eef0f2;        /* placeholder fills */
+  --fill-2: #dcdfe3;      /* buttons, darker blocks */
+  --note: #2f5fd0;        /* annotation (designer notes) */
+  --note-bg: #e8eefc;
+  --flag: #a35a00;        /* [CONFIRM] / [PLACEHOLDER] */
+  --flag-bg: #fff1dc;
+  --f-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15171a; --paper: #1e2125; --ink: #eceef1; --mute: #a2a7b0; --line: #3c4148;
+    --fill: #272b30; --fill-2: #353a41; --note: #8fb0ff; --note-bg: #1f2a44; --flag: #ffbb5c; --flag-bg: #3a2a12;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15171a; --paper: #1e2125; --ink: #eceef1; --mute: #a2a7b0; --line: #3c4148;
+  --fill: #272b30; --fill-2: #353a41; --note: #8fb0ff; --note-bg: #1f2a44; --flag: #ffbb5c; --flag-bg: #3a2a12;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-display); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+}
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--note); outline-offset: 2px; }
+
+/* ---------- toolbar ---------- */
+.bar { max-width: 1280px; margin: 0 auto 16px; display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: end; justify-content: space-between; }
+.bar h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; }
+.bar .sub { font-family: var(--f-mono); font-size: 12px; color: var(--mute); margin-top: 4px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-family: var(--f-mono); font-size: 12px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--paper); }
+.seg button { border: 0; background: none; padding: 6px 12px; cursor: pointer; color: var(--mute); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.toggle { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); }
+.legend { max-width: 1280px; margin: 0 auto 16px; display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: var(--f-mono); font-size: 11px; color: var(--mute); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+/* ---------- frame ---------- */
+.stage { max-width: 1280px; margin: 0 auto; display: flex; justify-content: center; }
+.frame { width: 100%; background: var(--paper); border: 1px solid var(--line); container-type: inline-size; transition: max-width .25s ease; }
+.stage.mobile .frame { max-width: 390px; border-radius: 28px; overflow: hidden; box-shadow: 0 0 0 8px var(--fill-2); }
+@media (prefers-reduced-motion: reduce) { .frame { transition: none; } }
+
+/* ---------- wireframe primitives ---------- */
+.sec { position: relative; padding: 48px 20px; border-top: 1px dashed var(--line); }
+.sec:first-child { border-top: 0; }
+.wrap { max-width: 1080px; margin: 0 auto; display: grid; gap: 20px; }
+.tag { position: absolute; top: 8px; left: 8px; font-family: var(--f-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--note); background: var(--note-bg); padding: 2px 6px; border-radius: 3px; }
+.eyebrow { font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--mute); }
+.h2 { font-size: 26px; font-weight: 800; line-height: 1.15; letter-spacing: -0.015em; max-width: 22ch; }
+.body { color: var(--mute); max-width: 62ch; }
+.small { font-size: 12.5px; color: var(--mute); }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 0 18px; border: 2px solid var(--ink); border-radius: 4px; font-weight: 700; font-size: 14px; background: var(--ink); color: var(--paper); text-decoration: none; cursor: default; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.sm { min-height: 34px; padding: 0 12px; font-size: 13px; }
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.box { border: 1px solid var(--line); border-radius: 6px; padding: 18px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.ph { /* crossed image placeholder */
+  border: 1px solid var(--line); background:
+    linear-gradient(to top right, transparent calc(50% - .5px), var(--line) 50%, transparent calc(50% + .5px)),
+    linear-gradient(to bottom right, transparent calc(50% - .5px), var(--line) 50%, transparent calc(50% + .5px)), var(--fill);
+  display: grid; place-items: center; min-height: 160px; max-width: 100%;
+}
+.ph span { font-family: var(--f-mono); font-size: 11px; color: var(--mute); background: var(--paper); padding: 4px 8px; border: 1px solid var(--line); text-align: center; max-width: 80%; }
+.flag { font-family: var(--f-mono); font-size: .82em; color: var(--flag); background: var(--flag-bg); padding: 0 4px; border-radius: 3px; white-space: nowrap; }
+.note { font-family: var(--f-mono); font-size: 11.5px; line-height: 1.45; color: var(--note); background: var(--note-bg); border-left: 2px solid var(--note); padding: 8px 10px; max-width: 70ch; }
+.hide-notes .note, .hide-notes .tag { display: none; }
+ul.ticks { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+ul.ticks li { padding-left: 20px; position: relative; color: var(--mute); font-size: 14px; }
+ul.ticks li::before { content: ""; position: absolute; left: 2px; top: .55em; width: 9px; height: 9px; border: 1.5px solid var(--mute); border-radius: 2px; }
+ul.ticks.no li::before { border-radius: 50%; }
+
+/* ---------- 1 nav ---------- */
+.nav { padding: 14px 20px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 16px; position: relative; }
+.logo { font-weight: 800; letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.logo i { width: 22px; height: 22px; border: 2px solid var(--ink); border-radius: 4px; display: inline-block; }
+.nav .links { display: none; gap: 22px; font-size: 14px; color: var(--mute); margin-left: auto; }
+.nav .btn { margin-left: auto; }
+.burger { width: 34px; height: 34px; border: 1px solid var(--line); border-radius: 4px; display: grid; place-content: center; gap: 4px; }
+.burger b { width: 16px; height: 2px; background: var(--ink); display: block; }
+
+/* ---------- 2 hero ---------- */
+.hero .wrap { gap: 28px; }
+.hero h1 { font-size: 34px; font-weight: 800; line-height: 1.05; letter-spacing: -0.025em; max-width: 16ch; }
+.hero .ph { min-height: 220px; }
+.hero-copy { display: grid; gap: 18px; align-content: center; min-width: 0; }
+
+/* ---------- grids ---------- */
+.g3, .g7, .steps, .price, .fit { display: grid; gap: 14px; grid-template-columns: 1fr; }
+.strip .box h3 { font-size: 17px; }
+.card-num { font-family: var(--f-mono); font-size: 11px; color: var(--mute); }
+.box h3 { font-size: 16px; font-weight: 700; }
+.get { font-size: 12.5px; color: var(--mute); border-top: 1px dotted var(--line); padding-top: 8px; margin-top: 4px; }
+.monthly { border: 2px dashed var(--line); border-radius: 6px; padding: 14px 18px; }
+.step-n { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--ink); display: grid; place-items: center; font-weight: 800; font-size: 14px; }
+.price .box { padding: 24px; gap: 12px; }
+.price .amt { font-size: 40px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+.price .amt small { font-size: 16px; font-weight: 500; color: var(--mute); letter-spacing: 0; }
+.case { display: grid; gap: 16px; }
+.problem-cols { display: grid; gap: 20px; }
+
+/* ---------- FAQ ---------- */
+.faq details { border-bottom: 1px solid var(--line); padding: 14px 0; }
+.faq summary { font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--f-mono); color: var(--mute); }
+.faq details[open] summary::after { content: "–"; }
+.faq details p { color: var(--mute); margin-top: 8px; max-width: 70ch; }
+
+/* ---------- final CTA ---------- */
+.cta { background: var(--fill); }
+.brief { font-size: 19px; line-height: 2.1; max-width: 46ch; }
+.brief input, .brief select { border: 0; border-bottom: 2px solid var(--ink); background: transparent; padding: 0 4px; font-weight: 700; min-width: 0; max-width: 100%; font-size: 17px; }
+.brief input { width: 11ch; }
+.brief input.w-l { width: 18ch; }
+.chips { display: inline-flex; flex-wrap: wrap; gap: 6px; vertical-align: middle; }
+.chip { border: 1.5px solid var(--ink); border-radius: 999px; padding: 2px 10px; font-size: 13px; background: transparent; cursor: pointer; line-height: 1.6; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.confirm { border: 1px dashed var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 6px; background: var(--paper); }
+
+.opt-seg { justify-self: start; font-family: var(--f-mono); font-size: 12px; flex-wrap: wrap; }
+.planner, .opt-a { display: grid; gap: 18px; }
+.planner[hidden], .opt-a[hidden] { display: none; }
+.pl-grid { display: grid; gap: 16px; }
+.pl-form { padding: 22px; gap: 14px; background: var(--paper); border-width: 2px; border-color: var(--ink); }
+.pl-top { display: grid; gap: 8px; }
+.pl-bar { height: 4px; background: var(--fill-2); border-radius: 2px; overflow: hidden; }
+.pl-bar i { display: block; height: 100%; width: 20%; background: var(--ink); transition: width .25s ease; }
+.pl-step { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; min-width: 0; }
+.pl-step legend { font-size: 22px; font-weight: 800; letter-spacing: -0.015em; margin-bottom: 8px; padding: 0; }
+.pl-step label, .pl-step .lbl { font-size: 13px; color: var(--mute); margin-top: 4px; }
+.pl-step label em { font-style: normal; font-family: var(--f-mono); font-size: 10px; color: var(--mute); border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; margin-left: 4px; }
+.pl-step input { border: 1.5px solid var(--line); border-radius: 4px; padding: 10px 12px; background: var(--paper); font-size: 16px; min-width: 0; width: 100%; }
+.pl-step input:focus { border-color: var(--ink); outline: none; }
+.tiles { display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }
+.tile { border: 1.5px solid var(--line); border-radius: 6px; background: var(--paper); padding: 12px; text-align: left; cursor: pointer; display: grid; gap: 2px; font-weight: 600; min-height: 48px; }
+.tile small { font-weight: 400; color: var(--mute); font-size: 12.5px; }
+.tile[aria-pressed="true"] { border-color: var(--ink); background: var(--fill); box-shadow: inset 0 0 0 1px var(--ink); }
+.pl-err { color: var(--flag); min-height: 1.2em; }
+.pl-nav { display: flex; justify-content: space-between; gap: 12px; }
+.pl-nav .btn { cursor: pointer; }
+.pl-nav .btn[disabled] { visibility: hidden; }
+.pl-done { display: grid; gap: 10px; }
+.pl-done h3 { font-size: 22px; }
+.pl-plan { border: 1px dashed var(--line); border-radius: 6px; padding: 20px; display: grid; gap: 12px; align-content: start; background: var(--fill); min-width: 0; }
+.pl-plan h3 { font-size: 18px; }
+.pl-plan dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; font-size: 13.5px; }
+.pl-plan dt { color: var(--mute); font-family: var(--f-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; padding-top: 2px; }
+.pl-plan dd { margin: 0; font-weight: 600; min-width: 0; overflow-wrap: anywhere; }
+.pl-plan dd.empty { color: var(--line); font-weight: 400; }
+.pl-cost { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; border-top: 1px solid var(--line); padding-top: 10px; font-weight: 700; font-size: 14px; }
+@media (prefers-reduced-motion: reduce) { .pl-bar i { transition: none; } }
+@container (min-width: 760px) {
+  .pl-grid { grid-template-columns: 1.5fr 1fr; align-items: start; }
+  .tiles.t3 { grid-template-columns: repeat(3, 1fr); }
+  .tiles.t4 { grid-template-columns: repeat(4, 1fr); }
+  .pl-step legend { font-size: 26px; }
+}
+
+/* ---------- footer ---------- */
+.foot { background: var(--fill-2); }
+.foot-cols { display: grid; gap: 20px; grid-template-columns: 1fr 1fr; }
+.foot-cols div { display: grid; gap: 4px; font-size: 13px; color: var(--mute); align-content: start; }
+.foot-cols strong { color: var(--ink); font-size: 12px; font-family: var(--f-mono); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+.seo { font-family: var(--f-mono); font-size: 12px; display: grid; gap: 8px; }
+.seo dt { color: var(--note); }
+.seo dd { margin: 0 0 6px; color: var(--mute); }
+
+/* ---------- desktop layout ---------- */
+@container (min-width: 760px) {
+  .sec { padding: 80px 48px; }
+  .nav { padding: 18px 48px; }
+  .nav .links { display: flex; }
+  .nav .btn { margin-left: 8px; }
+  .burger { display: none; }
+  .h2 { font-size: 38px; }
+  .hero .wrap { grid-template-columns: 1.05fr 1fr; align-items: center; gap: 48px; }
+  .hero h1 { font-size: 56px; }
+  .hero .ph { min-height: 420px; }
+  .g3, .strip .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g7 { grid-template-columns: repeat(4, 1fr); }
+  .g7 .box:nth-child(n+5) { grid-column: span 1; }
+  .g7 .box:first-child { grid-column: span 2; grid-row: span 1; }
+  .steps { grid-template-columns: repeat(4, 1fr); }
+  .price { grid-template-columns: 1fr 1fr; }
+  .fit { grid-template-columns: 1fr 1fr; }
+  .case { grid-template-columns: 1.2fr 1fr; align-items: stretch; }
+  .problem-cols { grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; }
+  .faq .wrap { grid-template-columns: 1fr 2fr; align-items: start; }
+  .cta .wrap { grid-template-columns: 1fr; }
+  .brief { font-size: 24px; }
+  .brief input, .brief select { font-size: 21px; }
+  .foot-cols { grid-template-columns: 2fr 1fr 1fr 1fr; }
+}
+</style>
+
+<header class="bar">
+  <div>
+    <h1>AI Starter Kit homepage</h1>
+    <div class="sub">Low-fi wireframe · v0.2 · 30 Oct 2026 · copy from docs/landing-page-copy.md (5-day update)</div>
+  </div>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Viewport">
+      <button id="v-desk" type="button" aria-pressed="true">Desktop</button>
+      <button id="v-mob" type="button" aria-pressed="false">Mobile 390</button>
+    </div>
+    <label class="toggle" for="notes"><input id="notes" type="checkbox" checked> Designer notes</label>
+  </div>
+</header>
+<div class="legend">
+  <span><b class="note" style="padding:0 6px;border-left-width:2px">note</b> for design/dev, never on the page</span>
+  <span><b class="flag">[CONFIRM]</b> decision pending</span>
+  <span><b class="flag">[PLACEHOLDER]</b> real content missing</span>
+  <span>Crossed box = image or visual</span>
+</div>
+
+<div class="stage" id="stage">
+<main class="frame" id="frame">
+
+  <!-- 1 NAV -->
+  <nav class="nav" aria-label="Wireframe navigation">
+    <span class="logo"><i></i>MuzMesh Creative</span>
+    <div class="links"><span>What's included</span><span>Pricing</span><span>Work</span><span>Referral</span><span>Blog</span></div>
+    <span class="btn sm">Plan my launch</span>
+    <span class="burger" aria-hidden="true"><b></b><b></b><b></b></span>
+  </nav>
+
+  <!-- 2 HERO -->
+  <section class="sec hero">
+    <span class="tag">02 Hero</span>
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">The AI Starter Kit · For AI startups</span>
+        <h1>Get AI-ready in 5 days.</h1>
+        <p class="body">A hand-designed landing page that's ready for the AI era: found in ChatGPT and Google AI answers, tracked from day one, and connected to your CRM. Plus social media, and a team that keeps it all running. $500 to set up, $200 a month.</p>
+        <div class="row"><span class="btn">Plan my launch in 15 minutes</span><span class="btn ghost">See what's included</span></div>
+        <p class="small">5 business days from when we have your content.</p>
+        <p class="note">Primary → /contact (or scrolls to the launch brief, section 13). Secondary scrolls to "What's included". Nav button stays visible next to the menu icon on mobile. Until we've hit 5 days on 1-2 real clients, swap "in 5 days" for "in about a week" across the page <span class="flag">[CONFIRM: switch to 5 days once proven]</span>. A/B alt headline: "Launch your AI startup like it's already a real company."</p>
+      </div>
+      <div class="ph"><span>Real screenshot: Topklik.ai site (with permission) or our Figma design system. No gradients, orbs or 3D shapes.</span></div>
+    </div>
+  </section>
+
+  <!-- 3 STRIP -->
+  <section class="sec strip" style="padding-block:40px">
+    <span class="tag">03 Built for the AI era</span>
+    <div class="wrap">
+      <div class="g3">
+        <div class="box"><h3>Found by AI.</h3><p class="small">Show up when people ask ChatGPT, Perplexity or Google about your category, not only when they search for your name.</p></div>
+        <div class="box"><h3>Built for AI.</h3><p class="small">Your content lives in a headless CMS with an API, so chatbots, search and agents can use it later without a rebuild.</p></div>
+        <div class="box"><h3>Not made by AI.</h3><p class="small">Designed by people in Figma, so your site doesn't look like every other AI startup's.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 PROBLEM -->
+  <section class="sec">
+    <span class="tag">04 Problem</span>
+    <div class="wrap problem-cols">
+      <div style="display:grid;gap:16px;min-width:0">
+        <span class="eyebrow">The problem</span>
+        <h2 class="h2">You built the product. The launch still looks like a template.</h2>
+        <p class="body">Most AI startup sites look the same: purple gradients, floating 3D shapes, and copy written by the model you're competing with. Investors, users and early hires have seen it a hundred times, and they scroll past.</p>
+        <p class="body">Behind the page it's worse. Your socials went quiet after launch week. Nobody knows where sign-ups come from. Waitlist emails sit in a spreadsheet. And when someone asks ChatGPT about your category, you're not in the answer.</p>
+        <p class="body">None of this is hard. It's just not your job, and you don't have anyone whose job it is.</p>
+      </div>
+      <div style="display:grid;gap:10px;grid-template-columns:1fr 1fr;min-width:0">
+        <div class="ph" style="min-height:200px"><span>"Generic AI startup" mock we made</span></div>
+        <div class="ph" style="min-height:200px"><span>"Looks like a company"</span></div>
+        <p class="note" style="grid-column:1/-1">Optional visual. The generic side must be our own mock, never a real company's site. Three short paragraphs, no list.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 OFFER -->
+  <section class="sec" style="background:var(--fill)">
+    <span class="tag">05 The offer</span>
+    <div class="wrap" style="max-width:760px;justify-items:start">
+      <span class="eyebrow">The AI Starter Kit</span>
+      <h2 class="h2">Everything you need to launch. One team. One price.</h2>
+      <p class="body">The AI Starter Kit is everything a new AI startup needs to show up online. We set up your landing page, social media, AI search visibility, tracking, CRM and CMS in one go, for $500. Then for $200 a month we keep it all running: site updates, social posts, support and a monthly report. You stay focused on the product.</p>
+      <span class="btn ghost">See the pricing</span>
+      <p class="note">Button scrolls to Pricing (09).</p>
+    </div>
+  </section>
+
+  <!-- 6 INCLUDED -->
+  <section class="sec" id="included">
+    <span class="tag">06 What's included</span>
+    <div class="wrap">
+      <span class="eyebrow">What's included</span>
+      <h2 class="h2">One setup. Seven things off your list.</h2>
+      <div class="g7">
+        <div class="box"><span class="card-num">1 / 7</span><h3>A landing page people trust</h3><p class="small">Designed by a person in Figma, built fast, and easy for you to edit. Not generated, not a template.</p><p class="get">What you get: one landing page, up to <span class="flag">[CONFIRM: 7]</span> sections, responsive, live in 5 business days, 1 round of revisions before launch and 1 after.</p></div>
+        <div class="box"><span class="card-num">2 / 7</span><h3>Found by AI search (AEO / GEO)</h3><p class="small">Set up so ChatGPT, Perplexity and Google AI answers can understand your product and cite you.</p><p class="get">What you get: schema markup, an FAQ block, clean heading structure, llms.txt, sitemap and Google Search Console.</p></div>
+        <div class="box"><span class="card-num">3 / 7</span><h3>Tracking that answers "where do sign-ups come from?"</h3><p class="small">Know which posts, pages and buttons turn visitors into users.</p><p class="get">What you get: analytics (<span class="flag">[CONFIRM: GA4 or PostHog]</span>) with conversion events on sign-up, waitlist and demo buttons.</p></div>
+        <div class="box"><span class="card-num">4 / 7</span><h3>Every lead in a CRM</h3><p class="small">Waitlist sign-ups and demo requests get an instant reply and land in one place, not in someone's inbox.</p><p class="get">What you get: your form connected to a CRM on your own account (<span class="flag">[CONFIRM: HubSpot free tier]</span>), an instant reply email and a team notification.</p></div>
+        <div class="box"><span class="card-num">5 / 7</span><h3>A CMS you can actually use</h3><p class="small">Change copy, publish a blog post or ship a changelog entry without waiting on us.</p><p class="get">What you get: Sanity headless CMS set up for your page, blog and changelog.</p></div>
+        <div class="box"><span class="card-num">6 / 7</span><h3>AI-ready from day one</h3><p class="small">Your content is structured data, not just pixels. When you want a docs bot, site search or an agent that reads your site, it's already there.</p><p class="get">What you get: a structured content model with API access.</p></div>
+        <div class="box"><span class="card-num">7 / 7</span><h3>Social that doesn't go quiet</h3><p class="small">Profiles that look like the same company as your site, and posts every month after launch.</p><p class="get">What you get: 2 profiles set up or cleaned up (<span class="flag">[CONFIRM: LinkedIn + X]</span>), banners, and 3 post templates in your brand.</p></div>
+      </div>
+      <div class="monthly"><strong>Then, every month:</strong> <span class="body">site edits and updates, <span class="flag">[CONFIRM: 8]</span> social posts, support, and a one-page report. That's the $200 retainer.</span></div>
+      <p class="note">Desktop: 4-column grid, card 1 spans two columns so 7 cards fill two rows evenly. Mobile: single column. "What you get" lines must match positioning.md section 3.</p>
+    </div>
+  </section>
+
+  <!-- 7 HOW IT WORKS -->
+  <section class="sec">
+    <span class="tag">07 How it works</span>
+    <div class="wrap">
+      <span class="eyebrow">How it works</span>
+      <h2 class="h2">Live in 5 business days.</h2>
+      <div class="steps">
+        <div class="box"><span class="step-n">1</span><h3>Book a 15-minute call.</h3><p class="small">Tell us what you're building, who it's for and when you want to launch.</p></div>
+        <div class="box"><span class="step-n">2</span><h3>Get a one-page proposal the same day.</h3><p class="small">What we'll build, when we start, the price, and exactly what we need from you.</p></div>
+        <div class="box"><span class="step-n">3</span><h3>We design and build.</h3><p class="small">We build on our own design system and Sanity starter, so it's fast without looking like a template. You review it on a live preview link, and one round of revisions fits inside the 5 days. You get a second round after launch.</p></div>
+        <div class="box"><span class="step-n">4</span><h3>Launch, then we keep it running.</h3><p class="small">Your site goes live and your socials start posting. From the next month, the $200 retainer covers updates, posts, support and a monthly report.</p></div>
+      </div>
+      <p class="small">5 business days from when we have your content: your logo, a rough draft of your copy and access to your accounts. The sooner you send them, the sooner you're live.</p>
+    </div>
+  </section>
+
+  <!-- 8 PROOF -->
+  <section class="sec" style="background:var(--fill)">
+    <span class="tag">08 Proof</span>
+    <div class="wrap">
+      <span class="eyebrow">Our work</span>
+      <h2 class="h2">Work we can show you.</h2>
+      <div class="case box" style="background:var(--paper);padding:0;overflow:hidden">
+        <div class="ph" style="border:0;min-height:240px"><span>Topklik.ai screenshot or system diagram</span></div>
+        <div style="display:grid;gap:12px;padding:22px;align-content:center;min-width:0">
+          <span class="eyebrow">Featured case study</span>
+          <h3 style="font-size:22px">Topklik.ai</h3>
+          <p class="body">An automated lead system for an AI startup: n8n, HubSpot, Resend, Claude and Gemini working together so every lead gets captured, answered and followed up.</p>
+          <p><span class="flag">[PLACEHOLDER: real, client-approved result, or remove this line]</span></p>
+          <span class="btn ghost sm" style="justify-self:start">Read the case study</span>
+        </div>
+      </div>
+      <p class="body">We're new to this offer, so we'll show you one real project instead of ten made-up ones. Ask us on the call and we'll walk you through how it was built.</p>
+      <p class="note">One card, no grid, until there is more paid client work with permission. Testimonials block is left out entirely until we have full name, role, company and written permission. No logo strip, "trusted by" row or counters.</p>
+    </div>
+  </section>
+
+  <!-- 9 PRICING -->
+  <section class="sec" id="pricing">
+    <span class="tag">09 Pricing</span>
+    <div class="wrap">
+      <span class="eyebrow">Pricing</span>
+      <h2 class="h2">One price. No surprises.</h2>
+      <p class="body">No tiers to compare, no "contact us for a quote". This is what it costs.</p>
+      <div class="price">
+        <div class="box" style="border-width:2px;border-color:var(--ink)">
+          <span class="eyebrow">AI Starter Kit setup</span>
+          <div class="amt">$500</div>
+          <p class="small">one-time, paid before we start <span class="flag">[CONFIRM: or 50/50]</span></p>
+          <ul class="ticks">
+            <li>Hand-designed landing page, up to <span class="flag">[CONFIRM: 7]</span> sections</li>
+            <li>Live in 5 business days, 1 round of revisions before launch and 1 after</li>
+            <li>Sanity headless CMS (page, blog, changelog)</li>
+            <li>AEO / GEO setup: schema, FAQ, llms.txt, sitemap, Search Console</li>
+            <li>Analytics with conversion tracking</li>
+            <li>Form connected to your CRM, with instant reply and team alerts</li>
+            <li>AI-ready content model with API access</li>
+            <li>2 social profiles set up, banners and 3 post templates</li>
+          </ul>
+        </div>
+        <div class="box">
+          <span class="eyebrow">AI Starter Kit monthly</span>
+          <div class="amt">$200 <small>/ month</small></div>
+          <p class="small">starts the month after launch. <span class="flag">[CONFIRM: 3-month minimum]</span>, then cancel any time with 30 days' notice.</p>
+          <ul class="ticks">
+            <li>Up to <span class="flag">[CONFIRM: 2 hours]</span> of site edits a month</li>
+            <li>Updates, backups, uptime checks and CMS help</li>
+            <li>Up to <span class="flag">[CONFIRM: 8]</span> social posts a month, made and scheduled for you</li>
+            <li>Support on <span class="flag">[CONFIRM: Slack Connect / email]</span>, reply within 2 business days</li>
+            <li>One-page monthly report: visits, sign-ups, leads and the AI search mentions we can find</li>
+          </ul>
+        </div>
+      </div>
+      <span class="btn" style="justify-self:center">Get my one-page proposal</span>
+      <p class="small" style="max-width:80ch;justify-self:center;text-align:center">Not included: extra pages or a full marketing site, product or app UI, logo or brand identity design, writing your copy from scratch, comment and DM management, paid ads and video. Hosting, domain and tool plans stay on your own accounts, so you own everything. Need more? We'll quote it separately.</p>
+      <p class="note">Two cards side by side on desktop, stacked on mobile. Prices exactly as written, in USD. Setup card gets the heavier border since it's the entry point.</p>
+    </div>
+  </section>
+
+  <!-- 10 REFERRAL -->
+  <section class="sec" style="background:var(--fill)">
+    <span class="tag">10 Referral</span>
+    <div class="wrap" style="max-width:760px">
+      <span class="eyebrow">Referral</span>
+      <h2 class="h2">Know a founder who needs to launch? Save 40%.</h2>
+      <p class="body">If you're a MuzMesh client, refer another AI startup. Once they pay their setup, you get 40% off your next monthly bill. That's $80 off a $200 bill. Refer more than one and the discount carries over to your next bills.</p>
+      <p class="small">For active retainer clients. Applies to the monthly retainer only, one 40% discount per bill, extra referrals carry forward as credit. Credit has no cash value. Full rules on the referral page.</p>
+      <span class="small" style="text-decoration:underline;color:var(--ink);font-weight:700">How referrals work →</span>
+      <p class="note">Link → /referral. Numbers there must match positioning.md section 4 word for word.</p>
+    </div>
+  </section>
+
+  <!-- 11 WHO IT'S FOR -->
+  <section class="sec">
+    <span class="tag">11 Who it's for</span>
+    <div class="wrap">
+      <span class="eyebrow">Is this for you?</span>
+      <h2 class="h2">Built for AI startups that need to look real, fast.</h2>
+      <div class="fit">
+        <div class="box">
+          <h3>A good fit if you:</h3>
+          <ul class="ticks">
+            <li>Are an AI startup, pre-launch to seed <span class="flag">[CONFIRM: Series A?]</span>, with a small team</li>
+            <li>Don't have a designer, marketer or web developer yet</li>
+            <li>Need to look credible to users, investors and early hires before a launch, raise or hire</li>
+            <li>Want to be in ChatGPT and Google AI answers, not only on page two of Google</li>
+          </ul>
+        </div>
+        <div class="box" style="border-style:dashed">
+          <h3>Probably not a fit if you:</h3>
+          <ul class="ticks no">
+            <li>Need a multi-page marketing site, a web app or product UI (we can quote that separately)</li>
+            <li>Need daily social management, paid ads or video</li>
+            <li>Need enterprise procurement, SLAs or 24/7 support</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 FAQ -->
+  <section class="sec faq" style="background:var(--fill)">
+    <span class="tag">12 FAQ</span>
+    <div class="wrap">
+      <div style="display:grid;gap:12px;align-content:start">
+        <h2 class="h2">Questions founders ask us</h2>
+        <p class="note">Every Q&amp;A goes into FAQPage schema. Answers stored as plain text in the CMS so page and schema always match. Accordion, first item open.</p>
+      </div>
+      <div>
+        <details open><summary>What does "ready for the AI era" actually mean?</summary><p>Two things. Your site is set up to be found by AI search (ChatGPT, Perplexity, Google AI answers) with schema, an FAQ, llms.txt and clean structure. And your content lives in a headless CMS with an API, so you can plug in chatbots, search or agents later without rebuilding the site.</p></details>
+        <details><summary>Is the design really custom, or is it AI-generated?</summary><p>Every page is designed by a person in Figma, on our own design system. We don't use AI site generators or stock templates. That's how we keep it to $500 without it looking like everyone else's.</p></details>
+        <details><summary>How can you do all this for $500?</summary><p>We've built our own design system, Sanity starter and tracking and CRM setup, and we reuse them on every project. You get a page designed for your startup, without paying for us to reinvent the plumbing each time. If you need more pages or a fully custom build, we'll quote it separately.</p></details>
+        <details><summary>What is AEO or GEO?</summary><p>Answer engine optimization and generative engine optimization. It's SEO for AI answers: making it easy for tools like ChatGPT and Perplexity to understand what you do and mention you when people ask about your category. Nobody can guarantee an AI will cite you, but we set up everything that makes it more likely.</p></details>
+        <details><summary>Who owns the site and the accounts?</summary><p>You do. Hosting, domain, CMS, CRM and analytics are on your own accounts. If you ever leave, everything stays with you and keeps working.</p></details>
+        <details><summary>Is it really 5 days?</summary><p>Yes, 5 business days from when we have your content: your logo, a rough draft of your copy and access to your accounts. We can move that fast because we build on our own design system and Sanity starter instead of starting from zero, and one round of revisions fits inside the 5 days, with a second after launch. Extra pages or a fully custom design take longer, and we'll tell you how long before we start.</p></details>
+        <details><summary>What do you need from us?</summary><p>Your logo, product screenshots, a rough draft of your copy and access to your accounts. We'll shape and edit the copy, but we don't write it from scratch.</p></details>
+        <details><summary>Which tools do you use?</summary><p>Sanity for the CMS, <span class="flag">[CONFIRM: Astro or Next.js]</span> for the site, <span class="flag">[CONFIRM: GA4 or PostHog]</span> for analytics and <span class="flag">[CONFIRM: HubSpot]</span> for the CRM. If you already use something else, tell us on the call.</p></details>
+        <details><summary>What's in the $200 a month?</summary><p>Site edits and updates, up to <span class="flag">[CONFIRM: 8]</span> social posts a month on your 2 platforms, support with a reply within 2 business days, and a one-page monthly report. Unused hours and posts don't roll over.</p></details>
+        <details><summary>Can we cancel?</summary><p><span class="flag">[CONFIRM: After the first 3 months]</span>, any time with 30 days' notice. Your site and accounts keep working because they're yours.</p></details>
+        <details><summary>How does the referral discount work?</summary><p>Refer another AI startup while you're on the retainer. Once they pay their $500 setup, you get 40% off your next monthly bill. One discount per bill, and extra referrals carry over.</p></details>
+        <details><summary>What if we need more pages, an app or a full brand?</summary><p>We'll quote it separately. The $500 setup is one landing page, done well.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 FINAL CTA -->
+  <section class="sec cta" id="launch" style="background:var(--paper);border-top:2px solid var(--ink)">
+    <span class="tag">13 Final CTA: launch brief</span>
+    <div class="wrap" style="max-width:860px">
+      <span class="eyebrow">Your launch</span>
+      <h2 class="h2">Tell us about your launch. We'll plan it around you.</h2>
+      <div class="seg opt-seg" role="group" aria-label="CTA option">
+        <button id="o-b" type="button" aria-pressed="true">Option B: multi-step planner</button>
+        <button id="o-a" type="button" aria-pressed="false">Option A: fill-in sentence</button>
+      </div>
+
+      <!-- OPTION B: multi-step launch planner -->
+      <div id="opt-b" class="planner">
+        <p class="body">Five quick questions. Your launch plan builds itself as you answer, and it's what we bring to the 15-minute call.</p>
+        <div class="pl-grid">
+          <form class="pl-form box" id="pl-form" autocomplete="off" novalidate>
+            <div class="pl-top">
+              <span class="eyebrow" id="pl-count">Step 1 of 5</span>
+              <div class="pl-bar" aria-hidden="true"><i id="pl-fill"></i></div>
+            </div>
+
+            <fieldset class="pl-step" data-step="1">
+              <legend>What are you building?</legend>
+              <label for="m-startup">Startup name <em>required</em></label>
+              <input id="m-startup" placeholder="e.g. Topklik" data-key="startup">
+              <label for="m-what">What it does, in one line</label>
+              <input id="m-what" placeholder="e.g. AI lead follow-up for agencies" data-key="what">
+            </fieldset>
+
+            <fieldset class="pl-step" data-step="2" hidden>
+              <legend>Who is it for, and where are you now?</legend>
+              <label for="m-who">Who it's for</label>
+              <input id="m-who" placeholder="e.g. small marketing agencies" data-key="who">
+              <span class="lbl">Stage</span>
+              <div class="tiles t4" data-key="stage" data-single>
+                <button type="button" class="tile">Pre-launch</button>
+                <button type="button" class="tile">Pre-seed</button>
+                <button type="button" class="tile">Seed</button>
+                <button type="button" class="tile">Later</button>
+              </div>
+            </fieldset>
+
+            <fieldset class="pl-step" data-step="3" hidden>
+              <legend>When do you want to launch?</legend>
+              <div class="tiles t2" data-key="when" data-single>
+                <button type="button" class="tile"><b>This month</b><small>Tight, but doable if your copy is ready</small></button>
+                <button type="button" class="tile"><b>Next month</b><small>The usual pace</small></button>
+                <button type="button" class="tile"><b>In 2-3 months</b><small>Room for a raise or hire first</small></button>
+                <button type="button" class="tile"><b>Not sure yet</b><small>We'll help you pick a date</small></button>
+              </div>
+            </fieldset>
+
+            <fieldset class="pl-step" data-step="4" hidden>
+              <legend>What do you need help with?</legend>
+              <span class="lbl">Pick any. The AI Starter Kit covers all of it.</span>
+              <div class="tiles t3" data-key="help" data-all="All of it">
+                <button type="button" class="tile">Landing page</button>
+                <button type="button" class="tile">Social</button>
+                <button type="button" class="tile">AI search</button>
+                <button type="button" class="tile">Tracking</button>
+                <button type="button" class="tile">CRM</button>
+                <button type="button" class="tile" aria-pressed="true">All of it</button>
+              </div>
+            </fieldset>
+
+            <fieldset class="pl-step" data-step="5" hidden>
+              <legend>Where should we send your plan?</legend>
+              <label for="m-url">Your site today</label>
+              <input id="m-url" placeholder="URL, or &quot;we don't have one yet&quot;" data-key="url">
+              <label for="m-name">Your name <em>required</em></label>
+              <input id="m-name" placeholder="First and last name" data-key="name">
+              <label for="m-email">Email <em>required</em></label>
+              <input id="m-email" type="email" placeholder="you@startup.com" data-key="email">
+            </fieldset>
+
+            <div class="pl-done" id="pl-done" hidden>
+              <h3>Thanks, <span id="d-name">there</span>. <span id="d-startup">Your startup</span> is on our list.</h3>
+              <p class="small">Pick a time below for your 15-minute call. Before we talk, we'll look at <span id="d-site">what you told us</span> so we don't waste your time on basics. Your one-page proposal arrives the same day as the call.</p>
+              <div class="ph" style="min-height:140px"><span>Booking calendar embed</span></div>
+            </div>
+
+            <p class="pl-err small" id="pl-err" role="alert"></p>
+            <div class="pl-nav" id="pl-nav">
+              <button type="button" class="btn ghost sm" id="pl-back">Back</button>
+              <button type="submit" class="btn" id="pl-next">Next</button>
+            </div>
+          </form>
+
+          <aside class="pl-plan" aria-live="polite">
+            <span class="eyebrow">Your launch plan</span>
+            <h3 id="p-title">Launch plan for your startup</h3>
+            <dl>
+              <dt>Building</dt><dd id="p-what" class="empty">…</dd>
+              <dt>For</dt><dd id="p-who" class="empty">…</dd>
+              <dt>Stage</dt><dd id="p-stage" class="empty">…</dd>
+              <dt>Launch</dt><dd id="p-when" class="empty">…</dd>
+              <dt>We'll set up</dt><dd id="p-help">Landing page, social, AI search, tracking, CRM and CMS</dd>
+              <dt>Starting from</dt><dd id="p-url" class="empty">…</dd>
+            </dl>
+            <div class="pl-cost"><span>$500 setup</span><span>then $200 / month</span></div>
+          </aside>
+        </div>
+        <p class="small">You'll get a calendar link straight away and a one-page proposal for <strong class="live-startup">your startup</strong> the same day. If we're not the right fit, we'll tell you. No long contracts. <span class="flag">[CONFIRM: "3-month minimum, then month to month" if the minimum stays]</span></p>
+        <p class="note">Option B. One question per step, big tap targets, Enter goes to the next step. The "launch plan" card fills in live as they answer, so the form feels like it's building something for them. On mobile the plan card sits under the form. Required: startup name (step 1), name and email (step 5). Step 4 defaults to "All of it". Fire an analytics event per step so we can see where people drop off. Same fields go to the CRM as option A.</p>
+      </div>
+
+      <!-- OPTION A: fill-in sentence -->
+      <div id="opt-a" class="opt-a" hidden>
+      <p class="body">Fill in the gaps. It takes a minute, and it means our 15-minute call is about your startup, not a generic pitch.</p>
+      <form class="brief" id="brief" autocomplete="off">
+        Hi, I'm <input id="f-name" placeholder="your name" aria-label="Your name"> from <input id="f-startup" placeholder="startup name" aria-label="Startup name">.
+        We're building <input id="f-what" class="w-l" placeholder="what it does, in one line" aria-label="What it does"> for <input id="f-who" placeholder="who it's for" aria-label="Who it's for">.
+        We're <select id="f-stage" aria-label="Stage"><option>pre-launch</option><option>pre-seed</option><option>seed</option><option>later</option></select>
+        and want to launch <select id="f-when" aria-label="Launch timing"><option>this month</option><option>next month</option><option>in 2-3 months</option><option>not sure yet</option></select>.
+        Right now we need help with
+        <span class="chips" role="group" aria-label="Help needed">
+          <button type="button" class="chip" aria-pressed="false">landing page</button>
+          <button type="button" class="chip" aria-pressed="false">social</button>
+          <button type="button" class="chip" aria-pressed="false">AI search</button>
+          <button type="button" class="chip" aria-pressed="false">tracking</button>
+          <button type="button" class="chip" aria-pressed="false">CRM</button>
+          <button type="button" class="chip" aria-pressed="true">all of it</button>
+        </span>.
+        Our site today is <input id="f-url" class="w-l" placeholder="URL, or &quot;we don't have one yet&quot;" aria-label="Current site">.
+        Reach me at <input id="f-email" class="w-l" type="email" placeholder="email" aria-label="Email">.
+      </form>
+      <div class="row"><button type="submit" form="brief" class="btn">Plan my launch</button></div>
+      <p class="small" style="max-width:62ch">You'll get a calendar link straight away and a one-page proposal for <strong class="live-startup">your startup</strong> the same day. If we're not the right fit, we'll tell you. $500 to set up, $200 a month. No long contracts. <span class="flag">[CONFIRM: "3-month minimum, then month to month" if the minimum stays]</span></p>
+      <div class="confirm" id="confirm" hidden>
+        <span class="eyebrow">After submit (replaces the form)</span>
+        <h3 style="font-size:20px">Thanks, <span id="c-name">there</span>. <span id="c-startup">Your startup</span> is on our list.</h3>
+        <p class="small">Pick a time below for your 15-minute call. Before we talk, we'll look at <span id="c-site">what you told us</span> so we don't waste your time on basics. Your one-page proposal arrives the same day as the call.</p>
+        <div class="ph" style="min-height:140px"><span>Booking calendar embed</span></div>
+      </div>
+      <p class="note">Only name, email and startup name are required. Help chips are multi-select, "all of it" selected by default. Small print updates live with the startup name (try typing). Fields map to the contact form in positioning.md section 5 and go to the CRM. Instant reply email copy is in landing-page-copy.md section 13.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 FOOTER -->
+  <footer class="sec foot" style="padding-block:48px">
+    <span class="tag">14 Footer</span>
+    <div class="wrap">
+      <div class="foot-cols">
+        <div style="grid-column:1/-1" class="foot-brand">
+          <span class="logo" style="color:var(--ink)"><i></i>MuzMesh Creative</span>
+          <span>MuzMesh Creative makes the AI Starter Kit: everything AI startups need to launch online. Designed by people, ready for the AI era.</span>
+          <span><span class="flag">[PLACEHOLDER: real contact email]</span></span>
+          <span>Based in Pakistan, working with founders in <span class="flag">[CONFIRM: US, UK, EU, UAE]</span>.</span>
+        </div>
+        <div><strong>Offer</strong><span>What's included</span><span>Pricing</span><span>How we work</span><span>Referral</span></div>
+        <div><strong>Company</strong><span>Work</span><span>About</span><span>Blog</span><span>Contact</span></div>
+        <div><strong>Legal</strong><span>Privacy</span><span>Terms</span></div>
+      </div>
+      <div class="row small" style="justify-content:space-between;border-top:1px solid var(--line);padding-top:14px">
+        <span>© 2026 MuzMesh Creative</span>
+        <span class="flag">[PLACEHOLDER: real, active social profiles only]</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 15 SEO -->
+  <section class="sec" style="padding-block:32px">
+    <span class="tag">15 SEO &amp; schema (not visible)</span>
+    <div class="wrap note" style="max-width:none">
+      <dl class="seo">
+        <dt>title</dt><dd>AI Starter Kit for AI Startups: Landing Page, Social, AEO &amp; CRM | MuzMesh Creative</dd>
+        <dt>meta description</dt><dd>Get AI-ready in 5 days: hand-designed landing page, social media, AI search visibility, tracking and CRM for AI startups. $500 to set up, $200 a month to keep it running.</dd>
+        <dt>og:title</dt><dd>Launch your AI startup like it's already a real company.</dd>
+        <dt>schema</dt><dd>Organization · Service with Offer ($500 setup, $200/month, USD) · FAQPage from section 12</dd>
+      </dl>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  var desk = document.getElementById('v-desk'), mob = document.getElementById('v-mob');
+  function setView(m) {
+    stage.classList.toggle('mobile', m);
+    desk.setAttribute('aria-pressed', String(!m));
+    mob.setAttribute('aria-pressed', String(m));
+    try { localStorage.setItem('wf-view', m ? 'm' : 'd'); } catch (e) {}
+  }
+  desk.addEventListener('click', function () { setView(false); });
+  mob.addEventListener('click', function () { setView(true); });
+  try { if (localStorage.getItem('wf-view') === 'm') setView(true); } catch (e) {}
+
+  var notes = document.getElementById('notes'), frame = document.getElementById('frame');
+  notes.addEventListener('change', function () { frame.classList.toggle('hide-notes', !notes.checked); });
+
+  // multi-select chips; "all of it" is exclusive with the others
+  var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
+  chips.forEach(function (c) {
+    c.addEventListener('click', function () {
+      var on = c.getAttribute('aria-pressed') !== 'true';
+      var isAll = c.textContent === 'all of it';
+      if (on) chips.forEach(function (o) { if ((o.textContent === 'all of it') !== isAll) o.setAttribute('aria-pressed', 'false'); });
+      c.setAttribute('aria-pressed', String(on));
+    });
+  });
+
+  var lives = document.querySelectorAll('.live-startup');
+  function setLive(name) { lives.forEach(function (l) { l.textContent = name || 'your startup'; }); }
+  var startup = document.getElementById('f-startup');
+  startup.addEventListener('input', function () { setLive(startup.value.trim()); });
+
+  // option A / B switch
+  var oA = document.getElementById('o-a'), oB = document.getElementById('o-b');
+  function setOpt(b) {
+    document.getElementById('opt-b').hidden = !b; document.getElementById('opt-a').hidden = b;
+    oB.setAttribute('aria-pressed', String(b)); oA.setAttribute('aria-pressed', String(!b));
+  }
+  oA.addEventListener('click', function () { setOpt(false); });
+  oB.addEventListener('click', function () { setOpt(true); });
+
+  // ---- multi-step planner ----
+  var form = document.getElementById('pl-form');
+  var steps = Array.prototype.slice.call(form.querySelectorAll('.pl-step'));
+  var cur = 0, N = steps.length;
+  var back = document.getElementById('pl-back'), next = document.getElementById('pl-next');
+  var err = document.getElementById('pl-err');
+  var $ = function (id) { return document.getElementById(id); };
+  var val = function (id) { return $(id).value.trim(); };
+
+  function plan() {
+    var s = val('m-startup');
+    $('p-title').textContent = 'Launch plan for ' + (s || 'your startup');
+    setLive(s);
+    [['p-what', val('m-what')], ['p-who', val('m-who')], ['p-url', val('m-url')]].forEach(function (p) {
+      $(p[0]).textContent = p[1] || '…'; $(p[0]).classList.toggle('empty', !p[1]);
+    });
+    form.querySelectorAll('.tiles').forEach(function (g) {
+      var on = Array.prototype.filter.call(g.querySelectorAll('.tile'), function (t) { return t.getAttribute('aria-pressed') === 'true'; })
+        .map(function (t) { return (t.querySelector('b') || t).textContent.trim(); });
+      var k = g.dataset.key, el = $('p-' + k), txt = on.join(', ');
+      if (k === 'help') txt = (!on.length || on.indexOf('All of it') > -1) ? 'Landing page, social, AI search, tracking, CRM and CMS' : txt;
+      if (k === 'when' && txt) txt = txt + (txt === 'Not sure yet' ? '. We’ll suggest a date' : '. Live 5 business days after we have your content');
+      el.textContent = txt || '…'; el.classList.toggle('empty', !txt);
+    });
+  }
+  function show(i) {
+    cur = i;
+    steps.forEach(function (s, j) { s.hidden = j !== i; });
+    $('pl-count').textContent = 'Step ' + (i + 1) + ' of ' + N;
+    $('pl-fill').style.width = ((i + 1) / N * 100) + '%';
+    back.disabled = i === 0;
+    next.textContent = i === N - 1 ? 'Plan my launch' : 'Next';
+    err.textContent = '';
+  }
+  function valid() {
+    if (cur === 0 && !val('m-startup')) return 'Add your startup name so we can name your plan.';
+    if (cur === N - 1) {
+      if (!val('m-name')) return 'Add your name so we know who to talk to.';
+      if (!/^\S+@\S+\.\S+$/.test(val('m-email'))) return 'Add an email we can send your plan to.';
+    }
+    return '';
+  }
+  form.addEventListener('input', plan);
+  form.querySelectorAll('.tiles').forEach(function (g) {
+    var tiles = Array.prototype.slice.call(g.querySelectorAll('.tile'));
+    tiles.forEach(function (t) {
+      t.addEventListener('click', function () {
+        var on = t.getAttribute('aria-pressed') !== 'true';
+        if ('single' in g.dataset) tiles.forEach(function (o) { o.setAttribute('aria-pressed', 'false'); });
+        else if (g.dataset.all && on) {
+          var isAll = t.textContent.trim() === g.dataset.all;
+          tiles.forEach(function (o) { if ((o.textContent.trim() === g.dataset.all) !== isAll) o.setAttribute('aria-pressed', 'false'); });
+        }
+        t.setAttribute('aria-pressed', String(on));
+        plan();
+      });
+    });
+  });
+  back.addEventListener('click', function () { if (cur > 0) show(cur - 1); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var m = valid(); if (m) { err.textContent = m; return; }
+    if (cur < N - 1) { show(cur + 1); return; }
+    steps.forEach(function (s) { s.hidden = true; });
+    $('pl-nav').hidden = true; err.textContent = '';
+    $('pl-count').textContent = 'Done';
+    $('d-name').textContent = val('m-name').split(' ')[0] || 'there';
+    $('d-startup').textContent = val('m-startup') || 'Your startup';
+    $('d-site').textContent = val('m-url') || 'what you told us';
+    $('pl-done').hidden = false;
+  });
+  show(0); plan();
+
+  document.getElementById('brief').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = function (id) { return document.getElementById(id).value.trim(); };
+    document.getElementById('c-name').textContent = (v('f-name').split(' ')[0]) || 'there';
+    document.getElementById('c-startup').textContent = v('f-startup') || 'Your startup';
+    document.getElementById('c-site').textContent = v('f-url') || 'what you told us';
+    document.getElementById('confirm').hidden = false;
+  });
+})();
+</script>

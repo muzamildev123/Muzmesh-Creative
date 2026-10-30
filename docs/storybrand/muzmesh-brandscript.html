@@ -1,0 +1,337 @@
+<title>MuzMesh BrandScript</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100,400;100,500;100,700;125,700;125,800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one long story column; each SB7 part is a numbered chapter, the villain is a full-width ink band. */
+:root {
+  --ink: #0e0e10; --ink-2: #17171d; --paper: #f2f2ee; --card: #ffffff;
+  --graphite: #55555f; --line: #d9d9df; --marker: #ffd60a; --marker-deep: #f2c200;
+  --band: #0e0e10; --band-fg: #f2f2ee; --band-muted: #a1a1aa; --band-line: #2c2c35;
+  --bg: var(--paper); --fg: var(--ink); --muted: var(--graphite); --surface: var(--card); --rule: var(--line);
+  --danger: #b42318; --success: #1f7a35;
+  --display: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --body: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e0e10; --fg: #f2f2ee; --muted: #a1a1aa; --surface: #17171d; --rule: #2c2c35;
+  --band: #17171d; --band-fg: #f2f2ee; --band-muted: #a1a1aa; --band-line: #2c2c35;
+  --danger: #f97066; --success: #4ade80; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0e0e10; --fg: #f2f2ee; --muted: #a1a1aa; --surface: #17171d; --rule: #2c2c35;
+  --band: #17171d; --band-fg: #f2f2ee; --band-muted: #a1a1aa; --band-line: #2c2c35;
+  --danger: #f97066; --success: #4ade80; color-scheme: dark }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.6; }
+.wrap { max-width: 75rem; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+section { padding-block: 72px; border-top: 1px solid var(--rule); }
+.band { background: var(--band); color: var(--band-fg); border-top: 0; }
+h1, h2, h3 { font-family: var(--display); font-stretch: 125%; font-weight: 800; letter-spacing: -0.03em; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.6rem, 7vw, 5.5rem); line-height: 0.95; }
+h2 { font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1; }
+h3 { font-size: 1.35rem; line-height: 1.15; }
+p { margin: 0; max-width: 40rem; }
+.eyebrow { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.band .eyebrow { color: var(--band-muted); }
+.mk { background: linear-gradient(transparent 12%, var(--marker) 12%, var(--marker) 88%, transparent 88%); padding-inline: 0.12em; margin-inline: -0.06em; color: #0e0e10; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.lead { font-size: 1.25rem; line-height: 1.5; color: var(--muted); }
+.stack { display: flex; flex-direction: column; gap: 20px; }
+.chapter-head { display: grid; grid-template-columns: 72px 1fr; gap: 20px; align-items: start; margin-bottom: 36px; }
+.num { font-family: var(--mono); font-weight: 600; font-size: 0.85rem; width: 56px; height: 56px; border: 2px solid currentColor; border-radius: 50%; display: grid; place-items: center; }
+.chapter-head > div { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.grid { display: grid; gap: 16px; }
+.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.quote { font-family: var(--display); font-stretch: 125%; font-weight: 700; font-size: 1.15rem; line-height: 1.25; letter-spacing: -0.01em; }
+.small { font-size: 0.9rem; color: var(--muted); }
+.tag { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; background: var(--marker); color: #0e0e10; padding: 2px 7px; border-radius: 4px; align-self: flex-start; }
+.tag.ghost { background: transparent; color: var(--muted); border: 1px solid var(--rule); }
+
+/* Hero */
+.top { padding-block: 64px 72px; border-top: 0; }
+.top .stack { gap: 28px; }
+.oneliner { border-left: 6px solid var(--marker); padding: 8px 0 8px 24px; display: flex; flex-direction: column; gap: 14px; }
+.oneliner .quote { font-size: clamp(1.25rem, 2.6vw, 1.75rem); max-width: 52rem; }
+
+/* Story arc */
+.arc { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, 1.2fr); gap: 0; margin-top: 36px; }
+.step { position: relative; padding: 18px 18px 18px 0; display: flex; flex-direction: column; gap: 8px; border-top: 3px solid var(--fg); min-width: 0; }
+.step::after { content: ""; position: absolute; top: -9px; right: 10px; width: 12px; height: 12px; border-top: 3px solid var(--fg); border-right: 3px solid var(--fg); transform: rotate(45deg); }
+.step .k { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.step b { font-family: var(--display); font-stretch: 125%; font-weight: 800; font-size: 1.05rem; line-height: 1.15; }
+.step span.v { font-size: 0.9rem; color: var(--muted); }
+.ends { display: flex; flex-direction: column; gap: 10px; padding-left: 18px; border-left: 3px solid var(--fg); }
+.end { padding: 12px 14px; border-radius: 8px; display: flex; flex-direction: column; gap: 4px; }
+.end.win { background: var(--marker); color: #0e0e10; }
+.end.lose { border: 1px dashed var(--rule); }
+.end .k { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.end.win .k { color: #0e0e10; }
+.end.lose .k { color: var(--danger); }
+.end b { font-family: var(--display); font-stretch: 125%; font-weight: 800; font-size: 1rem; line-height: 1.2; }
+
+/* Villain wall */
+.wall { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin-top: 36px; }
+.tile { aspect-ratio: 4 / 3; max-width: 100%; border-radius: 6px; background: #1d1830; position: relative; overflow: hidden; padding: 10px; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; opacity: 0.55; }
+.tile::before { content: ""; position: absolute; width: 70%; aspect-ratio: 1; right: -18%; top: -25%; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #b49cff, #6d4dff 55%, transparent 70%); filter: blur(2px); }
+.tile i { display: block; height: 5px; border-radius: 3px; background: #cfc6ff; width: 80%; position: relative; }
+.tile i + i { width: 55%; opacity: 0.6; }
+.tile em { position: relative; font-style: normal; font-family: var(--mono); font-size: 0.55rem; color: #cfc6ff; letter-spacing: 0.04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tile.you { background: #f2f2ee; opacity: 1; outline: 3px solid var(--marker); outline-offset: 3px; justify-content: space-between; }
+.tile.you::before { display: none; }
+.tile.you .bar { position: relative; height: 34%; background: #0e0e10; border-radius: 3px; }
+.tile.you .hl { position: relative; height: 9px; width: 60%; background: var(--marker); }
+.tile.you em { color: #0e0e10; font-weight: 600; }
+.wall-note { margin-top: 14px; font-size: 0.85rem; color: var(--band-muted); }
+.band .levels { margin-top: 40px; }
+.band .card { background: transparent; border-color: var(--band-line); }
+.band .small { color: var(--band-muted); }
+.band .tag.ghost { color: var(--band-muted); border-color: var(--band-line); }
+
+/* Plan */
+.plan { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; counter-reset: s; }
+.plan li { counter-increment: s; display: flex; flex-direction: column; gap: 8px; padding-top: 16px; border-top: 3px solid var(--fg); min-width: 0; }
+.plan li::before { content: "Step " counter(s); font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.promises { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.promises span { border: 1px solid var(--rule); border-radius: 4px; padding: 6px 12px; font-size: 0.92rem; background: var(--surface); }
+
+/* CTA */
+.btn { display: inline-block; font-family: var(--display); font-stretch: 125%; font-weight: 800; font-size: 1.05rem; padding: 14px 22px; border-radius: 4px; background: var(--fg); color: var(--bg); align-self: flex-start; }
+.btn.alt { background: transparent; color: var(--fg); border: 2px solid var(--fg); }
+
+/* Transformation */
+.shift { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 20px; align-items: center; margin-top: 8px; }
+.shift .from { font-family: var(--display); font-stretch: 125%; font-weight: 700; font-size: clamp(1.2rem, 3vw, 2rem); color: var(--muted); text-decoration: line-through; text-decoration-thickness: 3px; line-height: 1.1; }
+.shift .to { font-family: var(--display); font-stretch: 125%; font-weight: 800; font-size: clamp(1.2rem, 3vw, 2rem); line-height: 1.1; }
+.shift .arrow { font-family: var(--mono); font-size: 1.6rem; }
+ul.clean { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 6px; }
+
+/* Changes table */
+.tablebox { overflow-x: auto; margin-top: 8px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 0.92rem; }
+th, td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--rule); }
+th { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+td.n { font-family: var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+tr:last-child td { border-bottom: 0; }
+.qs { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.qs li { display: flex; gap: 12px; align-items: baseline; }
+.qs li::before { content: "?"; font-family: var(--mono); font-weight: 600; background: var(--marker); color: #0e0e10; width: 22px; height: 22px; border-radius: 4px; display: inline-grid; place-items: center; flex: none; font-size: 0.8rem; }
+footer { padding-block: 32px 48px; border-top: 1px solid var(--rule); }
+
+@media (max-width: 900px) {
+  .arc { grid-template-columns: 1fr; }
+  .step { border-top: 0; border-left: 3px solid var(--fg); padding: 8px 0 18px 18px; }
+  .step::after { top: auto; bottom: -2px; right: auto; left: -10px; transform: rotate(135deg); }
+  .ends { border-left: 3px solid var(--fg); padding-top: 8px; }
+  .g3, .plan { grid-template-columns: 1fr; }
+  .wall { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  section { padding-block: 52px; }
+  .g2 { grid-template-columns: 1fr; }
+  .chapter-head { grid-template-columns: 1fr; gap: 14px; }
+  .shift { grid-template-columns: 1fr; }
+  .shift .arrow { transform: rotate(90deg); justify-self: start; }
+}
+</style>
+
+<header class="wrap top">
+  <div class="stack">
+    <div class="eyebrow">MuzMesh Creative · StoryBrand BrandScript · Draft, 30 Oct 2026</div>
+    <h1>The founder is the <span class="mk">hero.</span> We're the guide.</h1>
+    <p class="lead">Our story for the AI Starter Kit, laid out with the StoryBrand (SB7) framework. Every headline on the site should be about what the founder wants, not about what we do.</p>
+    <div class="oneliner">
+      <div class="eyebrow">The one-liner</div>
+      <div class="quote">Most AI startups now look and sound the same, because their brand came from one prompt. The AI Starter Kit gives you a launch designed by people in about a week, so you stand out and people remember you.</div>
+      <p class="small"><strong>Short version:</strong> We help AI startups stop looking like everyone else: a launch designed by people for $500, kept running for $200 a month.</p>
+    </div>
+  </div>
+
+  <div class="arc" aria-label="The SB7 story in order">
+    <div class="step"><span class="k">A character</span><b>The AI founder</b><span class="v">wants to stand out and be remembered</span></div>
+    <div class="step"><span class="k">Has a problem</span><b>AI sameness</b><span class="v">a brand from one prompt, like everyone else's</span></div>
+    <div class="step"><span class="k">Meets a guide</span><b>MuzMesh</b><span class="v">three people who design by hand</span></div>
+    <div class="step"><span class="k">Who gives a plan</span><b>Call · Plan · Launch</b><span class="v">live in about a week</span></div>
+    <div class="step"><span class="k">And calls them to act</span><b>Plan my launch</b><span class="v">or grab the launch checklist</span></div>
+    <div class="ends">
+      <div class="end win"><span class="k">Ends in success</span><b>The one people recognise and remember</b></div>
+      <div class="end lose"><span class="k">Avoids failure</span><b>Lost in the crowd</b></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="chapter-head"><div class="num">01</div><div>
+      <div class="eyebrow">The hero</div>
+      <h2>An AI founder who wants to <span class="mk">stand out.</span></h2>
+    </div></div>
+    <div class="grid g2">
+      <div class="card"><span class="tag ghost">Who they are</span><p>Founders of an AI startup, pre-launch to seed, 1-15 people. Usually technical or product people. No designer, marketer or web developer on the team.</p></div>
+      <div class="card"><span class="tag">What they want</span><p class="quote">To stand out and be remembered in a crowded AI market, so users, investors and early hires pick them and not the lookalike next door.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="chapter-head"><div class="num">02</div><div>
+      <div class="eyebrow">The problem · the villain</div>
+      <h2>AI sameness: brands made from <span class="mk">one prompt.</span></h2>
+      <p class="lead" style="color: var(--band-muted)">Same purple gradients, same floating shapes, same generated logo, copy written by the model they compete with. When every startup comes from the same prompt, nobody can tell them apart.</p>
+    </div></div>
+
+    <div class="wall" aria-hidden="true">
+      <div class="tile"><i></i><i></i><em>The AI platform for everything</em></div>
+      <div class="tile"><i></i><i></i><em>Supercharge your workflow</em></div>
+      <div class="tile"><i></i><i></i><em>The AI platform for everything</em></div>
+      <div class="tile"><i></i><i></i><em>Unlock the power of AI</em></div>
+      <div class="tile"><i></i><i></i><em>Supercharge your workflow</em></div>
+      <div class="tile"><i></i><i></i><em>The AI platform for everything</em></div>
+      <div class="tile"><i></i><i></i><em>Unlock the power of AI</em></div>
+      <div class="tile"><i></i><i></i><em>The AI platform for everything</em></div>
+      <div class="tile you"><div class="bar"></div><div class="hl"></div><em>Your startup, by people</em></div>
+      <div class="tile"><i></i><i></i><em>Supercharge your workflow</em></div>
+      <div class="tile"><i></i><i></i><em>Unlock the power of AI</em></div>
+      <div class="tile"><i></i><i></i><em>The AI platform for everything</em></div>
+    </div>
+    <p class="wall-note">Illustration only. The generic tiles are mock-ups we drew, not real companies.</p>
+
+    <div class="grid g3 levels">
+      <div class="card"><span class="tag ghost">External</span><p>No difference between brands. Socials went quiet after launch week. Nobody knows where sign-ups come from. ChatGPT has never heard of them.</p><p class="quote">"Your AI startup shouldn't look like it came from the same prompt as everyone else's."</p></div>
+      <div class="card"><span class="tag">Internal · this one sells</span><p>They feel invisible. Proud of the product, a little embarrassed to send the link, and stretched too thin to fix it.</p><p class="quote">"You built something different. Your brand should show it."</p></div>
+      <div class="card"><span class="tag ghost">Philosophical</span><p>A good product shouldn't be ignored because its brand looks like everyone else's.</p><p class="quote">"Good products deserve to be noticed."</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="chapter-head"><div class="num">03</div><div>
+      <div class="eyebrow">The guide</div>
+      <h2>MuzMesh: we get it, and we can <span class="mk">help.</span></h2>
+    </div></div>
+    <div class="grid g2">
+      <div class="card"><span class="tag ghost">Empathy</span><p class="quote">"We know what it's like to build something good and watch it get ignored."</p><p class="small">Needs confirming. A real story from the team beats a written line.</p></div>
+      <div class="card"><span class="tag ghost">Authority we can show today</span>
+        <ul class="clean">
+          <li><strong>Topklik.ai:</strong> automated lead system for an AI startup (result line still pending)</li>
+          <li><strong>Our own system:</strong> design system, Sanity starter and CRM setup, reused every time</li>
+          <li><strong>Published price:</strong> $500 + $200/month, no "contact us"</li>
+          <li><strong>Three people:</strong> you talk to the ones doing the work</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="chapter-head"><div class="num">04</div><div>
+      <div class="eyebrow">The plan</div>
+      <h2>Three steps. Live in <span class="mk">about a week.</span></h2>
+    </div></div>
+    <ol class="plan">
+      <li><h3>Book a 15-minute call</h3><p class="small">Tell us what you're building and when you launch.</p></li>
+      <li><h3>Get your plan the same day</h3><p class="small">A one-page proposal: what we build, when, and what we need from you.</p></li>
+      <li><h3>Launch, then we keep it running</h3><p class="small">Site, social, AI search, tracking and CRM. Then $200 a month keeps it all moving.</p></li>
+    </ol>
+    <div class="promises" aria-label="Agreement plan">
+      <span>You own every account</span><span>One published price</span><span>Designed by people, not generated</span><span>Not a fit? We tell you on the call</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="chapter-head"><div class="num">05</div><div>
+      <div class="eyebrow">Call to action</div>
+      <h2>One button, everywhere.</h2>
+    </div></div>
+    <div class="grid g2">
+      <div class="card"><span class="tag">Direct</span><span class="btn">Plan my launch</span><p class="small">Same words in the nav, hero, pricing and final section. Today the copy uses three different phrasings.</p></div>
+      <div class="card"><span class="tag ghost">Transitional · new</span><span class="btn alt">Get the AI launch checklist</span><p class="small">For founders not ready to talk yet. One page, costs nothing per lead, and feeds the CRM and the 3-day follow-up.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="chapter-head"><div class="num">06–07</div><div>
+      <div class="eyebrow">What's at stake</div>
+      <h2>Lost in the crowd, or the one people <span class="mk">remember.</span></h2>
+    </div></div>
+    <div class="grid g2">
+      <div class="card"><span class="tag ghost" style="color: var(--danger)">Failure</span>
+        <ul class="clean">
+          <li>You launch to silence. People scroll past a page they've seen a hundred times.</li>
+          <li>Someone asks ChatGPT about your category and it names a competitor.</li>
+          <li>Sign-ups slip through a spreadsheet and never hear back.</li>
+          <li>You lose weeks on the website instead of the product.</li>
+        </ul>
+      </div>
+      <div class="card"><span class="tag">Success</span>
+        <ul class="clean">
+          <li>Launch day looks like a real company launched.</li>
+          <li>You show up when people ask AI tools about your category.</li>
+          <li>Every sign-up is tracked, answered and in one place.</li>
+          <li>Socials keep posting, and you're back on the product.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card" style="margin-top: 16px;">
+      <span class="eyebrow">The identity change</span>
+      <div class="shift"><span class="from">Another AI startup</span><span class="arrow" aria-hidden="true">→</span><span class="to"><span class="mk">The one people remember</span></span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap stack">
+    <div class="eyebrow">Gap to close</div>
+    <h2>"Unique" needs a brand step.</h2>
+    <p>Today the kit excludes brand identity, so standing out is a promise we only half keep. Proposal: add a light <strong>brand direction</strong> step to the $500 setup. A 30-minute session, then one page with the positioning line, colours, type, voice, and one visual idea no competitor uses. A full logo or identity stays a separate quote.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap stack">
+    <div class="eyebrow">Where this changes existing copy</div>
+    <h2>Ten proposed edits</h2>
+    <p class="small">References are to landing-page-copy.md unless noted. Nothing has been edited yet.</p>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>#</th><th>Section</th><th>Today</th><th>Proposed</th></tr></thead>
+        <tbody>
+          <tr><td class="n">1</td><td>Hero heading</td><td>"Get AI-ready in 5 days."</td><td>"Your AI startup shouldn't look like everyone else's." or "Launch like a real company." Move "AI-ready" to the eyebrow or body.</td></tr>
+          <tr><td class="n">2</td><td>Problem</td><td>External problems only</td><td>Name the villain (AI sameness), add the internal line, close on the philosophical line.</td></tr>
+          <tr><td class="n">3</td><td>Proof / Team</td><td>Authority only</td><td>Add the empathy line above the Topklik card.</td></tr>
+          <tr><td class="n">4</td><td>How it works</td><td>4 steps</td><td>3 steps, here and in positioning.md.</td></tr>
+          <tr><td class="n">5</td><td>All buttons</td><td>3 phrasings</td><td>"Plan my launch" everywhere.</td></tr>
+          <tr><td class="n">6</td><td>New block</td><td>No transitional CTA</td><td>Launch checklist download.</td></tr>
+          <tr><td class="n">7</td><td>Problem</td><td>No stakes</td><td>2-3 failure lines, inside the problem section.</td></tr>
+          <tr><td class="n">8</td><td>Final CTA</td><td>"Tell us about your launch."</td><td>Open with the success picture, then the form.</td></tr>
+          <tr><td class="n">9</td><td>Footer, positioning.md §1</td><td>Feature-list one-liner</td><td>The one-liner above.</td></tr>
+          <tr><td class="n">10</td><td>What's included</td><td>No brand step</td><td>Brand direction as an eighth card, if agreed.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap stack">
+    <div class="eyebrow">Open questions</div>
+    <ul class="qs">
+      <li>Is the empathy line true for the team? What's the real story?</li>
+      <li>Add the brand direction step to the $500 setup?</li>
+      <li>Hero heading: which option, or A/B test both?</li>
+      <li>Transitional CTA: checklist, a "Can ChatGPT find you?" check, or both?</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="wrap"><p class="small">MuzMesh Creative · Draft for internal review · Full write-up in the StoryBrand doc.</p></footer>
