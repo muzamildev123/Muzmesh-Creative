@@ -56,13 +56,15 @@ Note: "Plan my launch" links to `/contact`. On mobile, keep the button visible n
 
 **Secondary button:** See what's included
 
-**Small print under the buttons:** One price, published. No calls to "discuss budget".
+**Hook (badge above or beside the buttons):** Get AI-ready in 5 days.
+
+**Small print under the buttons:** 5 business days from when we have your content. One price, published.
 
 Note: "AI Starter Kit" is the name of the whole offer ($500 setup + $200/month). Always write it with these capitals, never "AI starter kit" or "Starter Pack". The secondary button scrolls to section 6. If the hero needs a visual, use a real screenshot of a site we built (Topklik.ai, with permission) or our design system in Figma. No purple gradients, glowing orbs or stock 3D shapes: the hero has to prove the "not AI slop" point on its own.
 
 **Alternative headings** (for A/B testing later, not for launch):
 
-- Your AI startup, ready for the AI era. Launched in weeks.
+- Get AI-ready in 5 days. Designed by people, found by AI.
 - The AI Starter Kit. Designed by people, found by AI.
 
 ---
@@ -124,7 +126,7 @@ Note: seven cards. Each card has a short title, one line of benefit, and a "What
 
 **1. A landing page people trust**
 Designed by a person in Figma, built fast, and easy for you to edit. Not generated, not a template.
-What you get: one landing page, up to `[CONFIRM: 7]` sections, responsive, 2 rounds of revisions.
+What you get: one landing page, up to `[CONFIRM: 7]` sections, responsive, 1 round of revisions, live in 5 business days.
 
 **2. Found by AI search (AEO / GEO)**
 Set up so ChatGPT, Perplexity and Google AI answers can understand your product and cite you.
@@ -159,7 +161,7 @@ What you get: 2 profiles set up or cleaned up (`[CONFIRM: LinkedIn + X]`), banne
 
 **Eyebrow:** How it works
 
-**Heading:** Live in about `[CONFIRM: 3]` weeks.
+**Heading:** Get AI-ready in 5 days.
 
 **1. Book a 15-minute call.**
 Tell us what you're building, who it's for and when you want to launch.
@@ -168,12 +170,12 @@ Tell us what you're building, who it's for and when you want to launch.
 What we'll build, when we start, the price, and exactly what we need from you.
 
 **3. We design and build.**
-You review the design in Figma, then the real site on a live preview link. Two rounds of revisions are included.
+We build on our own design system and Sanity starter, so it's fast without looking like a template. You review it on a live preview link, and one round of revisions fits inside the 5 days.
 
 **4. Launch, then we keep it running.**
 Your site goes live and your socials start posting. From the next month, the $200 retainer covers updates, posts, support and a monthly report.
 
-**Small print:** The clock starts once we have your logo, a rough draft of your copy and access to your accounts.
+**Small print:** 5 business days from when we have your content: your logo, a rough draft of your copy and access to your accounts. The sooner you send them, the sooner you're live.
 
 ---
 
@@ -217,7 +219,7 @@ Note: two cards side by side on desktop, stacked on mobile. Prices exactly as wr
 
 **Includes:**
 - Hand-designed landing page, up to `[CONFIRM: 7]` sections
-- 2 rounds of revisions
+- Live in 5 business days, 1 round of revisions
 - Sanity headless CMS (page, blog, changelog)
 - AEO / GEO setup: schema, FAQ, `llms.txt`, sitemap, Search Console
 - Analytics with conversion tracking
@@ -301,6 +303,9 @@ Answer engine optimization and generative engine optimization. It's SEO for AI a
 
 **Who owns the site and the accounts?**
 You do. Hosting, domain, CMS, CRM and analytics are on your own accounts. If you ever leave, everything stays with you and keeps working.
+
+**Is it really 5 days?**
+Yes, 5 business days from when we have your content: your logo, a rough draft of your copy and access to your accounts. We can move that fast because we build on our own design system and Sanity starter instead of starting from zero, and one round of revisions fits inside the 5 days. Extra pages or a fully custom design take longer, and we'll tell you how long before we start.
 
 **What do you need from us?**
 Your logo, product screenshots, a rough draft of your copy and access to your accounts. We'll shape and edit the copy, but we don't write it from scratch.
