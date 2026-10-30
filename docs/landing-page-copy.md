@@ -158,7 +158,7 @@ What you get: 2 profiles set up or cleaned up (`[CONFIRM: LinkedIn + X]`), banne
 
 **Eyebrow:** How it works
 
-**Heading:** Get AI-ready in 5 days.
+**Heading:** Live in 5 business days.
 
 **1. Book a 15-minute call.**
 Tell us what you're building, who it's for and when you want to launch.
