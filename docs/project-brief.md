@@ -1,8 +1,10 @@
 # MuzMesh Creative: Project Brief
 
-Version 0.1 (draft) · 30 Oct 2026 · Owner: Muzamil Awan
+Version 0.2 (draft) · 30 Oct 2026 · Owner: Muzamil Awan
 
-Read this first. It is the one-page view of what we are doing, why, who does what and when. The detail (offer wording, tier contents, referral rules, homepage copy, sitemap, redirect map) lives in **[positioning.md](positioning.md)**. This brief links to it instead of repeating it.
+Read this first. It is the one-page view of what we are doing, why, who does what and when. The detail (homepage copy, sitemap, redirect map) lives in **[positioning.md](positioning.md)**. This brief links to it instead of repeating it.
+
+> **v0.2 change (30 Oct 2026): new direction.** We now focus on **AI startups** with a setup fee plus a monthly retainer, replacing the three-tier $1.5k-7k/mo offer. Sections 1, 4 and 5 below reflect the new direction. `positioning.md` still describes the old offer (sections 1-4 and 6) and will be rewritten once pricing is confirmed. Where the two disagree, this brief wins.
 
 **Placeholder rule.** Anything marked `[PLACEHOLDER]`, `[CONFIRM]` or `[OPEN]` is not decided or not verified. We never publish invented results, client names, testimonials or statistics.
 
@@ -10,7 +12,7 @@ Read this first. It is the one-page view of what we are doing, why, who does wha
 
 ## 1. The project in one paragraph
 
-MuzMesh Creative is moving from "freelance Webflow developer" to a 3-person studio that sells **one monthly retainer** covering design, website, social content and automation. We are rebuilding muzmeshcreative.com so a visitor understands that offer in seconds and books a call, and we are building a lead system so every enquiry gets an instant reply and a follow-up.
+MuzMesh Creative is moving from "freelance Webflow developer" to a 3-person studio that **gets AI startups launched online**: a hand-designed landing page (not AI slop), social media, AEO/GEO, tracking, CRM, and a headless CMS (Sanity or similar), then keeps the site and social running on a monthly retainer. We are rebuilding muzmeshcreative.com so a founder understands that offer in seconds and books a call, and we are building a lead system so every enquiry gets an instant reply and a follow-up.
 
 ## 2. Why we are doing this
 
@@ -25,7 +27,7 @@ From the audit of the current Webflow site:
 
 What "done" looks like for this project:
 
-1. New site live on muzmeshcreative.com, with the retainer offer clear on the homepage in five seconds.
+1. New site live on muzmeshcreative.com, so an AI startup founder understands the offer on the homepage in five seconds.
 2. Every old URL either kept or 301-redirected, with no drop in indexed pages after launch.
 3. A working lead system: qualifying form, saved to a database, instant reply, team notification, 3-day follow-up, monthly report.
 4. Only real, verified proof on the site. If we have one real case study at launch, we show one.
@@ -40,29 +42,57 @@ Success measures after launch `[CONFIRM targets]`:
 | Retainer clients signed | 0 | `[CONFIRM]` in first 3 months |
 | Time to first reply on an enquiry | not tracked | under 5 minutes (automated) |
 
-## 4. The offer (summary)
+## 4. The offer
 
-Full detail: [positioning.md, section 3](positioning.md#3-the-offer).
+**Who it is for:** AI startups (pre-seed to Series A `[CONFIRM]`) that need to look credible and get found, without hiring a designer, developer and social person.
 
-- **Monthly retainer, fixed scope, 3-month minimum.** One plan, one price, one invoice. We recommend the tier; we do not make the client choose from three.
-- **Four pillars:** Design & Brand, Web Development (Webflow, WordPress, custom code; Shopify and Wix as secondary), Social & Content, Automation & Systems. Line: *"We pick the platform that fits your business."*
-- **Three tiers** (starting points to test, site shows "From $X/mo"):
+**What they get:**
 
-| Tier | Range | What it adds |
-|---|---|---|
-| Launch | $1.5k-2.5k/mo, 3 months | Brand kit, website, SEO/AEO setup, light support |
-| Growth | $2.5k-4k/mo | Launch + 12-16 social posts/month, content calendar, design requests |
-| Scale | $4k-7k/mo | Growth + lead capture, CRM, follow-ups, reporting, priority support |
+| Service | What it means |
+|---|---|
+| Landing page (not AI slop) | Custom design from Figma, no generic templates or stock AI visuals. Fast, responsive. |
+| Headless CMS | Built on **Sanity** by default (or another headless CMS if it fits better), so the founders edit copy, blog and changelog without us. |
+| AEO / GEO ready | Structured data (schema.org), clean headings, FAQ blocks, `llms.txt`, sitemap, so the startup can be cited by ChatGPT, Perplexity and Google AI answers. |
+| Tracking | Analytics (GA4 or PostHog `[CONFIRM]`), conversion events on sign-up and demo buttons, Search Console. |
+| CRM | Forms connected to a CRM (HubSpot free tier or similar `[CONFIRM]`), with instant reply and team notification. |
+| AI-ready build | Clean content model and API access, so the site can feed AI tools (chatbots, search, agents) later. |
+| Social media | Profile setup and brand templates at launch; ongoing posts on the retainer (scope depends on pricing, see below). |
+| Maintenance & support | Site updates, fixes, CMS help, and social support every month. |
 
-- **Industries:** show 2-3 with real proof, never "all industries". `[OPEN]` Candidates: remodelers, interior design studios (Dubai/UAE), SaaS/AI. Recommendation in [positioning.md, section 2](positioning.md#2-focus-industries).
+**Pricing: `[DECISION PENDING]`.** Muzamil proposed **$500 one-time + $200/month** for everything above. Honest view:
 
-## 5. Referral program (summary)
+- By my rough estimate (not measured), the setup is **50-80 hours** of work (landing page 25-40h, Sanity 8-12h, CRM and tracking 8-13h, AEO 4-6h, social setup 6-10h). At $500 that is about **$6-10 per hour, split across three people**.
+- Ongoing social posting alone (8-12 posts a month) is 15-25 hours. $200/month does not cover that plus site maintenance.
+- AI startups usually have funding and compare us with agencies charging $3k-10k. A $500 price can make "not AI slop" harder to believe, not easier.
 
-Full rules and contract wording: [positioning.md, section 4](positioning.md#4-referral-rules).
+Options being decided (see the decision in the project thread):
 
-- **Clients:** an active retainer client who refers a new client gets 50% off one month, applied after the new client pays their first invoice. Max one discounted month per billing cycle; extra referrals roll forward as credit. Written into the contract.
-- **Partners** (outside freelancers, agencies): cash commission of about 10% of the referred client's first 3 months, paid as each invoice is paid.
-- **Risk to decide:** a Scale client referring a Launch client costs us more than we earn in month one. Suggested cap: discount up to the value of the referred client's first invoice. `[CONFIRM]`
+| Option | Setup | Monthly | Notes |
+|---|---|---|---|
+| **A. Recommended** | $1,500 `[CONFIRM]` (e.g. $1,000 for the first 3 clients in exchange for a case study) | $200 **Care**: site maintenance + support, up to `[CONFIRM: 4]` hours | Social content is a separate add-on, about $400/mo `[CONFIRM]` for 8-12 posts |
+| B. Low price, narrow scope | $500: one page on our own design system, Sanity + tracking + CRM wiring | $200: maintenance + support, no new social posts | Good for getting first clients fast |
+| C. As proposed | $500, everything | $200, everything incl. social | Not sustainable past 2-3 clients |
+
+Rules that apply whatever the price:
+
+- Setup is paid **upfront** (or 50/50), before work starts.
+- Retainer has a **3-month minimum** `[CONFIRM]`, then month to month with 30 days' notice.
+- Each plan lists **monthly limits** (edit hours, number of posts). Extra work is quoted separately.
+- Hosting, domain, CMS and CRM paid plans are on the client's own accounts, so they own everything.
+
+## 5. Referral program
+
+- An **active retainer client** who refers a **new** client gets **40% off their next monthly bill**.
+- The discount is applied only **after the referred client pays their setup fee**.
+- Applies to the **monthly retainer only**, not to setup fees or add-ons `[CONFIRM]`.
+- **Max one 40% discount per bill.** Extra referrals roll forward as credit to later bills.
+- Credit has no cash value and ends if the referrer's retainer ends.
+- "New client" means not a client or in a sales conversation with us in the last 6 months `[CONFIRM]`.
+- Written into the client contract.
+
+Cost check: on a $200 retainer, one referral costs us $80 and brings in a setup fee plus a new $200/month. That is a good trade, so this rule is safe at any of the price options.
+
+Partner commission for outside freelancers (from the old plan, about 10% of the first 3 months) `[CONFIRM: keep or drop]`.
 
 ## 6. How we sell
 
@@ -71,7 +101,7 @@ Full rules and contract wording: [positioning.md, section 4](positioning.md#4-re
 3. Proposal recommending one fixed tier.
 4. Contract and first invoice. Work starts when it is paid.
 
-The contact form qualifies for step 1 (budget, needs, timeline). Detail in [positioning.md, section 5](positioning.md#5-pitch-flow).
+The contact form qualifies for step 1: company, website, stage (pre-seed / seed / Series A), what they need, timeline. Detail in [positioning.md, section 5](positioning.md#5-pitch-flow).
 
 ## 7. The website
 
@@ -89,6 +119,7 @@ The contact form qualifies for step 1 (budget, needs, timeline). Detail in [posi
 | Hosting | Vercel, preview link on every PR |
 | Domain | Stays at GoDaddy. Only DNS records change. |
 | Future client portal | Separate Next.js app (e.g. `app.muzmeshcreative.com`), not part of this project |
+| Client builds | Sanity (default headless CMS) + Astro or Next.js front end `[CONFIRM]`. Our own site stays on MDX for now; we can move it to Sanity later as a live demo of what we sell. |
 
 How to run it and where files live: [README](../README.md).
 
@@ -141,7 +172,7 @@ Start date `[CONFIRM]`. Weeks count from that date.
 
 | Phase | Weeks | Output | Owner | Status |
 |---|---|---|---|---|
-| 1. Strategy and copy | 1 | Positioning doc, homepage copy, sitemap, redirect map | Muzamil | Draft done, in review (PR #1) |
+| 1. Strategy and copy | 1 | Positioning doc, homepage copy, sitemap, redirect map | Muzamil | Old-offer draft in PR #1; needs rewrite for AI startups once pricing is decided |
 | 2. Figma design | 1-2 | Home, Plans, Work, Industry, Contact pages in Figma | `[CONFIRM]` | Not started |
 | 3. Astro build and lead system | 2-4 | All pages built, content migrated, form wired to n8n + Supabase + Resend | Muzamil | Scaffold done (PR #1); lead system not started |
 | 4. QA, SEO, redirects | 5 | Every old URL tested, meta tags, sitemap, Turnstile, mobile check | Muzamil + reviewer | Not started |
@@ -150,8 +181,8 @@ Start date `[CONFIRM]`. Weeks count from that date.
 **Launch blockers** (site does not go live until these are done):
 
 - [ ] No `[PLACEHOLDER]` content left: `grep -rln "placeholder: true\|<Placeholder" src/content src/pages` returns nothing
-- [ ] Final prices confirmed
-- [ ] 2-3 industries confirmed, each with a real page
+- [ ] Final prices confirmed (section 4)
+- [ ] Homepage and copy rewritten for AI startups
 - [ ] Topklik case study has real, client-approved results (or no result line at all)
 - [ ] Privacy and Terms pages have real text
 - [ ] Contact form delivers leads end to end, with Turnstile
@@ -161,10 +192,12 @@ Start date `[CONFIRM]`. Weeks count from that date.
 
 | Risk | What we do about it |
 |---|---|
-| Retainer prices are far above today's one-off prices, with little published proof | Expect early deals at the low end. Get real numbers from Topklik first. Raise prices as proof grows. |
+| Price too low for the work ($500 + $200 for everything) | Decide pricing before the site goes live (section 4). Track hours on the first 3 clients and reprice from real data. |
+| AI startups pivot, run out of money or churn fast | Setup paid upfront, 3-month minimum, clients own their accounts so handover is clean. |
+| Little AI-startup proof besides Topklik | Lead with Topklik. Offer a lower price to the first 3 clients in exchange for a case study with real numbers. |
 | Rebuild loses Google rankings | Redirect every URL, test on preview, keep Webflow 2+ weeks, watch Search Console. |
 | Site is not where clients come from today | Use the site as the place we send Upwork/Contra/referral leads to close them, not only as a traffic source. Track source on every enquiry. |
-| Referral discount costs more than it earns | Cap the discount at the referred client's first invoice (see section 5). |
+| Referral discounts stack up | Max one 40% discount per bill, the rest rolls forward (section 5). |
 | Scope creep inside a fixed retainer | Each tier lists monthly limits. Extra work is quoted or moves the client up a tier. |
 | Friends' availability and skills not confirmed | Confirm roles before Phase 2. Muzamil can cover design with a template if needed, but it will look weaker. |
 
@@ -173,11 +206,13 @@ Start date `[CONFIRM]`. Weeks count from that date.
 Answers go into this brief and [positioning.md](positioning.md).
 
 1. Exact names, skills and roles of Friend 1 and Friend 2.
-2. Which 2-3 industries we lead with.
+2. ~~Which 2-3 industries we lead with.~~ Decided: AI startups. Do we keep remodelers and interior design pages at all, or redirect them?
 3. Who writes code besides Muzamil, and their comfort with Astro and React.
 4. Search Console data for the old site (top pages and queries).
-5. Final USD prices per tier, and whether to show AED.
+5. Final pricing: setup fee, monthly retainer, and social add-on (section 4).
 6. Which portfolio and case study entries are real paid client work.
 7. Where `/dubai-interior-design` and `/websites-for-remodelers` live (not in the Webflow page list).
 8. Project start date, and success targets for section 3.
 9. Booking tool (Cal.com or Calendly), n8n hosting, and where team notifications go.
+10. Default stack for client builds: Sanity + Astro or Sanity + Next.js?
+11. What "social media support" includes each month: number of posts, which platforms, and whether we reply to comments and DMs.
