@@ -38,9 +38,9 @@ Finished, section-by-section copy for the new homepage (`/`). It expands [positi
 
 **Links:** What's included · Pricing · Work · Referral · Blog
 
-**Button:** Book a call
+**Button:** Plan my launch
 
-Note: "Book a call" links to `/contact`. On mobile, keep the button visible next to the menu icon.
+Note: "Plan my launch" links to `/contact`. On mobile, keep the button visible next to the menu icon.
 
 ---
 
@@ -52,7 +52,7 @@ Note: "Book a call" links to `/contact`. On mobile, keep the button visible next
 
 **Body:** A hand-designed landing page that's ready for the AI era: found in ChatGPT and Google AI answers, tracked from day one, and connected to your CRM. Plus social media, and a team that keeps it all running. $500 to set up, $200 a month.
 
-**Primary button:** Book a 15-minute call
+**Primary button:** Plan my launch in 15 minutes
 
 **Secondary button:** See what's included
 
@@ -238,7 +238,7 @@ Note: two cards side by side on desktop, stacked on mobile. Prices exactly as wr
 - Support on `[CONFIRM: Slack Connect / email]`, reply within 2 business days
 - One-page monthly report: visits, sign-ups, leads and the AI search mentions we can find
 
-**Button (under both cards):** Book a 15-minute call
+**Button (under both cards):** Get my one-page proposal
 
 **Not included line (small text under the cards):**
 Not included: extra pages or a full marketing site, product or app UI, logo or brand identity design, writing your copy from scratch, comment and DM management, paid ads and video. Hosting, domain and tool plans stay on your own accounts, so you own everything. Need more? We'll quote it separately.
@@ -324,15 +324,55 @@ We'll quote it separately. The $500 setup is one landing page, done well.
 
 ## 13. Final CTA
 
-**Heading:** Ready to launch like a real company?
+Note: this is a short "launch brief" the founder fills in right on the page, written as a sentence about their startup. It makes the CTA about them, not us, and it gives us what we need for the same-day proposal. The fields map to the contact form in positioning.md section 5, so the same data goes to the CRM. Keep every field short and optional except name, email and startup name.
 
-**Body:** Book a 15-minute call. Tell us what you're building and when you launch. You'll get a one-page proposal the same day. If we're not the right fit, we'll tell you.
+**Eyebrow:** Your launch
 
-**Button:** Book a 15-minute call
+**Heading:** Tell us about your launch. We'll plan it around you.
 
-**Small print:** $500 to set up. $200 a month. No long contracts.
+**Body:** Fill in the gaps. It takes a minute, and it means our 15-minute call is about your startup, not a generic pitch.
 
-Note: "No long contracts" depends on the `[CONFIRM: 3-month minimum]`. If the minimum stays, change the small print to "$500 to set up. $200 a month. 3-month minimum, then month to month."
+**Fill-in sentence (form fields in brackets):**
+
+> Hi, I'm **[your name]** from **[startup name]**.
+> We're building **[what it does, in one line]** for **[who it's for]**.
+> We're **[pre-launch / pre-seed / seed / later]** and want to launch **[this month / next month / in 2-3 months / not sure yet]**.
+> Right now we need help with **[landing page · social · AI search · tracking · CRM · all of it]**.
+> Our site today is **[URL, or "we don't have one yet"]**.
+> Reach me at **[email]**.
+
+Note: the help options are multi-select chips. Default "all of it" to selected, since that is the offer.
+
+**Button:** Plan my launch
+
+**Small print under the button:** You'll get a calendar link straight away and a one-page proposal for **[startup name]** the same day. If we're not the right fit, we'll tell you. $500 to set up, $200 a month. No long contracts.
+
+Note: the small print updates live with the startup name as they type. If the field is empty, show "your startup". "No long contracts" depends on the `[CONFIRM: 3-month minimum]`. If the minimum stays, change it to "3-month minimum, then month to month."
+
+**Confirmation message (after submit):**
+
+**Heading:** Thanks, **[first name]**. **[Startup name]** is on our list.
+
+**Body:** Pick a time below for your 15-minute call. Before we talk, we'll look at **[site URL / what you told us]** so we don't waste your time on basics. Your one-page proposal arrives the same day as the call.
+
+**Instant reply email (sent by the CRM):**
+
+**Subject:** Your launch plan for **[startup name]**
+
+**Body:**
+Hi **[first name]**,
+
+Thanks for telling us about **[startup name]**. Here's what happens next:
+
+1. Book your 15-minute call here: **[booking link]** (if you haven't already).
+2. Before the call, we'll look at **[site URL, or "what you sent us"]** and your launch timing (**[launch timing]**).
+3. You'll get a one-page proposal for **[startup name]** the same day: what we'll build, when we start, and what we need from you.
+
+If anything changes before then, just reply to this email. It comes straight to the people doing the work.
+
+`[PLACEHOLDER: sender name]`, MuzMesh Creative
+
+Note: every bracket in the confirmation and email is filled from the form. Never send a bracket the founder left empty: fall back to "your startup", "your site" or drop the line.
 
 ---
 
