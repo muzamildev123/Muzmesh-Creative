@@ -2,6 +2,8 @@
 
 The new muzmeshcreative.com, built with Astro + TypeScript + Tailwind CSS + MDX, hosted on Vercel.
 
+Start with **[docs/project-brief.md](docs/project-brief.md)**: goals, team, phases and open questions on one page.
+
 Strategy, offer, copy, sitemap and the 301 redirect map live in **[docs/positioning.md](docs/positioning.md)**. Site copy comes from there.
 
 ## Run it
