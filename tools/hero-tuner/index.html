@@ -492,6 +492,9 @@ $('loadJson').addEventListener('change', async (e) => {
 });
 $('reset').addEventListener('click', () => { state = merge({}); render(); toast('Reset'); });
 
+// Downloads don't work when this page is embedded (for example in a preview frame).
+if (window.self !== window.top) $('downloadJson').hidden = true;
+
 buildControls();
 render();
 fitFrame();
