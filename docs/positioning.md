@@ -69,7 +69,7 @@ Prices are in USD. Shown on the site exactly as above, no ranges.
 
 | Service | What exactly |
 |---|---|
-| **Landing page (not AI slop)** | One landing page, up to `[CONFIRM: 7]` sections, designed in Figma on our own design system, then built. Responsive and fast. 2 rounds of revisions. |
+| **Landing page (not AI slop)** | One landing page, up to `[CONFIRM: 7]` sections, designed in Figma on our own design system, then built. Responsive and fast. 1 round of revisions before launch, 1 more after. |
 | **Headless CMS** | Sanity by default, so the founders can edit copy, blog posts and a changelog without us. |
 | **AEO / GEO ready** | Schema markup, FAQ block, clean heading structure, `llms.txt`, sitemap, Google Search Console. |
 | **Tracking** | Analytics (`[CONFIRM: GA4 or PostHog]`) with conversion events on sign-up, waitlist and demo buttons. |
@@ -77,7 +77,9 @@ Prices are in USD. Shown on the site exactly as above, no ranges.
 | **AI-ready build** | Structured content in the CMS with API access, so the site can feed chatbots, search or agents later. |
 | **Social setup** | Profiles set up or cleaned up on 2 platforms (`[CONFIRM: LinkedIn + X]`), banners, and 3 post templates in their brand. |
 
-Delivery: about `[CONFIRM: 2-3 weeks]` from kickoff, once we have the founder's content and logo.
+Delivery: **5 business days**, counted from the day we have everything we need: payment, logo, a draft of their copy, product screenshots and access to their accounts (domain, CRM, social). One revision round happens inside the 5 days; the second is after launch.
+
+**Rule before we promise it publicly:** hit 5 days on 1-2 real clients first. Until then the site says "in about a week" `[CONFIRM: switch to 5 days once proven]`.
 
 ### What the $200/month retainer includes
 
@@ -147,9 +149,15 @@ Draft copy, ready for Figma. Everything marked `[PLACEHOLDER]` must be replaced 
 
 ### Hero
 
-**Headline:** Launch your AI startup like it's already a real company.
+**Eyebrow:** For AI startups
+
+**Headline:** Get AI-ready in 5 days.
+
+**Alt headline (A/B test):** Launch your AI startup like it's already a real company.
 
 **Subheadline:** A hand-designed landing page that's built for the AI era: found in ChatGPT and Google AI answers, tracked, and connected to your CRM. $500 to set up, $200 a month.
+
+**Small print under CTAs:** 5 business days from when we have your content.
 
 **Primary CTA:** Book a 15-minute call
 **Secondary CTA:** See what's included
@@ -188,11 +196,11 @@ Most AI startup sites look the same: purple gradients, stock 3D shapes, copy wri
 
 ### How it works
 
-**Heading:** Live in about `[CONFIRM: 3]` weeks.
+**Heading:** Live in 5 business days.
 
 1. **Book a 15-minute call.** Tell us what you're building and when you launch.
 2. **Get a one-page proposal the same day.** What we'll build, when, and what we need from you.
-3. **We design and build.** You review in Figma, then on a live preview link.
+3. **Send your content, then we build in 5 days.** You review once in Figma or on a live preview link.
 4. **Launch, then we keep it running.** Updates, posts and a monthly report for $200 a month.
 
 ### Proof
@@ -228,7 +236,8 @@ Based in Pakistan, working with founders in `[CONFIRM: US, UK, EU, UAE?]`.
 
 - **Is the design really custom?** Every page is designed in Figma by a person, on our own design system. We don't use AI site generators or stock templates.
 - **Who owns the site and accounts?** You do. Hosting, domain, CMS and CRM are on your accounts.
-- **What do you need from us?** Your logo, product screenshots, a rough draft of your copy, and access to your accounts.
+- **What do you need from us?** Your logo, product screenshots, a rough draft of your copy, and access to your accounts. The 5 days start when we have these.
+- **Is it really 5 days?** 5 business days from when we have your content, with one round of changes before launch and one after.
 - **Can we cancel?** After the first 3 months, any time with 30 days' notice. Your site keeps working.
 - **What if we need more pages or an app?** We quote it separately.
 
@@ -243,7 +252,7 @@ Book a 15-minute call. If we're not the right fit, we'll tell you.
 ### SEO for the homepage
 
 - **Title:** MuzMesh Creative | Launch Kit for AI Startups: Landing Page, Social, AEO & CRM
-- **Meta description:** Hand-designed landing page, social media, AI search visibility, tracking and CRM for AI startups. $500 to set up, $200 a month to keep it running.
+- **Meta description:** Get AI-ready in 5 days: hand-designed landing page, social media, AI search visibility, tracking and CRM for AI startups. $500 to set up, $200 a month.
 
 ---
 
