@@ -46,9 +46,9 @@ Note: "Plan my launch" links to `/contact`. On mobile, keep the button visible n
 
 ## 2. Hero
 
-**Eyebrow:** The AI Starter Kit
+**Eyebrow:** The AI Starter Kit · For AI startups
 
-**Heading:** Launch your AI startup like it's already a real company.
+**Heading:** Get AI-ready in 5 days.
 
 **Body:** A hand-designed landing page that's ready for the AI era: found in ChatGPT and Google AI answers, tracked from day one, and connected to your CRM. Plus social media, and a team that keeps it all running. $500 to set up, $200 a month.
 
@@ -56,16 +56,13 @@ Note: "Plan my launch" links to `/contact`. On mobile, keep the button visible n
 
 **Secondary button:** See what's included
 
-**Hook (badge above or beside the buttons):** Get AI-ready in 5 days.
+**Small print under the buttons:** 5 business days from when we have your content.
 
-**Small print under the buttons:** 5 business days from when we have your content. One price, published.
+Note: positioning.md section 3 says we only promise 5 days publicly after hitting it on 1-2 real clients. Until then, swap "in 5 days" for "in about a week" everywhere on this page `[CONFIRM: switch to 5 days once proven]`.
 
 Note: "AI Starter Kit" is the name of the whole offer ($500 setup + $200/month). Always write it with these capitals, never "AI starter kit" or "Starter Pack". The secondary button scrolls to section 6. If the hero needs a visual, use a real screenshot of a site we built (Topklik.ai, with permission) or our design system in Figma. No purple gradients, glowing orbs or stock 3D shapes: the hero has to prove the "not AI slop" point on its own.
 
-**Alternative headings** (for A/B testing later, not for launch):
-
-- Get AI-ready in 5 days. Designed by people, found by AI.
-- The AI Starter Kit. Designed by people, found by AI.
+**Alternative heading** (A/B test, not for launch): Launch your AI startup like it's already a real company.
 
 ---
 
@@ -126,7 +123,7 @@ Note: seven cards. Each card has a short title, one line of benefit, and a "What
 
 **1. A landing page people trust**
 Designed by a person in Figma, built fast, and easy for you to edit. Not generated, not a template.
-What you get: one landing page, up to `[CONFIRM: 7]` sections, responsive, 1 round of revisions, live in 5 business days.
+What you get: one landing page, up to `[CONFIRM: 7]` sections, responsive, live in 5 business days, 1 round of revisions before launch and 1 after.
 
 **2. Found by AI search (AEO / GEO)**
 Set up so ChatGPT, Perplexity and Google AI answers can understand your product and cite you.
@@ -170,7 +167,7 @@ Tell us what you're building, who it's for and when you want to launch.
 What we'll build, when we start, the price, and exactly what we need from you.
 
 **3. We design and build.**
-We build on our own design system and Sanity starter, so it's fast without looking like a template. You review it on a live preview link, and one round of revisions fits inside the 5 days.
+We build on our own design system and Sanity starter, so it's fast without looking like a template. You review it on a live preview link, and one round of revisions fits inside the 5 days. You get a second round after launch.
 
 **4. Launch, then we keep it running.**
 Your site goes live and your socials start posting. From the next month, the $200 retainer covers updates, posts, support and a monthly report.
@@ -219,7 +216,7 @@ Note: two cards side by side on desktop, stacked on mobile. Prices exactly as wr
 
 **Includes:**
 - Hand-designed landing page, up to `[CONFIRM: 7]` sections
-- Live in 5 business days, 1 round of revisions
+- Live in 5 business days, 1 round of revisions before launch and 1 after
 - Sanity headless CMS (page, blog, changelog)
 - AEO / GEO setup: schema, FAQ, `llms.txt`, sitemap, Search Console
 - Analytics with conversion tracking
@@ -305,7 +302,7 @@ Answer engine optimization and generative engine optimization. It's SEO for AI a
 You do. Hosting, domain, CMS, CRM and analytics are on your own accounts. If you ever leave, everything stays with you and keeps working.
 
 **Is it really 5 days?**
-Yes, 5 business days from when we have your content: your logo, a rough draft of your copy and access to your accounts. We can move that fast because we build on our own design system and Sanity starter instead of starting from zero, and one round of revisions fits inside the 5 days. Extra pages or a fully custom design take longer, and we'll tell you how long before we start.
+Yes, 5 business days from when we have your content: your logo, a rough draft of your copy and access to your accounts. We can move that fast because we build on our own design system and Sanity starter instead of starting from zero, and one round of revisions fits inside the 5 days, with a second after launch. Extra pages or a fully custom design take longer, and we'll tell you how long before we start.
 
 **What do you need from us?**
 Your logo, product screenshots, a rough draft of your copy and access to your accounts. We'll shape and edit the copy, but we don't write it from scratch.
@@ -404,7 +401,7 @@ Note: every bracket in the confirmation and email is filled from the form. Never
 
 **Title tag:** AI Starter Kit for AI Startups: Landing Page, Social, AEO & CRM | MuzMesh Creative
 
-**Meta description:** Hand-designed landing page, social media, AI search visibility, tracking and CRM for AI startups. $500 to set up, $200 a month to keep it running.
+**Meta description:** Get AI-ready in 5 days: hand-designed landing page, social media, AI search visibility, tracking and CRM for AI startups. $500 to set up, $200 a month to keep it running.
 
 **Open Graph title:** Launch your AI startup like it's already a real company.
 
