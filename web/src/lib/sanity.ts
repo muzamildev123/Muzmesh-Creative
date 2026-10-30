@@ -63,6 +63,13 @@ export function sanityLoader(query: string): Loader {
   return {
     name: 'sanity-loader',
     load: async ({ store, parseData, generateDigest, logger }) => {
+      // Lets the team work on design locally before Sanity is set up.
+      // Production builds still fail loudly without a project ID.
+      if (!import.meta.env.SANITY_PROJECT_ID && import.meta.env.DEV) {
+        logger.warn('SANITY_PROJECT_ID is not set, so this collection is empty. See README to connect Sanity.');
+        store.clear();
+        return;
+      }
       const docs = await sanityClient().fetch<Array<Record<string, unknown>>>(query);
       store.clear();
       for (const { slug, body, ...rest } of docs) {
