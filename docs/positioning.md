@@ -12,7 +12,9 @@ This is the single source of truth for what we sell, how we say it, and how the 
 
 ## 1. The one-line positioning
 
-> **MuzMesh Creative gets AI startups launched online: a landing page that doesn't look AI-generated, social media, AEO, tracking and CRM. $500 to set up, $200 a month to keep it running.**
+> **MuzMesh Creative makes the AI Starter Kit: everything an AI startup needs to launch online. A landing page that doesn't look AI-generated, social media, AEO, tracking and CRM. $500 to set up, $200 a month to keep it running.**
+
+**Offer name: AI Starter Kit.** Always written with these capitals, never "AI starter kit" or "Starter Pack". It names the whole offer ($500 setup + $200/month). Full page copy: `landing-page-copy.md`.
 
 What a founder should understand in five seconds:
 
@@ -60,8 +62,8 @@ The old remodeler and Dubai interior design pages are no longer part of the offe
 
 | | Price | When it is paid |
 |---|---|---|
-| **Launch setup** | **$500 one-time** | Upfront `[CONFIRM: or 50% to start, 50% before launch]`, before work starts |
-| **Monthly retainer** | **$200 / month** | Monthly, starting the month after launch. 3-month minimum `[CONFIRM]`, then month to month with 30 days' notice. |
+| **AI Starter Kit setup** | **$500 one-time** | Upfront `[CONFIRM: or 50% to start, 50% before launch]`, before work starts |
+| **AI Starter Kit monthly** | **$200 / month** | Monthly, starting the month after launch. 3-month minimum `[CONFIRM]`, then month to month with 30 days' notice. |
 
 Prices are in USD. Shown on the site exactly as above, no ranges.
 
@@ -149,7 +151,7 @@ Draft copy, ready for Figma. Everything marked `[PLACEHOLDER]` must be replaced 
 
 ### Hero
 
-**Eyebrow:** For AI startups
+**Eyebrow:** The AI Starter Kit · For AI startups
 
 **Headline:** Get AI-ready in 5 days.
 
@@ -159,7 +161,7 @@ Draft copy, ready for Figma. Everything marked `[PLACEHOLDER]` must be replaced 
 
 **Small print under CTAs:** 5 business days from when we have your content.
 
-**Primary CTA:** Book a 15-minute call
+**Primary CTA:** Plan my launch in 15 minutes
 **Secondary CTA:** See what's included
 
 ### Built for the AI era (three-up strip under the hero)
@@ -192,7 +194,7 @@ Most AI startup sites look the same: purple gradients, stock 3D shapes, copy wri
 - **$500 once** to set everything up.
 - **$200 a month** for site updates, social posts, support and a monthly report.
 
-`[Button: See exactly what's included]`
+`[Button: Get my one-page proposal]`
 
 ### How it works
 
@@ -245,13 +247,13 @@ Based in Pakistan, working with founders in `[CONFIRM: US, UK, EU, UAE?]`.
 
 **Heading:** Ready to launch?
 
-Book a 15-minute call. If we're not the right fit, we'll tell you.
+Tell us about your startup and pick a 15-minute slot. If we're not the right fit, we'll tell you.
 
-`[Button: Book a call]`
+`[Button: Plan my launch]`
 
 ### SEO for the homepage
 
-- **Title:** MuzMesh Creative | Launch Kit for AI Startups: Landing Page, Social, AEO & CRM
+- **Title:** AI Starter Kit for AI Startups: Landing Page, Social, AEO & CRM | MuzMesh Creative
 - **Meta description:** Get AI-ready in 5 days: hand-designed landing page, social media, AI search visibility, tracking and CRM for AI startups. $500 to set up, $200 a month.
 
 ---
