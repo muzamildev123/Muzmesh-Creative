@@ -4,7 +4,7 @@ Version 0.2 (draft) · 30 Oct 2026 · Owner: Muzamil Awan
 
 Read this first. It is the one-page view of what we are doing, why, who does what and when. The detail (homepage copy, sitemap, redirect map) lives in **[positioning.md](positioning.md)**. This brief links to it instead of repeating it.
 
-> **v0.2 change (30 Oct 2026): new direction.** We now focus on **AI startups** with a setup fee plus a monthly retainer, replacing the three-tier $1.5k-7k/mo offer. Sections 1, 4 and 5 below reflect the new direction. `positioning.md` still describes the old offer (sections 1-4 and 6) and will be rewritten once pricing is confirmed. Where the two disagree, this brief wins.
+> **v0.2 change (30 Oct 2026): new direction.** We now focus on **AI startups** at **$500 setup + $200/month**, replacing the three-tier $1.5k-7k/mo offer. `positioning.md` is updated to match. The site code in the repo still shows the old offer and is the next thing to update.
 
 **Placeholder rule.** Anything marked `[PLACEHOLDER]`, `[CONFIRM]` or `[OPEN]` is not decided or not verified. We never publish invented results, client names, testimonials or statistics.
 
@@ -44,68 +44,45 @@ Success measures after launch `[CONFIRM targets]`:
 
 ## 4. The offer
 
-**Who it is for:** AI startups (pre-seed to Series A `[CONFIRM]`) that need to look credible and get found, without hiring a designer, developer and social person.
+Full detail (exact limits, what is not included, homepage copy): [positioning.md, section 3](positioning.md#3-the-offer).
 
-**What they get:**
+**Who it is for:** AI startups, pre-launch to seed `[CONFIRM: include Series A?]`, with no designer, marketer or web developer.
 
-| Service | What it means |
+**Price (decided 30 Oct 2026): $500 one-time setup + $200/month, everything included.** Setup paid upfront. Retainer starts the month after launch, 3-month minimum `[CONFIRM]`.
+
+| $500 setup | $200/month |
 |---|---|
-| Landing page (not AI slop) | Custom design from Figma, no generic templates or stock AI visuals. Fast, responsive. |
-| Headless CMS | Built on **Sanity** by default (or another headless CMS if it fits better), so the founders edit copy, blog and changelog without us. |
-| AEO / GEO ready | Structured data (schema.org), clean headings, FAQ blocks, `llms.txt`, sitemap, so the startup can be cited by ChatGPT, Perplexity and Google AI answers. |
-| Tracking | Analytics (GA4 or PostHog `[CONFIRM]`), conversion events on sign-up and demo buttons, Search Console. |
-| CRM | Forms connected to a CRM (HubSpot free tier or similar `[CONFIRM]`), with instant reply and team notification. |
-| AI-ready build | Clean content model and API access, so the site can feed AI tools (chatbots, search, agents) later. |
-| Social media | Profile setup and brand templates at launch; ongoing posts on the retainer (scope depends on pricing, see below). |
-| Maintenance & support | Site updates, fixes, CMS help, and social support every month. |
+| One landing page designed in Figma (not AI slop), 2 revision rounds | Up to `[CONFIRM: 2]` hours of site edits, updates, backups |
+| Sanity headless CMS (copy, blog, changelog) | Up to `[CONFIRM: 8]` social posts on 2 platforms |
+| AEO/GEO: schema, FAQ, `llms.txt`, sitemap, Search Console | Support on one channel, reply within 2 business days |
+| Tracking with conversion events | One-page monthly report |
+| CRM: form to client's CRM, instant reply, team alert | |
+| AI-ready content model with API access | |
+| Social setup on 2 platforms, banners, 3 post templates | |
 
-**Pricing: `[DECISION PENDING]`.** Muzamil proposed **$500 one-time + $200/month** for everything above. Honest view:
-
-- By my rough estimate (not measured), the setup is **50-80 hours** of work (landing page 25-40h, Sanity 8-12h, CRM and tracking 8-13h, AEO 4-6h, social setup 6-10h). At $500 that is about **$6-10 per hour, split across three people**.
-- Ongoing social posting alone (8-12 posts a month) is 15-25 hours. $200/month does not cover that plus site maintenance.
-- AI startups usually have funding and compare us with agencies charging $3k-10k. A $500 price can make "not AI slop" harder to believe, not easier.
-
-Options being decided (see the decision in the project thread):
-
-| Option | Setup | Monthly | Notes |
-|---|---|---|---|
-| **A. Recommended** | $1,500 `[CONFIRM]` (e.g. $1,000 for the first 3 clients in exchange for a case study) | $200 **Care**: site maintenance + support, up to `[CONFIRM: 4]` hours | Social content is a separate add-on, about $400/mo `[CONFIRM]` for 8-12 posts |
-| B. Low price, narrow scope | $500: one page on our own design system, Sanity + tracking + CRM wiring | $200: maintenance + support, no new social posts | Good for getting first clients fast |
-| C. As proposed | $500, everything | $200, everything incl. social | Not sustainable past 2-3 clients |
-
-Rules that apply whatever the price:
-
-- Setup is paid **upfront** (or 50/50), before work starts.
-- Retainer has a **3-month minimum** `[CONFIRM]`, then month to month with 30 days' notice.
-- Each plan lists **monthly limits** (edit hours, number of posts). Extra work is quoted separately.
-- Hosting, domain, CMS and CRM paid plans are on the client's own accounts, so they own everything.
+**How the price holds:** monthly limits are written down, unused hours don't roll over, extra pages or custom brand work are quoted separately, and every project reuses our own design system, Sanity starter and CRM/tracking setup. **Track hours on the first 3 clients**; if setup goes past about `[CONFIRM: 20]` hours or the retainer past about `[CONFIRM: 8]` hours a month, we reprice before client 4.
 
 ## 5. Referral program
 
-- An **active retainer client** who refers a **new** client gets **40% off their next monthly bill**.
-- The discount is applied only **after the referred client pays their setup fee**.
-- Applies to the **monthly retainer only**, not to setup fees or add-ons `[CONFIRM]`.
-- **Max one 40% discount per bill.** Extra referrals roll forward as credit to later bills.
-- Credit has no cash value and ends if the referrer's retainer ends.
-- "New client" means not a client or in a sales conversation with us in the last 6 months `[CONFIRM]`.
-- Written into the client contract.
+Full rules: [positioning.md, section 4](positioning.md#4-referral-rules).
 
-Cost check: on a $200 retainer, one referral costs us $80 and brings in a setup fee plus a new $200/month. That is a good trade, so this rule is safe at any of the price options.
-
-Partner commission for outside freelancers (from the old plan, about 10% of the first 3 months) `[CONFIRM: keep or drop]`.
+- An **active retainer client** who refers a **new** client gets **40% off their next monthly bill** ($80 on $200).
+- Applied only **after the referred client pays their $500 setup**. Monthly retainer only, not setup fees.
+- **Max one 40% discount per bill.** Extra referrals roll forward as credit. No cash value. Written into the contract.
+- Partner commission for outside freelancers `[CONFIRM: keep or drop]`.
 
 ## 6. How we sell
 
-1. 20-minute discovery call.
-2. Short audit (Loom or 2-page PDF) within 2 business days.
-3. Proposal recommending one fixed tier.
-4. Contract and first invoice. Work starts when it is paid.
+1. 15-minute intro call.
+2. Same-day one-page proposal (no free custom audit at this price).
+3. Invoice and kickoff form. Work starts when the $500 is paid.
+4. Launch, then the $200 retainer starts the following month.
 
 The contact form qualifies for step 1: company, website, stage (pre-seed / seed / Series A), what they need, timeline. Detail in [positioning.md, section 5](positioning.md#5-pitch-flow).
 
 ## 7. The website
 
-**Pages:** Home, Services (4 pillars), Plans, Work (Topklik first), Industries (2-3), How We Work, Referral, About/Team, Blog, Contact/Book a call, Privacy, Terms, 404. Full sitemap with URLs: [positioning.md, section 7](positioning.md#7-sitemap-new-site).
+**Pages:** Home, Services, Pricing, Work (Topklik first), How We Work, Referral, About/Team, Blog, Contact/Book a call, Privacy, Terms, 404. Full sitemap with URLs: [positioning.md, section 7](positioning.md#7-sitemap-new-site).
 
 **Tech stack** (already scaffolded in this repo):
 
@@ -172,7 +149,7 @@ Start date `[CONFIRM]`. Weeks count from that date.
 
 | Phase | Weeks | Output | Owner | Status |
 |---|---|---|---|---|
-| 1. Strategy and copy | 1 | Positioning doc, homepage copy, sitemap, redirect map | Muzamil | Old-offer draft in PR #1; needs rewrite for AI startups once pricing is decided |
+| 1. Strategy and copy | 1 | Positioning doc, homepage copy, sitemap, redirect map | Muzamil | Positioning v0.2 for AI startups done (PR #2) |
 | 2. Figma design | 1-2 | Home, Plans, Work, Industry, Contact pages in Figma | `[CONFIRM]` | Not started |
 | 3. Astro build and lead system | 2-4 | All pages built, content migrated, form wired to n8n + Supabase + Resend | Muzamil | Scaffold done (PR #1); lead system not started |
 | 4. QA, SEO, redirects | 5 | Every old URL tested, meta tags, sitemap, Turnstile, mobile check | Muzamil + reviewer | Not started |
@@ -192,7 +169,7 @@ Start date `[CONFIRM]`. Weeks count from that date.
 
 | Risk | What we do about it |
 |---|---|
-| Price too low for the work ($500 + $200 for everything) | Decide pricing before the site goes live (section 4). Track hours on the first 3 clients and reprice from real data. |
+| $500 + $200 is low for this much work | Written monthly limits, reuse our own design system and starters, track hours on the first 3 clients and reprice before client 4 if needed. |
 | AI startups pivot, run out of money or churn fast | Setup paid upfront, 3-month minimum, clients own their accounts so handover is clean. |
 | Little AI-startup proof besides Topklik | Lead with Topklik. Offer a lower price to the first 3 clients in exchange for a case study with real numbers. |
 | Rebuild loses Google rankings | Redirect every URL, test on preview, keep Webflow 2+ weeks, watch Search Console. |
@@ -209,10 +186,10 @@ Answers go into this brief and [positioning.md](positioning.md).
 2. ~~Which 2-3 industries we lead with.~~ Decided: AI startups. Do we keep remodelers and interior design pages at all, or redirect them?
 3. Who writes code besides Muzamil, and their comfort with Astro and React.
 4. Search Console data for the old site (top pages and queries).
-5. Final pricing: setup fee, monthly retainer, and social add-on (section 4).
+5. ~~Final pricing.~~ Decided: $500 + $200. Still to confirm: the monthly limits in section 4 and upfront vs 50/50 payment.
 6. Which portfolio and case study entries are real paid client work.
 7. Where `/dubai-interior-design` and `/websites-for-remodelers` live (not in the Webflow page list).
 8. Project start date, and success targets for section 3.
 9. Booking tool (Cal.com or Calendly), n8n hosting, and where team notifications go.
 10. Default stack for client builds: Sanity + Astro or Sanity + Next.js?
-11. What "social media support" includes each month: number of posts, which platforms, and whether we reply to comments and DMs.
+11. Social: confirm 8 posts/month on LinkedIn + X, and no comment/DM management.

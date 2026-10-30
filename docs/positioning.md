@@ -1,8 +1,10 @@
 # MuzMesh Creative: Positioning Document
 
-Version 0.1 (draft) · 29 Oct 2026 · Owner: Muzamil Awan
+Version 0.2 (draft) · 30 Oct 2026 · Owner: Muzamil Awan
 
-This is the single source of truth for what we sell, how we say it, and how the new site is structured. Copy on the site should come from here. If the site and this doc disagree, fix one of them.
+This is the single source of truth for what we sell, how we say it, and how the new site is structured. Copy on the site should come from here. If the site and this doc disagree, fix one of them. The one-page overview is [project-brief.md](project-brief.md).
+
+**v0.2 change (30 Oct 2026):** new direction. We now sell to **AI startups**: one setup for **$500** plus a **$200/month** retainer, with everything included. This replaces the old three-tier $1.5k-7k/mo offer.
 
 **Placeholder rule.** Anything marked `[PLACEHOLDER]` or `[CONFIRM]` is not verified and must not go live as-is. We never publish invented results, client names, testimonials or statistics.
 
@@ -10,108 +12,95 @@ This is the single source of truth for what we sell, how we say it, and how the 
 
 ## 1. The one-line positioning
 
-> **MuzMesh Creative is a small studio that runs your brand, website, social content and lead automation for one fixed monthly fee.**
+> **MuzMesh Creative gets AI startups launched online: a landing page that doesn't look AI-generated, social media, AEO, tracking and CRM. $500 to set up, $200 a month to keep it running.**
 
-What we want a visitor to understand in five seconds:
+What a founder should understand in five seconds:
 
-1. One team, one monthly plan, four things covered (design, website, social, automation).
-2. Fixed scope and fixed price. No hourly billing, no surprise invoices.
-3. We pick the right platform for your business. We are not "the Webflow guys" anymore.
-4. We work best with `[PLACEHOLDER: 2-3 focus industries]`.
+1. We do the whole launch kit for AI startups: landing page, social media, AI search visibility, tracking and CRM.
+2. It is hand-designed, not AI slop.
+3. The price is simple and published: $500 once, then $200 a month.
+4. After launch we keep the site and social running, so the founders can focus on the product.
 
 ### What we are not
 
-- Not a freelancer marketplace profile. Not "Webflow developer for startups and SaaS" (crowded, price-shopped).
-- Not "we serve all industries". We show 2-3 industries with real proof.
-- Not a full-service agency with account managers. Clients talk to the people doing the work.
+- Not a template shop or an AI site generator. Every page is designed in Figma first.
+- Not a full-service agency with account managers, long contracts or $10k quotes.
+- Not "for every industry". We build for AI startups.
 
 ### Who it is for (ideal client)
 
-- An owner-led business with 2-50 staff that already makes money and needs to look credible and get more enquiries.
-- Has no in-house designer, developer or marketer, or has one person stretched across all three.
-- Is currently paying 3-4 separate freelancers or tools and is tired of coordinating them.
-- Can commit to 3 months and at least `[CONFIRM: lowest tier price]` per month.
+- An AI startup, from pre-launch to seed `[CONFIRM: include Series A?]`, with 1-15 people.
+- Founders are technical or product-focused and have no designer, marketer or web developer.
+- Needs to look credible to users, investors and early hires, quickly.
+- Wants to be cited by ChatGPT, Perplexity and Google AI answers, not only ranked on Google.
 
 ### Who it is not for
 
-- One-off "just build me a site for $500" buyers. Send them to a fixed-price project or decline.
-- Businesses with no product or no budget yet.
+- Startups that need a multi-page marketing site, web app or product UI. Quote that separately.
+- Companies that need daily social management, paid ads or video production.
 - Enterprises that need procurement, SLAs and 24/7 support.
 
 ---
 
-## 2. Focus industries
+## 2. Focus market
 
-**Status: `[OPEN QUESTION]`.** We need to pick 2-3. Here is what we actually have proof for today, based on the current Webflow CMS:
+**AI startups.** Decided 30 Oct 2026.
 
-| Candidate | Proof we have | Proof we still need |
+| Why it fits | Proof we have | Proof we still need |
 |---|---|---|
-| SaaS / AI startups | Topklik.ai case study (n8n + HubSpot + Resend + Claude + Gemini automation). Our best proof. | Real numbers from Topklik (time saved, leads handled, response time). Client permission to publish them. |
-| Remodelers / home improvement | `/websites-for-remodelers` page already sells website + CRM + follow-up + monthly fee. Case study entry "Vivify Custom Remodeling" exists. | Confirm Vivify was real paid work. Remove the "5+ remodeling companies" claim unless we can list them. |
-| Interior design studios (Dubai/UAE) | `/dubai-interior-design` page already sells the same bundle. | At least one real interior design client or a clearly labelled concept. |
+| Founders need credibility fast (launch, fundraising, hiring) and rarely have design or marketing help. AEO/GEO is a natural sell to people who build AI. | Topklik.ai case study (n8n + HubSpot + Resend + Claude + Gemini automation). | Real, client-approved numbers from Topklik. 2-3 more AI startup launches with permission to show them. |
 
-**My recommendation:** Remodelers + Interior design studios as the two lead industries (both are "design-and-build" businesses where a good portfolio site plus fast lead follow-up directly wins jobs), with SaaS/AI kept as a third because Topklik is our strongest automation proof. Final call is yours.
+The old remodeler and Dubai interior design pages are no longer part of the offer. What to do with their URLs is in section 8 (`[CONFIRM]`).
 
 ---
 
 ## 3. The offer
 
-### How it works
+### Price
 
-- **Monthly retainer, fixed scope, 3-month minimum.** After 3 months it rolls month to month with 30 days' notice.
-- **One plan, one price, one invoice.** The client picks a tier. We recommend the tier in the proposal; we do not send three options and let them guess.
-- **Fixed scope means fixed limits.** Each tier lists exactly what is included per month. Extra work is quoted separately or moves the client up a tier.
-- **Requests go through one place** (`[CONFIRM: Trello / Notion / ClickUp / email]`), with a target turnaround of `[CONFIRM: 2-3 business days]` per request.
-
-### The four pillars
-
-| Pillar | What it means for the client | Who leads |
+| | Price | When it is paid |
 |---|---|---|
-| **Design & Brand** | Logo refresh or brand kit, visual system, social templates, ad and print design requests. | `[CONFIRM: Friend 1 or Friend 2]` |
-| **Web Development** | Website design and build on the right platform: Webflow, WordPress or custom code (Astro/Next.js). Shopify and Wix supported for existing stores/sites. SEO and AEO (AI search) setup. | Muzamil |
-| **Social & Content** | Content calendar, 12-16 posts per month, captions, basic community management. | `[CONFIRM: Friend 1 or Friend 2]` |
-| **Automation & Systems** | Lead capture, CRM setup, instant replies, follow-up sequences, monthly reporting. Built with n8n, HubSpot, Supabase, Resend and AI tools. | Muzamil |
+| **Launch setup** | **$500 one-time** | Upfront `[CONFIRM: or 50% to start, 50% before launch]`, before work starts |
+| **Monthly retainer** | **$200 / month** | Monthly, starting the month after launch. 3-month minimum `[CONFIRM]`, then month to month with 30 days' notice. |
 
-Platform line for the site: **"We pick the platform that fits your business, not the one we happen to know."**
+Prices are in USD. Shown on the site exactly as above, no ranges.
 
-### The three tiers
+### What the $500 setup includes
 
-Prices are starting points to test. **`[CONFIRM: final USD prices]`** and whether to show AED. Until confirmed the site shows "From $X/mo" using the lowest number in each range.
+| Service | What exactly |
+|---|---|
+| **Landing page (not AI slop)** | One landing page, up to `[CONFIRM: 7]` sections, designed in Figma on our own design system, then built. Responsive and fast. 2 rounds of revisions. |
+| **Headless CMS** | Sanity by default, so the founders can edit copy, blog posts and a changelog without us. |
+| **AEO / GEO ready** | Schema markup, FAQ block, clean heading structure, `llms.txt`, sitemap, Google Search Console. |
+| **Tracking** | Analytics (`[CONFIRM: GA4 or PostHog]`) with conversion events on sign-up, waitlist and demo buttons. |
+| **CRM** | Waitlist / contact form connected to a CRM on the client's account (`[CONFIRM: HubSpot free tier]`), with an instant reply email and team notification. |
+| **AI-ready build** | Structured content in the CMS with API access, so the site can feed chatbots, search or agents later. |
+| **Social setup** | Profiles set up or cleaned up on 2 platforms (`[CONFIRM: LinkedIn + X]`), banners, and 3 post templates in their brand. |
 
-#### Launch: from $1,500/mo `[CONFIRM: $1.5k-2.5k]`
-*For businesses that need to look credible and be found. 3-month build-and-launch plan.*
+Delivery: about `[CONFIRM: 2-3 weeks]` from kickoff, once we have the founder's content and logo.
 
-- Brand kit (logo refresh, colours, fonts, basic guidelines)
-- Website design and build, up to `[CONFIRM: 6-8]` pages
-- Platform chosen for the business (Webflow, WordPress or custom)
-- On-page SEO and AEO setup, Google Search Console and analytics
-- Contact form wired to email with spam protection
-- Light support: `[CONFIRM: 2-4]` small edits per month after launch
+### What the $200/month retainer includes
 
-#### Growth: from $2,500/mo `[CONFIRM: $2.5k-4k]` (recommended for most)
-*Everything in Launch, plus a steady presence on social.*
+| Area | Monthly limit |
+|---|---|
+| **Landing page maintenance** | Up to `[CONFIRM: 2 hours]` of edits, plus updates, backups, uptime and CMS help. |
+| **Social media** | Up to `[CONFIRM: 8]` posts a month on the 2 set-up platforms, made from our templates and the founder's updates, scheduled for them. |
+| **Support** | One channel (`[CONFIRM: Slack Connect / email]`), reply within 2 business days. |
+| **Monthly report** | One page: visits, sign-ups, leads and top AI search mentions we can find. |
 
-- Everything in Launch
-- 12-16 social posts per month (design + captions)
-- Monthly content calendar, agreed in advance
-- Design requests (ads, flyers, presentations), up to `[CONFIRM: number]` per month
-- Monthly website updates and blog post `[CONFIRM: 1 per month?]`
+### Not included (quoted separately)
 
-#### Scale: from $4,000/mo `[CONFIRM: $4k-7k]`
-*Everything in Growth, plus systems that turn visitors into booked calls.*
+- Extra pages, a full marketing site, or product/app UI
+- Logo design or a full brand identity
+- Writing copy from scratch (we edit and shape the founder's copy)
+- Comment and DM management, community building, paid ads, video
+- Paid tools (hosting, domain, CMS, CRM plans). These stay on the client's own accounts, so they own everything.
 
-- Everything in Growth
-- Lead capture forms connected to a CRM
-- Instant auto-reply and team notification on every enquiry
-- Follow-up email sequence (e.g. day 0, day 3, day 7)
-- Monthly report: enquiries, sources, response times
-- Priority support and a monthly strategy call
+Unused hours and posts do not roll over.
 
-### Honest notes on pricing (read before finalising)
+### Honest note on this price (read before selling)
 
-1. **These prices are a big jump from today.** Current clients come from Upwork, Fiverr and Contra at $1,500-$3,000 one-off. A $4k+/month retainer needs proof (results, named case studies) that we do not have published yet. Expect early deals to land at the low end of Launch and Growth. That is fine; test and raise.
-2. **Launch is really a project dressed as a retainer.** That is OK as long as the contract says 3 months minimum and what happens in month 4 (roll into Growth, or a cheaper "Care" plan). `[CONFIRM: do we want a Care plan around $300-500/mo for post-launch maintenance?]`
-3. **Do not show a price range on the site.** Show "From $X/mo". Ranges invite people to pick the bottom.
+The setup only works at $500 because we reuse our own design system, Sanity starter and CRM/tracking setup on every project. If a client needs a fully custom design or more pages, it is a separate quote. **Track hours on the first 3 clients.** If setup takes more than about `[CONFIRM: 20]` hours or the retainer more than about `[CONFIRM: 8]` hours a month, we reprice before client 4.
 
 ---
 
@@ -119,39 +108,36 @@ Prices are starting points to test. **`[CONFIRM: final USD prices]`** and whethe
 
 ### Client referral (active retainer clients)
 
-1. An **active retainer client** who refers a **new** client gets **50% off one month** of their own retainer.
-2. The discount is applied **only after the referred client pays their first invoice**.
-3. **Cap: one discounted month per billing cycle.** Additional successful referrals in the same cycle roll forward as credit to the next cycle(s).
-4. Credit has **no cash value**, cannot be transferred, and is lost if the referrer's retainer ends `[CONFIRM: or is paid out at 50% value?]`.
-5. "New client" means a business that has not been our client or in a sales conversation with us in the last `[CONFIRM: 6]` months.
-6. These rules are written into the retainer contract.
+1. An **active retainer client** who refers a **new** client gets **40% off their next monthly bill** ($80 on a $200 bill).
+2. The discount is applied only **after the referred client pays their $500 setup**.
+3. It applies to the **monthly retainer only**, not to setup fees or extra quoted work.
+4. **Max one 40% discount per bill.** Extra successful referrals roll forward as credit to later bills.
+5. Credit has **no cash value**, cannot be transferred, and ends if the referrer's retainer ends.
+6. "New client" means a startup that has not been our client or in a sales conversation with us in the last `[CONFIRM: 6]` months.
+7. These rules are written into the client contract.
 
-**Risk to flag:** 50% of a Scale month is $2,000-3,500 of free work. If a Launch client refers a Scale client that is fine, but if a Scale client refers a Launch client we give away more than we earn in month one. **My suggestion:** make it "50% off one month, up to the value of the referred client's first monthly invoice." Simple, and we never lose money on a referral.
+### Partner referral (outside freelancers, agencies, accelerators)
 
-### Partner referral (outside freelancers, agencies, consultants)
-
-1. Partners get a **cash commission of 10% of the referred client's first 3 months** of fees.
-2. Paid **monthly as each of those 3 invoices is paid** by the client (not upfront).
-3. Paid by `[CONFIRM: Wise / Payoneer / bank transfer]` in USD.
-4. Partner must introduce the client by email before the first call so attribution is clear.
-5. No commission on clients already in our pipeline.
+`[CONFIRM: keep or drop]`. Suggested: a one-time cash commission of `[CONFIRM: $50]` (10% of setup) once the referred client pays their setup, paid by `[CONFIRM: Wise / Payoneer]`. Partner introduces the client by email before the first call.
 
 ### Referral page copy
 
-> **Know someone who needs a better website?**
-> If you are a MuzMesh client, refer a business and get 50% off one month once they pay their first invoice. Not a client? Partners earn 10% of their first three months, paid as they pay.
-> `[Button: Refer a business]`
+> **Know a founder who needs to launch?**
+> If you are a MuzMesh client, refer an AI startup and get 40% off your next monthly bill once they pay their setup. Refer more than one and the discount carries over to your next bills.
+> `[Button: Refer a startup]`
 
 ---
 
 ## 5. Pitch flow
 
-1. **20-minute discovery call.** Goals, current setup, budget range, decision maker.
-2. **Short audit** (Loom video or 2-page PDF) within 2 business days: what is broken, what is costing them leads, what we would do first.
-3. **Proposal recommending one tier**, with scope, start date and the 3-month minimum.
-4. Contract + first invoice. Work starts when the first invoice is paid.
+At $500 we cannot do a free custom audit for every lead, so the flow is short:
 
-The contact form should qualify for step 1: name, email, company, website, industry, monthly budget range, what they need (multi-select of the four pillars), timeline.
+1. **15-minute intro call** (booked from the site). What they are building, launch date, what exists today.
+2. **Same-day one-page proposal:** what we will build, start date, price, and what we need from them.
+3. **Invoice and kickoff form** (logo, copy, links, accounts). Work starts when the setup is paid.
+4. **Launch**, then the $200 retainer starts the following month.
+
+The contact form qualifies for step 1: name, email, startup name, website (if any), stage (pre-launch / pre-seed / seed / later), launch date, what they need, anything else.
 
 ---
 
@@ -161,36 +147,47 @@ Draft copy, ready for Figma. Everything marked `[PLACEHOLDER]` must be replaced 
 
 ### Hero
 
-**Headline:** Your brand, website, social and lead follow-up. One team. One monthly plan.
+**Headline:** Launch your AI startup like it's already a real company.
 
-**Subheadline:** MuzMesh Creative is a three-person studio that designs, builds and runs the online side of your business for a fixed monthly fee. We work with `[PLACEHOLDER: industry 1]` and `[PLACEHOLDER: industry 2]`.
+**Subheadline:** A landing page that doesn't look AI-generated, social media, AI search visibility, tracking and CRM, set up for $500. Then we keep it running for $200 a month.
 
-**Primary CTA:** Book a 20-minute call
-**Secondary CTA:** See plans and pricing
+**Primary CTA:** Book a 15-minute call
+**Secondary CTA:** See what's included
 
 ### Problem
 
-**Heading:** Stop managing four freelancers.
+**Heading:** You built the product. The launch still looks like a template.
 
-One person for the logo. Another for the website. Someone else for Instagram. And nobody replying to the leads that come in. It is slow, it costs more than you think, and nothing looks like it belongs together.
+Most AI startup sites look the same: purple gradients, stock 3D shapes, copy written by the model you're competing with. Investors and users have seen it a hundred times. Meanwhile your socials are empty, nobody knows where sign-ups come from, and ChatGPT has never heard of you.
 
-### What you get (four pillars)
+### What you get
 
-**Heading:** Everything your business needs online, under one plan.
+**Heading:** Everything you need to launch, in one setup.
 
-- **Design & Brand.** A brand that looks like one business everywhere: logo, colours, templates and design requests.
-- **Websites.** Fast, search-ready sites on the platform that fits you: Webflow, WordPress or custom code.
-- **Social & Content.** A monthly content calendar and 12-16 finished posts, so your pages never go quiet.
-- **Automation & Systems.** Every enquiry gets an instant reply, lands in your CRM and gets followed up. No lead forgotten.
+- **A landing page people trust.** Designed by a human in Figma, built fast, easy for you to edit.
+- **Found by AI search.** Set up so ChatGPT, Perplexity and Google AI answers can understand and cite you.
+- **Tracking that answers "where do sign-ups come from?"** Analytics and conversion events from day one.
+- **Every lead in a CRM.** Waitlist and demo requests get an instant reply and land in one place.
+- **Social that doesn't go quiet.** Profiles set up, branded templates, and posts every month.
+- **Built on a headless CMS.** Edit your own copy, blog and changelog. Ready for AI features later.
+
+### Pricing
+
+**Heading:** One price. No surprises.
+
+- **$500 once** to set everything up.
+- **$200 a month** for site updates, social posts, support and a monthly report.
+
+`[Button: See exactly what's included]`
 
 ### How it works
 
-**Heading:** Simple from day one.
+**Heading:** Live in about `[CONFIRM: 3]` weeks.
 
-1. **Book a call.** 20 minutes to understand your business and goals.
-2. **Get a free audit.** A short video or PDF showing what is holding your site and leads back.
-3. **Pick up one plan.** We recommend the right tier. Fixed scope, fixed price, 3-month minimum.
-4. **We get to work.** You send requests in one place. We ship, report and improve every month.
+1. **Book a 15-minute call.** Tell us what you're building and when you launch.
+2. **Get a one-page proposal the same day.** What we'll build, when, and what we need from you.
+3. **We design and build.** You review in Figma, then on a live preview link.
+4. **Launch, then we keep it running.** Updates, posts and a monthly report for $200 a month.
 
 ### Proof
 
@@ -198,51 +195,49 @@ One person for the logo. Another for the website. Someone else for Instagram. An
 
 **Featured case study: Topklik.ai**
 We built an automated lead system using n8n, HubSpot, Resend, Claude and Gemini.
-Result: `[PLACEHOLDER: real, client-approved result, e.g. response time or hours saved. Do not publish without numbers we can back up.]`
+Result: `[PLACEHOLDER: real, client-approved result. Do not publish without numbers we can back up.]`
 `[Link: Read the case study]`
 
-Second and third cards: `[PLACEHOLDER: only real, paid client work. No concept projects in this section. If we only have one real case study at launch, show one.]`
+Other cards: `[PLACEHOLDER: only real client work. If we only have one at launch, show one.]`
 
 Testimonials: `[PLACEHOLDER: only with full name, role, company and written permission. Leave the section out if we have none.]`
 
-### Plans teaser
+### Referral teaser
 
-**Heading:** Three plans. No hourly billing.
+**Heading:** Refer a founder, save 40%.
 
-- **Launch**, from $1,500/mo `[CONFIRM]`: brand, website and SEO setup.
-- **Growth**, from $2,500/mo `[CONFIRM]`: Launch plus monthly social content and design requests.
-- **Scale**, from $4,000/mo `[CONFIRM]`: Growth plus lead automation, CRM and reporting.
-
-`[Button: Compare plans]`
-
-### Industries
-
-**Heading:** Built for businesses like yours.
-
-Cards for `[PLACEHOLDER: 2-3 confirmed industries]`, each linking to its industry page.
+Clients get 40% off their next monthly bill for every startup they refer. `[Link: How referrals work]`
 
 ### Team
 
-**Heading:** Small team. Senior work. You talk to the people doing it.
+**Heading:** Three people. You talk to the ones doing the work.
 
-- **Muzamil Awan**, Development and Automation. Webflow, custom code, n8n and CRM systems.
+- **Muzamil Awan**, Development and Automation. Webflow, Astro, headless CMS, n8n and CRM systems.
 - **`[PLACEHOLDER: Friend 1 name]`**, `[PLACEHOLDER: role, e.g. Design & Brand]`.
 - **`[PLACEHOLDER: Friend 2 name]`**, `[PLACEHOLDER: role, e.g. Social & Content]`.
 
-Based in Pakistan, working with clients in `[CONFIRM: US, UK, UAE?]`.
+Based in Pakistan, working with founders in `[CONFIRM: US, UK, EU, UAE?]`.
+
+### FAQ (also used for AEO schema)
+
+- **Is the design really custom?** Every page is designed in Figma by a person, on our own design system. We don't use AI site generators or stock templates.
+- **Who owns the site and accounts?** You do. Hosting, domain, CMS and CRM are on your accounts.
+- **What do you need from us?** Your logo, product screenshots, a rough draft of your copy, and access to your accounts.
+- **Can we cancel?** After the first 3 months, any time with 30 days' notice. Your site keeps working.
+- **What if we need more pages or an app?** We quote it separately.
 
 ### Final CTA
 
-**Heading:** Let's see if we're a fit.
+**Heading:** Ready to launch?
 
-Book a 20-minute call. If we are not the right team for you, we will tell you and point you to someone who is.
+Book a 15-minute call. If we're not the right fit, we'll tell you.
 
 `[Button: Book a call]`
 
 ### SEO for the homepage
 
-- **Title:** MuzMesh Creative | Design, Web, Social & Automation on One Monthly Plan
-- **Meta description:** A small studio that designs, builds and runs your brand, website, social content and lead follow-up for one fixed monthly fee. Book a 20-minute call.
+- **Title:** MuzMesh Creative | Launch Kit for AI Startups: Landing Page, Social, AEO & CRM
+- **Meta description:** Hand-designed landing page, social media, AI search visibility, tracking and CRM for AI startups. $500 to set up, $200 a month to keep it running.
 
 ---
 
@@ -251,25 +246,21 @@ Book a 20-minute call. If we are not the right team for you, we will tell you an
 | Page | URL | Notes |
 |---|---|---|
 | Home | `/` | |
-| Services (overview) | `/services` | The four pillars |
-| Design & Brand | `/services/design-brand` | |
-| Web Development | `/services/web-development` | Includes SEO/AEO |
-| Social & Content | `/services/social-content` | |
-| Automation & Systems | `/services/automation` | |
-| Plans / Pricing | `/plans` | Three tiers + FAQ |
-| Work (case studies) | `/work` | Real paid work only. Topklik first. |
+| Services | `/services` | Everything in the setup and retainer, one page |
+| Pricing | `/pricing` | $500 + $200, full included/not included lists, FAQ. `/plans` 301s here. |
+| Work (case studies) | `/work` | Real client work only. Topklik first. |
 | Case study | `/work/[slug]` | MDX collection `work` |
-| Industries | `/industries` | |
-| Industry page | `/industries/[slug]` | MDX collection `industries`, 2-3 pages |
-| How We Work | `/how-we-work` | Pitch flow + monthly rhythm |
-| Referral | `/referral` | Client + partner rules |
+| How We Work | `/how-we-work` | Pitch flow, timeline, what we need from the founder |
+| Referral | `/referral` | |
 | About / Team | `/about` | |
-| Blog | `/blog` | |
-| Blog post | `/blog/[slug]` | MDX collection `blog`, old slugs kept |
+| Blog | `/blog` | AEO/GEO and launch topics for AI founders. Old slugs kept. |
+| Blog post | `/blog/[slug]` | MDX collection `blog` |
 | Contact / Book a call | `/contact` | Qualifying form + booking link |
 | Privacy | `/privacy` | `[PLACEHOLDER: needs real policy text]` |
 | Terms | `/terms` | `[PLACEHOLDER: needs real terms text]` |
 | 404 | `/404` | |
+
+Removed from the v0.1 plan: the four `/services/[pillar]` pages and the `/industries` section. `[CONFIRM]` what happens to `/industries/remodelers` and `/industries/interior-design` (see section 8).
 
 ---
 
@@ -289,8 +280,9 @@ Rule of thumb: if the old page has a real equivalent, send it there. If not, sen
 | `/contact` | `/contact` | Same URL |
 | `/blogs` | `/blog` | 301 |
 | `/search` | `/blog` | 301 (Webflow search page, not rebuilt) |
-| `/dubai-interior-design` | `/industries/interior-design` | 301. **`[CONFIRM]`** This page was not in the Webflow API page list. Check whether it lives on this site or another one. |
-| `/websites-for-remodelers` | `/industries/remodelers` | 301. **`[CONFIRM]`** Same note as above. |
+| `/dubai-interior-design` | `/services` | 301 for now (no longer our market). **`[CONFIRM]`** keep the page live instead? It was not in the Webflow API page list, so check where it lives. |
+| `/websites-for-remodelers` | `/services` | 301 for now. **`[CONFIRM]`** Same note as above. |
+| `/plans` (v0.1 scaffold) | `/pricing` | 301 |
 
 ### Blog posts (`/post/...` → `/blog/...`, slugs kept)
 
@@ -335,13 +327,13 @@ A wildcard `/post/:slug → /blog/:slug` also catches anything missed. **Each po
 
 | Old URL | New URL |
 |---|---|
-| `/services/webflow-development-or-migration` | `/services/web-development` |
-| `/services/template-customization` | `/services/web-development` |
-| `/services/seo-aeo` | `/services/web-development` |
-| `/services/seo-optimization` | `/services/web-development` |
-| `/services/web-design` | `/services/design-brand` |
+| `/services/webflow-development-or-migration` | `/services` |
+| `/services/template-customization` | `/services` |
+| `/services/seo-aeo` | `/services` |
+| `/services/seo-optimization` | `/services` |
+| `/services/web-design` | `/services` |
 
-`/services` itself keeps the same URL.
+`/services` itself keeps the same URL. The v0.1 pillar pages are dropped, so every old service URL goes to `/services`.
 
 ### Reviews (`/reviews/...`)
 
@@ -380,9 +372,11 @@ Do not carry these over to the new site:
 Ask one or two at a time. Answers update this doc.
 
 1. Exact skills, names and roles of Friend 1 and Friend 2.
-2. Which 2-3 industries we lead with.
-3. Who writes the code, and their comfort with Astro and React.
-4. Search Console data for the old site (top pages and queries), so we know which redirects matter most.
-5. Final USD pricing per tier, and whether to show AED.
-6. Which portfolio and case study entries are real paid client work.
-7. Where do `/dubai-interior-design` and `/websites-for-remodelers` live? They are not in the Webflow site's page list.
+2. Setup paid 100% upfront or 50/50? And the 3-month minimum: keep it?
+3. The `[CONFIRM]` limits in section 3: sections per page, edit hours, posts per month, platforms.
+4. Default stack for client builds: Sanity + Astro or Sanity + Next.js? Analytics: GA4 or PostHog? CRM: HubSpot free?
+5. Keep a partner commission, and how much?
+6. Old remodeler and interior design pages: keep them live or redirect them?
+7. Who writes code besides Muzamil, and their comfort with Astro and React.
+8. Search Console data for the old site (top pages and queries).
+9. Which portfolio and case study entries are real paid client work.
