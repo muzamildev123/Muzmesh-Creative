@@ -1,6 +1,6 @@
 # MuzMesh Creative website
 
-The new muzmeshcreative.com: an Astro + TypeScript + Tailwind site in `web/`, blog posts and case studies edited in Sanity Studio in `studio/`, hosted on Vercel.
+The new muzmeshcreative.com: an Astro + TypeScript + Tailwind site in `web/`, blog posts and projects edited in Sanity Studio in `studio/`, hosted on Vercel.
 
 Start with **[docs/project-brief.md](docs/project-brief.md)**: goals, team, phases and open questions on one page.
 

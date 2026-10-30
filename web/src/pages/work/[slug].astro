@@ -22,6 +22,15 @@ const { Content } = await render(entry);
   <article class="mx-auto max-w-3xl px-4 py-12">
     {entry.data.placeholder && <Placeholder />}
     {
+      entry.data.image && (
+        <img
+          src={`${entry.data.image}?w=1200&auto=format`}
+          alt={entry.data.imageAlt ?? ''}
+          class="mb-10 w-full rounded-2xl"
+        />
+      )
+    }
+    {
       entry.data.results.length > 0 && (
         <dl class="mb-10 grid gap-4 sm:grid-cols-3">
           {entry.data.results.map((r) => (
@@ -34,6 +43,27 @@ const { Content } = await render(entry);
       )
     }
     <div class="prose prose-slate max-w-none"><Content /></div>
+    {
+      entry.data.gallery.length > 0 && (
+        <div class="mt-12 grid gap-6">
+          {entry.data.gallery.map((g) => (
+            <figure>
+              <img src={`${g.src}?w=1200&auto=format`} alt={g.alt} loading="lazy" class="w-full rounded-2xl border border-line" />
+              {g.caption && <figcaption class="mt-2 text-sm text-muted">{g.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      )
+    }
+    {
+      entry.data.liveUrl && (
+        <p class="mt-10">
+          <a href={entry.data.liveUrl} rel="noopener" target="_blank" class="font-semibold text-brand hover:underline">
+            Visit the live site
+          </a>
+        </p>
+      )
+    }
   </article>
   <CallToAction />
 </BaseLayout>

@@ -7,7 +7,7 @@ import { sanityLoader } from '@/lib/sanity';
 // Anything with invented or unconfirmed content must keep it set.
 const placeholder = z.boolean().default(false);
 
-// Blog posts and case studies are edited in Sanity Studio (../studio).
+// Blog posts and projects (case studies) are edited in Sanity Studio (../studio).
 const blog = defineCollection({
   loader: sanityLoader(`*[_type == "post" && defined(slug.current)]{
     "slug": slug.current, title, description, "author": author->name,
@@ -27,7 +27,9 @@ const blog = defineCollection({
 const work = defineCollection({
   loader: sanityLoader(`*[_type == "caseStudy" && defined(slug.current)]{
     "slug": slug.current, title, client, description, industry, pillars, stack,
-    "results": results[]{label, value}, liveUrl, order, body, placeholder
+    "results": results[]{label, value}, liveUrl, order, body, placeholder,
+    "image": coverImage.asset->url, "imageAlt": coverImage.alt,
+    "gallery": gallery[]{"src": asset->url, alt, caption}
   }`),
   schema: z.object({
     title: z.string(),
@@ -39,6 +41,9 @@ const work = defineCollection({
     // Only real, client-approved numbers go here.
     results: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
     liveUrl: z.url().optional(),
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
+    gallery: z.array(z.object({ src: z.string(), alt: z.string(), caption: z.string().nullish() })).default([]),
     order: z.number().default(100),
     placeholder,
   }),

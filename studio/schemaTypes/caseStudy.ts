@@ -3,7 +3,7 @@ import { descriptionField, placeholderField, slugField } from './fields';
 
 export const caseStudy = defineType({
   name: 'caseStudy',
-  title: 'Case study',
+  title: 'Project',
   type: 'document',
   fields: [
     defineField({ name: 'title', type: 'string', validation: (rule) => rule.required() }),
@@ -47,6 +47,29 @@ export const caseStudy = defineType({
         }),
       ],
     }),
+    defineField({
+      name: 'coverImage',
+      type: 'image',
+      description: 'Main image on the /work grid and at the top of the project page.',
+      options: { hotspot: true },
+      fields: [defineField({ name: 'alt', title: 'Alt text', type: 'string' })],
+    }),
+    defineField({
+      name: 'gallery',
+      title: 'Screenshots',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({ name: 'alt', title: 'Alt text', type: 'string', validation: (rule) => rule.required() }),
+            defineField({ name: 'caption', type: 'string' }),
+          ],
+        }),
+      ],
+      options: { layout: 'grid' },
+    }),
     defineField({ name: 'liveUrl', title: 'Live site URL', type: 'url' }),
     defineField({
       name: 'order',
@@ -58,5 +81,5 @@ export const caseStudy = defineType({
     placeholderField,
   ],
   orderings: [{ title: 'Display order', name: 'orderAsc', by: [{ field: 'order', direction: 'asc' }] }],
-  preview: { select: { title: 'client', subtitle: 'industry' } },
+  preview: { select: { title: 'client', subtitle: 'industry', media: 'coverImage' } },
 });

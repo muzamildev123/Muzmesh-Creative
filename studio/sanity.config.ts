@@ -15,7 +15,7 @@ export default defineConfig({
           .title('Content')
           .items([
             S.documentTypeListItem('post').title('Blog posts'),
-            S.documentTypeListItem('caseStudy').title('Case studies'),
+            S.documentTypeListItem('caseStudy').title('Projects'),
             S.divider(),
             S.documentTypeListItem('author').title('Authors'),
           ]),
