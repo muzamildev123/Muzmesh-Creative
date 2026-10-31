@@ -237,6 +237,10 @@
     font: 600 11px/1 'Archivo', sans-serif; letter-spacing: .06em; text-transform: uppercase; color: rgb(255 255 255 / .35);
   }
   .hero__card.is-hot .thumb::after { color: rgb(14 14 16 / .55); }
+  .hero__card .thumb .art { position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+    transition: transform .8s var(--ease); }
+  .hero__card a:hover .art, .hero__card a:focus-visible .art { transform: scale(1.04); }
+  @media (prefers-reduced-motion: reduce) { .hero__card .thumb .art { transition: none; } }
   .hero__card a { text-decoration: none; }
   .hero__card a:focus-visible { outline: 2px solid var(--marker); outline-offset: 3px; border-radius: var(--card-radius); }
 
@@ -437,11 +441,87 @@
       stand: ['Brands that', 'stand out.'],
     };
     const ROTATE_WORDS = ['forget.', 'copy.', 'ignore.', 'miss.'];
-    const PROJECTS = [
-      ['Client name', 'Brand identity'], ['Client name', 'Website'], ['Client name', 'Campaign'],
-      ['Client name', 'Packaging'], ['Client name', 'Naming'], ['Client name', 'Art direction'],
-      ['Client name', 'Brand identity'],
-    ];
+    // Sample project visuals, drawn as SVG so the file stays self-contained.
+    // Swap each one for a real project image (an <img>) when the photos are ready.
+    let artSeq = 0;
+    const svgWrap = (body, bg) => {
+      const id = 'g' + (artSeq++);
+      return `<svg class="art" viewBox="0 0 400 275" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+        <defs><filter id="${id}" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0"/><feComposite in2="SourceGraphic" operator="in"/></filter></defs>
+        <rect width="400" height="275" fill="${bg}"/>${body}
+        <rect width="400" height="275" fill="${bg}" filter="url(#${id})" opacity=".25" style="mix-blend-mode:multiply"/></svg>`;
+    };
+    const ART = {
+      poster: () => svgWrap(`
+        <circle cx="352" cy="34" r="78" fill="#0e0e10"/>
+        <g fill="#ffd60a" opacity=".9">${Array.from({ length: 36 }, (_, k) => `<circle cx="${300 + (k % 6) * 17}" cy="${-4 + Math.floor(k / 6) * 17}" r="${2 + (k % 6) * .9}"/>`).join('')}</g>
+        <text x="22" y="150" font-family="Archivo" font-weight="900" font-stretch="75%" font-size="92" letter-spacing="-3" fill="#0e0e10">MAKE</text>
+        <text x="22" y="232" font-family="Archivo" font-weight="900" font-stretch="75%" font-size="92" letter-spacing="-3" fill="#0e0e10">NOISE.</text>
+        <rect x="22" y="250" width="356" height="1.5" fill="#0e0e10"/>
+        <text x="22" y="266" font-family="Archivo" font-weight="600" font-size="8" letter-spacing="1.5" fill="#0e0e10">CAMPAIGN 2026 — OUT OF HOME</text>
+        <text x="378" y="266" text-anchor="end" font-family="Archivo" font-weight="600" font-size="8" letter-spacing="1.5" fill="#0e0e10">01 / 12</text>`, '#ffd60a'),
+      identity: () => svgWrap(`
+        <g transform="translate(200 112)">
+          <path d="M-46 0 A46 46 0 0 1 0 -46 L0 0Z" fill="#f5f3ed"/>
+          <path d="M0 0 L46 0 A46 46 0 0 1 0 46Z" fill="#f5f3ed"/>
+          <circle cx="23" cy="-23" r="14" fill="#ffd60a"/>
+          <rect x="-46" y="10" width="36" height="36" fill="none" stroke="#f5f3ed" stroke-width="3"/>
+        </g>
+        <text x="200" y="196" text-anchor="middle" font-family="Archivo" font-weight="800" font-size="26" letter-spacing="10" fill="#f5f3ed">HALDEN</text>
+        <g transform="translate(118 228)">${['#ffd60a', '#f5f3ed', '#ff6b3d', '#3a3a42', '#8a8a94'].map((c, k) => `<rect x="${k * 34}" width="26" height="26" rx="13" fill="${c}"/>`).join('')}</g>
+        <path d="M20 20h20M20 20v20M380 20h-20M380 20v20M20 255h20M20 255v-20M380 255h-20M380 255v-20" stroke="#f5f3ed" stroke-opacity=".35" stroke-width="1.5" fill="none"/>`, '#18181c'),
+      website: () => svgWrap(`
+        <g transform="translate(44 34) rotate(-4)">
+          <rect width="300" height="210" rx="8" fill="#f5f3ed"/>
+          <rect width="300" height="22" rx="8" fill="#e4e1d7"/><rect y="14" width="300" height="8" fill="#e4e1d7"/>
+          ${[0, 1, 2].map((k) => `<circle cx="${14 + k * 11}" cy="11" r="3.5" fill="${['#ff6b3d', '#ffd60a', '#6fcf97'][k]}"/>`).join('')}
+          <text x="18" y="74" font-family="Archivo" font-weight="900" font-stretch="80%" font-size="36" letter-spacing="-1" fill="#0f3d2e">GROW SLOW.</text>
+          <text x="18" y="108" font-family="Archivo" font-weight="900" font-stretch="80%" font-size="36" letter-spacing="-1" fill="#0f3d2e">LIVE WELL.</text>
+          <rect x="18" y="124" width="120" height="5" rx="2.5" fill="#0f3d2e" opacity=".25"/>
+          <rect x="18" y="135" width="90" height="5" rx="2.5" fill="#0f3d2e" opacity=".25"/>
+          <rect x="18" y="156" width="70" height="24" rx="12" fill="#0f3d2e"/>
+          <rect x="172" y="122" width="110" height="74" rx="6" fill="#6fcf97"/>
+          <circle cx="227" cy="170" r="30" fill="#0f3d2e"/><path d="M227 148c14 6 18 20 0 34c-18-14-14-28 0-34z" fill="#6fcf97"/>
+        </g>`, '#0f3d2e'),
+      packaging: () => svgWrap(`
+        <ellipse cx="200" cy="252" rx="110" ry="10" fill="#000" opacity=".25"/>
+        <g transform="translate(138 30)">
+          <path d="M0 22 L6 0 H118 L124 22 L130 220 Q130 226 124 226 H6 Q0 226 0 220Z" fill="#f5f3ed"/>
+          <path d="M6 0 H118 L120 8 H4Z" fill="#d9d4c5"/>
+          ${Array.from({ length: 14 }, (_, k) => `<rect x="${10 + k * 8}" y="1" width="2" height="6" fill="#c2bba8"/>`).join('')}
+          <rect x="12" y="60" width="106" height="110" fill="#b5502c"/>
+          <text x="65" y="108" text-anchor="middle" font-family="Archivo" font-weight="900" font-stretch="75%" font-size="38" fill="#f5f3ed">KILN</text>
+          <text x="65" y="128" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="6.5" letter-spacing="1.6" fill="#f5f3ed">COFFEE ROASTERS</text>
+          <rect x="40" y="142" width="50" height="1" fill="#f5f3ed"/>
+          <text x="65" y="158" text-anchor="middle" font-family="Archivo" font-weight="500" font-size="7" letter-spacing="2" fill="#f5f3ed">DARK • 250G</text>
+          <text x="65" y="200" text-anchor="middle" font-family="Archivo" font-weight="600" font-size="7" letter-spacing="2" fill="#b5502c">NO. 04 ETHIOPIA</text>
+        </g>`, '#d9693f'),
+      naming: () => svgWrap(`
+        ${[['Sockwise', 52], ['Heelo', 92], ['Footnote', 132], ['Pairly', 172]].map(([w, y]) => `<text x="40" y="${y}" font-family="Archivo" font-weight="700" font-size="30" fill="#f5f3ed" opacity=".28">${w}</text><rect x="38" y="${y - 10}" width="${w.length * 17}" height="2.5" fill="#ff6b3d" opacity=".8"/>`).join('')}
+        <rect x="34" y="190" width="226" height="54" fill="#ffd60a"/>
+        <text x="44" y="232" font-family="Archivo" font-weight="900" font-stretch="80%" font-size="44" letter-spacing="-1" fill="#0e0e10">ODDSOCK</text>
+        <path d="M282 216 l12 12 l26 -30" stroke="#ffd60a" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`, '#101012'),
+      direction: () => svgWrap(`
+        <defs><linearGradient id="sky${artSeq}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b1b4a"/><stop offset=".6" stop-color="#d9693f"/><stop offset="1" stop-color="#ffd60a"/></linearGradient></defs>
+        <rect width="400" height="275" fill="url(#sky${artSeq})"/>
+        <circle cx="270" cy="168" r="58" fill="#ffd60a" opacity=".95"/>
+        <path d="M0 200 Q80 160 160 196 T320 190 T400 180 V275 H0Z" fill="#1a1230"/>
+        <path d="M0 232 Q100 206 200 230 T400 222 V275 H0Z" fill="#0e0a1c"/>
+        <text x="22" y="40" font-family="Archivo" font-weight="600" font-size="9" letter-spacing="2" fill="#f5f3ed" opacity=".8">SHOT 07 — GOLDEN HOUR</text>`, '#2b1b4a'),
+      stationery: () => svgWrap(`
+        <g transform="translate(70 70) rotate(-10)"><rect width="180" height="104" rx="4" fill="#ffd60a"/><text x="16" y="84" font-family="Archivo" font-weight="900" font-stretch="80%" font-size="34" fill="#0e0e10">BRIGHT</text></g>
+        <g transform="translate(150 110) rotate(6)"><rect width="180" height="104" rx="4" fill="#f5f3ed"/>
+          <text x="16" y="30" font-family="Archivo" font-weight="800" font-size="11" fill="#0e0e10">Sam Rivera</text>
+          <text x="16" y="44" font-family="Archivo" font-weight="500" font-size="8" fill="#0e0e10" opacity=".6">Head of Studio</text>
+          <rect x="16" y="76" width="80" height="3" fill="#0e0e10" opacity=".2"/><rect x="16" y="84" width="60" height="3" fill="#0e0e10" opacity=".2"/>
+          <circle cx="152" cy="28" r="10" fill="#ffd60a"/></g>`, '#232328'),
+    };
+    const DARK_ART = ['identity', 'website', 'packaging', 'naming', 'direction', 'stationery'];
+    const CAPTIONS = {
+      poster: ['Loudhaus', 'Campaign'], identity: ['Halden', 'Brand identity'], website: ['Fernhouse', 'Website'],
+      packaging: ['Kiln Coffee', 'Packaging'], naming: ['Oddsock', 'Naming'], direction: ['Dusk Records', 'Art direction'],
+      stationery: ['Brightwell', 'Stationery'],
+    };
 
     const OPTIONS = [
       { key: 'copy', label: 'Words', choices: [['spot', 'Spot'], ['cookie', 'Cookie'], ['stand', 'Stand out']] },
@@ -513,8 +593,10 @@
     function card(i, hot, label) {
       const li = document.createElement('li');
       li.className = 'hero__card' + (hot ? ' is-hot' : '');
-      const [name, kind] = PROJECTS[i % PROJECTS.length];
-      li.innerHTML = `<a href="#work-${i + 1}"><figure style="margin:0;aspect-ratio:auto;background:none"><div class="thumb" data-label="${label}"></div><figcaption>${name}<span>${kind}</span></figcaption></figure></a>`;
+      const key = hot ? 'poster' : DARK_ART[i % DARK_ART.length];
+      const [name, kind] = CAPTIONS[key];
+      li.innerHTML = `<a href="#work-${i + 1}"><figure style="margin:0;aspect-ratio:auto;background:none"><div class="thumb">${ART[key]()}</div><figcaption>${name}<span>${kind}</span></figcaption></figure></a>`;
+      li.querySelector('a').setAttribute('aria-label', `${name}, ${kind} (sample)`);
       return li;
     }
 
