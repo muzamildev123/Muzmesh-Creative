@@ -566,7 +566,7 @@
       else if (state.extras.has('reveal')) hero.classList.add('is-revealed');
       syncPanel();
       const q = new URLSearchParams({ copy: state.copy, headline: state.headline, cards: state.cards, extras: [...state.extras].join(',') });
-      history.replaceState(null, '', '#' + q.toString());
+      // State stays in the page (no hash), so the page works anywhere it is hosted.
     }
 
     // Panel
@@ -599,11 +599,15 @@
     const copyBtn = document.createElement('button');
     copyBtn.className = 'xp__copy';
     copyBtn.type = 'button';
-    copyBtn.textContent = 'Copy link to this combination';
+    copyBtn.textContent = 'Copy my picks';
+    // Copies the chosen combination as plain text, ready to paste into a message.
     copyBtn.addEventListener('click', async () => {
-      try { await navigator.clipboard.writeText(location.href); copyBtn.textContent = 'Link copied'; }
-      catch (e) { copyBtn.textContent = 'Copy blocked: use the address bar'; }
-      setTimeout(() => { copyBtn.textContent = 'Copy link to this combination'; }, 1600);
+      const name = (key, v) => OPTIONS.find((o) => o.key === key).choices.find((c) => c[0] === v)[1];
+      const extras = [...state.extras].map((v) => name('extras', v)).join(', ') || 'none';
+      const text = `Hero picks: words ${name('copy', state.copy)}, headline ${name('headline', state.headline)}, cards ${name('cards', state.cards)}, extras ${extras}.`;
+      try { await navigator.clipboard.writeText(text); copyBtn.textContent = 'Copied'; }
+      catch (e) { copyBtn.textContent = text; }
+      setTimeout(() => { copyBtn.textContent = 'Copy my picks'; }, 2500);
     });
     body.append(copyBtn);
 
