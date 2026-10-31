@@ -1,0 +1,29 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/blogs", "destination": "/blog", "statusCode": 301 },
+    { "source": "/search", "destination": "/blog", "statusCode": 301 },
+    { "source": "/post/:slug", "destination": "/blog/:slug", "statusCode": 301 },
+
+    { "source": "/dubai-interior-design", "destination": "/industries/interior-design", "statusCode": 301 },
+    { "source": "/websites-for-remodelers", "destination": "/industries/remodelers", "statusCode": 301 },
+
+    { "source": "/portfolio/topklik-ai", "destination": "/work/topklik-ai", "statusCode": 301 },
+    { "source": "/portfolio/:slug", "destination": "/work", "statusCode": 301 },
+    { "source": "/portfolio", "destination": "/work", "statusCode": 301 },
+
+    { "source": "/case-studies/:slug", "destination": "/work", "statusCode": 301 },
+    { "source": "/case-studies", "destination": "/work", "statusCode": 301 },
+
+    { "source": "/services/webflow-development-or-migration", "destination": "/services/web-development", "statusCode": 301 },
+    { "source": "/services/template-customization", "destination": "/services/web-development", "statusCode": 301 },
+    { "source": "/services/seo-aeo", "destination": "/services/web-development", "statusCode": 301 },
+    { "source": "/services/seo-optimization", "destination": "/services/web-development", "statusCode": 301 },
+    { "source": "/services/web-design", "destination": "/services/design-brand", "statusCode": 301 },
+
+    { "source": "/reviews/:slug", "destination": "/work", "statusCode": 301 },
+    { "source": "/reviews", "destination": "/work", "statusCode": 301 }
+  ]
+}

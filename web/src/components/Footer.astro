@@ -1,0 +1,23 @@
+---
+import { footerNav, nav, site } from '@/data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-line bg-surface">
+  <div class="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-3">
+    <div>
+      <p class="font-bold">{site.name}</p>
+      <p class="mt-2 text-sm text-muted">{site.tagline}</p>
+      <p class="mt-2 text-sm"><a class="underline" href={`mailto:${site.email}`}>{site.email}</a></p>
+    </div>
+    <ul class="space-y-2 text-sm">
+      {nav.map((item) => <li><a href={item.href} class="hover:text-brand">{item.label}</a></li>)}
+    </ul>
+    <ul class="space-y-2 text-sm">
+      {footerNav.map((item) => <li><a href={item.href} class="hover:text-brand">{item.label}</a></li>)}
+      <!-- Social links go here once real profiles exist. No placeholder "#" links. -->
+    </ul>
+  </div>
+  <p class="pb-8 text-center text-xs text-muted">© {year} {site.name}</p>
+</footer>

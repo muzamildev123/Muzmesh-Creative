@@ -1,0 +1,28 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import CallToAction from '@/components/CallToAction.astro';
+
+export const getStaticPaths = (async () => {
+  const posts = await getCollection('blog');
+  return posts.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const fmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'long' });
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description}>
+  <article class="mx-auto max-w-3xl px-4 py-16">
+    <h1 class="text-4xl font-bold tracking-tight">{entry.data.title}</h1>
+    <p class="mt-4 text-sm text-muted">
+      By {entry.data.author} · {fmt.format(entry.data.pubDate)}
+    </p>
+    {entry.data.placeholder && <Placeholder />}
+    <div class="prose prose-slate mt-10 max-w-none"><Content /></div>
+  </article>
+  <CallToAction />
+</BaseLayout>

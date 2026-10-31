@@ -1,0 +1,278 @@
+{
+  "color": {
+    "ink": {
+      "$type": "color",
+      "$value": "#0E0E10",
+      "$description": "Text, primary buttons, dark bands, logo"
+    },
+    "ink-2": {
+      "$type": "color",
+      "$value": "#17171D",
+      "$description": "Raised surface on ink"
+    },
+    "paper": {
+      "$type": "color",
+      "$value": "#F2F2EE",
+      "$description": "Page background"
+    },
+    "card": {
+      "$type": "color",
+      "$value": "#FFFFFF",
+      "$description": "Cards and inputs on paper"
+    },
+    "graphite": {
+      "$type": "color",
+      "$value": "#55555F",
+      "$description": "Secondary text on paper"
+    },
+    "mist": {
+      "$type": "color",
+      "$value": "#A1A1AA",
+      "$description": "Secondary text on ink"
+    },
+    "line": {
+      "$type": "color",
+      "$value": "#D9D9DF",
+      "$description": "Borders on paper"
+    },
+    "line-ink": {
+      "$type": "color",
+      "$value": "#2C2C35",
+      "$description": "Borders on ink"
+    },
+    "marker": {
+      "$type": "color",
+      "$value": "#FFD60A",
+      "$description": "Accent. Fill only, never text on paper"
+    },
+    "marker-deep": {
+      "$type": "color",
+      "$value": "#F2C200",
+      "$description": "Hover, pressed, focus"
+    },
+    "danger": {
+      "$type": "color",
+      "$value": "#B42318",
+      "$description": "Form errors only"
+    },
+    "success": {
+      "$type": "color",
+      "$value": "#1F7A35",
+      "$description": "Confirmations only"
+    }
+  },
+  "font": {
+    "family": {
+      "display": {
+        "$type": "fontFamily",
+        "$value": "Archivo",
+        "$description": "Use Archivo Expanded (width 125)"
+      },
+      "body": {
+        "$type": "fontFamily",
+        "$value": "Archivo"
+      },
+      "mono": {
+        "$type": "fontFamily",
+        "$value": "JetBrains Mono"
+      }
+    },
+    "size": {
+      "label": {
+        "$type": "dimension",
+        "$value": "12px"
+      },
+      "sm": {
+        "$type": "dimension",
+        "$value": "14px"
+      },
+      "base": {
+        "$type": "dimension",
+        "$value": "17px"
+      },
+      "lead": {
+        "$type": "dimension",
+        "$value": "20px"
+      },
+      "h3": {
+        "$type": "dimension",
+        "$value": "24px"
+      },
+      "h2": {
+        "$type": "dimension",
+        "$value": "48px"
+      },
+      "h1": {
+        "$type": "dimension",
+        "$value": "68px"
+      },
+      "hero": {
+        "$type": "dimension",
+        "$value": "112px"
+      }
+    }
+  },
+  "typography": {
+    "hero": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Archivo Expanded",
+        "fontWeight": 800,
+        "fontSize": "112px",
+        "lineHeight": "95%",
+        "letterSpacing": "-3.5%",
+        "textCase": "none"
+      }
+    },
+    "h1": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Archivo Expanded",
+        "fontWeight": 800,
+        "fontSize": "68px",
+        "lineHeight": "95%",
+        "letterSpacing": "-3%",
+        "textCase": "none"
+      }
+    },
+    "h2": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Archivo Expanded",
+        "fontWeight": 800,
+        "fontSize": "48px",
+        "lineHeight": "100%",
+        "letterSpacing": "-3%",
+        "textCase": "none"
+      }
+    },
+    "h3": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Archivo Expanded",
+        "fontWeight": 800,
+        "fontSize": "24px",
+        "lineHeight": "110%",
+        "letterSpacing": "-2%",
+        "textCase": "none"
+      }
+    },
+    "lead": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Archivo",
+        "fontWeight": 400,
+        "fontSize": "20px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%",
+        "textCase": "none"
+      }
+    },
+    "body": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Archivo",
+        "fontWeight": 400,
+        "fontSize": "17px",
+        "lineHeight": "160%",
+        "letterSpacing": "0%",
+        "textCase": "none"
+      }
+    },
+    "body-bold": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Archivo",
+        "fontWeight": 700,
+        "fontSize": "17px",
+        "lineHeight": "160%",
+        "letterSpacing": "0%",
+        "textCase": "none"
+      }
+    },
+    "small": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Archivo",
+        "fontWeight": 400,
+        "fontSize": "14px",
+        "lineHeight": "150%",
+        "letterSpacing": "0%",
+        "textCase": "none"
+      }
+    },
+    "label": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "JetBrains Mono",
+        "fontWeight": 400,
+        "fontSize": "12px",
+        "lineHeight": "120%",
+        "letterSpacing": "8%",
+        "textCase": "uppercase"
+      }
+    }
+  },
+  "space": {
+    "1": {
+      "$type": "dimension",
+      "$value": "4px"
+    },
+    "2": {
+      "$type": "dimension",
+      "$value": "8px"
+    },
+    "3": {
+      "$type": "dimension",
+      "$value": "12px"
+    },
+    "4": {
+      "$type": "dimension",
+      "$value": "16px"
+    },
+    "6": {
+      "$type": "dimension",
+      "$value": "24px"
+    },
+    "8": {
+      "$type": "dimension",
+      "$value": "32px"
+    },
+    "12": {
+      "$type": "dimension",
+      "$value": "48px"
+    },
+    "16": {
+      "$type": "dimension",
+      "$value": "64px"
+    },
+    "24": {
+      "$type": "dimension",
+      "$value": "96px"
+    }
+  },
+  "radius": {
+    "sm": {
+      "$type": "dimension",
+      "$value": "4px"
+    },
+    "md": {
+      "$type": "dimension",
+      "$value": "8px"
+    },
+    "lg": {
+      "$type": "dimension",
+      "$value": "14px"
+    }
+  },
+  "border": {
+    "thin": {
+      "$type": "dimension",
+      "$value": "1px"
+    },
+    "strong": {
+      "$type": "dimension",
+      "$value": "2px"
+    }
+  }
+}

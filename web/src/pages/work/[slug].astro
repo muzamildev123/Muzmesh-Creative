@@ -1,0 +1,69 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import CallToAction from '@/components/CallToAction.astro';
+
+export const getStaticPaths = (async () => {
+  const work = await getCollection('work');
+  return work.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={`${entry.data.title} Case Study`} description={entry.data.description}>
+  <PageHeader title={entry.data.title} intro={entry.data.description}>
+    <p class="mt-4 text-sm text-muted">{entry.data.industry} · {entry.data.stack.join(', ')}</p>
+  </PageHeader>
+  <article class="mx-auto max-w-3xl px-4 py-12">
+    {entry.data.placeholder && <Placeholder />}
+    {
+      entry.data.image && (
+        <img
+          src={`${entry.data.image}?w=1200&auto=format`}
+          alt={entry.data.imageAlt ?? ''}
+          class="mb-10 w-full rounded-2xl"
+        />
+      )
+    }
+    {
+      entry.data.results.length > 0 && (
+        <dl class="mb-10 grid gap-4 sm:grid-cols-3">
+          {entry.data.results.map((r) => (
+            <div class="rounded-xl border border-line p-4">
+              <dt class="text-sm text-muted">{r.label}</dt>
+              <dd class="text-2xl font-bold">{r.value}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+    <div class="prose prose-slate max-w-none"><Content /></div>
+    {
+      entry.data.gallery.length > 0 && (
+        <div class="mt-12 grid gap-6">
+          {entry.data.gallery.map((g) => (
+            <figure>
+              <img src={`${g.src}?w=1200&auto=format`} alt={g.alt} loading="lazy" class="w-full rounded-2xl border border-line" />
+              {g.caption && <figcaption class="mt-2 text-sm text-muted">{g.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      )
+    }
+    {
+      entry.data.liveUrl && (
+        <p class="mt-10">
+          <a href={entry.data.liveUrl} rel="noopener" target="_blank" class="font-semibold text-brand hover:underline">
+            Visit the live site
+          </a>
+        </p>
+      )
+    }
+  </article>
+  <CallToAction />
+</BaseLayout>

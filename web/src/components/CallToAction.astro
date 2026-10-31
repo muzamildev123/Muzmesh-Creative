@@ -1,0 +1,14 @@
+---
+import Button from './Button.astro';
+import { site } from '@/data/site';
+---
+
+<section class="mx-auto max-w-6xl px-4 py-16">
+  <div class="rounded-2xl bg-ink px-8 py-12 text-white">
+    <h2 class="text-3xl font-bold">Let's see if we're a fit.</h2>
+    <p class="mt-3 max-w-2xl text-slate-300">
+      Book a 20-minute call. If we are not the right team for you, we will tell you and point you to someone who is.
+    </p>
+    <div class="mt-6"><Button href={site.bookingUrl}>Book a call</Button></div>
+  </div>
+</section>

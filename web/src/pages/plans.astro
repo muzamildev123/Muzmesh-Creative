@@ -1,0 +1,52 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import Section from '@/components/Section.astro';
+import PlanCard from '@/components/PlanCard.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import CallToAction from '@/components/CallToAction.astro';
+import { plans } from '@/data/site';
+
+const faqs = [
+  {
+    q: 'Why a 3-month minimum?',
+    a: 'Brand, website and content work needs time to show results. Three months gives us room to launch, measure and improve. After that it is month to month with 30 days notice.',
+  },
+  {
+    q: 'What does fixed scope mean?',
+    a: 'Each plan lists exactly what is included every month. Anything extra is quoted separately, or you move up a plan. No surprise invoices.',
+  },
+  {
+    q: 'Which platform will you build on?',
+    a: 'The one that fits your business. Usually Webflow, WordPress or custom code. We also support existing Shopify and Wix sites.',
+  },
+  {
+    q: 'How do I send requests?',
+    a: 'Through one shared board, so nothing gets lost in email or chat.',
+  },
+];
+---
+
+<BaseLayout
+  title="Plans & Pricing"
+  description="Three monthly plans covering design, website, social content and automation. Fixed scope, fixed price, 3-month minimum."
+>
+  <PageHeader title="Three plans. No hourly billing." intro="Fixed scope, fixed monthly price, 3-month minimum. We recommend one plan after a short audit." />
+  <Section>
+    <div class="grid gap-6 md:grid-cols-3">{plans.map((p) => <PlanCard {...p} />)}</div>
+    <Placeholder note="Prices are test values. Confirm final USD pricing, page limits, request limits and turnaround times." />
+  </Section>
+  <Section heading="Questions">
+    <dl class="space-y-6">
+      {
+        faqs.map((f) => (
+          <div>
+            <dt class="font-bold">{f.q}</dt>
+            <dd class="mt-1 text-muted">{f.a}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+  <CallToAction />
+</BaseLayout>

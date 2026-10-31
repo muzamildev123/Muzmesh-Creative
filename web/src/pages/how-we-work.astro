@@ -1,0 +1,44 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import Section from '@/components/Section.astro';
+import CallToAction from '@/components/CallToAction.astro';
+
+const pitch = [
+  { title: '20-minute discovery call', body: 'Your goals, your current setup, your budget and who makes the decision.' },
+  { title: 'Short audit', body: 'Within 2 business days you get a Loom video or 2-page PDF: what is broken, what is costing you leads, what we would fix first.' },
+  { title: 'One clear proposal', body: 'We recommend one plan with a fixed scope, start date and the 3-month minimum. No menu of options to decode.' },
+  { title: 'Kick-off', body: 'Contract signed and first invoice paid, then work starts.' },
+];
+
+const monthly = [
+  'Requests go into one shared board.',
+  'We plan the month with you at the start: content calendar, site updates, priorities.',
+  'Every change is reviewed by a second team member before it goes live.',
+  'At the end of the month you get a short report on what shipped and what changed.',
+];
+---
+
+<BaseLayout
+  title="How We Work"
+  description="From a 20-minute call to a fixed monthly plan: how MuzMesh Creative scopes, delivers and reports on your work."
+>
+  <PageHeader title="How we work" intro="Clear steps, fixed scope, and one place for every request." />
+  <Section heading="Getting started">
+    <ol class="grid gap-6 md:grid-cols-2">
+      {
+        pitch.map((s, i) => (
+          <li class="rounded-2xl border border-line p-6">
+            <p class="text-sm font-semibold text-brand">Step {i + 1}</p>
+            <h3 class="mt-1 text-lg font-bold">{s.title}</h3>
+            <p class="mt-2 text-muted">{s.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+  <Section heading="Every month" class="bg-surface">
+    <ul class="list-disc space-y-2 pl-5 text-lg">{monthly.map((m) => <li>{m}</li>)}</ul>
+  </Section>
+  <CallToAction />
+</BaseLayout>

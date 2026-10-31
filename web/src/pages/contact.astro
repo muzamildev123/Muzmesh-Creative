@@ -1,0 +1,23 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import Section from '@/components/Section.astro';
+import ContactForm from '@/components/ContactForm';
+import { site } from '@/data/site';
+---
+
+<BaseLayout
+  title="Book a Call"
+  description="Tell us about your business and book a free 20-minute call with MuzMesh Creative."
+>
+  <PageHeader
+    title="Book a 20-minute call"
+    intro="Tell us a little about your business. We reply within one business day with a link to book."
+  />
+  <Section>
+    <ContactForm client:visible />
+    <p class="mt-8 text-sm text-muted">
+      Prefer email? <a class="underline" href={`mailto:${site.email}`}>{site.email}</a>
+    </p>
+  </Section>
+</BaseLayout>

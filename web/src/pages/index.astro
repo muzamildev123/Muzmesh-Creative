@@ -1,0 +1,131 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/Button.astro';
+import Section from '@/components/Section.astro';
+import PlanCard from '@/components/PlanCard.astro';
+import Placeholder from '@/components/Placeholder.astro';
+import CallToAction from '@/components/CallToAction.astro';
+import { pillars, plans, site, team } from '@/data/site';
+
+const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order).slice(0, 3);
+const industries = (await getCollection('industries')).sort((a, b) => a.data.order - b.data.order);
+
+const steps = [
+  { title: 'Book a call', body: '20 minutes to understand your business and goals.' },
+  { title: 'Get a free audit', body: 'A short video or PDF showing what is holding your site and leads back.' },
+  { title: 'Pick one plan', body: 'We recommend the right tier. Fixed scope, fixed price, 3-month minimum.' },
+  { title: 'We get to work', body: 'You send requests in one place. We ship, report and improve every month.' },
+];
+---
+
+<BaseLayout
+  title={site.name}
+  description="A small studio that designs, builds and runs your brand, website, social content and lead follow-up for one fixed monthly fee. Book a 20-minute call."
+>
+  <!-- Hero -->
+  <section class="mx-auto max-w-6xl px-4 pt-20 pb-16">
+    <h1 class="max-w-4xl text-4xl font-bold tracking-tight md:text-6xl">
+      Your brand, website, social and lead follow-up. One team. One monthly plan.
+    </h1>
+    <p class="mt-6 max-w-2xl text-lg text-muted">
+      MuzMesh Creative is a three-person studio that designs, builds and runs the online side of your business for a
+      fixed monthly fee.
+    </p>
+    <Placeholder note="Add 'We work with [industry 1] and [industry 2].' once focus industries are confirmed." />
+    <div class="mt-8 flex flex-wrap gap-3">
+      <Button href={site.bookingUrl}>Book a 20-minute call</Button>
+      <Button href="/plans" variant="secondary">See plans and pricing</Button>
+    </div>
+  </section>
+
+  <!-- Problem -->
+  <Section heading="Stop managing four freelancers." class="border-t border-line">
+    <p class="max-w-3xl text-lg text-muted">
+      One person for the logo. Another for the website. Someone else for Instagram. And nobody replying to the leads
+      that come in. It is slow, it costs more than you think, and nothing looks like it belongs together.
+    </p>
+  </Section>
+
+  <!-- Pillars -->
+  <Section heading="Everything your business needs online, under one plan.">
+    <div class="grid gap-6 md:grid-cols-2">
+      {
+        pillars.map((p) => (
+          <a href={`/services/${p.slug}`} class="rounded-2xl border border-line p-6 hover:border-brand">
+            <h3 class="text-xl font-bold">{p.name}</h3>
+            <p class="mt-2 text-muted">{p.summary}</p>
+          </a>
+        ))
+      }
+    </div>
+  </Section>
+
+  <!-- How it works -->
+  <Section heading="Simple from day one." class="bg-surface">
+    <ol class="grid gap-6 md:grid-cols-4">
+      {
+        steps.map((s, i) => (
+          <li>
+            <p class="text-sm font-semibold text-brand">Step {i + 1}</p>
+            <h3 class="mt-1 text-lg font-bold">{s.title}</h3>
+            <p class="mt-2 text-muted">{s.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <!-- Proof -->
+  <Section heading="Work we can show you.">
+    <div class="grid gap-6 md:grid-cols-3">
+      {
+        work.map((w) => (
+          <a href={`/work/${w.id}`} class="rounded-2xl border border-line p-6 hover:border-brand">
+            <p class="text-sm text-muted">{w.data.industry}</p>
+            <h3 class="mt-1 text-xl font-bold">{w.data.client}</h3>
+            <p class="mt-2 text-muted">{w.data.description}</p>
+          </a>
+        ))
+      }
+    </div>
+    <Placeholder note="Only real, paid client work in this section. Testimonials only with full name, role, company and written permission; leave them out until then." />
+  </Section>
+
+  <!-- Plans -->
+  <Section heading="Three plans. No hourly billing." intro="Fixed scope, fixed monthly price, 3-month minimum.">
+    <div class="grid gap-6 md:grid-cols-3">{plans.map((p) => <PlanCard {...p} />)}</div>
+    <Placeholder note="Prices are test values. Confirm final USD pricing." />
+  </Section>
+
+  <!-- Industries -->
+  <Section heading="Built for businesses like yours." class="bg-surface">
+    <div class="grid gap-6 md:grid-cols-3">
+      {
+        industries.map((ind) => (
+          <a href={`/industries/${ind.id}`} class="rounded-2xl border border-line bg-white p-6 hover:border-brand">
+            <h3 class="text-xl font-bold">{ind.data.title}</h3>
+            <p class="mt-2 text-muted">{ind.data.description}</p>
+          </a>
+        ))
+      }
+    </div>
+  </Section>
+
+  <!-- Team -->
+  <Section heading="Small team. Senior work." intro="You talk to the people doing the work.">
+    <ul class="grid gap-6 md:grid-cols-3">
+      {
+        team.map((m) => (
+          <li class="rounded-2xl border border-line p-6">
+            <p class="text-lg font-bold">{m.name}</p>
+            <p class="text-muted">{m.role}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <Placeholder note="Team names and roles for Friend 1 and Friend 2." />
+  </Section>
+
+  <CallToAction />
+</BaseLayout>

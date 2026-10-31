@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import Section from '@/components/Section.astro';
+import CallToAction from '@/components/CallToAction.astro';
+
+const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="Work" description="Case studies from real MuzMesh Creative client projects: what we did and what changed.">
+  <PageHeader title="Our work" intro="Real client projects. What we did, and what changed." />
+  <Section>
+    <div class="grid gap-6 md:grid-cols-2">
+      {
+        work.map((w) => (
+          <a href={`/work/${w.id}`} class="rounded-2xl border border-line p-6 hover:border-brand">
+            {w.data.image && (
+              <img
+                src={`${w.data.image}?w=800&h=500&fit=crop&auto=format`}
+                alt={w.data.imageAlt ?? ''}
+                width="800"
+                height="500"
+                loading="lazy"
+                class="mb-4 aspect-[8/5] w-full rounded-xl object-cover"
+              />
+            )}
+            <p class="text-sm text-muted">{w.data.industry}</p>
+            <h2 class="mt-1 text-2xl font-bold">{w.data.client}</h2>
+            <p class="mt-2 text-muted">{w.data.description}</p>
+          </a>
+        ))
+      }
+    </div>
+  </Section>
+  <CallToAction />
+</BaseLayout>
