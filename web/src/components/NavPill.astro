@@ -1,0 +1,312 @@
+---
+// Floating menu pill from the hero mockup (tools/hero-base/hero.html).
+// Closed it is a small dark bar; open it grows into the menu panel.
+import { site } from '@/data/site';
+import Wordmark from './Wordmark.astro';
+
+const path = Astro.url.pathname;
+// The links and button from the first version of the pill, kept as approved.
+const links = [
+  { label: 'Home', href: '/' },
+  { label: 'Work', href: '/work' },
+  { label: 'Services', href: '/services' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<div class="nav-scrim" data-nav-scrim></div>
+<nav class="nav" data-nav aria-label="Main">
+  <div class="nav__bar">
+    <a class="nav__home" href="/" aria-label="MuzMesh Creative home">
+      <Wordmark class="nav__logo" />
+    </a>
+    <button
+      class="nav__menu"
+      data-nav-toggle
+      type="button"
+      aria-expanded="false"
+      aria-controls="nav-panel"
+      aria-label="Open menu"
+    >
+      <span></span><span></span>
+    </button>
+  </div>
+  <div class="nav__panel" id="nav-panel" data-nav-panel inert>
+    <div class="nav__panel-inner">
+      <ul class="nav__links">
+        {
+          links.map((item, i) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label} <small>{String(i + 1).padStart(2, '0')}</small>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="nav__foot">
+        <a class="nav__mail" href={`mailto:${site.email}`}>{site.email}</a>
+        <a class="nav__cta" href={site.bookingUrl}>Start a project</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Open/close the pill, close on Escape, outside click or link click,
+  // and keep keyboard focus inside the menu while it is open.
+  const nav = document.querySelector<HTMLElement>('[data-nav]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+  const panel = document.querySelector<HTMLElement>('[data-nav-panel]');
+  const scrim = document.querySelector<HTMLElement>('[data-nav-scrim]');
+
+  if (nav && toggle && panel && scrim) {
+    const isOpen = () => nav.classList.contains('is-open');
+    const focusables = () => [toggle, ...panel.querySelectorAll<HTMLAnchorElement>('a')];
+
+    const setOpen = (open: boolean, focus = true) => {
+      nav.classList.toggle('is-open', open);
+      scrim.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      panel.inert = !open;
+      if (!focus) return;
+      if (open) panel.querySelector('a')?.focus({ preventScroll: true });
+      else toggle.focus({ preventScroll: true });
+    };
+
+    toggle.addEventListener('click', () => setOpen(!isOpen()));
+    scrim.addEventListener('click', () => setOpen(false));
+    panel.addEventListener('click', (e) => {
+      if ((e.target as Element).closest('a')) setOpen(false, false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (!isOpen()) return;
+      if (e.key === 'Escape') return setOpen(false);
+      if (e.key !== 'Tab') return;
+      const items = focusables();
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+  }
+</script>
+
+<style>
+  .nav {
+    --nav-top: 19px;
+    --nav-left: 36px;
+    --nav-w: 232px;
+    --nav-h: 56px;
+    --nav-open-w: 380px;
+    --nav-pad-x: 16px;
+    --logo-h: 17.8px;
+
+    position: fixed;
+    z-index: 50;
+    top: var(--nav-top);
+    left: var(--nav-left);
+    width: var(--nav-w);
+    overflow: hidden;
+    border-radius: 8px;
+    background: #151517;
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    transition: width 0.45s var(--ease-snap);
+  }
+  .nav.is-open {
+    width: var(--nav-open-w);
+  }
+  .nav__bar {
+    display: flex;
+    height: var(--nav-h);
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--nav-pad-x);
+  }
+  .nav__home {
+    display: flex;
+    border-radius: 4px;
+    color: var(--color-paper);
+  }
+  .nav__home :global(.nav__logo) {
+    display: block;
+    height: var(--logo-h);
+    width: auto;
+  }
+  .nav__menu {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    margin-right: -4.25px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .nav__menu span {
+    position: absolute;
+    left: 7px;
+    width: 17.5px;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--color-paper);
+    transition: transform 0.35s var(--ease-snap);
+  }
+  .nav__menu span:nth-child(1) {
+    top: 11px;
+  }
+  .nav__menu span:nth-child(2) {
+    top: 19px;
+  }
+  .nav.is-open .nav__menu span:nth-child(1) {
+    transform: translateY(4px) rotate(45deg);
+  }
+  .nav.is-open .nav__menu span:nth-child(2) {
+    transform: translateY(-4px) rotate(-45deg);
+  }
+  .nav a:focus-visible,
+  .nav button:focus-visible {
+    outline: 2px solid var(--color-marker);
+    outline-offset: 2px;
+  }
+
+  /* Panel: grid rows animate from 0 to the content height */
+  .nav__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    transition:
+      grid-template-rows 0.45s var(--ease-snap),
+      visibility 0s linear 0.45s;
+  }
+  .nav.is-open .nav__panel {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition:
+      grid-template-rows 0.45s var(--ease-snap),
+      visibility 0s;
+  }
+  .nav__panel-inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .nav__links {
+    margin: 0;
+    padding: 12px var(--nav-pad-x) 8px;
+    border-top: 1px solid rgb(255 255 255 / 0.08);
+  }
+  .nav__links a {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 6px 0;
+    color: var(--color-paper);
+    font-size: 34px;
+    font-weight: 900;
+    font-stretch: 86%;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 0.3s,
+      transform 0.3s var(--ease-snap),
+      color 0.2s;
+  }
+  .nav__links small {
+    color: var(--color-mist);
+    font-size: 11px;
+    font-weight: 600;
+    font-stretch: 100%;
+    letter-spacing: 0.04em;
+  }
+  .nav__links a:hover,
+  .nav__links a[aria-current='page'] {
+    color: var(--color-marker);
+  }
+  .nav.is-open .nav__links a {
+    opacity: 1;
+    transform: none;
+  }
+  .nav.is-open .nav__links li:nth-child(2) a { transition-delay: 0.04s; }
+  .nav.is-open .nav__links li:nth-child(3) a { transition-delay: 0.08s; }
+  .nav.is-open .nav__links li:nth-child(4) a { transition-delay: 0.12s; }
+  .nav.is-open .nav__links li:nth-child(5) a { transition-delay: 0.16s; }
+  .nav.is-open .nav__links li:nth-child(6) a { transition-delay: 0.2s; }
+  .nav.is-open .nav__links li:nth-child(7) a { transition-delay: 0.24s; }
+  .nav__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px var(--nav-pad-x) var(--nav-pad-x);
+  }
+  .nav__mail {
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 4px;
+    color: var(--color-mist);
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .nav__mail:hover {
+    color: var(--color-paper);
+  }
+  .nav__cta {
+    display: inline-flex;
+    height: 36px;
+    flex-shrink: 0;
+    align-items: center;
+    padding: 0 14px;
+    border-radius: 6px;
+    background: var(--color-marker);
+    color: var(--color-ink);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .nav__cta:hover {
+    background: var(--color-marker-deep);
+  }
+  .nav-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 49;
+    background: rgb(0 0 0 / 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s;
+  }
+  .nav-scrim.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (max-width: 767px) {
+    .nav {
+      --nav-top: 12px;
+      --nav-left: 12px;
+      --nav-w: 200px;
+      --nav-open-w: calc(100vw - 24px);
+      --nav-h: 48px;
+      --logo-h: 14px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav,
+    .nav *,
+    .nav-scrim {
+      transition-duration: 0s !important;
+      transition-delay: 0s !important;
+    }
+  }
+</style>
