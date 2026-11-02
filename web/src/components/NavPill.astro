@@ -1,11 +1,18 @@
 ---
 // Floating menu pill from the hero mockup (tools/hero-base/hero.html).
 // Closed it is a small dark bar; open it grows into the menu panel.
-import { nav, site } from '@/data/site';
+import { site } from '@/data/site';
 import Wordmark from './Wordmark.astro';
 
 const path = Astro.url.pathname;
-const links = [{ label: 'Home', href: '/' }, ...nav];
+// The links and button from the first version of the pill, kept as approved.
+const links = [
+  { label: 'Home', href: '/' },
+  { label: 'Work', href: '/work' },
+  { label: 'Services', href: '/services' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
 const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 
@@ -41,7 +48,7 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
       </ul>
       <div class="nav__foot">
         <a class="nav__mail" href={`mailto:${site.email}`}>{site.email}</a>
-        <a class="nav__cta" href={site.bookingUrl}>Plan my launch</a>
+        <a class="nav__cta" href={site.bookingUrl}>Start a project</a>
       </div>
     </div>
   </div>

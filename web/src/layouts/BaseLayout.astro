@@ -40,6 +40,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <main class="flex-1">
       <slot />
     </main>
-    <Footer />
+    <Footer flush={nav === 'pill'} />
   </body>
 </html>
