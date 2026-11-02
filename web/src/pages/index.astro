@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Button from '@/components/Button.astro';
+import Hero from '@/components/Hero.astro';
 import Section from '@/components/Section.astro';
 import PlanCard from '@/components/PlanCard.astro';
 import Placeholder from '@/components/Placeholder.astro';
@@ -20,24 +20,17 @@ const steps = [
 ---
 
 <BaseLayout
+  nav="pill"
   title={site.name}
   description="A small studio that designs, builds and runs your brand, website, social content and lead follow-up for one fixed monthly fee. Book a 20-minute call."
 >
-  <!-- Hero -->
-  <section class="mx-auto max-w-6xl px-4 pt-20 pb-16">
-    <h1 class="max-w-4xl text-4xl font-bold tracking-tight md:text-6xl">
-      Your brand, website, social and lead follow-up. One team. One monthly plan.
-    </h1>
-    <p class="mt-6 max-w-2xl text-lg text-muted">
-      MuzMesh Creative is a three-person studio that designs, builds and runs the online side of your business for a
-      fixed monthly fee.
-    </p>
-    <Placeholder note="Add 'We work with [industry 1] and [industry 2].' once focus industries are confirmed." />
-    <div class="mt-8 flex flex-wrap gap-3">
-      <Button href={site.bookingUrl}>Book a 20-minute call</Button>
-      <Button href="/plans" variant="secondary">See plans and pricing</Button>
-    </div>
-  </section>
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" />
+  </Fragment>
+
+  <Hero />
 
   <!-- Problem -->
   <Section heading="Stop managing four freelancers." class="border-t border-line">

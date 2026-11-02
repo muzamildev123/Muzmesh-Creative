@@ -13,6 +13,22 @@
   --color-warn: #b45309;
 }
 
+/* MuzMesh brand ("The Mesh", docs/brand/tailwind-theme.css). Used by the new hero first;
+   the rest of the site moves over to these when each section is redesigned. */
+@theme static {
+  --font-display: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --color-ink-2: #17171d;
+  --color-paper: #f2f2ee;
+  --color-card: #ffffff;
+  --color-graphite: #55555f;
+  --color-mist: #a1a1aa;
+  --color-line-ink: #2c2c35;
+  --color-marker: #ffd60a;
+  --color-marker-deep: #f2c200;
+  --ease-snap: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
 html {
   scroll-behavior: smooth;
 }
