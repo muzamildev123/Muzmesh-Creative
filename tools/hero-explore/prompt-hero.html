@@ -473,6 +473,57 @@ html.open .after{display:block}
   .why{grid-template-columns:1fr;row-gap:30px}
   .why b{margin-bottom:14px}
 }
+/* ---------- a prompt vs. a partner ---------- */
+.vs{position:relative;padding-block:clamp(40px,8vh,90px) clamp(120px,18vh,200px);background:#000}
+.vs .lab{margin-bottom:clamp(24px,3.5vh,36px)}
+.vs h2{margin:0;font-weight:500;font-size:clamp(34px,4.6vw,76px);line-height:1.04;letter-spacing:-.035em}
+.vs h2>span{display:block;text-wrap:balance}
+.vs h2 .dim{color:rgba(var(--fg-c),.42)}
+.vsg{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,2.4vw,40px);margin-top:clamp(56px,8vh,96px);align-items:stretch}
+.vsc{position:relative;display:flex;flex-direction:column;border-radius:20px;padding:clamp(22px,2.4vw,36px);min-width:0;
+  opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+.vs.in .vsc{opacity:1;transform:none}
+.vs.in .vsc.us{transition-delay:.18s}
+.vsh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:26px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase}
+/* the prompt: a generic, system-font chat box, a little washed out */
+.vsc.them{background:#0d0d0f;box-shadow:inset 0 0 0 1px rgba(var(--fg-c),.1);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.them .vsh{color:rgba(var(--fg-c),.45)}
+.vprompt{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 8px 8px 18px;border-radius:14px;background:#17171a;box-shadow:inset 0 0 0 1px rgba(var(--fg-c),.12);font-size:15px;color:rgba(var(--fg-c),.82)}
+.vprompt .tx{flex:1;min-width:0;line-height:1.4;padding:4px 0}
+.vprompt .tx::after{content:"";display:inline-block;width:1.5px;height:1.1em;margin-left:2px;vertical-align:-.18em;background:currentColor;animation:vblink 1s steps(1) infinite}
+.vs.typed .vprompt .tx::after{display:none}
+@keyframes vblink{50%{opacity:0}}
+.vsend{flex:none;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#7c5cff,#c44dff);color:#fff;font-size:16px}
+.vout{margin-top:22px;padding:18px 18px 4px;border-radius:14px;background:linear-gradient(135deg,rgba(124,92,255,.10),rgba(196,77,255,.06));box-shadow:inset 0 0 0 1px rgba(150,120,255,.14)}
+.vout .vgen{display:flex;align-items:center;gap:8px;font-size:12.5px;color:rgba(var(--fg-c),.5);margin-bottom:10px}
+.vout .vgen i{font-style:normal;color:#b49cff}
+.vlist{list-style:none;margin:0;padding:0}
+.vlist li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:baseline;padding:13px 0;border-top:1px solid rgba(var(--fg-c),.08);font-size:15.5px;line-height:1.45;
+  opacity:0;transform:translateY(6px);transition:opacity .5s ease,transform .5s ease;transition-delay:var(--d,0s)}
+.vlist li:first-child{border-top:0}
+.vs.typed .them .vlist li,.vs.in .us .vlist li{opacity:1;transform:none}
+.them .vlist li{color:rgba(var(--fg-c),.55)}
+.them .vlist li::before{content:"–";color:rgba(var(--fg-c),.32)}
+.vfoot{margin-top:auto;padding-top:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.them .vfoot{font-size:14px;color:rgba(var(--fg-c),.4)}
+/* the partner: the brand's own type, warm light, every line ticked */
+.vsc.us{background:radial-gradient(120% 80% at 100% 0%,rgba(var(--y-c),.16),rgba(var(--y-c),0) 60%),#0e0e10;box-shadow:inset 0 0 0 1px rgba(var(--y-c),.42),0 40px 120px -40px rgba(var(--y-c),.35)}
+.us .vsh{color:var(--fg)}
+.us .vsh .lab{margin:0}
+.us .vsh span:last-child{color:var(--y)}
+.us .vlist li{font-size:16px;color:var(--fg)}
+.us .vlist li::before{content:"";width:16px;height:16px;align-self:start;margin-top:3px;border-radius:50%;
+  background:var(--y) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.3 7 10.6l4.6-5' fill='none' stroke='%230e0e10' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.us .vlist li span{color:var(--faint)}
+.vprice{font-size:15px;color:var(--muted)}
+.vprice b{color:var(--fg);font-weight:500}
+.vschip{position:absolute;left:50%;top:50%;z-index:2;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#000;box-shadow:inset 0 0 0 1px var(--hair);font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--faint)}
+@media (max-width:900px){
+  .vsg{grid-template-columns:1fr;gap:56px}
+  .vschip{top:auto;bottom:auto;position:relative;left:auto;transform:none;margin:-34px auto -34px;grid-row:2}
+  .vsc.us{grid-row:3}
+}
+@media (prefers-reduced-motion:reduce){.vsc,.vlist li{transition:none!important;opacity:1!important;transform:none!important}.vprompt .tx::after{animation:none}}
 @media (prefers-reduced-motion:reduce){.nav,.main>*,.next,.bar,.chip,.go,.build,.win,.bfoot,.bdone,.slot>*,.pbg,.pcards,.steps li,.steps li *,.lgrid,.lpan,.ldim,.mc,.lmsg,.lmsg h2,.lmsg p,.ldim2,.sdim,#curtain,.sh .s1,.sh .s2,.sp,.sbtns,.sagain,.yslot::before,.yveil,.cta,.boot,.sk::before,.launch::after{transition:none!important;animation:none!important}}
 </style>
 
@@ -596,6 +647,42 @@ html.open .after{display:block}
       <li><b>03</b><h3>Found by AI</h3><p>Built so AI search can read and cite you, not only rank you on Google.</p></li>
       <li><b>04</b><h3>One team for the launch</h3><p>Logo, brand, landing page and social in one place, and kept running after launch.</p></li>
     </ol>
+  </div>
+</section>
+
+<section class="vs after pad" id="partner" aria-labelledby="vsh">
+  <div class="in">
+    <span class="lab">A prompt vs. a partner</span>
+    <h2 id="vsh"><span class="dim">A prompt gives you a page.</span> <span>A partner gives you a brand.</span></h2>
+    <div class="vsg">
+      <div class="vsc them">
+        <div class="vsh"><span>Any AI site builder</span><span>Free · 30 seconds</span></div>
+        <div class="vprompt" aria-label="Prompt: make a landing page for my AI startup"><span class="tx" data-text="make a landing page for my AI startup"></span><span class="vsend" aria-hidden="true">↑</span></div>
+        <div class="vout">
+          <div class="vgen"><i>✦</i> Here’s your page!</div>
+          <ul class="vlist">
+            <li style="--d:.05s">A purple gradient, a sparkle icon and the default font</li>
+            <li style="--d:.2s">Copy written by the model you’re competing with</li>
+            <li style="--d:.35s">No reason behind a single choice</li>
+            <li style="--d:.5s">A new look every time you ask again</li>
+            <li style="--d:.65s">Nobody looking after it once launch week is over</li>
+          </ul>
+        </div>
+        <div class="vfoot"><span>Looks like everyone else’s.</span></div>
+      </div>
+      <div class="vschip" aria-hidden="true">vs</div>
+      <div class="vsc us">
+        <div class="vsh"><span class="lab">MuzMesh</span><span>Your design partner</span></div>
+        <ul class="vlist">
+          <li style="--d:.35s"><p style="margin:0">A logo and brand made for your idea alone</p></li>
+          <li style="--d:.47s"><p style="margin:0">A landing page designed in Figma by people, then built <span>with a reason behind every choice</span></p></li>
+          <li style="--d:.59s"><p style="margin:0">Set up so ChatGPT, Perplexity and Google’s AI answers can find you</p></li>
+          <li style="--d:.71s"><p style="margin:0">Social profiles, tracking and a CRM set up in the same go</p></li>
+          <li style="--d:.83s"><p style="margin:0">Kept running after launch <span>with site updates, social posts and a monthly report</span></p></li>
+        </ul>
+        <div class="vfoot"><span class="vprice"><b>$500</b> to set up · <b>$200</b> a month</span><a class="cta" href="#top">Plan my launch <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1188,6 +1275,24 @@ html.open .after{display:block}
   ghost.querySelectorAll('a,button').forEach(e => e.setAttribute('tabindex', '-1'));
   hero.append(ghost);
   const ghostWords = [...ghost.querySelectorAll('.mani .w')], ghostUl = ghost.querySelector('.ul path');
+
+
+  /* ---------- a prompt vs. a partner: the prompt types itself when the section comes into view ---------- */
+  const vs = $('partner'), vtx = vs.querySelector('.vprompt .tx'), vtext = vtx.dataset.text;
+  vs.querySelectorAll('a[href="#top"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
+  let vtyped = false;
+  new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting || vtyped) return;
+    vtyped = true;
+    vs.classList.add('in');
+    if (reduce) { vtx.textContent = vtext; vs.classList.add('typed'); return; }
+    let n = 0;
+    setTimeout(function step() {
+      vtx.textContent = vtext.slice(0, ++n);
+      if (n < vtext.length) setTimeout(step, 34 + Math.random() * 40);
+      else setTimeout(() => vs.classList.add('typed'), 380);
+    }, 700);
+  }, { threshold: .3 }).observe(vs.querySelector('.vsg'));
 
   setHeight();
   chips.forEach(o => o.setAttribute('aria-pressed', 'false'));
