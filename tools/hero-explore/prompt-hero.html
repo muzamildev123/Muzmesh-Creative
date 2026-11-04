@@ -430,8 +430,16 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   .sagain{margin-top:12px}
 }
 /* ---------- after the story: who MuzMesh is (only on the page once Build my idea has opened the story) ---------- */
-/* as the finished hero scrolls away, its bottom melts into the black of the next section (never during the story) */
-.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:45%;z-index:30;pointer-events:none;background:linear-gradient(rgba(0,0,0,0),#000 92%);opacity:var(--seam,0)}
+/* the end of the story: the finished hero fades to black, then About MuzMesh fades in, still pinned (a copy of its first
+   screen, inside the hero). The real section sits exactly underneath that copy and takes over the moment the scrub ends,
+   so from there the page simply scrolls. */
+.fadeblk{position:absolute;inset:0;z-index:40;background:#000;opacity:0;pointer-events:none}
+.hero.faded .fadeblk{pointer-events:auto}
+.hero>.echo{position:absolute;left:0;right:0;top:0;z-index:41;margin:0;opacity:0;visibility:hidden;pointer-events:none}
+.hero.fading>.echo{visibility:visible}
+#about{margin-top:-100vh;visibility:hidden}
+html.handed #about{visibility:visible}
+.mani .m1 .w{--o:.42}
 .after{display:none}
 html.open .after{display:block}
 .intro{position:relative;padding-block:clamp(120px,18vh,220px) clamp(110px,16vh,190px);background:#000;overflow:hidden}
@@ -566,6 +574,7 @@ html.open .after{display:block}
       </div>
     </div>
   </div>
+  <div class="fadeblk" aria-hidden="true"></div>
 </section>
 </div>
 
@@ -860,7 +869,9 @@ html.open .after{display:block}
   const A_END = T_DONE + 900;                            // where Build my idea stops
   const L = A_END + 900;                                 // the launch (a short hold before it)
   const G = L + 250;                                     // the camera starts pulling back
-  const END = G + 12900;
+  const SOLVED = G + 12900;                              // the answer is complete: where Launch now stops
+  const FO = SOLVED + 700, FI = FO + 1050;               // fade to black, then About MuzMesh fades in
+  const END = FI + 2700;
   const RATE = .3, DEAD = 24;                            // px of scroll per story-ms; a little dead zone at the top
   const E_OUT = 'cubic-bezier(.2,.7,.2,1)', E_IO = 'cubic-bezier(.4,0,.2,1)';
   const story = $('story'), main = [...document.querySelectorAll('.main>*')];
@@ -978,6 +989,16 @@ html.open .after{display:block}
     fadeIn(sh.parentNode.querySelector('.sp'), G + 11900, 600, 8);
     fadeIn(sh.parentNode.querySelector('.sbtns'), G + 12050, 600, 8);
     fadeIn($('again2'), G + 12250, 600, 8);
+
+    /* the hand-off: everything fades to black, then About MuzMesh rises in and its words light up one by one */
+    track(fadeblk, 'opacity', [[FO, 0, 'ease'], [FO + 900, 1]]);
+    track(ghost, 'opacity', [[FI, 0, 'ease'], [FI + 700, 1]]);
+    track(ghost, 'transform', [[FI, 'translateY(18px)', E_OUT], [FI + 1100, 'none']]);
+    ghostWords.forEach((w, i) => {
+      const t = FI + 250 + i * 220, end = w.closest('.m1') ? .42 : 1;
+      track(w, 'opacity', [[t, .12, 'ease'], [t + 450, end]]);
+    });
+    track(ghostUl, 'strokeDashoffset', [[FI + 1650, 1, 'cubic-bezier(.6,0,.2,1)'], [FI + 2250, 0]]);
     seek(Tcur);
   }
 
@@ -1014,6 +1035,8 @@ html.open .after{display:block}
     on('p4d', T >= G + 10400);
     on('p4e', T >= G + 11900);
     on('solved', T >= G + 12400);
+    on('faded', T >= FO + 450);
+    on('fading', T >= FI);
     if (!c.contains('lost') && !raf && !reduce && !document.hidden) raf = requestAnimationFrame(loop);
   }
   function seek(T) {
@@ -1030,7 +1053,7 @@ html.open .after{display:block}
   const toY = T => T <= 0 ? 0 : Math.round(T * RATE + DEAD);
   // 100vh is the tallest the viewport gets, so the gate is always reachable
   const setHeight = () => { story.style.height = gate ? `calc(100vh + ${toY(gate)}px)` : ''; };
-  const setGate = g => { if (g !== gate) { gate = g; document.documentElement.classList.toggle('open', g > 0); setHeight(); } };
+  const setGate = g => { if (g !== gate) { gate = g; document.documentElement.classList.toggle('open', g > 0); if (g !== END) document.documentElement.classList.remove('handed'); setHeight(); } };
   let Tcur = 0, Tgoal = 0, auto = null, rafS = 0, lastNow = 0, wantY = -1;
   function tick(now) {
     rafS = 0;
@@ -1067,6 +1090,7 @@ html.open .after{display:block}
     if (auto) { if (Math.abs(scrollY - wantY) > 3) takeOver(); else return; }
     Tgoal = toT(scrollY);
     if (Tgoal <= 0) setGate(0);   // back at the prompt bar: locked again until Build my idea
+    document.documentElement.classList.toggle('handed', gate === END && scrollY >= toY(END) - 1);
     if (Tgoal > 0 && document.activeElement === input) input.blur();
     if (!cur) { Tgoal = 0; return; }
     kick();
@@ -1102,7 +1126,7 @@ html.open .after{display:block}
     ensureIdea();
     play(A_END, () => $('launch').focus({ preventScroll: true }));
   });
-  $('launch').addEventListener('click', () => { if (cur) play(END, () => $('cta').focus({ preventScroll: true })); });
+  $('launch').addEventListener('click', () => { if (cur) play(SOLVED, () => $('cta').focus({ preventScroll: true })); });
   const startOver = () => {
     auto = null;
     input.value = ''; sync();
@@ -1128,7 +1152,7 @@ html.open .after{display:block}
   });
 
 
-  /* ---------- after the story: the manifesto lights up word by word as it rises into view ---------- */
+  /* ---------- after the story: About MuzMesh (its manifesto is split into words, so they can light up one by one) ---------- */
   const mani = $('mani');
   [...mani.querySelectorAll('.m1,.m2')].forEach(line => {
     const walk = node => [...node.childNodes].forEach(n => {
@@ -1144,28 +1168,15 @@ html.open .after{display:block}
     });
     walk(line);
   });
-  const words = [...mani.querySelectorAll('.w')].map(w => ({ w, end: w.closest('.m1') ? .42 : 1 }));
-  const ul = mani.querySelector('.ul');
-  let lastP = -1;
-  let seamK = -1;
-  function reveal() {
-    if (!document.documentElement.classList.contains('open')) return;
-    const k = Math.min(1, Math.max(0, (scrollY - toY(END)) / (innerHeight * .45)));
-    if (k !== seamK) { seamK = k; hero.style.setProperty('--seam', k.toFixed(3)); }
-    const r = mani.getBoundingClientRect(), vh = innerHeight;
-    // 0 when the manifesto's top is 90% down the screen, 1 when it is 35% down
-    const p = reduce ? 1 : Math.min(1, Math.max(0, (vh * .9 - r.top) / (vh * .55)));
-    if (Math.abs(p - lastP) < .002) return;
-    lastP = p;
-    const n = words.length;
-    words.forEach(({ w, end }, i) => {
-      const k = Math.min(1, Math.max(0, (p * (n + 2) - i) / 2.2));      // each word fades in over a couple of words' worth of scroll
-      w.style.setProperty('--o', (.12 + (end - .12) * k).toFixed(3));
-    });
-    ul.style.setProperty('--d', (1 - Math.min(1, Math.max(0, (p - .82) / .18))).toFixed(3));
-  }
-  addEventListener('scroll', reveal, { passive: true });
-  addEventListener('resize', () => { lastP = -1; reveal(); });
+  // the copy of the section's first screen that fades in inside the hero
+  const fadeblk = hero.querySelector('.fadeblk');
+  const ghost = $('about').cloneNode(true);
+  ghost.classList.remove('after'); ghost.classList.add('echo');
+  ghost.setAttribute('aria-hidden', 'true'); ghost.removeAttribute('aria-labelledby');
+  ghost.removeAttribute('id'); ghost.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
+  ghost.querySelectorAll('a,button').forEach(e => e.setAttribute('tabindex', '-1'));
+  hero.append(ghost);
+  const ghostWords = [...ghost.querySelectorAll('.mani .w')], ghostUl = ghost.querySelector('.ul path');
 
   setHeight();
   chips.forEach(o => o.setAttribute('aria-pressed', 'false'));
