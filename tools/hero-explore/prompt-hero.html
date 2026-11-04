@@ -253,7 +253,11 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 .ghost:hover{box-shadow:inset 0 0 0 1px rgba(var(--fg-c),.7)}
 .ghost:focus-visible{outline:2px solid var(--y);outline-offset:3px}
 /* the nav comes back once the answer is on screen */
-.hero.solved .nav{pointer-events:auto;z-index:12}
+.hero.solved .nav{pointer-events:auto;z-index:42}   /* above the fade to black: the nav stays through the hand-off */
+/* the same nav, fixed, for the rest of the page: it takes over from the hero's at the exact moment the page starts scrolling */
+.sitenav{position:fixed;top:0;left:0;right:0;z-index:50;visibility:hidden;background:rgba(0,0,0,0);transition:background .3s,box-shadow .3s}
+html.handed .sitenav{visibility:visible}
+html.below .sitenav{background:rgba(0,0,0,.78);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--hair)}
 
 /* their window: rendered at its final size in the right column and flown in from the card with a transform */
 .yslot{position:relative;min-width:0}
@@ -1053,7 +1057,7 @@ html.open .after{display:block}
   const toY = T => T <= 0 ? 0 : Math.round(T * RATE + DEAD);
   // 100vh is the tallest the viewport gets, so the gate is always reachable
   const setHeight = () => { story.style.height = gate ? `calc(100vh + ${toY(gate)}px)` : ''; };
-  const setGate = g => { if (g !== gate) { gate = g; document.documentElement.classList.toggle('open', g > 0); if (g !== END) document.documentElement.classList.remove('handed'); setHeight(); } };
+  const setGate = g => { if (g !== gate) { gate = g; document.documentElement.classList.toggle('open', g > 0); if (g !== END) document.documentElement.classList.remove('handed', 'below'); setHeight(); } };
   let Tcur = 0, Tgoal = 0, auto = null, rafS = 0, lastNow = 0, wantY = -1;
   function tick(now) {
     rafS = 0;
@@ -1091,6 +1095,7 @@ html.open .after{display:block}
     Tgoal = toT(scrollY);
     if (Tgoal <= 0) setGate(0);   // back at the prompt bar: locked again until Build my idea
     document.documentElement.classList.toggle('handed', gate === END && scrollY >= toY(END) - 1);
+    document.documentElement.classList.toggle('below', gate === END && scrollY >= toY(END) + 24);
     if (Tgoal > 0 && document.activeElement === input) input.blur();
     if (!cur) { Tgoal = 0; return; }
     kick();
@@ -1135,7 +1140,7 @@ html.open .after{display:block}
     scrollTo(0, 0);
     setTimeout(() => input.focus({ preventScroll: true }), 50);
   };
-  hero.querySelectorAll('a[href="#top"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));   // placeholders for now
+  document.querySelectorAll('a[href="#top"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));   // placeholders for now
   $('again').addEventListener('click', startOver);
   $('again2').addEventListener('click', startOver);
 
@@ -1168,6 +1173,12 @@ html.open .after{display:block}
     });
     walk(line);
   });
+  // the nav for the rest of the page: a fixed copy of the hero's, in exactly the same place
+  const sitenav = nav.cloneNode(true);
+  sitenav.classList.add('sitenav');
+  sitenav.querySelector('.links').setAttribute('aria-label', 'Main');
+  $('about').before(sitenav);
+  sitenav.querySelectorAll('a[href="#top"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
   // the copy of the section's first screen that fades in inside the hero
   const fadeblk = hero.querySelector('.fadeblk');
   const ghost = $('about').cloneNode(true);
