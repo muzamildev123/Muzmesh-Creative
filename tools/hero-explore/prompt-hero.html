@@ -973,9 +973,15 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   }
 
   /* ---------- scroll ⇄ story time ---------- */
-  const toT = y => Math.max(0, Math.min(END, (y - DEAD) / RATE));
+  /* The prompt bar doesn't scrub: there the page doesn't scroll at all, and only Build my idea moves the story on.
+     From then on the page is as long as the whole story (the "gate" is open), so scrolling scrubs forwards and
+     backwards. Scrolling all the way back to the prompt bar closes the gate again. */
+  let gate = 0;
+  const toT = y => Math.max(0, Math.min(gate, (y - DEAD) / RATE));
   const toY = T => T <= 0 ? 0 : Math.round(T * RATE + DEAD);
-  const setHeight = () => { story.style.height = `calc(100vh + ${Math.ceil(END * RATE + DEAD)}px)`; };   // 100vh: the tallest the viewport gets, so the end is always reachable
+  // 100vh is the tallest the viewport gets, so the gate is always reachable
+  const setHeight = () => { story.style.height = gate ? `calc(100vh + ${toY(gate)}px)` : ''; };
+  const setGate = g => { if (g !== gate) { gate = g; setHeight(); } };
   let Tcur = 0, Tgoal = 0, auto = null, rafS = 0, lastNow = 0, wantY = -1;
   function tick(now) {
     rafS = 0;
@@ -997,19 +1003,22 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   }
   const kick = () => { if (!rafS) rafS = requestAnimationFrame(tick); };
   function play(to, done) {
+    setGate(END);
     if (Tcur >= to) { done && done(); return; }
     if (reduce) { auto = null; Tgoal = Tcur = to; scrollTo(0, toY(to)); seek(to); done && done(); return; }
     auto = { from: Tcur, to, t0: performance.now(), done };
-    lastNow = 0; kick();
+    wantY = scrollY; lastNow = 0; kick();
   }
   const takeOver = () => { if (auto) { auto = null; Tgoal = toT(scrollY); } };
   addEventListener('wheel', takeOver, { passive: true });
   addEventListener('touchstart', takeOver, { passive: true });
-  addEventListener('keydown', e => { if (!(e.target.closest && e.target.closest('input'))) takeOver(); });
+  const SCROLL_KEYS = new Set(['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ']);
+  addEventListener('keydown', e => { if (SCROLL_KEYS.has(e.key) && !(e.target.closest && e.target.closest('input'))) takeOver(); });
   addEventListener('scroll', () => {
     if (auto) { if (Math.abs(scrollY - wantY) > 3) takeOver(); else return; }
     Tgoal = toT(scrollY);
-    if (Tgoal > 0) { ensureIdea(); if (document.activeElement === input) input.blur(); }
+    if (Tgoal <= 0) setGate(0);   // back at the prompt bar: locked again until Build my idea
+    if (Tgoal > 0 && document.activeElement === input) input.blur();
     if (!cur) { Tgoal = 0; return; }
     kick();
   }, { passive: true });
@@ -1049,7 +1058,7 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
     auto = null;
     input.value = ''; sync();
     chips.forEach(o => o.setAttribute('aria-pressed', 'false'));
-    Tgoal = Tcur = 0; seek(0);
+    Tgoal = Tcur = 0; seek(0); setGate(0);
     scrollTo(0, 0);
     setTimeout(() => input.focus({ preventScroll: true }), 50);
   };
@@ -1072,7 +1081,6 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   setHeight();
   chips.forEach(o => o.setAttribute('aria-pressed', 'false'));
   sync();
-  if (scrollY > 0) { ensureIdea(); Tgoal = Tcur = toT(scrollY); seek(Tcur); }
 })();
 
 </script>
