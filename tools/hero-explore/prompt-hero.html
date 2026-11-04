@@ -803,7 +803,9 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
      Everything after the prompt bar is one timeline, counted in story-milliseconds. The page is tall and the hero sticks
      to the top; how far you've scrolled is where you are in the story. Every movement is a paused Web Animation whose
      time is set from the scroll, so scrolling back plays it backwards, exactly. Build my idea and Launch now simply
-     scroll the page for you at story speed, and any scroll of yours takes over. */
+     scroll the page for you at story speed, and any scroll of yours takes over.
+     The prompt bar is a gate: the page only grows tall once Build my idea is pressed, so scrolling can't start the
+     story. Scrolling back all the way to the prompt bar closes the gate again. */
   const STEP = 720, RUN = 600, LEAD = 900;               // one log line every 0.72s, once the idea has landed in the log
   const BUILD = (steps.length - 1) * STEP + RUN;          // 4.2s of building, shown on the clock as 15s
   const T_DONE = LEAD + BUILD;                           // ready
@@ -975,7 +977,9 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   /* ---------- scroll ⇄ story time ---------- */
   const toT = y => Math.max(0, Math.min(END, (y - DEAD) / RATE));
   const toY = T => T <= 0 ? 0 : Math.round(T * RATE + DEAD);
-  const setHeight = () => { story.style.height = `calc(100vh + ${Math.ceil(END * RATE + DEAD)}px)`; };   // 100vh: the tallest the viewport gets, so the end is always reachable
+  let open = false;                                      // has Build my idea opened the story? until then the page doesn't scroll
+  const setHeight = () => { story.style.height = open ? `calc(100vh + ${Math.ceil(END * RATE + DEAD)}px)` : ''; };   // 100vh: the tallest the viewport gets, so the end is always reachable
+  const close = () => { open = false; setHeight(); };
   let Tcur = 0, Tgoal = 0, auto = null, rafS = 0, lastNow = 0, wantY = -1;
   function tick(now) {
     rafS = 0;
@@ -993,6 +997,7 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
       Tcur = Math.abs(d) < .5 ? Tgoal : Tcur + d * (1 - Math.exp(-dt / 75));
     }
     seek(Tcur);
+    if (!auto && open && Tcur === 0 && Tgoal === 0) close();   // scrubbed all the way back: the prompt bar is the gate again
     if (auto || Tcur !== Tgoal) rafS = requestAnimationFrame(tick); else lastNow = 0;
   }
   const kick = () => { if (!rafS) rafS = requestAnimationFrame(tick); };
@@ -1008,6 +1013,7 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   addEventListener('keydown', e => { if (!(e.target.closest && e.target.closest('input'))) takeOver(); });
   addEventListener('scroll', () => {
     if (auto) { if (Math.abs(scrollY - wantY) > 3) takeOver(); else return; }
+    if (!open) { Tgoal = 0; return; }                    // a phone's toolbar can still leave a little scroll: it never starts the story
     Tgoal = toT(scrollY);
     if (Tgoal > 0) { ensureIdea(); if (document.activeElement === input) input.blur(); }
     if (!cur) { Tgoal = 0; return; }
@@ -1042,6 +1048,7 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
     clearInterval(typing);
     input.blur();
     ensureIdea();
+    open = true; setHeight();
     play(A_END, () => $('launch').focus({ preventScroll: true }));
   });
   $('launch').addEventListener('click', () => { if (cur) play(END, () => $('cta').focus({ preventScroll: true })); });
@@ -1050,7 +1057,7 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
     input.value = ''; sync();
     chips.forEach(o => o.setAttribute('aria-pressed', 'false'));
     Tgoal = Tcur = 0; seek(0);
-    scrollTo(0, 0);
+    scrollTo(0, 0); close();
     setTimeout(() => input.focus({ preventScroll: true }), 50);
   };
   hero.querySelectorAll('a[href="#top"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));   // placeholders for now
@@ -1072,7 +1079,7 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   setHeight();
   chips.forEach(o => o.setAttribute('aria-pressed', 'false'));
   sync();
-  if (scrollY > 0) { ensureIdea(); Tgoal = Tcur = toT(scrollY); seek(Tcur); }
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';   // a reload starts at the prompt bar, gate closed
 })();
 
 </script>
