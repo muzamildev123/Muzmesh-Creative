@@ -433,85 +433,20 @@ html.below .sitenav{background:rgba(0,0,0,.78);-webkit-backdrop-filter:blur(14px
   .sbtns{margin-top:16px}
   .sagain{margin-top:12px}
 }
-/* ---------- after the story: who MuzMesh is (only on the page once Build my idea has opened the story) ---------- */
-/* the end of the story: the finished hero fades to black, then About MuzMesh fades in, still pinned (a copy of its first
+/* ---------- after the story (only on the page once Build my idea has opened the story) ---------- */
+/* the end of the story: the finished hero fades to black, then the next section fades in, still pinned (a copy of its first
    screen, inside the hero). The real section sits exactly underneath that copy and takes over the moment the scrub ends,
    so from there the page simply scrolls. */
 .fadeblk{position:absolute;inset:0;z-index:40;background:#000;opacity:0;pointer-events:none}
 .hero.faded .fadeblk{pointer-events:auto}
 .hero>.echo{position:absolute;left:0;right:0;top:0;z-index:41;margin:0;opacity:0;visibility:hidden;pointer-events:none}
 .hero.fading>.echo{visibility:visible}
-#about{margin-top:-100vh;visibility:hidden}
-html.handed #about{visibility:visible}
-.mani .m1 .w{--o:.42}
+#team{margin-top:-100vh;visibility:hidden}
+html.handed #team{visibility:visible}
 .after{display:none}
 html.open .after{display:block}
-.intro{position:relative;padding-block:clamp(120px,18vh,220px) clamp(110px,16vh,190px);background:#000;overflow:hidden}
-.intro::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(60% 50% at 18% 30%,rgba(var(--y-c),.07),transparent 70%)}
-.iw{position:relative}
-.intro .lab{margin-bottom:clamp(28px,4vh,44px)}
-.mani{margin:0;font-weight:500;font-size:clamp(40px,7.4vw,132px);line-height:.98;letter-spacing:-.04em}
-.mani>span{display:block}
-.mani .w{opacity:var(--o,1)}
-.mani em{font-style:normal;position:relative;white-space:nowrap}
-.mani .ul{position:absolute;left:-1%;width:102%;bottom:-.16em;height:.26em;overflow:visible;pointer-events:none}
-.mani .ul path{fill:none;stroke:var(--y);stroke-width:2.4;stroke-linecap:round;stroke-dasharray:1 1;stroke-dashoffset:var(--d,0)}
-.ibody{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(20px,2.4vw,40px);margin-top:clamp(64px,10vh,120px);align-items:start}
-.ilead{grid-column:1/3}
-.ibody .isub{grid-column:3/5}
-.ibody p{margin:0;text-wrap:pretty}
-.ilead{font-size:clamp(21px,1.9vw,30px);line-height:1.32;letter-spacing:-.018em;color:var(--fg);max-width:30ch}
-.ibody .isub{font-size:clamp(16px,1.15vw,18px);line-height:1.62;color:var(--muted);max-width:44ch;padding-top:.35em}
-.why{list-style:none;margin:clamp(72px,11vh,130px) 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(20px,2.4vw,40px)}
-.why li{border-top:1px solid var(--hair);padding-top:22px}
-.why b{display:block;font-family:var(--mono);font-weight:400;font-size:12px;letter-spacing:.06em;color:var(--y);margin-bottom:26px}
-.why h3{margin:0 0 10px;font-weight:500;font-size:clamp(19px,1.45vw,23px);letter-spacing:-.015em;line-height:1.2}
-.why p{margin:0;font-size:15px;line-height:1.6;color:var(--faint);max-width:32ch;text-wrap:pretty}
-@media (max-width:1000px){.why{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:44px}.ibody{grid-template-columns:1fr;gap:24px}.ilead,.ibody .isub{grid-column:auto}}
-@media (max-width:760px){
-  .why{grid-template-columns:1fr;row-gap:30px}
-  .why b{margin-bottom:14px}
-}
-/* ---------- the reasons: their redesigned page again, with a designer's notes drawn over it ---------- */
-.why2{position:relative;padding-block:clamp(40px,8vh,90px) clamp(110px,16vh,180px);background:#000}
-.why2 .lab{margin-bottom:clamp(24px,3.5vh,36px)}
-.why2 h2{margin:0;font-weight:500;font-size:clamp(34px,4.6vw,76px);line-height:1.04;letter-spacing:-.035em}
-.why2 h2>span{display:block;text-wrap:balance}
-.why2 h2 .dim{color:rgba(var(--fg-c),.42)}
-.rg{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:clamp(28px,3.6vw,64px);margin-top:clamp(52px,8vh,90px);align-items:center}
-.rframe{border-radius:14px;overflow:hidden;background:#141418;box-shadow:0 0 0 1px rgba(var(--fg-c),.14),0 50px 120px -40px rgba(0,0,0,.95)}
-.rbar{display:flex;align-items:center;gap:7px;height:34px;padding:0 14px;background:#141418;border-bottom:1px solid rgba(var(--fg-c),.08)}
-.rbar i{width:9px;height:9px;border-radius:50%;background:rgba(var(--fg-c),.18)}
-.rbar span{margin:0 auto;padding:3px 14px;border-radius:6px;background:rgba(var(--fg-c),.06);font-family:var(--mono);font-size:11px;color:rgba(var(--fg-c),.55);transform:translateX(-20px)}
-.rvp{position:relative;aspect-ratio:960/580;overflow:hidden;--s:.6}
-.rvp .ypg{transition:filter .4s}
-.rmarks{position:absolute;inset:0;pointer-events:none}
-.rm{position:absolute;transition:opacity .35s}
-.rm svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.rm path{fill:none;stroke:var(--y);stroke-width:2.4;stroke-linecap:round;stroke-dasharray:1 1;stroke-dashoffset:1;transition:stroke-dashoffset .9s cubic-bezier(.6,0,.2,1);transition-delay:var(--d,0s)}
-.rm b{position:absolute;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--y);color:var(--on-y);font-family:var(--mono);font-size:12px;font-weight:500;
-  box-shadow:0 6px 18px -4px rgba(0,0,0,.6);transform:scale(0);transition:transform .45s cubic-bezier(.3,1.6,.5,1);transition-delay:calc(var(--d,0s) + .55s)}
-.why2.in .rm path{stroke-dashoffset:0}
-.why2.in .rm b{transform:none}
-.rnotes{list-style:none;margin:0;padding:0;display:grid;gap:4px}
-.rnotes li{position:relative;display:grid;grid-template-columns:30px minmax(0,1fr);gap:4px 14px;padding:16px 16px 16px 14px;border-radius:14px;cursor:default;outline:none;
-  opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease,background .25s;transition-delay:calc(var(--d,0s) + .3s),calc(var(--d,0s) + .3s),0s}
-.why2.in .rnotes li{opacity:1;transform:none}
-.rnotes li b{grid-row:span 2;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px var(--y);color:var(--y);font-family:var(--mono);font-size:12px;font-weight:500;transition:background .25s,color .25s}
-.rnotes h3{margin:2px 0 0;font-weight:500;font-size:clamp(18px,1.35vw,21px);letter-spacing:-.015em;line-height:1.25}
-.rnotes p{margin:0;font-size:15px;line-height:1.55;color:var(--faint);text-wrap:pretty}
-.rnotes li:hover,.rnotes li:focus-visible,.rnotes li.on{background:rgba(var(--fg-c),.05)}
-.rnotes li:hover b,.rnotes li:focus-visible b,.rnotes li.on b{background:var(--y);color:var(--on-y)}
-.rframe.focus .rm{opacity:.18}
-.rframe.focus .rm.on{opacity:1}
-.rkick{margin:18px 0 0 14px;font-size:14px;color:rgba(var(--fg-c),.4)}
-@media (max-width:1000px){.rg{grid-template-columns:1fr}.rnotes{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:640px){.rnotes{grid-template-columns:1fr}.rm b{width:22px;height:22px;font-size:11px}}
-@media (prefers-reduced-motion:reduce){.rm path,.rm b,.rnotes li{transition:none!important}}
-
 /* ---------- one team, the whole launch: six mismatched freelancers become one team ---------- */
-.team{position:relative;padding-block:clamp(40px,8vh,90px) clamp(120px,18vh,200px);background:#000}
+.team{position:relative;padding-block:clamp(120px,18vh,220px) clamp(120px,18vh,200px);background:#000}
 .team .lab{margin-bottom:clamp(24px,3.5vh,36px)}
 .team h2{margin:0;font-weight:500;font-size:clamp(34px,4.6vw,76px);line-height:1.04;letter-spacing:-.035em}
 .team h2>span{display:block;text-wrap:balance}
@@ -558,57 +493,6 @@ html.open .after{display:block}
 @media (max-width:900px){.tg{grid-template-columns:1fr}.tstage{aspect-ratio:1}.tn{width:9.6em;padding:.65em .8em}.tn .b{padding:0 .8em}}
 @media (prefers-reduced-motion:reduce){.tn,.tn *,.tc *,.tcopy>div{transition:none!important}}
 
-/* ---------- a prompt vs. a partner ---------- */
-.vs{position:relative;padding-block:clamp(40px,8vh,90px) clamp(120px,18vh,200px);background:#000}
-.vs .lab{margin-bottom:clamp(24px,3.5vh,36px)}
-.vs h2{margin:0;font-weight:500;font-size:clamp(34px,4.6vw,76px);line-height:1.04;letter-spacing:-.035em}
-.vs h2>span{display:block;text-wrap:balance}
-.vs h2 .dim{color:rgba(var(--fg-c),.42)}
-.vsg{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,2.4vw,40px);margin-top:clamp(56px,8vh,96px);align-items:stretch}
-.vsc{position:relative;display:flex;flex-direction:column;border-radius:20px;padding:clamp(22px,2.4vw,36px);min-width:0;
-  opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
-.vs.in .vsc{opacity:1;transform:none}
-.vs.in .vsc.us{transition-delay:.18s}
-.vsh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:26px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase}
-/* the prompt: a generic, system-font chat box, a little washed out */
-.vsc.them{background:#0d0d0f;box-shadow:inset 0 0 0 1px rgba(var(--fg-c),.1);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-.them .vsh{color:rgba(var(--fg-c),.45)}
-.vprompt{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 8px 8px 18px;border-radius:14px;background:#17171a;box-shadow:inset 0 0 0 1px rgba(var(--fg-c),.12);font-size:15px;color:rgba(var(--fg-c),.82)}
-.vprompt .tx{flex:1;min-width:0;line-height:1.4;padding:4px 0}
-.vprompt .tx::after{content:"";display:inline-block;width:1.5px;height:1.1em;margin-left:2px;vertical-align:-.18em;background:currentColor;animation:vblink 1s steps(1) infinite}
-.vs.typed .vprompt .tx::after{display:none}
-@keyframes vblink{50%{opacity:0}}
-.vsend{flex:none;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#7c5cff,#c44dff);color:#fff;font-size:16px}
-.vout{margin-top:22px;padding:18px 18px 4px;border-radius:14px;background:linear-gradient(135deg,rgba(124,92,255,.10),rgba(196,77,255,.06));box-shadow:inset 0 0 0 1px rgba(150,120,255,.14)}
-.vout .vgen{display:flex;align-items:center;gap:8px;font-size:12.5px;color:rgba(var(--fg-c),.5);margin-bottom:10px}
-.vout .vgen i{font-style:normal;color:#b49cff}
-.vlist{list-style:none;margin:0;padding:0}
-.vlist li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:baseline;padding:13px 0;border-top:1px solid rgba(var(--fg-c),.08);font-size:15.5px;line-height:1.45;
-  opacity:0;transform:translateY(6px);transition:opacity .5s ease,transform .5s ease;transition-delay:var(--d,0s)}
-.vlist li:first-child{border-top:0}
-.vs.typed .them .vlist li,.vs.in .us .vlist li{opacity:1;transform:none}
-.them .vlist li{color:rgba(var(--fg-c),.55)}
-.them .vlist li::before{content:"–";color:rgba(var(--fg-c),.32)}
-.vfoot{margin-top:auto;padding-top:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.them .vfoot{font-size:14px;color:rgba(var(--fg-c),.4)}
-/* the partner: the brand's own type, warm light, every line ticked */
-.vsc.us{background:radial-gradient(120% 80% at 100% 0%,rgba(var(--y-c),.16),rgba(var(--y-c),0) 60%),#0e0e10;box-shadow:inset 0 0 0 1px rgba(var(--y-c),.42),0 40px 120px -40px rgba(var(--y-c),.35)}
-.us .vsh{color:var(--fg)}
-.us .vsh .lab{margin:0}
-.us .vsh span:last-child{color:var(--y)}
-.us .vlist li{font-size:16px;color:var(--fg)}
-.us .vlist li::before{content:"";width:16px;height:16px;align-self:start;margin-top:3px;border-radius:50%;
-  background:var(--y) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.3 7 10.6l4.6-5' fill='none' stroke='%230e0e10' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
-.us .vlist li span{color:var(--faint)}
-.vprice{font-size:15px;color:var(--muted)}
-.vprice b{color:var(--fg);font-weight:500}
-.vschip{position:absolute;left:50%;top:50%;z-index:2;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#000;box-shadow:inset 0 0 0 1px var(--hair);font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--faint)}
-@media (max-width:900px){
-  .vsg{grid-template-columns:1fr;gap:56px}
-  .vschip{top:auto;bottom:auto;position:relative;left:auto;transform:none;margin:-34px auto -34px;grid-row:2}
-  .vsc.us{grid-row:3}
-}
-@media (prefers-reduced-motion:reduce){.vsc,.vlist li{transition:none!important;opacity:1!important;transform:none!important}.vprompt .tx::after{animation:none}}
 @media (prefers-reduced-motion:reduce){.nav,.main>*,.next,.bar,.chip,.go,.build,.win,.bfoot,.bdone,.slot>*,.pbg,.pcards,.steps li,.steps li *,.lgrid,.lpan,.ldim,.mc,.lmsg,.lmsg h2,.lmsg p,.ldim2,.sdim,#curtain,.sh .s1,.sh .s2,.sp,.sbtns,.sagain,.yslot::before,.yveil,.cta,.boot,.sk::before,.launch::after{transition:none!important;animation:none!important}}
 </style>
 
@@ -718,34 +602,6 @@ html.open .after{display:block}
 </section>
 </div>
 
-<section class="intro after pad" id="about" aria-labelledby="mani">
-  <div class="in iw">
-    <span class="lab">About MuzMesh</span>
-    <h2 class="mani" id="mani"><span class="m1">We’re not anti‑AI.</span><span class="m2">We’re anti‑<em>sameness.<svg class="ul" viewBox="0 0 160 10" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 6.6C30 3.4 56 3 84 4.4S134 7.8 158 3.6"/></svg></em></span></h2>
-    <div class="ibody">
-      <p class="ilead">MuzMesh is a small design studio that only works with AI startups. We make your logo, brand, landing page and launch kit, so you look like a company, not a prompt.</p>
-      <p class="isub">We’re not against the tools. We build your site so ChatGPT, Perplexity and Google’s AI answers can find you. We just don’t let a model decide how you look. Every page is designed in Figma, by people, with a reason behind every choice.</p>
-    </div>
-    <ol class="why" aria-label="Why MuzMesh">
-      <li><b>01</b><h3>Only AI startups</h3><p>One kind of client. We know your users, your investors, and the look you need to get away from.</p></li>
-      <li><b>02</b><h3>Made by people</h3><p>Designed in Figma on our own system, never generated. It’s the difference people feel before they read a word.</p></li>
-      <li><b>03</b><h3>Found by AI</h3><p>Built so AI search can read and cite you, not only rank you on Google.</p></li>
-      <li><b>04</b><h3>One team for the launch</h3><p>Logo, brand, landing page and social in one place, and kept running after launch.</p></li>
-    </ol>
-  </div>
-</section>
-
-<section class="why2 after pad" id="reasons" aria-labelledby="rh">
-  <div class="in">
-    <span class="lab">Behind the redesign</span>
-    <h2 id="rh"><span class="dim">A prompt can’t tell you why.</span> <span>We can. Here’s your page, with our notes.</span></h2>
-    <div class="rg">
-      <div class="rframe"><div class="rbar"><i></i><i></i><i></i><span id="rurl">yourstartup.ai</span></div>
-        <div class="rvp" id="rvp"><div class="ypg" id="rpg"></div><div class="rmarks" id="rmarks" aria-hidden="true"></div></div></div>
-      <div><ol class="rnotes" id="rnotes"></ol><p class="rkick">Every choice has a reason. That’s what you’re paying for.</p></div>
-    </div>
-  </div>
-</section>
 <section class="team after pad" id="team" aria-labelledby="th">
   <div class="in">
     <span class="lab">One team, the whole launch</span>
@@ -758,41 +614,6 @@ html.open .after{display:block}
           <div class="t0"><h3>Six people. Six looks.</h3><p>Six briefs, six invoices and six timelines, and six ideas of what your brand looks like. Nothing quite matches, and every change goes through you.</p></div>
           <div class="t1"><h3>One brief. Everything matches.</h3><p>Logo, brand, landing page, social, AI search, tracking and CRM, made by one team from one brief, for one price. After launch, we keep it all running.</p></div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-<section class="vs after pad" id="partner" aria-labelledby="vsh">
-  <div class="in">
-    <span class="lab">A prompt vs. a partner</span>
-    <h2 id="vsh"><span class="dim">A prompt gives you a page.</span> <span>A partner gives you a brand.</span></h2>
-    <div class="vsg">
-      <div class="vsc them">
-        <div class="vsh"><span>Any AI site builder</span><span>Free · 30 seconds</span></div>
-        <div class="vprompt" aria-label="Prompt: make a landing page for my AI startup"><span class="tx" data-text="make a landing page for my AI startup"></span><span class="vsend" aria-hidden="true">↑</span></div>
-        <div class="vout">
-          <div class="vgen"><i>✦</i> Here’s your page!</div>
-          <ul class="vlist">
-            <li style="--d:.05s">A purple gradient, a sparkle icon and the default font</li>
-            <li style="--d:.2s">Copy written by the model you’re competing with</li>
-            <li style="--d:.35s">No reason behind a single choice</li>
-            <li style="--d:.5s">A new look every time you ask again</li>
-            <li style="--d:.65s">Nobody looking after it once launch week is over</li>
-          </ul>
-        </div>
-        <div class="vfoot"><span>Looks like everyone else’s.</span></div>
-      </div>
-      <div class="vschip" aria-hidden="true">vs</div>
-      <div class="vsc us">
-        <div class="vsh"><span class="lab">MuzMesh</span><span>Your design partner</span></div>
-        <ul class="vlist">
-          <li style="--d:.35s"><p style="margin:0">A logo and brand made for your idea alone</p></li>
-          <li style="--d:.47s"><p style="margin:0">A landing page designed in Figma by people, then built <span>with a reason behind every choice</span></p></li>
-          <li style="--d:.59s"><p style="margin:0">Set up so ChatGPT, Perplexity and Google’s AI answers can find you</p></li>
-          <li style="--d:.71s"><p style="margin:0">Social profiles, tracking and a CRM set up in the same go</p></li>
-          <li style="--d:.83s"><p style="margin:0">Kept running after launch <span>with site updates, social posts and a monthly report</span></p></li>
-        </ul>
-        <div class="vfoot"><span class="vprice"><b>$500</b> to set up · <b>$200</b> a month</span><a class="cta" href="#top">Plan my launch <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
       </div>
     </div>
   </div>
@@ -1108,7 +929,6 @@ html.open .after{display:block}
     fit();
     design(cur);
     build();
-    renderReasons();
   }
 
   // everything that depends on the layout: the grid, the copies, and every track
@@ -1194,15 +1014,15 @@ html.open .after{display:block}
     fadeIn(sh.parentNode.querySelector('.sbtns'), G + 12050, 600, 8);
     fadeIn($('again2'), G + 12250, 600, 8);
 
-    /* the hand-off: everything fades to black, then About MuzMesh rises in and its words light up one by one */
+    /* the hand-off: everything fades to black, then the next section rises in and its headline lights up word by word */
     track(fadeblk, 'opacity', [[FO, 0, 'ease'], [FO + 900, 1]]);
     track(ghost, 'opacity', [[FI, 0, 'ease'], [FI + 700, 1]]);
     track(ghost, 'transform', [[FI, 'translateY(18px)', E_OUT], [FI + 1100, 'none']]);
+    const wstep = Math.min(220, 1700 / ghostWords.length);
     ghostWords.forEach((w, i) => {
-      const t = FI + 250 + i * 220, end = w.closest('.m1') ? .42 : 1;
-      track(w, 'opacity', [[t, .12, 'ease'], [t + 450, end]]);
+      const t = FI + 250 + i * wstep;
+      track(w, 'opacity', [[t, .12, 'ease'], [t + 450, 1]]);
     });
-    track(ghostUl, 'strokeDashoffset', [[FI + 1650, 1, 'cubic-bezier(.6,0,.2,1)'], [FI + 2250, 0]]);
     seek(Tcur);
   }
 
@@ -1357,121 +1177,6 @@ html.open .after{display:block}
   });
 
 
-  /* ---------- after the story: About MuzMesh (its manifesto is split into words, so they can light up one by one) ---------- */
-  const mani = $('mani');
-  [...mani.querySelectorAll('.m1,.m2')].forEach(line => {
-    const walk = node => [...node.childNodes].forEach(n => {
-      if (n.nodeType === 3) {
-        const f = document.createDocumentFragment();
-        n.textContent.split(/(\s+)/).forEach(t => {
-          if (!t) return;
-          if (/^\s+$/.test(t)) { f.append(t); return; }
-          const w = document.createElement('span'); w.className = 'w'; w.textContent = t; f.append(w);
-        });
-        n.replaceWith(f);
-      } else if (n.nodeType === 1 && n.tagName !== 'svg') walk(n);
-    });
-    walk(line);
-  });
-  // the nav for the rest of the page: a fixed copy of the hero's, in exactly the same place
-  const sitenav = nav.cloneNode(true);
-  sitenav.classList.add('sitenav');
-  sitenav.querySelector('.links').setAttribute('aria-label', 'Main');
-  $('about').before(sitenav);
-  sitenav.querySelectorAll('a[href="#top"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
-  // the copy of the section's first screen that fades in inside the hero
-  const fadeblk = hero.querySelector('.fadeblk');
-  const ghost = $('about').cloneNode(true);
-  ghost.classList.remove('after'); ghost.classList.add('echo');
-  ghost.setAttribute('aria-hidden', 'true'); ghost.removeAttribute('aria-labelledby');
-  ghost.removeAttribute('id'); ghost.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
-  ghost.querySelectorAll('a,button').forEach(e => e.setAttribute('tabindex', '-1'));
-  hero.append(ghost);
-  const ghostWords = [...ghost.querySelectorAll('.mani .w')], ghostUl = ghost.querySelector('.ul path');
-
-
-
-  /* ---------- the reasons: their own page from the hero, with a designer's notes pinned to the exact parts ---------- */
-  const NOTES = {
-    't-med': [
-      ['h3', 'Serif, like a paper chart', 'Doctors trust paper. A serif headline reads calm and clinical, not like one more app on the screen.'],
-      ['h3 em', 'One word in colour: patient', 'The only green word is the person they care about. Not the feature, not the AI.', 'r'],
-      ['.note', 'Show the note, not a dashboard', 'The real output, in the format doctors already write, so they recognise it in a second.'],
-      ['.nf', '“Drafted in 40 s”, not “10x faster”', 'A small, specific number from a real visit is easier to believe than a big claim.']],
-    't-book': [
-      ['h3', 'Their words, not ours', 'The headline is the email everyone is tired of typing. They feel the problem before they read the name.'],
-      ['.yl', 'Friendly, bold, lower-case', 'Scheduling is a chore. The brand should feel like a helpful colleague, not enterprise software.'],
-      ['.mail', 'Shown where it lives', 'Bookly works inside email, so the hero is an email thread, not an abstract calendar.'],
-      ['.y1', 'Yellow means “do this”', 'One accent colour, used only for the action and the moment the meeting is booked.']],
-    't-lex': [
-      ['h3 em', 'Sell the judgement', 'Lawyers don’t want to be faster for free. The headline sells back the hours they can bill.'],
-      ['.yl', 'A serif with weight', 'Law is old-fashioned for a reason. The wordmark feels like a firm, not a chatbot.'],
-      ['.doc p', 'A real redline', 'Struck-through and replaced wording is how lawyers already review. No sparkles needed.'],
-      ['.dn', 'It cites its source', 'Every flag points to a case, because a lawyer can’t use an answer they can’t check.']],
-    't-sales': [
-      ['h3 em', '“Before” does the work', 'Help after the call is too late. One word in colour carries the whole promise.'],
-      ['.sug', 'The product, mid-call', 'The hero shows the exact line a rep would say next, so nobody has to imagine the value.'],
-      ['.lv', 'Lime means live', 'The green is the colour of “on air”, used only where something is happening right now.'],
-      ['.wv', 'A call is sound', 'The waveform says “we’re listening” without a single extra word.']],
-    't-gen': [
-      ['h3', 'Your idea, in your words', 'The headline is what you told us, said to your customer. No “supercharge”, no “revolutionise”.'],
-      ['.gm', 'A name, not a sparkle', 'Your name is the mark. The type carries the brand, so it’s yours from the first glance.'],
-      ['.y1', 'One colour, one action', 'The accent colour is used once, on the thing you want people to do.'],
-      ['.yk', 'Only what a visitor needs', 'Two links. Everything else can wait until they care.']]
-  };
-  const rvp = $('rvp'), rpg = $('rpg'), rmarks = $('rmarks'), rnotes = $('rnotes'), rframe = rvp.parentNode, why2 = $('reasons');
-  let rlist = [];
-  function renderReasons() {
-    if (!cur) return;
-    rpg.className = ypg.className; rpg.setAttribute('style', ypg.getAttribute('style') || '');
-    rpg.innerHTML = ypg.innerHTML;
-    $('rurl').textContent = cur.url;
-    const key = ypg.className.split(' ').find(c => NOTES[c]) || 't-gen';
-    rlist = NOTES[key];
-    rnotes.innerHTML = rlist.map(([, h, p], i) => `<li tabindex="0" data-i="${i}" style="--d:${(i * .32).toFixed(2)}s"><b>${i + 1}</b><h3>${h}</h3><p>${p}</p></li>`).join('');
-    placeMarks();
-  }
-  // each mark is a loose, hand-drawn box around the real element (sides a little bowed, the stroke overshooting where it started)
-  const PADM = 8;
-  function scribble(w, h, k) {
-    const x0 = -PADM, y0 = -PADM, x1 = w + PADM, y1 = h + PADM, r = Math.min(12, (h + PADM * 2) / 3), b = k % 2 ? 2.2 : -1.6, mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
-    const f = n => n.toFixed(1);
-    return `M${f(x0 + r + 4)} ${f(y0 + 1.2)}Q${f(mx)} ${f(y0 - b)} ${f(x1 - r)} ${f(y0)}Q${f(x1)} ${f(y0)} ${f(x1)} ${f(y0 + r)}` +
-      `Q${f(x1 + b)} ${f(my)} ${f(x1)} ${f(y1 - r)}Q${f(x1)} ${f(y1)} ${f(x1 - r)} ${f(y1)}Q${f(mx)} ${f(y1 - b)} ${f(x0 + r)} ${f(y1)}` +
-      `Q${f(x0)} ${f(y1)} ${f(x0)} ${f(y1 - r)}Q${f(x0 - b)} ${f(my)} ${f(x0)} ${f(y0 + r)}Q${f(x0)} ${f(y0)} ${f(x0 + r)} ${f(y0)}L${f(x0 + r + 26)} ${f(y0 - 1.4)}`;
-  }
-  function placeMarks() {
-    const W = rvp.clientWidth;
-    if (!W || !rlist.length) return;
-    const sc = W / 960;
-    rvp.style.setProperty('--s', sc.toFixed(4));
-    const base = rvp.getBoundingClientRect();
-    rmarks.innerHTML = rlist.map(([sel, , , side], i) => {
-      const el = rpg.querySelector(sel);
-      if (!el) return '';
-      const r = el.getBoundingClientRect();
-      const x = r.left - base.left, y = r.top - base.top, w = r.width, h = r.height;
-      // the number sits on the box's corner, but never outside the window
-      const half = W < 600 ? 11 : 13;
-      const bl = Math.max(4 - x, Math.min(W - 4 - 2 * half - x, side === 'r' ? w + PADM - half : -PADM - half));
-      const bt = Math.max(4 - y, -PADM - half);
-      return `<div class="rm" data-i="${i}" style="left:${x.toFixed(1)}px;top:${y.toFixed(1)}px;width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;--d:${(i * .32).toFixed(2)}s">` +
-        `<svg viewBox="0 0 ${w.toFixed(1)} ${h.toFixed(1)}"><path pathLength="1" d="${scribble(w, h, i)}"/></svg><b style="left:${bl.toFixed(1)}px;top:${bt.toFixed(1)}px">${i + 1}</b></div>`;
-    }).join('');
-  }
-  new ResizeObserver(placeMarks).observe(rvp);
-  const focusNote = i => {
-    rframe.classList.toggle('focus', i !== null);
-    rmarks.querySelectorAll('.rm').forEach(m => m.classList.toggle('on', +m.dataset.i === i));
-    rnotes.querySelectorAll('li').forEach(l => l.classList.toggle('on', +l.dataset.i === i));
-  };
-  rnotes.addEventListener('pointerover', e => { const li = e.target.closest('li'); if (li) focusNote(+li.dataset.i); });
-  rnotes.addEventListener('pointerleave', () => focusNote(null));
-  rnotes.addEventListener('focusin', e => { const li = e.target.closest('li'); if (li) focusNote(+li.dataset.i); });
-  rnotes.addEventListener('focusout', () => focusNote(null));
-  new IntersectionObserver(([e]) => { if (e.isIntersecting) why2.classList.add('in'); }, { threshold: .35 }).observe(rframe);
-
-
   /* ---------- one team: the freelancers snap into one team (plays once when it comes into view; the switch flips it) ---------- */
   const team = $('team'), tstage = $('tstage'), tlines = $('tlines'), tnodes = [...tstage.querySelectorAll('.tn')], tbtns = [...team.querySelectorAll('.tsw button')];
   // scattered, a little crooked, and the six lines to "you" cross each other
@@ -1479,7 +1184,7 @@ html.open .after{display:block}
   const SCAT_SQ = [[27, 13, -6], [74, 11, 4], [77, 50, -3], [70, 88, 6], [28, 85, -5], [22, 47, 3]];
   const ringAt = (i, sq) => { const a = (-90 + i * 60) * Math.PI / 180; return [50 + Math.cos(a) * (sq ? 31 : 33), 50 + Math.sin(a) * (sq ? 34 : 35), 0]; };
   const CROSS = [[78, 70], [24, 72], [22, 20], [30, 34], [80, 30], [62, 18]];   // where each tangled line bends
-  let tk = 0, tto = 0, tanim = 0, tplayed = false;
+  let tk = 0, tto = 0, tanim = 0, tplayed = false, echoT = null;   // echoT: the same stage in the copy that fades in
   const tease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
   function tdraw() {
     const k = tease(tk), sq = tstage.clientWidth / tstage.clientHeight < 1.15;
@@ -1487,18 +1192,19 @@ html.open .after{display:block}
     tnodes.forEach((n, i) => {
       const [x0, y0, r0] = (sq ? SCAT_SQ : SCAT)[i], [x1, y1] = ringAt(i, sq);
       const x = x0 + (x1 - x0) * k, y = y0 + (y1 - y0) * k;
-      n.style.left = x + '%'; n.style.top = y + '%'; n.style.setProperty('--r', (r0 * (1 - k)).toFixed(2) + 'deg');
+      for (const m of echoT ? [n, echoT.nodes[i]] : [n]) { m.style.left = x + '%'; m.style.top = y + '%'; m.style.setProperty('--r', (r0 * (1 - k)).toFixed(2) + 'deg'); }
       const cxp = CROSS[i][0] + (50 + (x - 50) * .5 - CROSS[i][0]) * k, cyp = CROSS[i][1] + (50 + (y - 50) * .5 - CROSS[i][1]) * k;
       d += `M50 50Q${cxp.toFixed(2)} ${cyp.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)}`;
     });
     tlines.innerHTML = `<path d="${d}" style="stroke:rgba(${k > .5 ? '242,88,15' : '244,244,241'},${(.22 + .26 * Math.abs(k - .5) * 2).toFixed(3)})"/>`;
     tstage.style.setProperty('--k', k.toFixed(3));
+    if (echoT) { echoT.lines.innerHTML = tlines.innerHTML; echoT.stage.style.setProperty('--k', k.toFixed(3)); }
   }
   tlines.setAttribute('viewBox', '0 0 100 100'); tlines.setAttribute('preserveAspectRatio', 'none');
   function tset(m, instant) {
     tto = m;
-    tstage.classList.toggle('one', !!m); team.classList.toggle('one', !!m);
-    tbtns.forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.m === m)));
+    for (const [st, sec] of echoT ? [[tstage, team], [echoT.stage, echoT.sec]] : [[tstage, team]]) { st.classList.toggle('one', !!m); sec.classList.toggle('one', !!m); }
+    [...tbtns, ...(echoT ? echoT.sec.querySelectorAll('.tsw button') : [])].forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.m === m)));
     cancelAnimationFrame(tanim);
     if (reduce || instant) { tk = m; tdraw(); return; }
     let last = performance.now();
@@ -1512,29 +1218,47 @@ html.open .after{display:block}
   }
   tbtns.forEach(b => b.addEventListener('click', () => { tplayed = true; tset(+b.dataset.m); }));
   new ResizeObserver(tdraw).observe(tstage);
-  new IntersectionObserver(([e]) => {
-    if (!e.isIntersecting || tplayed) return;
+  // plays once by itself, when the real section is on screen (never while its copy is still fading in over the hero)
+  function teamCheck() {
+    if (tplayed || !document.documentElement.classList.contains('handed')) return;
+    const r = tstage.getBoundingClientRect();
+    if (r.top > innerHeight * .8 || r.bottom < innerHeight * .2) return;
     tplayed = true;
-    setTimeout(() => { if (tto === 0) tset(1); }, reduce ? 0 : 1400);
-  }, { threshold: .55 }).observe(tstage);
+    setTimeout(() => { if (tto === 0) tset(1); }, reduce ? 0 : 1100);
+  }
+  addEventListener('scroll', teamCheck, { passive: true });
   tdraw();
 
-  /* ---------- a prompt vs. a partner: the prompt types itself when the section comes into view ---------- */
-  const vs = $('partner'), vtx = vs.querySelector('.vprompt .tx'), vtext = vtx.dataset.text;
-  vs.querySelectorAll('a[href="#top"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
-  let vtyped = false;
-  new IntersectionObserver(([e]) => {
-    if (!e.isIntersecting || vtyped) return;
-    vtyped = true;
-    vs.classList.add('in');
-    if (reduce) { vtx.textContent = vtext; vs.classList.add('typed'); return; }
-    let n = 0;
-    setTimeout(function step() {
-      vtx.textContent = vtext.slice(0, ++n);
-      if (n < vtext.length) setTimeout(step, 34 + Math.random() * 40);
-      else setTimeout(() => vs.classList.add('typed'), 380);
-    }, 700);
-  }, { threshold: .3 }).observe(vs.querySelector('.vsg'));
+  /* ---------- after the story: the nav, and the copy of the next section's first screen that fades in over the hero ---------- */
+  // its headline is split into words, so they can light up one by one
+  const teamH = $('th');
+  [...teamH.children].forEach(line => {
+    const f = document.createDocumentFragment();
+    line.textContent.split(/(\s+)/).forEach(t => {
+      if (!t) return;
+      if (/^\s+$/.test(t)) { f.append(t); return; }
+      const w = document.createElement('span'); w.className = 'w'; w.textContent = t; f.append(w);
+    });
+    line.replaceChildren(f);
+  });
+  // the nav for the rest of the page: a fixed copy of the hero's, in exactly the same place
+  const sitenav = nav.cloneNode(true);
+  sitenav.classList.add('sitenav');
+  sitenav.querySelector('.links').setAttribute('aria-label', 'Main');
+  team.before(sitenav);
+  sitenav.querySelectorAll('a[href="#top"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
+  const fadeblk = hero.querySelector('.fadeblk');
+  const ghost = team.cloneNode(true);
+  ghost.classList.remove('after'); ghost.classList.add('echo');
+  ghost.setAttribute('aria-hidden', 'true'); ghost.removeAttribute('aria-labelledby');
+  ghost.querySelectorAll('[aria-live]').forEach(e => e.removeAttribute('aria-live'));
+  ghost.removeAttribute('id'); ghost.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
+  ghost.querySelectorAll('a,button').forEach(e => e.setAttribute('tabindex', '-1'));
+  hero.append(ghost);
+  const ghostWords = [...ghost.querySelectorAll('h2 .w')];
+  const gst = ghost.querySelector('.tstage');
+  echoT = { sec: ghost, stage: gst, nodes: [...gst.querySelectorAll('.tn')], lines: gst.querySelector('svg') };
+  tdraw();
 
   setHeight();
   chips.forEach(o => o.setAttribute('aria-pressed', 'false'));
