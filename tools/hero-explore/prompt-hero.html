@@ -97,18 +97,18 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 .bidea{margin:0;font-size:19px;line-height:1.3;letter-spacing:-.015em;text-wrap:balance;opacity:0}
 .fly{position:absolute;z-index:30;left:0;top:0;white-space:nowrap;pointer-events:none;color:var(--fg);transform-origin:0 0;letter-spacing:-.01em;line-height:1.3}
 .steps{list-style:none;margin:0;padding:0;display:grid;gap:11px}
-.steps li{display:grid;grid-template-columns:14px minmax(0,1fr);gap:4px 12px;align-items:baseline;font-size:14.5px;color:rgba(var(--fg-c),.32);transition:color .3s}
-.steps li small{grid-column:2;font-family:var(--mono);font-size:11px;letter-spacing:.03em;color:rgba(var(--fg-c),.3);transition:color .3s}
-.steps .st{width:9px;height:9px;align-self:center;box-shadow:inset 0 0 0 1px rgba(var(--fg-c),.3);transition:background .2s,box-shadow .2s}
+.steps li{display:grid;grid-template-columns:14px minmax(0,1fr);gap:4px 12px;align-items:baseline;font-size:14.5px;color:rgba(var(--fg-c),.32);transition:color .6s ease}
+.steps li small{grid-column:2;font-family:var(--mono);font-size:11px;letter-spacing:.03em;color:rgba(var(--fg-c),.3);transition:color .6s ease}
+.steps .st{width:9px;height:9px;align-self:center;box-shadow:inset 0 0 0 1px rgba(var(--fg-c),.3);transition:background .5s,box-shadow .5s}
 .steps li.run{color:var(--fg)}
 .steps li.run small{color:var(--muted)}
-.steps li.run .st{background:var(--y);box-shadow:none;animation:blink .5s steps(2,start) infinite}
+.steps li.run .st{background:var(--y);box-shadow:none;animation:blink 1.1s cubic-bezier(.45,0,.55,1) infinite alternate}
 .steps li.done{color:rgba(var(--fg-c),.82)}
 .steps li.done small{color:rgba(var(--fg-c),.45)}
 .steps li.done .st{background:none;box-shadow:none;width:11px;height:9px;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 9'%3E%3Cpath d='M1 4.6 4 7.6 10 1.4' fill='none' stroke='%23f4f4f1' stroke-width='1.6'/%3E%3C/svg%3E");background-repeat:no-repeat}
-@keyframes blink{to{opacity:.25}}
-.bdone{padding-top:14px;border-top:1px solid var(--hair);font-size:15px;color:var(--fg);opacity:0;transform:translateY(4px);transition:opacity .4s,transform .4s}
+@keyframes blink{from{opacity:1}to{opacity:.35}}
+.bdone{padding-top:14px;border-top:1px solid var(--hair);font-size:15px;color:var(--fg);opacity:0;transform:translateY(4px);transition:opacity .7s ease,transform .8s cubic-bezier(.2,.7,.2,1)}
 .bdone b{font-weight:600}
 .hero.built .bdone{opacity:1;transform:none}
 
@@ -120,20 +120,20 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 .wbar i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.16)}
 .wurl{margin:0 auto;transform:translateX(-14px);min-width:0;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;height:18px;line-height:18px;padding:0 12px;border-radius:5px;background:rgba(255,255,255,.06);font-family:var(--mono);font-size:10.5px;color:rgba(255,255,255,.55)}
 .vp{position:relative;aspect-ratio:960/580;overflow:hidden}
-.boot{position:absolute;inset:0;z-index:2;display:grid;place-items:center;font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:rgba(255,255,255,.42);opacity:0;transition:opacity .3s;pointer-events:none}
+.boot{position:absolute;inset:0;z-index:2;display:grid;place-items:center;font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:rgba(255,255,255,.42);opacity:0;transition:opacity .6s ease;pointer-events:none}
 .win.s1 .boot{opacity:1}
 .pg.s2~.boot{opacity:0}
 .pg{position:absolute;left:0;top:0;width:960px;height:580px;transform-origin:0 0;transform:scale(var(--s,.7));
   font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#fff;background:#111116;overflow:hidden}
-.pbg{position:absolute;inset:0;opacity:0;transition:opacity .6s;
+.pbg{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease;
   background:radial-gradient(60% 70% at 50% 0%,rgba(139,92,246,.55),transparent 70%),radial-gradient(50% 60% at 90% 100%,rgba(59,130,246,.35),transparent 70%),linear-gradient(160deg,#120a2e,#1e1048 55%,#0c1638)}
 .pg.s4 .pbg{opacity:1}
 
 /* a slot holds the real element; its skeleton sits on top until the slot's step arrives */
 .slot{position:relative;display:inline-block}
-.slot>.sk{position:absolute;inset:0;border-radius:7px;opacity:0;transition:opacity .3s}
-.slot>.sk::before{content:"";position:absolute;inset:0;border-radius:inherit;background:rgba(255,255,255,.11);animation:pulse .9s ease-in-out infinite alternate}
-.slot>.rl{opacity:0;transition:opacity .45s}
+.slot>.sk{position:absolute;inset:0;border-radius:7px;opacity:0;transition:opacity .6s ease}
+.slot>.sk::before{content:"";position:absolute;inset:0;border-radius:inherit;background:rgba(255,255,255,.11);animation:pulse 1.6s ease-in-out infinite alternate}
+.slot>.rl{opacity:0;transition:opacity .8s ease}
 .pg.s2 .slot>.sk{opacity:1}
 .slot.on>.sk{opacity:0!important}
 .slot.on>.rl{opacity:1}
@@ -159,7 +159,7 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 .pbtns .a .rl{background:linear-gradient(135deg,#8b5cf6,#3b82f6);box-shadow:0 0 30px rgba(139,92,246,.65)}
 .pbtns .b .rl{background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
 
-.pcards{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:40px 70px 0;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
+.pcards{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:40px 70px 0;opacity:0;transform:translateY(8px);transition:opacity .8s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
 .pg.s3 .pcards{opacity:1;transform:none}
 .pcards .slot{display:block}
 .pcards .rl{display:grid;gap:6px;padding:18px 20px;border-radius:14px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
@@ -255,7 +255,7 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 /* the nav comes back once the answer is on screen */
 .hero.solved .nav{pointer-events:auto;z-index:42}   /* above the fade to black: the nav stays through the hand-off */
 /* the same nav, fixed, for the rest of the page: it takes over from the hero's at the exact moment the page starts scrolling */
-.sitenav{position:fixed;top:0;left:0;right:0;z-index:50;visibility:hidden;background:rgba(0,0,0,0);transition:background .3s,box-shadow .3s}
+.sitenav{position:fixed;top:0;left:0;right:0;z-index:50;visibility:hidden;background:rgba(0,0,0,0);transition:background .6s ease,box-shadow .6s ease}
 html.handed .sitenav{visibility:visible}
 html.below .sitenav{background:rgba(0,0,0,.78);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--hair)}
 
@@ -441,6 +441,7 @@ html.below .sitenav{background:rgba(0,0,0,.78);-webkit-backdrop-filter:blur(14px
 .hero.faded .fadeblk{pointer-events:auto}
 .hero>.echo{position:absolute;left:0;right:0;top:0;z-index:41;margin:0;opacity:0;visibility:hidden;pointer-events:none}
 .hero.fading>.echo{visibility:visible}
+.hero.fading:not(.settled)>.echo{will-change:transform,opacity}   /* a layer only while it rises, so the swap stays pixel-matched */
 #team{margin-top:-100vh;visibility:hidden}
 html.handed #team{visibility:visible}
 .after{display:none}
@@ -456,35 +457,41 @@ html.open .after{display:block}
 .tstage svg{position:absolute;inset:0;width:100%;height:100%}
 .tstage path{fill:none;stroke-width:1.4;vector-effect:non-scaling-stroke}
 .tn{position:absolute;left:0;top:0;transform:translate(-50%,-50%) rotate(var(--r,0deg));width:11.4em;padding:.75em 1em;font-size:clamp(11px,1vw,14px);line-height:1.25;text-align:left;
-  transition:background .7s,border-radius .7s,box-shadow .7s,color .7s,font-family .7s;will-change:left,top,transform}
-.tn .a,.tn .b{display:block;transition:opacity .5s}
+  transition:background 1.1s ease,border-radius 1.1s ease,box-shadow 1.1s ease,color 1.1s ease;will-change:transform}
+.tn .a,.tn .b{display:block;transition:opacity .9s ease}
 .tn small{display:block;margin-top:3px;font-size:.82em;opacity:.6}
 .tn .b{position:absolute;inset:0;padding:0 1em;display:flex;align-items:center;opacity:0;font-family:var(--sans);font-weight:500;color:var(--fg)}
 .tn .b::before{content:"";flex:none;width:6px;height:6px;margin-right:9px;background:var(--y)}
 /* freelancers: everyone has their own look */
-.tn.f0{background:#f1ede4;color:#222;border-radius:2px;font-family:"Instrument Serif",serif;font-size:clamp(12px,1.12vw,16px)}
-.tn.f1{background:#2a45ff;color:#fff;border-radius:999px;font-family:"Bricolage Grotesque",sans-serif;font-weight:700}
-.tn.f2{background:#16161a;color:#c4f24a;border-radius:6px;font-family:var(--mono);box-shadow:inset 0 0 0 1px #c4f24a55}
-.tn.f3{background:#ffd84a;color:#16163a;border-radius:18px 18px 18px 4px;font-family:system-ui,sans-serif;font-weight:600}
-.tn.f4{background:#3a1f4f;color:#f3dcff;border-radius:10px;font-family:Georgia,serif;font-style:italic}
-.tn.f5{background:#fff;color:#111;border-radius:0;font-family:system-ui,sans-serif;box-shadow:4px 4px 0 #ff4d6d}
+.tn.f0{background:#f1ede4;color:#222;border-radius:2px;font-size:clamp(12px,1.12vw,16px)}
+.tn.f0 .a{font-family:"Instrument Serif",serif}
+.tn.f1{background:#2a45ff;color:#fff;border-radius:999px}
+.tn.f1 .a{font-family:"Bricolage Grotesque",sans-serif;font-weight:700}
+.tn.f2{background:#16161a;color:#c4f24a;border-radius:6px;box-shadow:inset 0 0 0 1px #c4f24a55}
+.tn.f2 .a{font-family:var(--mono)}
+.tn.f3{background:#ffd84a;color:#16163a;border-radius:18px 18px 18px 4px}
+.tn.f3 .a{font-family:system-ui,sans-serif;font-weight:600}
+.tn.f4{background:#3a1f4f;color:#f3dcff;border-radius:10px}
+.tn.f4 .a{font-family:Georgia,serif;font-style:italic}
+.tn.f5{background:#fff;color:#111;border-radius:0;box-shadow:4px 4px 0 #ff4d6d}
+.tn.f5 .a{font-family:system-ui,sans-serif}
 /* one team: one look */
-.tstage.one .tn{background:#141418;color:var(--fg);border-radius:12px;box-shadow:inset 0 0 0 1px rgba(var(--y-c),.45);font-family:var(--sans);font-style:normal;font-weight:400}
+.tstage.one .tn{background:#141418;color:var(--fg);border-radius:12px;box-shadow:inset 0 0 0 1px rgba(var(--y-c),.45)}
 .tstage.one .tn .a{opacity:0}
 .tstage.one .tn .b{opacity:1}
 .tc{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;place-items:center;text-align:center;z-index:2}
-.tc .you,.tc .mm{grid-area:1/1;transition:opacity .5s,transform .6s cubic-bezier(.3,1.4,.5,1)}
+.tc .you,.tc .mm{grid-area:1/1;transition:opacity .9s ease,transform 1.2s cubic-bezier(.2,.8,.2,1)}
 .tc .you{padding:.7em 1.1em;border-radius:999px;background:#f4f4f1;color:#000;font-size:clamp(12px,1.05vw,15px);font-weight:500;box-shadow:0 0 0 6px rgba(244,244,241,.08)}
 .tc .you small{display:block;font-size:.78em;font-weight:400;opacity:.6}
-.tc .mm{padding:.8em 1.4em;border-radius:999px;background:var(--y);color:var(--on-y);font-size:clamp(15px,1.4vw,20px);font-weight:700;letter-spacing:-.02em;opacity:0;transform:scale(.6);box-shadow:0 0 0 8px rgba(var(--y-c),.14),0 20px 60px -10px rgba(var(--y-c),.6)}
-.tstage.one .tc .you{opacity:0;transform:scale(.7)}
+.tc .mm{padding:.8em 1.4em;border-radius:999px;background:var(--y);color:var(--on-y);font-size:clamp(15px,1.4vw,20px);font-weight:700;letter-spacing:-.02em;opacity:0;transform:scale(.82);box-shadow:0 0 0 8px rgba(var(--y-c),.14),0 20px 60px -10px rgba(var(--y-c),.6)}
+.tstage.one .tc .you{opacity:0;transform:scale(.88)}
 .tstage.one .tc .mm{opacity:1;transform:none}
 .tsw{display:inline-flex;padding:4px;border-radius:999px;background:rgba(var(--fg-c),.06);box-shadow:inset 0 0 0 1px var(--hair);margin-bottom:28px}
-.tsw button{all:unset;cursor:pointer;padding:9px 16px;border-radius:999px;font-size:14px;color:var(--faint);transition:background .25s,color .25s}
+.tsw button{all:unset;cursor:pointer;padding:9px 16px;border-radius:999px;font-size:14px;color:var(--faint);transition:background .4s ease,color .4s ease}
 .tsw button[aria-pressed="true"]{background:var(--fg);color:#000}
 .tsw button:focus-visible{outline:2px solid var(--y);outline-offset:2px}
 .tcopy{position:relative;display:grid}
-.tcopy>div{grid-area:1/1;transition:opacity .5s,transform .5s}
+.tcopy>div{grid-area:1/1;transition:opacity .8s ease,transform 1s cubic-bezier(.2,.7,.2,1)}
 .tcopy h3{margin:0 0 12px;font-weight:500;font-size:clamp(22px,1.9vw,30px);letter-spacing:-.02em;line-height:1.15}
 .tcopy p{margin:0;font-size:16px;line-height:1.6;color:var(--muted);max-width:40ch;text-wrap:pretty}
 .tcopy .t1{opacity:0;transform:translateY(8px)}
@@ -665,7 +672,7 @@ html.open .after{display:block}
   function loop(now) {
     if (hero.classList.contains('lost')) { raf = 0; return; }   // hidden behind the grid after launch: stop asking for frames
     raf = requestAnimationFrame(loop);
-    if (now - last < 33) return; // 30fps is plenty for slow light
+    if (now - last < 12) return;   // every frame (capped near 60fps), so the slow light never steps
     last = now;
     draw(4 + (now - t0) / 1000);
   }
@@ -897,7 +904,8 @@ html.open .after{display:block}
   const FO = SOLVED + 700, FI = FO + 1050;               // fade to black, then About MuzMesh fades in
   const END = FI + 2700;
   const RATE = .3, DEAD = 24;                            // px of scroll per story-ms; a little dead zone at the top
-  const E_OUT = 'cubic-bezier(.2,.7,.2,1)', E_IO = 'cubic-bezier(.4,0,.2,1)';
+  const E_OUT = 'cubic-bezier(.2,.7,.2,1)', E_IO = 'cubic-bezier(.4,0,.2,1)', SOFT = 'cubic-bezier(.42,0,.3,1)';
+  const SPEED = .82;                                      // autoplay runs the story a little slower than real time
   const story = $('story'), main = [...document.querySelectorAll('.main>*')];
   const ldim = document.querySelector('.ldim'), lmsg = document.querySelector('.lmsg'), ldim2 = document.querySelector('.ldim2'), sdim = document.querySelector('.sdim');
   const blog = document.querySelector('.blog'), bfoot = document.querySelector('.bfoot'), buildEl = $('build'), nav = document.querySelector('.nav');
@@ -906,7 +914,7 @@ html.open .after{display:block}
   let TL = [], geo = null, fly = null;
   // one paused animation per element and property, keyframed at story times: [[t, value, easing to the next], ...]
   function track(el, prop, pts, pseudo) {
-    const kf = pts.map(([t, v, e]) => ({ offset: Math.min(1, Math.max(0, t / END)), [prop]: v, easing: e || 'linear' }));
+    const kf = pts.map(([t, v, e]) => ({ offset: Math.min(1, Math.max(0, t / END)), [prop]: v, easing: e === 'ease' ? SOFT : e || 'linear' }));
     if (kf[0].offset > 0) kf.unshift({ offset: 0, [prop]: pts[0][1] });
     if (kf[kf.length - 1].offset < 1) kf.push({ offset: 1, [prop]: pts[pts.length - 1][1] });
     const o = { duration: END, fill: 'both' };
@@ -1061,6 +1069,7 @@ html.open .after{display:block}
     on('solved', T >= G + 12400);
     on('faded', T >= FO + 450);
     on('fading', T >= FI);
+    on('settled', T >= FI + 1100);
     if (!c.contains('lost') && !raf && !reduce && !document.hidden) raf = requestAnimationFrame(loop);
   }
   function seek(T) {
@@ -1084,7 +1093,9 @@ html.open .after{display:block}
     const dt = lastNow ? Math.min(50, now - lastNow) : 16;
     lastNow = now;
     if (auto) {
-      const T = Math.min(auto.to, auto.from + (now - auto.t0));
+      const x = Math.min(1, (now - auto.t0) / auto.D), a = auto.a, b = auto.b, v = 1 / (1 - a / 2 - b / 2);
+      const p = x < a ? v * x * x / (2 * a) : x > 1 - b ? 1 - v * (1 - x) * (1 - x) / (2 * b) : v * (a / 2 + x - a);
+      const T = x >= 1 ? auto.to : auto.from + (auto.to - auto.from) * p;
       Tgoal = Tcur = T;
       wantY = toY(T);
       if (Math.abs(scrollY - wantY) > .5) scrollTo(0, wantY);
@@ -1092,7 +1103,7 @@ html.open .after{display:block}
     } else {
       // ease towards wherever the scroll is, so a notched mouse wheel still scrubs smoothly
       const d = Tgoal - Tcur;
-      Tcur = Math.abs(d) < .5 ? Tgoal : Tcur + d * (1 - Math.exp(-dt / 75));
+      Tcur = Math.abs(d) < .5 ? Tgoal : Tcur + d * (1 - Math.exp(-dt / 110));
     }
     seek(Tcur);
     if (auto || Tcur !== Tgoal) rafS = requestAnimationFrame(tick); else lastNow = 0;
@@ -1102,7 +1113,9 @@ html.open .after{display:block}
     setGate(END);
     if (Tcur >= to) { done && done(); return; }
     if (reduce) { auto = null; Tgoal = Tcur = to; scrollTo(0, toY(to)); seek(to); done && done(); return; }
-    auto = { from: Tcur, to, t0: performance.now(), done };
+    // a gentle start and a gentle stop: the page eases into the story's pace and settles at the end
+    const D0 = (to - Tcur) / SPEED, R1 = Math.min(600, D0 * .3), R2 = Math.min(900, D0 * .3), D = D0 + (R1 + R2) / 2;
+    auto = { from: Tcur, to, t0: performance.now(), done, D, a: R1 / D, b: R2 / D };
     wantY = scrollY; lastNow = 0; kick();
   }
   const takeOver = () => { if (auto) { auto = null; Tgoal = toT(scrollY); } };
@@ -1187,16 +1200,17 @@ html.open .after{display:block}
   let tk = 0, tto = 0, tanim = 0, tplayed = false, echoT = null;   // echoT: the same stage in the copy that fades in
   const tease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
   function tdraw() {
-    const k = tease(tk), sq = tstage.clientWidth / tstage.clientHeight < 1.15;
+    const k = tease(tk), sw = tstage.clientWidth, shh = tstage.clientHeight, sq = sw / shh < 1.15;
     let d = '';
     tnodes.forEach((n, i) => {
       const [x0, y0, r0] = (sq ? SCAT_SQ : SCAT)[i], [x1, y1] = ringAt(i, sq);
       const x = x0 + (x1 - x0) * k, y = y0 + (y1 - y0) * k;
-      for (const m of echoT ? [n, echoT.nodes[i]] : [n]) { m.style.left = x + '%'; m.style.top = y + '%'; m.style.setProperty('--r', (r0 * (1 - k)).toFixed(2) + 'deg'); }
+      const tf = `translate(${(x * sw / 100).toFixed(2)}px,${(y * shh / 100).toFixed(2)}px) translate(-50%,-50%) rotate(${(r0 * (1 - k)).toFixed(2)}deg)`;
+      for (const m of echoT ? [n, echoT.nodes[i]] : [n]) m.style.transform = tf;
       const cxp = CROSS[i][0] + (50 + (x - 50) * .5 - CROSS[i][0]) * k, cyp = CROSS[i][1] + (50 + (y - 50) * .5 - CROSS[i][1]) * k;
       d += `M50 50Q${cxp.toFixed(2)} ${cyp.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)}`;
     });
-    tlines.innerHTML = `<path d="${d}" style="stroke:rgba(${k > .5 ? '242,88,15' : '244,244,241'},${(.22 + .26 * Math.abs(k - .5) * 2).toFixed(3)})"/>`;
+    tlines.innerHTML = `<path d="${d}" style="stroke:rgba(${Math.round(244 - 2 * k)},${Math.round(244 - 156 * k)},${Math.round(241 - 226 * k)},${(.22 + .26 * Math.abs(k - .5) * 2).toFixed(3)})"/>`;
     tstage.style.setProperty('--k', k.toFixed(3));
     if (echoT) { echoT.lines.innerHTML = tlines.innerHTML; echoT.stage.style.setProperty('--k', k.toFixed(3)); }
   }
@@ -1210,7 +1224,7 @@ html.open .after{display:block}
     let last = performance.now();
     const step = now => {
       const dt = Math.min(50, now - last); last = now;
-      tk = m ? Math.min(1, tk + dt / 1300) : Math.max(0, tk - dt / 1300);
+      tk = m ? Math.min(1, tk + dt / 1900) : Math.max(0, tk - dt / 1900);
       tdraw();
       if (tk !== m) tanim = requestAnimationFrame(step);
     };
