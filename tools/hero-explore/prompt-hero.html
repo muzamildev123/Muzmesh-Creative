@@ -965,7 +965,7 @@ html.open .after{display:block}
     const cs = getComputedStyle(input), ir = input.getBoundingClientRect(), bi = $('bidea'), bcs = getComputedStyle(bi), br = bi.getBoundingClientRect();
     const fs = parseFloat(cs.fontSize), ts = parseFloat(bcs.fontSize), k = (ts / fs).toFixed(5), fly8 = 'cubic-bezier(.5,0,.15,1)';
     fly.textContent = cur.idea; fly.style.fontSize = fs + 'px'; fly.style.fontFamily = cs.fontFamily; fly.style.letterSpacing = cs.letterSpacing;
-    const x0 = (ir.left - hr.left + parseFloat(cs.paddingLeft)).toFixed(2), y0 = (ir.top - hr.top + (ir.height - fs * 1.3) / 2).toFixed(2);
+    const x0 = (ir.left - hr.left + parseFloat(cs.paddingLeft)).toFixed(2), y0 = Math.round(ir.top - hr.top + (ir.height - fs * 1.3) / 2);   // the input puts its text on a whole pixel, so the copy starts on the same one
     const x1 = (br.left - hr.left).toFixed(2), y1 = br.top - hr.top;
     const at = (x, y, sc) => `translate(${x}px,${typeof y === 'number' ? y.toFixed(2) : y}px) scale(${sc})`;
     const oneLine = br.height < ts * 1.3 * 1.5;
