@@ -62,7 +62,7 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   box-shadow:inset 0 0 0 1px rgba(var(--fg-c),.2),0 30px 90px -20px rgba(0,0,0,.9);transition:box-shadow .3s}
 .bar:focus-within{box-shadow:inset 0 0 0 1px rgba(var(--y-c),.85),0 0 0 4px rgba(var(--y-c),.14),0 30px 90px -20px rgba(0,0,0,.9)}
 .bar label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-.bar input{flex:1;min-width:0;height:54px;border:0;background:none;color:var(--fg);font:inherit;font-size:17px;letter-spacing:-.01em;outline:none;caret-color:var(--y)}
+.bar input{flex:1;min-width:0;height:54px;border:0;background:none;color:var(--fg);font:inherit;font-size:17px;line-height:1.3;letter-spacing:-.01em;outline:none;caret-color:var(--y)}   /* same line height as the flying copy, so both sit on the same baseline */
 .bar input::placeholder{color:var(--faint)}
 .go{height:54px;padding:0 26px;border-radius:999px;font-size:15.5px;font-weight:500;transition:background .2s,color .2s,transform .15s}
 .go svg{width:16px;height:16px;color:var(--y-deep)}
@@ -911,7 +911,7 @@ html.open .after{display:block}
   const blog = document.querySelector('.blog'), bfoot = document.querySelector('.bfoot'), buildEl = $('build'), nav = document.querySelector('.nav');
   const yveil = document.querySelector('.yveil');
 
-  let TL = [], geo = null, fly = null;
+  let TL = [], geo = null, fly = null, flyEnd = 0;
   // one paused animation per element and property, keyframed at story times: [[t, value, easing to the next], ...]
   function track(el, prop, pts, pseudo) {
     const kf = pts.map(([t, v, e]) => ({ offset: Math.min(1, Math.max(0, t / END)), [prop]: v, easing: e === 'ease' ? SOFT : e || 'linear' }));
@@ -959,22 +959,25 @@ html.open .after{display:block}
     });
     // the idea lifts out of the bar and lands as the first line of the build log
     if (!fly) { fly = document.createElement('span'); fly.className = 'fly'; fly.setAttribute('aria-hidden', 'true'); hero.append(fly); }
-    // it grows by font size, not by scaling, so it is drawn exactly like the input text when it leaves and exactly
-    // like the title when it lands: the hand-over at the end is then invisible instead of two blurred copies
+    // The idea itself flies: it starts exactly where the typed text sits and lands in the title's place in the log.
+    // When the title fits on one line the flying copy simply stays there as the title (the real one is only a
+    // placeholder), so there is no hand-over at the end and nothing can jump in any browser. It leaves with the log.
     const cs = getComputedStyle(input), ir = input.getBoundingClientRect(), bi = $('bidea'), bcs = getComputedStyle(bi), br = bi.getBoundingClientRect();
-    const fs = parseFloat(cs.fontSize), ts = parseFloat(bcs.fontSize), fly8 = 'cubic-bezier(.5,0,.15,1)';
-    fly.textContent = cur.idea; fly.style.fontFamily = cs.fontFamily; fly.style.fontWeight = bcs.fontWeight;
-    const x0 = ir.left - hr.left + parseFloat(cs.paddingLeft), y0 = ir.top - hr.top + (ir.height - fs * 1.3) / 2;
-    track(fly, 'transform', [[0, `translate(${x0.toFixed(2)}px,${y0.toFixed(2)}px)`, fly8], [820, `translate(${(br.left - hr.left).toFixed(2)}px,${(br.top - hr.top).toFixed(2)}px)`]]);
-    track(fly, 'fontSize', [[0, fs + 'px', fly8], [820, ts + 'px']]);
-    track(fly, 'letterSpacing', [[0, cs.letterSpacing, fly8], [820, bcs.letterSpacing]]);
-    if (br.height < ts * 1.3 * 1.5) {
-      // one line: the copy has landed drawn exactly like the title, so they swap in a single frame and nothing on screen changes
-      track(fly, 'opacity', [[0, 0], [1, 1], [840, 1], [841, 0]]);
-      track(bi, 'opacity', [[840, 0], [841, 1]]);
+    const fs = parseFloat(cs.fontSize), ts = parseFloat(bcs.fontSize), k = (ts / fs).toFixed(5), fly8 = 'cubic-bezier(.5,0,.15,1)';
+    fly.textContent = cur.idea; fly.style.fontSize = fs + 'px'; fly.style.fontFamily = cs.fontFamily; fly.style.letterSpacing = cs.letterSpacing;
+    const x0 = (ir.left - hr.left + parseFloat(cs.paddingLeft)).toFixed(2), y0 = (ir.top - hr.top + (ir.height - fs * 1.3) / 2).toFixed(2);
+    const x1 = (br.left - hr.left).toFixed(2), y1 = br.top - hr.top;
+    const at = (x, y, sc) => `translate(${x}px,${typeof y === 'number' ? y.toFixed(2) : y}px) scale(${sc})`;
+    const oneLine = br.height < ts * 1.3 * 1.5;
+    flyEnd = oneLine ? L + 400 : 1000;
+    if (oneLine) {
+      track(fly, 'transform', [[0, at(x0, y0, 1), fly8], [820, at(x1, y1, k)], [L, at(x1, y1, k), 'ease'], [L + 400, at(x1, y1 - 6, k)]]);
+      track(fly, 'opacity', [[0, 1], [L, 1, 'ease'], [L + 400, 0]]);   // fully there on the very frame the typed text hides (shown by visibility)
+      track(bi, 'opacity', [[0, 0], [1, 0]]);
     } else {
-      // a long idea that wraps in the log (small phones): a soft crossfade instead
-      track(fly, 'opacity', [[0, 0], [1, 1], [760, 1, 'ease'], [1000, 0]]);
+      // a long idea that wraps in the log (small phones): it lands, then softly gives way to the wrapped title
+      track(fly, 'transform', [[0, at(x0, y0, 1), fly8], [820, at(x1, y1, k)]]);
+      track(fly, 'opacity', [[0, 1], [760, 1, 'ease'], [1000, 0]]);
       track(bi, 'opacity', [[760, 0, 'ease'], [1000, 1]]);
     }
 
@@ -1051,7 +1054,7 @@ html.open .after{display:block}
   function discrete(T) {
     const c = hero.classList, on = (k, v) => c.toggle(k, v);
     on('leaving', T > 0); on('building', T > 0);
-    if (fly) fly.style.visibility = T > 0 && T < 1000 ? '' : 'hidden';   // never left behind once it has landed
+    if (fly) fly.style.visibility = T > 0 && T < flyEnd ? '' : 'hidden';   // never left behind once its part is over
     input.style.color = T > 0 ? 'transparent' : '';
     let lvl = T >= LEAD ? 1 : 0;
     steps.forEach((li, i) => {
