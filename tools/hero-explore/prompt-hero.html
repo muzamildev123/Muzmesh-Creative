@@ -430,12 +430,172 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   .sbtns{margin-top:16px}
   .sagain{margin-top:12px}
 }
-/* ---------- after the story (only on the page once Build my idea has opened the story) ---------- */
-/* the end of the story: the finished hero fades to black, then the next section fades in, still pinned (a copy of its first
-   screen, inside the hero). The real section sits exactly underneath that copy and takes over the moment the scrub ends,
-   so from there the page simply scrolls. */
+/* ---------- part five: the kit unfolds ----------
+   Keep scrolling past "Yours won't" and the rest of the launch arrives around their site. The text column leaves, the crowd
+   goes dark, and their site shrinks into the middle of a kit: Look (logo, brand), Launch (the site, a social post, an intro
+   video) and Run (tracking, the CRM, a site they edit themselves). Every tile is drawn in their own brand, so the point
+   makes itself: it all matches. Tiles size their contents with container units, so one design serves a laptop and a phone. */
+.kdim{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+/* once it's dark the crowd underneath isn't drawn at all */
+.hero.kitdark .lpan,.hero.kitdark .ldim,.hero.kitdark .ldim2,.hero.kitdark .sdim,.hero.kitdark .lmsg{visibility:hidden}
+.kcue{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:flex;align-items:center;gap:8px;font-size:12.5px;letter-spacing:.01em;color:var(--faint);opacity:0;pointer-events:none;white-space:nowrap}
+.kcue svg{width:12px;height:12px}
+.kit{position:absolute;inset:0;pointer-events:none;visibility:hidden;overflow:hidden}
+.hero.kitin .kit{visibility:visible}
+.kin{width:min(1240px,100%);height:100%;margin:0 auto;display:flex;flex-direction:column;padding:96px 0 34px}
+.khead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,34ch);gap:48px;align-items:end;margin-bottom:30px}
+.kh{margin:0;font-weight:500;font-size:clamp(28px,2.75vw,42px);line-height:1.08;letter-spacing:-.028em}
+.kh span{display:block;opacity:0;text-wrap:balance}
+.kh .k1{color:#77777c}
+.kp{margin:0;font-size:15px;line-height:1.55;color:var(--muted);text-wrap:pretty;opacity:0}
+.kbento{flex:1;min-height:0;display:flex;gap:var(--kg,14px)}
+.kcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:var(--kg,14px)}
+.kc2{flex:0 0 var(--cw,50%)}
+.kch{flex:none;display:flex;align-items:baseline;gap:10px;height:18px;font-size:12.5px;line-height:18px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0}
+.kch b{font-weight:500;color:var(--fg)}
+.kslot{flex:none;width:100%;aspect-ratio:var(--ya,1.55);border-radius:var(--kr,8px);box-shadow:0 0 0 1px rgba(255,255,255,.12),0 40px 90px -40px #000;opacity:0}
+.krow{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:var(--kg,14px)}
+.kc1 .klogo{flex:1.2 1 0}
+.kc1 .kbrand,.kc3 .kt{flex:1 1 0}
+/* the kit is painted at 1% while the answer holds still, so nothing is drawn for the first time mid-move; its layers stay (they rest at scale 1) */
+.hero.kitin .kt,.hero.kitin .kh span,.hero.kitin .kp,.hero.kitin .kch,.hero.kitin .kslot{will-change:transform,opacity}
+.hero.kitfly .ywin{will-change:transform}
+.kdim,.kcue{will-change:opacity}
+.hero.kitin:not(.kitout) .stext{will-change:transform,opacity}
+.hero.kitin:not(.kitout) .yslot::before{will-change:opacity}
+.hero.kitout .sbtns,.hero.kitout .sagain{visibility:hidden}
+.hero.kitout .stext{pointer-events:none}
 
-@media (prefers-reduced-motion:reduce){.nav,.main>*,.next,.bar,.chip,.go,.build,.win,.bfoot,.bdone,.slot>*,.pbg,.pcards,.steps li,.steps li *,.lgrid,.lpan,.ldim,.mc,.lmsg,.lmsg h2,.lmsg p,.ldim2,.sdim,#curtain,.sh .s1,.sh .s2,.sp,.sbtns,.sagain,.yslot::before,.yveil,.cta,.boot,.sk::before,.launch::after{transition:none!important;animation:none!important}}
+/* the tiles: their brand's tokens. --kb/--ki home surface, --kp/--kpi a panel, --kx/--kxi the inverse, --ka/--kc the accent */
+.kt{position:relative;min-height:0;min-width:0;border-radius:var(--kr,8px);overflow:hidden;container-type:size;opacity:0;
+  background:var(--kb);color:var(--ki);font-family:var(--sans);letter-spacing:-.005em;box-shadow:0 0 0 1px rgba(255,255,255,.09)}
+.kt.kp-s{background:var(--kp);color:var(--kpi)}
+.kt.kx-s{background:var(--kx);color:var(--kxi)}
+.kit{--kd:var(--sans);--kdw:600;--kdl:-.03em}
+.kit.t-lex{--kb:#f8f7f3;--ki:#191917;--kp:#ece8df;--kpi:#191917;--kx:#191917;--kxi:#f8f7f3;--ka:#191917;--kc:#f8f7f3;--kv:#191917;--kvi:#f8f7f3;--klf:"Inter Tight";--kd:Newsreader,"Instrument Serif",serif;--kdw:400;--kdl:-.022em}
+.kit.t-med{--kb:#f2eee5;--ki:#15332a;--kp:#fffdf8;--kpi:#15332a;--kx:#15332a;--kxi:#f2eee5;--ka:#3d7a5c;--kc:#fff;--kv:#3d7a5c;--kvi:#fffdf8;--klf:"Instrument Serif";--kd:"Instrument Serif",serif;--kdw:400;--kdl:-.005em}
+.kit.t-book{--kb:#2a45ff;--ki:#fff6e6;--kp:#fff6e6;--kpi:#16163a;--kx:#16163a;--kxi:#ffd84a;--ka:#ffd84a;--kc:#16163a;--kv:#ffd84a;--kvi:#16163a;--klf:"Bricolage Grotesque";--kd:"Bricolage Grotesque",var(--sans);--kdw:800;--kdl:-.045em}
+.kit.t-sales{--kb:#0b110d;--ki:#f1f5ee;--kp:#141d17;--kpi:#f1f5ee;--kx:#c4f24a;--kxi:#0b110d;--ka:#c4f24a;--kc:#0b110d;--kv:#f1f5ee;--kvi:#0b110d;--kd:"Inter Tight",var(--sans);--kdw:700;--kdl:-.05em}
+.kit.t-gen{--kb:var(--pb);--ki:var(--pi);--kp:color-mix(in srgb,var(--pb) 90%,var(--pi));--kpi:var(--pi);--kx:var(--pi);--kxi:var(--pb);--ka:var(--pa);--kc:var(--pc);--kv:var(--pa);--kvi:var(--pc);--klf:"Bricolage Grotesque";--kd:"Bricolage Grotesque",var(--sans);--kdw:700;--kdl:-.04em}
+.kt .kdf{font-family:var(--kd);font-weight:var(--kdw);letter-spacing:var(--kdl)}
+.kt .kmono{font-family:var(--mono);letter-spacing:0}
+.kmk{display:inline-grid;place-items:center;flex:none}
+.kmk svg{width:17px;height:17px;display:block}
+.kmut{opacity:.62}
+
+/* Look: the logo, set on a sheet with its clear space marked */
+.kq{position:absolute;inset:0}
+.klogo>.kq{display:grid;place-items:center}
+.klz{position:relative;padding:calc(var(--lz,1) * 14px) calc(var(--lz,1) * 18px)}
+.klz::before{content:"";position:absolute;inset:0;border:1px dashed currentColor;opacity:.18}
+:where(.kit) .yl{display:flex;align-items:center;gap:10px;font-size:23px;font-weight:600;letter-spacing:-.015em;white-space:nowrap;font-family:var(--klf,var(--sans))}
+.klz .yl{zoom:var(--lz,1)}
+.kcap{position:absolute;left:7cqmin;bottom:6cqmin;font-size:clamp(8.5px,4.2cqmin,11px);line-height:1;opacity:.55;white-space:nowrap}
+.kcap.r{left:auto;right:7cqmin}
+/* the brand sheet: four colours and the two typefaces */
+.kbrand>.kq{display:grid;grid-template-rows:minmax(0,1fr) auto;gap:6cqmin;padding:7cqmin}
+.ksw{display:flex;gap:3cqmin;min-height:0}
+.ksw>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2.2cqmin;min-height:0}
+.ksw i{flex:1;min-height:12px;border-radius:calc(var(--kr,8px) * .5);box-shadow:inset 0 0 0 1px color-mix(in srgb,currentColor 16%,transparent)}
+.ksw b{font-weight:500;font-size:clamp(8px,2.8cqi + 1cqh,12.5px);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ksw span{font-size:clamp(7.5px,2.2cqi + .8cqh,10.5px);line-height:1;opacity:.55}
+.kty{display:flex;align-items:flex-end;justify-content:space-between;gap:4cqmin;border-top:1px solid color-mix(in srgb,currentColor 16%,transparent);padding-top:4.5cqmin}
+.kaa{font-size:clamp(22px,19cqmin,62px);line-height:.8}
+.ktn{font-size:clamp(8px,4cqmin,11px);line-height:1.35;text-align:right;opacity:.62}
+
+/* Launch: a social post and the intro video */
+.kpost>.kq{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:5cqmin;padding:7cqmin}
+.kph{display:flex;align-items:center;gap:2.6cqmin;font-size:clamp(9px,2.6cqi + 1.4cqh,13px);line-height:1;white-space:nowrap;min-width:0}
+.kph b{font-weight:600}
+.kph span:last-child{opacity:.55;overflow:hidden;text-overflow:ellipsis}
+.kav{width:clamp(14px,10cqmin,24px);height:clamp(14px,10cqmin,24px);border-radius:50%;background:var(--kb);display:grid;place-items:center;overflow:hidden}
+.kav .kmk{transform:scale(.62)}
+.kpq{margin:0;align-self:center;font-size:clamp(12px,5.2cqi + 4cqh,30px);line-height:1.04;text-wrap:balance;overflow:hidden}
+.kpf{display:flex;gap:4.5cqmin;font-size:clamp(8.5px,2.3cqi + 1cqh,12px);line-height:1;opacity:.62}
+.kpf span{display:flex;align-items:center;gap:1.4cqmin}
+.kpf svg{width:1.15em;height:1.15em}
+.kvid{background:var(--kv);color:var(--kvi)}
+.kvid img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.55);transform-origin:36% 26%}   /* a closer shot from the same photograph: a still from the video */
+.kvid.ph{color:#fff}
+.kvid.ph::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.1) 40%,rgba(0,0,0,.72))}
+.kvid>*:not(img){z-index:2}
+.kvw{position:absolute;right:5cqmin;top:50%;transform:translateY(-56%);font-size:118cqh;line-height:1;opacity:.14;pointer-events:none}
+.kpl{position:absolute;left:50%;top:44%;width:clamp(22px,20cqmin,46px);height:clamp(22px,20cqmin,46px);margin:calc(clamp(22px,20cqmin,46px) / -2) 0 0 calc(clamp(22px,20cqmin,46px) / -2);border-radius:50%;
+  background:color-mix(in srgb,currentColor 18%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,currentColor 55%,transparent);display:grid;place-items:center}
+.kpl svg{width:36%;height:36%;margin-left:8%}
+.kvt{position:absolute;left:7cqmin;right:7cqmin;bottom:15cqmin;font-size:clamp(10px,4cqi + 2cqh,22px);line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kvb{position:absolute;left:7cqmin;right:7cqmin;bottom:6.5cqmin;display:flex;align-items:center;gap:3cqmin;font-size:clamp(7.5px,2cqi + 1cqh,10.5px);line-height:1}
+.kvb i{flex:1;height:2px;border-radius:2px;background:linear-gradient(90deg,currentColor 0 24%,color-mix(in srgb,currentColor 30%,transparent) 24%)}
+.kvb span{opacity:.8}
+
+/* Run: tracking, the pipeline, and editing the site */
+.ktrack>.kq,.kcrm>.kq{display:flex;flex-direction:column;padding:6.5cqmin 7cqmin}
+.kmh{display:flex;justify-content:space-between;gap:8px;font-size:clamp(9px,2.6cqi + 1.2cqh,13px);line-height:1.2;white-space:nowrap}
+.kmh span:last-child{opacity:.55}
+.kmn{display:flex;align-items:baseline;gap:3cqmin;margin-top:2.5cqmin}
+.kmn b{font-weight:inherit;font-size:clamp(18px,6cqi + 6cqh,46px);line-height:1}
+.kmn em{font-style:normal;font-size:clamp(8px,2.2cqi + 1cqh,11.5px);font-weight:600;line-height:1;padding:.4em .6em;border-radius:999px;background:var(--ka);color:var(--kc)}
+.ktrack.kp-s .kmn em{background:var(--kx);color:var(--kxi)}
+.kgr{position:relative;flex:1;min-height:0;margin:4cqmin -7cqmin -6.5cqmin}
+.kgr svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.kgr .ga{fill:currentColor;opacity:.08}
+.kgr .gl{fill:none;stroke:currentColor;stroke-width:1.6;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.kgr .gd{position:absolute;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px color-mix(in srgb,currentColor 18%,transparent)}
+.kcrm>.kq{gap:0}
+.kcrm .kmh{margin-bottom:2.5cqmin}
+.kr{flex:1;min-height:0;display:flex;align-items:center;gap:3cqmin;border-top:1px solid color-mix(in srgb,currentColor 12%,transparent);font-size:clamp(9px,2.7cqi + 1.4cqh,13.5px);line-height:1;white-space:nowrap}
+.kr i{flex:none;width:clamp(14px,8.5cqmin,22px);height:clamp(14px,8.5cqmin,22px);border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:.72em;font-weight:600;background:color-mix(in srgb,currentColor 11%,transparent)}
+.kr b{flex:1;min-width:0;font-weight:500;overflow:hidden;text-overflow:ellipsis}
+.kr span{flex:none;font-size:.86em;padding:.42em .7em;border-radius:999px;box-shadow:inset 0 0 0 1px color-mix(in srgb,currentColor 24%,transparent)}
+.kr span.on{background:var(--ka);color:var(--kc);box-shadow:none}
+.kedit>.kq{display:flex;flex-direction:column;padding:6.5cqmin 7cqmin}
+.keb{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:clamp(9px,2.6cqi + 1.2cqh,13px);line-height:1;white-space:nowrap}
+.keb span:first-child{opacity:.55}
+.keb b{font-weight:600;padding:.5em .8em;border-radius:999px;background:var(--ka);color:var(--kc)}
+.kedit.kp-s .keb b{background:var(--kx);color:var(--kxi)}
+.ketb{display:flex;gap:1.6cqmin;margin-top:4.5cqmin}
+.ketb span{display:grid;place-items:center;min-width:clamp(14px,5cqi + 2cqh,26px);height:clamp(14px,5cqi + 2cqh,26px);padding:0 1.2cqmin;border-radius:calc(var(--kr,8px) * .4);font-size:clamp(8px,2.4cqi + 1cqh,12px);line-height:1;box-shadow:inset 0 0 0 1px color-mix(in srgb,currentColor 18%,transparent)}
+.ketb span:first-child{font-weight:700;background:color-mix(in srgb,currentColor 10%,transparent)}
+.ket{flex:none;margin:4cqmin 0 0;font-size:clamp(11px,4.6cqi + 3cqh,24px);line-height:1.08;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;text-wrap:pretty}
+.ket mark{color:inherit;background:color-mix(in srgb,var(--ka) 30%,transparent);border-radius:2px}
+.kit.t-lex .ket mark,.kit.t-sales .kedit .ket mark{background:color-mix(in srgb,currentColor 14%,transparent)}
+.kcar{display:inline-block;width:1.5px;height:.95em;margin-left:1px;vertical-align:-.1em;background:currentColor;animation:kblink 1.1s ease-in-out infinite alternate}
+.kes{margin:3cqmin 0 0;font-size:clamp(8px,2.2cqi + 1cqh,12px);line-height:1.45;opacity:.62;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.kef{margin-top:auto;padding-top:3cqmin;display:flex;justify-content:space-between;font-size:clamp(8px,2.2cqi + 1cqh,11.5px);line-height:1;opacity:.55}
+.kef span:first-child{display:flex;align-items:center;gap:.5em}
+.kef span:first-child::before{content:"";width:.55em;height:.55em;border-radius:50%;background:currentColor}
+@keyframes kblink{from{opacity:1}to{opacity:.1}}
+
+/* small tiles keep the essentials */
+@container (max-height:170px){.kes,.kef{display:none}}
+@container (max-height:120px){.kpf,.ketb,.kcap{display:none}.kr:nth-of-type(4){display:none}}
+@container (max-width:150px){.kph span:last-child,.ktn,.kmh span:last-child,.kr span,.keb span:first-child,.ksw b,.ksw span{display:none}}
+@container (max-width:200px){.ksw span{display:none}}
+
+/* tablets and phones: one column. The site sits on top, the other seven tiles in a 3×3 grid under it */
+@media (max-width:900px){
+  .kin{padding:78px 0 18px}
+  .khead{grid-template-columns:minmax(0,1fr);gap:10px;margin-bottom:18px}
+  .kbento{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:auto repeat(3,minmax(84px,1fr));
+    grid-template-areas:"land land land" "logo brand post" "vid vid track" "crm crm edit"}
+  .kcol,.krow{display:contents}
+  .kch{display:none}
+  .kslot{grid-area:land;width:var(--cw,100%);justify-self:center}
+  .klogo{grid-area:logo}.kbrand{grid-area:brand}.kpost{grid-area:post}.kvid{grid-area:vid}.ktrack{grid-area:track}.kcrm{grid-area:crm}.kedit{grid-area:edit}
+}
+@media (max-width:760px){
+  .kin{padding:68px 0 14px}
+  .kh{font-size:clamp(23px,6.6vw,30px)}
+  .kp{font-size:13.5px;line-height:1.45}
+  .kit{--kg:8px}
+}
+@media (max-width:760px) and (max-height:740px){
+  .kp{display:none}
+  .khead{margin-bottom:14px}
+  .kcue{display:none}
+}
+
+@media (prefers-reduced-motion:reduce){.nav,.main>*,.next,.bar,.chip,.go,.build,.win,.bfoot,.bdone,.slot>*,.pbg,.pcards,.steps li,.steps li *,.lgrid,.lpan,.ldim,.mc,.lmsg,.lmsg h2,.lmsg p,.ldim2,.sdim,#curtain,.sh .s1,.sh .s2,.sp,.sbtns,.sagain,.yslot::before,.yveil,.kcar,.cta,.boot,.sk::before,.launch::after{transition:none!important;animation:none!important}}
 </style>
 
 <div class="story" id="story">
@@ -522,6 +682,7 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
     <div class="lmsg"><h2>Can you still find yours?</h2><p>Neither can your customers.</p></div>
     <div class="ldim2"></div>
     <div class="sdim"></div>
+    <div class="kdim"></div>
     <div class="solve pad" id="solve">
       <div class="swrap">
         <div class="stext">
@@ -536,6 +697,21 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
             <div class="vp" id="yvp"><div class="ypg" id="ypg"></div><div class="ygen" id="ygen"><div class="ygi" id="ygi"></div></div><i class="yedge" id="yedge"></i></div>
             <div class="yveil"></div>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="kcue" aria-hidden="true">More than a website <svg viewBox="0 0 12 12"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="kit pad" id="kit">
+      <div class="kin" id="kin">
+        <div class="khead">
+          <h2 class="kh"><span class="k1">A website is one page of your launch.</span> <span class="k2">We design the rest.</span></h2>
+          <p class="kp">Your logo, brand, social posts and intro video, plus the tracking, CRM and easy editor to run it. Designed together, so every piece looks like one company.</p>
+        </div>
+        <div class="kbento" id="kbento" aria-hidden="true">
+          <div class="kcol kc1"><div class="kch"><b>Look</b>Logo and brand</div><div class="kt klogo"></div><div class="kt kbrand kp-s"></div></div>
+          <div class="kcol kc2"><div class="kch"><b>Launch</b>Landing page, social posts, intro video</div><div class="kslot" id="kslot"></div>
+            <div class="krow"><div class="kt kpost kx-s"></div><div class="kt kvid"></div></div></div>
+          <div class="kcol kc3"><div class="kch"><b>Run</b>Tracking, CRM, a site you edit</div><div class="kt ktrack kp-s"></div><div class="kt kcrm"></div><div class="kt kedit kp-s"></div></div>
         </div>
       </div>
     </div>
@@ -751,6 +927,108 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
       gh.textContent = line;
       gh.classList.toggle('lg', line.length > 40);
     }
+    fillKit(c, d);
+  }
+
+
+  /* ---------- part five: the kit, drawn in their brand ---------- */
+  const kit = $('kit'), kin = $('kin'), kslot = $('kslot'), kbento = $('kbento');
+  // what each startup's kit says: its colours, its typefaces, a post, a video, a number worth tracking and three leads
+  const KITS = {
+    't-lex': { sw: [['Paper', '#F8F7F3'], ['Ink', '#191917'], ['Stone', '#CFC9BD'], ['Brass', '#9C7B4E']], ty: ['Newsreader', 'Inter Tight'],
+      post: 'A 40-page contract, reviewed before your coffee cools.', m: ['Demo requests', '48', '+22%'],
+      crm: [['Hale & Brook LLP', 'Demo booked'], ['Okafor Legal', 'Trial'], ['Lindqvist & Co', 'New lead']] },
+    't-med': { sw: [['Linen', '#F2EEE5'], ['Pine', '#15332A'], ['Sage', '#3D7A5C'], ['Mint', '#E1EBE1']], ty: ['Instrument Serif', 'Inter Tight'],
+      post: 'Your notes, written before the next patient walks in.', m: ['Trial sign-ups', '126', '+18%'],
+      crm: [['Riverside Clinic', 'Demo booked'], ['Dr. Amara Osei', 'Trial'], ['Northgate Practice', 'New lead']] },
+    't-book': { sw: [['Blue', '#2A45FF'], ['Cream', '#FFF6E6'], ['Sun', '#FFD84A'], ['Night', '#16163A']], ty: ['Bricolage Grotesque', 'Inter Tight'],
+      post: 'Cc Bookly. Get your Tuesdays back.', m: ['Sign-ups', '2,340', '+31%'],
+      crm: [['Sam Patel', 'Active'], ['Lena Fischer', 'Invited'], ['Noah Kim', 'Waitlist']] },
+    't-sales': { sw: [['Night', '#0B110D'], ['Chalk', '#F1F5EE'], ['Volt', '#C4F24A'], ['Moss', '#141D17']], ty: ['Inter Tight', 'JetBrains Mono'],
+      post: 'Your best rep, on every call.', m: ['Demo requests', '64', '+27%'],
+      crm: [['Acme Corp', 'Demo booked'], ['Brightline', 'Trial'], ['Northwind', 'New lead']] }
+  };
+  const SERIES = [47, 48, 42, 44, 37, 39, 32, 34, 26, 28, 20, 15];   // the chart, in a 200×60 box: a good week
+  const chartPath = () => {
+    const P = SERIES.map((y, i) => [i * 188 / (SERIES.length - 1), y]);
+    let d = `M${P[0][0]},${P[0][1]}`;
+    for (let i = 0; i < P.length - 1; i++) {   // a soft curve through every point
+      const a = P[i - 1] || P[i], b = P[i], c = P[i + 1], e = P[i + 2] || c;
+      d += ` C${(b[0] + (c[0] - a[0]) / 6).toFixed(1)},${(b[1] + (c[1] - a[1]) / 6).toFixed(1)} ${(c[0] - (e[0] - b[0]) / 6).toFixed(1)},${(c[1] - (e[1] - b[1]) / 6).toFixed(1)} ${c[0].toFixed(1)},${c[1]}`;
+    }
+    return [d, `${d} L188,60 L0,60Z`, P[P.length - 1]];
+  };
+  const ICON = {
+    heart: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13.4S2.2 10 2.2 6.1A3 3 0 0 1 8 4.7a3 3 0 0 1 5.8 1.4C13.8 10 8 13.4 8 13.4z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>',
+    talk: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3.5h10v7H7.5L4.5 13v-2.5H3z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>',
+    share: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9.5 3.5 13 7l-3.5 3.5M13 7H7.5A4.5 4.5 0 0 0 3 11.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    play: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.2v9.6L10.4 6z" fill="currentColor"/></svg>'
+  };
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  function fillKit(c, d) {
+    const cls = d[0], yl = ypg.querySelector('.yl'), name = yl.textContent.trim(), head = ypg.querySelector('h3').textContent.trim();
+    let k = KITS[cls];
+    if (!k) {
+      const v = n => ypg.style.getPropertyValue(n).trim().toUpperCase();
+      k = { sw: [['Base', v('--pb')], ['Ink', v('--pi')], ['Accent', v('--pa')]], ty: ['Bricolage Grotesque', 'Inter Tight'],
+        post: `${name} is live. Get your hours back.`, m: ['Sign-ups', '312', '+24%'],
+        crm: [['Priya Nair', 'Active'], ['Tom Becker', 'Invited'], ['Ana Lima', 'Waitlist']] };
+    }
+    kit.className = 'kit pad ' + cls;
+    kit.style.cssText = ypg.getAttribute('style') || '';
+    const mark = `<span class="kmk">${yl.firstElementChild.outerHTML}</span>`;
+    const tile = s => kit.querySelector('.' + s);
+    tile('klogo').innerHTML = `<div class="kq"><div class="klz"><span class="yl">${yl.innerHTML}</span></div><span class="kcap kmono">Logo</span><span class="kcap r kmono">Clear space</span></div>`;
+    tile('kbrand').innerHTML = `<div class="kq"><div class="ksw">${k.sw.map(([n, h]) => `<div><i style="background:${h}"></i><b>${n}</b><span class="kmono">${h}</span></div>`).join('')}</div>
+      <div class="kty"><span class="kaa kdf">Aa</span><span class="ktn kmono">${k.ty[0]}<br>${k.ty[1]}</span></div></div>`;
+    tile('kpost').innerHTML = `<div class="kq"><div class="kph"><span class="kav">${mark}</span><b>${esc(name)}</b><span>· Sponsored</span></div>
+      <p class="kpq kdf">${esc(k.post)}</p>
+      <div class="kpf"><span>${ICON.heart}248</span><span>${ICON.talk}31</span><span>${ICON.share}18</span></div></div>`;
+    const v = tile('kvid'), photo = cls === 't-lex' && PHOTOS.lex;
+    v.classList.toggle('ph', !!photo);
+    v.innerHTML = `${photo ? `<img src="${PHOTOS.lex}" alt="">` : `<span class="kvw kdf">${esc(name[0].toUpperCase())}</span>`}
+      <span class="kpl">${ICON.play}</span><div class="kvt kdf">${esc(name)} in 60 seconds</div><div class="kvb kmono"><i></i><span>0:14 / 1:00</span></div>`;
+    const [line, area, end] = chartPath();
+    tile('ktrack').innerHTML = `<div class="kq"><div class="kmh"><span>${k.m[0]}</span><span>This week</span></div>
+      <div class="kmn"><b class="kdf">${k.m[1]}</b><em>${k.m[2]}</em></div>
+      <div class="kgr"><svg viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden="true"><path class="ga" d="${area}"/><path class="gl" d="${line}"/></svg><i class="gd" style="left:${end[0] / 2}%;top:${(end[1] / 60 * 100).toFixed(2)}%"></i></div></div>`;
+    const ini = n => n.split(/\s+/).filter(w => /^[A-Z]/.test(w) && !/^Dr\.?$/.test(w)).slice(0, 2).map(w => w[0]).join('');
+    tile('kcrm').innerHTML = `<div class="kq"><div class="kmh"><span>Pipeline</span><span>12 new this week</span></div>` +
+      k.crm.map(([n, s], i) => `<div class="kr"><i>${ini(n)}</i><b>${esc(n)}</b><span class="${i ? '' : 'on'}">${s}</span></div>`).join('') + '</div>';
+    // the headline of their site, mid-edit: the last phrase selected, the caret after it
+    const sent = head.match(/[^.!?]+[.!?]+/g) || [head], last = sent[sent.length - 1].trim();
+    let a, b;
+    if (sent.length > 1 && last.split(' ').length <= 5) { a = head.slice(0, head.lastIndexOf(last)); b = last; }
+    else { const w = head.split(' '); a = w.slice(0, -2).join(' ') + ' '; b = w.slice(-2).join(' '); }
+    tile('kedit').innerHTML = `<div class="kq"><div class="keb"><span>Editing · Home</span><b>Publish</b></div>
+      <div class="ketb"><span>B</span><span><i>I</i></span><span>Link</span><span>Aa</span></div>
+      <p class="ket kdf">${esc(a)}<mark>${esc(b)}</mark><i class="kcar"></i></p>
+      <p class="kes">${esc(ypg.querySelector('.ys').textContent.trim())}</p><div class="kef"><span>Saved</span><span>Preview</span></div></div>`;
+  }
+  // sizes the kit for this screen: the site's tile takes about two thirds of the height, the rest share what's left
+  function layoutKit(f) {
+    const ya = f.width / f.height, narrow = innerWidth <= 900;
+    kit.style.setProperty('--ya', ya.toFixed(4));
+    kit.style.removeProperty('--cw');
+    const b = kbento.getBoundingClientRect(), gap = parseFloat(getComputedStyle(kbento).rowGap) || 14;
+    let cw;
+    if (!narrow) cw = Math.max(b.width * .36, Math.min(b.width * .5, (b.height - 18 - gap) * .64 * ya));
+    else cw = Math.min(b.width, Math.max(b.width * .78, (b.height - 3 * 84 - 3 * gap) * ya));
+    kit.style.setProperty('--cw', cw.toFixed(1) + 'px');
+    const s = kslot.getBoundingClientRect(), z = s.width / f.width;
+    kit.style.setProperty('--kr', (12 * z).toFixed(2) + 'px');
+    // the logo fills about half its sheet
+    const lz = kit.querySelector('.klz .yl'), lt = kit.querySelector('.klogo').getBoundingClientRect();
+    kit.style.setProperty('--lz', 1);
+    const lr = lz.getBoundingClientRect();
+    kit.style.setProperty('--lz', Math.max(.6, Math.min(2.8, lt.width * .5 / lr.width, lt.height * .2 / lr.height)).toFixed(3));
+    // on a short screen the kit runs past the bottom: it pans up once it has arrived
+    const hr = hero.getBoundingClientRect();
+    let bottom = 0;
+    kit.querySelectorAll('.kt').forEach(t => { bottom = Math.max(bottom, t.getBoundingClientRect().bottom); });
+    const pan = Math.max(0, Math.ceil(bottom - (hr.bottom - 14)));
+    const to = dy => `translate(${(s.left - f.left).toFixed(2)}px,${(s.top - f.top - dy).toFixed(2)}px) scale(${z.toFixed(5)})`;
+    return { to: to(0), toPan: to(pan), pan, sx: s.left + s.width / 2, sy: s.top + s.height / 2 };
   }
 
   /* ---------- the grid of look-alikes ---------- */
@@ -821,7 +1099,8 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   const L = A_END + 900;                                 // the launch (a short hold before it)
   const G = L + 250;                                     // the camera starts pulling back
   const SOLVED = G + 12900;                              // the answer is complete: where Launch now stops
-  const END = SOLVED + 500;                              // a short hold on the answer, then the page ends
+  const K0 = SOLVED + 600;                               // keep scrolling: the kit unfolds
+  const END = K0 + 3600;                                 // the kit has arrived; a short hold, then the page ends
   const RATE = .3, DEAD = 24;                            // px of scroll per story-ms; a little dead zone at the top
   const E_OUT = 'cubic-bezier(.2,.7,.2,1)', E_IO = 'cubic-bezier(.4,0,.2,1)', SOFT = 'cubic-bezier(.42,0,.3,1)';
   const SPEED = .82;                                      // autoplay runs the story a little slower than real time
@@ -939,7 +1218,9 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
     const cx = geo.fx, cy = geo.fy - geo.row * 1.6;
     const lift = `translate(${(cx - f.left).toFixed(2)}px,${(cy - f.top).toFixed(2)}px) scale(${(geo.cw / f.width).toFixed(5)},${(geo.ch / f.height).toFixed(5)})`;
     track(ywin, 'opacity', [[G + 7300, 0], [G + 7301, .01], [G + 9000, .01], [G + 9001, 1]]);
-    track(ywin, 'transform', [[G + 9080, lift, 'cubic-bezier(.62,0,.2,1)'], [G + 10380, 'none']]);
+    const kg = layoutKit(f), KE = 'cubic-bezier(.5,0,.15,1)';
+    track(ywin, 'transform', [[G + 9080, lift, 'cubic-bezier(.62,0,.2,1)'], [G + 10380, 'none'], [K0 + 150, 'none', KE], [K0 + 1450, kg.to],
+      ...(kg.pan ? [[K0 + 2500, kg.to, 'ease'], [K0 + 3300, kg.toPan]] : [])]);
     track(yveil, 'opacity', [[G + 9100, .78, 'ease'], [G + 10100, 0]]);
     track(sdim, 'opacity', [[G + 9000, 0, 'ease'], [G + 10200, 1]]);
     // the hand-made page wipes across the generic one, led by a thin line of light: two opposing transforms, no repaint
@@ -950,10 +1231,40 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
     track(yedge, 'opacity', [[G + 10350, 0], [G + 10470, 1], [G + 11200, 1], [G + 11350, 0]]);
     // "Yours won't." and the answer
     fadeIn(s2, G + 11150, 700, 12);
-    track(yslot, 'opacity', [[G + 11150, 0, 'ease'], [G + 12350, 1]], '::before');
+    track(yslot, 'opacity', [[G + 11150, 0, 'ease'], [G + 12350, 1], [K0, 1, 'ease'], [K0 + 450, 0]], '::before');
     fadeIn(sh.parentNode.querySelector('.sp'), G + 11900, 600, 8);
     fadeIn(sh.parentNode.querySelector('.sbtns'), G + 12050, 600, 8);
     fadeIn($('again2'), G + 12250, 600, 8);
+
+    /* part five: the kit unfolds. The words leave, the crowd goes dark, their site shrinks into the middle of the kit
+       and the other pieces slide out from behind it */
+    const stext = sh.parentNode;
+    track(stext, 'opacity', [[K0, 1, 'ease'], [K0 + 450, 0]]);
+    track(stext, 'transform', [[K0, 'none', 'ease'], [K0 + 450, 'translateY(-10px)']]);
+    track(document.querySelector('.kcue'), 'opacity', [[G + 12300, 0, 'ease'], [SOLVED, 1], [K0, 1, 'ease'], [K0 + 300, 0]]);
+    track(document.querySelector('.kdim'), 'opacity', [[K0, 0, 'ease'], [K0 + 900, 1]]);
+    const P = SOLVED + 150;   // nothing moves between the answer and the kit: the kit's layers are painted here, at 1%
+    const kIn = (el, t, d, dy) => {
+      track(el, 'opacity', [[P, 0], [P + 1, .01], [t, .01, 'ease'], [t + d, 1]]);
+      if (dy) track(el, 'transform', [[t, `translateY(${dy}px)`, E_OUT], [t + d + 200, 'none']]);
+    };
+    kIn(kit.querySelector('.k1'), K0 + 650, 700, 10);
+    kIn(kit.querySelector('.k2'), K0 + 850, 700, 10);
+    kIn(kit.querySelector('.kp'), K0 + 1100, 700, 8);
+    kIn(kslot, K0 + 1250, 350);
+    const tiles = [...kit.querySelectorAll('.kt')].map(el => {
+      const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+      return { el, dx: (kg.sx - x) * .32, dy: (kg.sy - y) * .32, d: Math.hypot(kg.sx - x, kg.sy - y) };
+    }).sort((p, q) => p.d - q.d);
+    tiles.forEach((o, i) => {
+      const t = K0 + 1050 + i * 85;
+      kIn(o.el, t, 550);
+      track(o.el, 'transform', [[t, `translate(${o.dx.toFixed(1)}px,${o.dy.toFixed(1)}px)`, E_OUT], [t + 1050, 'none']]);
+    });
+    kit.querySelectorAll('.kch').forEach((el, i) => kIn(el, K0 + 1900 + i * 90, 500, 6));
+    track(kit.querySelector('.kgr svg'), 'clipPath', [[K0 + 1750, 'inset(0 100% 0 0)', E_IO], [K0 + 2850, 'inset(0 0% 0 0)']]);
+    track(kit.querySelector('.gd'), 'opacity', [[K0 + 2700, 0, 'ease'], [K0 + 2950, 1]]);
+    if (kg.pan) track(kin, 'transform', [[K0 + 2500, 'none', 'ease'], [K0 + 3300, `translateY(${-kg.pan}px)`]]);
 
     seek(Tcur);
   }
@@ -992,6 +1303,10 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
     on('p4d', T >= G + 10400);
     on('p4e', T >= G + 11900);
     on('solved', T >= G + 12400);
+    on('kitin', T >= SOLVED + 150);
+    on('kitfly', T >= K0 + 100 && T < K0 + 3300);   // their site keeps its layer until everything has landed
+    on('kitout', T >= K0 + 450);
+    on('kitdark', T >= K0 + 900);
     if (!c.contains('lost') && !raf && !reduce && !document.hidden) raf = requestAnimationFrame(loop);
   }
   function seek(T) {
