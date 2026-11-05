@@ -256,9 +256,6 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 /* the nav comes back once the answer is on screen */
 .hero.solved .nav{pointer-events:auto;z-index:42}   /* above the fade to black: the nav stays through the hand-off */
 /* the same nav, fixed, for the rest of the page: it takes over from the hero's at the exact moment the page starts scrolling */
-.sitenav{position:fixed;top:0;left:0;right:0;z-index:50;visibility:hidden;background:rgba(0,0,0,0);transition:background .6s ease,box-shadow .6s ease}
-html.handed .sitenav{visibility:visible}
-html.below .sitenav{background:rgba(0,0,0,.78);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--hair)}
 
 /* their window: rendered at its final size in the right column and flown in from the card with a transform */
 .yslot{position:relative;min-width:0}
@@ -437,68 +434,6 @@ html.below .sitenav{background:rgba(0,0,0,.78);-webkit-backdrop-filter:blur(14px
 /* the end of the story: the finished hero fades to black, then the next section fades in, still pinned (a copy of its first
    screen, inside the hero). The real section sits exactly underneath that copy and takes over the moment the scrub ends,
    so from there the page simply scrolls. */
-.fadeblk{position:absolute;inset:0;z-index:40;background:#000;opacity:0;pointer-events:none}
-.hero.faded .fadeblk{pointer-events:auto}
-.hero>.echo{position:absolute;left:0;right:0;top:0;z-index:41;margin:0;opacity:0;visibility:hidden;pointer-events:none}
-.hero.fading>.echo{visibility:visible}
-.hero.fading:not(.settled)>.echo{will-change:transform,opacity}   /* a layer only while it rises, so the swap stays pixel-matched */
-#team{margin-top:-100vh;visibility:hidden}
-html.handed #team{visibility:visible}
-.after{display:none}
-html.open .after{display:block}
-/* ---------- one team, the whole launch: six mismatched freelancers become one team ---------- */
-.team{position:relative;padding-block:clamp(120px,18vh,220px) clamp(120px,18vh,200px);background:#000}
-.team .lab{margin-bottom:clamp(24px,3.5vh,36px)}
-.team h2{margin:0;font-weight:500;font-size:clamp(34px,4.6vw,76px);line-height:1.04;letter-spacing:-.035em}
-.team h2>span{display:block;text-wrap:balance}
-.team h2 .dim{color:rgba(var(--fg-c),.42)}
-.tg{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:clamp(28px,4vw,72px);margin-top:clamp(48px,7vh,84px);align-items:center}
-.tstage{position:relative;aspect-ratio:1.3;border-radius:22px;background:radial-gradient(70% 60% at 50% 50%,rgba(var(--y-c),calc(.10 * var(--k,0))),transparent 70%),#08080a;box-shadow:inset 0 0 0 1px rgba(var(--fg-c),.08);overflow:hidden}
-.tstage svg{position:absolute;inset:0;width:100%;height:100%}
-.tstage path{fill:none;stroke-width:1.4;vector-effect:non-scaling-stroke}
-.tn{position:absolute;left:0;top:0;transform:translate(-50%,-50%) rotate(var(--r,0deg));width:11.4em;padding:.75em 1em;font-size:clamp(11px,1vw,14px);line-height:1.25;text-align:left;
-  transition:background 1.1s ease,border-radius 1.1s ease,box-shadow 1.1s ease,color 1.1s ease;will-change:transform}
-.tn .a,.tn .b{display:block;transition:opacity .9s ease}
-.tn small{display:block;margin-top:3px;font-size:.82em;opacity:.6}
-.tn .b{position:absolute;inset:0;padding:0 1em;display:flex;align-items:center;opacity:0;font-family:var(--sans);font-weight:500;color:var(--fg)}
-.tn .b::before{content:"";flex:none;width:6px;height:6px;margin-right:9px;background:var(--y)}
-/* freelancers: everyone has their own look */
-.tn.f0{background:#f1ede4;color:#222;border-radius:2px;font-size:clamp(12px,1.12vw,16px)}
-.tn.f0 .a{font-family:"Instrument Serif",serif}
-.tn.f1{background:#2a45ff;color:#fff;border-radius:999px}
-.tn.f1 .a{font-family:"Bricolage Grotesque",sans-serif;font-weight:700}
-.tn.f2{background:#16161a;color:#c4f24a;border-radius:6px;box-shadow:inset 0 0 0 1px #c4f24a55}
-.tn.f2 .a{font-family:var(--mono)}
-.tn.f3{background:#ffd84a;color:#16163a;border-radius:18px 18px 18px 4px}
-.tn.f3 .a{font-family:system-ui,sans-serif;font-weight:600}
-.tn.f4{background:#3a1f4f;color:#f3dcff;border-radius:10px}
-.tn.f4 .a{font-family:Georgia,serif;font-style:italic}
-.tn.f5{background:#fff;color:#111;border-radius:0;box-shadow:4px 4px 0 #ff4d6d}
-.tn.f5 .a{font-family:system-ui,sans-serif}
-/* one team: one look */
-.tstage.one .tn{background:#141418;color:var(--fg);border-radius:12px;box-shadow:inset 0 0 0 1px rgba(var(--y-c),.45)}
-.tstage.one .tn .a{opacity:0}
-.tstage.one .tn .b{opacity:1}
-.tc{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;place-items:center;text-align:center;z-index:2}
-.tc .you,.tc .mm{grid-area:1/1;transition:opacity .9s ease,transform 1.2s cubic-bezier(.2,.8,.2,1)}
-.tc .you{padding:.7em 1.1em;border-radius:999px;background:#f4f4f1;color:#000;font-size:clamp(12px,1.05vw,15px);font-weight:500;box-shadow:0 0 0 6px rgba(244,244,241,.08)}
-.tc .you small{display:block;font-size:.78em;font-weight:400;opacity:.6}
-.tc .mm{padding:.8em 1.4em;border-radius:999px;background:var(--y);color:var(--on-y);font-size:clamp(15px,1.4vw,20px);font-weight:700;letter-spacing:-.02em;opacity:0;transform:scale(.82);box-shadow:0 0 0 8px rgba(var(--y-c),.14),0 20px 60px -10px rgba(var(--y-c),.6)}
-.tstage.one .tc .you{opacity:0;transform:scale(.88)}
-.tstage.one .tc .mm{opacity:1;transform:none}
-.tsw{display:inline-flex;padding:4px;border-radius:999px;background:rgba(var(--fg-c),.06);box-shadow:inset 0 0 0 1px var(--hair);margin-bottom:28px}
-.tsw button{all:unset;cursor:pointer;padding:9px 16px;border-radius:999px;font-size:14px;color:var(--faint);transition:background .4s ease,color .4s ease}
-.tsw button[aria-pressed="true"]{background:var(--fg);color:#000}
-.tsw button:focus-visible{outline:2px solid var(--y);outline-offset:2px}
-.tcopy{position:relative;display:grid}
-.tcopy>div{grid-area:1/1;transition:opacity .8s ease,transform 1s cubic-bezier(.2,.7,.2,1)}
-.tcopy h3{margin:0 0 12px;font-weight:500;font-size:clamp(22px,1.9vw,30px);letter-spacing:-.02em;line-height:1.15}
-.tcopy p{margin:0;font-size:16px;line-height:1.6;color:var(--muted);max-width:40ch;text-wrap:pretty}
-.tcopy .t1{opacity:0;transform:translateY(8px)}
-.team.one .tcopy .t0{opacity:0;transform:translateY(-8px)}
-.team.one .tcopy .t1{opacity:1;transform:none}
-@media (max-width:900px){.tg{grid-template-columns:1fr}.tstage{aspect-ratio:1}.tn{width:9.6em;padding:.65em .8em}.tn .b{padding:0 .8em}}
-@media (prefers-reduced-motion:reduce){.tn,.tn *,.tc *,.tcopy>div{transition:none!important}}
 
 @media (prefers-reduced-motion:reduce){.nav,.main>*,.next,.bar,.chip,.go,.build,.win,.bfoot,.bdone,.slot>*,.pbg,.pcards,.steps li,.steps li *,.lgrid,.lpan,.ldim,.mc,.lmsg,.lmsg h2,.lmsg p,.ldim2,.sdim,#curtain,.sh .s1,.sh .s2,.sp,.sbtns,.sagain,.yslot::before,.yveil,.cta,.boot,.sk::before,.launch::after{transition:none!important;animation:none!important}}
 </style>
@@ -605,26 +540,10 @@ html.open .after{display:block}
       </div>
     </div>
   </div>
-  <div class="fadeblk" aria-hidden="true"></div>
+</div>
 </section>
 </div>
 
-<section class="team after pad" id="team" aria-labelledby="th">
-  <div class="in">
-    <span class="lab">One team, the whole launch</span>
-    <h2 id="th"><span class="dim">Why not hire six freelancers?</span> <span>Because then you’re the project manager.</span></h2>
-    <div class="tg">
-      <div class="tstage" id="tstage" aria-hidden="true"><svg id="tlines"></svg><div class="tn f0" data-i="0"><span class="a">A logo designer<small>Brief #1 · their style</small></span><span class="b">Logo &amp; brand</span></div><div class="tn f1" data-i="1"><span class="a">A web developer<small>Brief #2 · their stack</small></span><span class="b">Landing page</span></div><div class="tn f2" data-i="2"><span class="a">A social freelancer<small>Brief #3 · their tone</small></span><span class="b">Social media</span></div><div class="tn f3" data-i="3"><span class="a">An SEO agency<small>Brief #4 · their report</small></span><span class="b">Found by AI search</span></div><div class="tn f4" data-i="4"><span class="a">An analytics person<small>Brief #5 · their tools</small></span><span class="b">Tracking</span></div><div class="tn f5" data-i="5"><span class="a">A CRM consultant<small>Brief #6 · their setup</small></span><span class="b">CRM &amp; waitlist</span></div><div class="tc"><span class="you">You<small>6 briefs, 6 invoices</small></span><span class="mm">MuzMesh</span></div></div>
-      <div>
-        <div class="tsw" role="group" aria-label="Compare"><button type="button" data-m="0" aria-pressed="true">Six freelancers</button><button type="button" data-m="1" aria-pressed="false">MuzMesh</button></div>
-        <div class="tcopy" aria-live="polite">
-          <div class="t0"><h3>Six people. Six looks.</h3><p>Six briefs, six invoices and six timelines, and six ideas of what your brand looks like. Nothing quite matches, and every change goes through you.</p></div>
-          <div class="t1"><h3>One brief. Everything matches.</h3><p>Logo, brand, landing page, social, AI search, tracking and CRM, made by one team from one brief, for one price. After launch, we keep it all running.</p></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 
 <script>
@@ -902,8 +821,7 @@ html.open .after{display:block}
   const L = A_END + 900;                                 // the launch (a short hold before it)
   const G = L + 250;                                     // the camera starts pulling back
   const SOLVED = G + 12900;                              // the answer is complete: where Launch now stops
-  const FO = SOLVED + 700, FI = FO + 1050;               // fade to black, then About MuzMesh fades in
-  const END = FI + 2700;
+  const END = SOLVED + 500;                              // a short hold on the answer, then the page ends
   const RATE = .3, DEAD = 24;                            // px of scroll per story-ms; a little dead zone at the top
   const E_OUT = 'cubic-bezier(.2,.7,.2,1)', E_IO = 'cubic-bezier(.4,0,.2,1)', SOFT = 'cubic-bezier(.42,0,.3,1)';
   const SPEED = .82;                                      // autoplay runs the story a little slower than real time
@@ -1037,15 +955,6 @@ html.open .after{display:block}
     fadeIn(sh.parentNode.querySelector('.sbtns'), G + 12050, 600, 8);
     fadeIn($('again2'), G + 12250, 600, 8);
 
-    /* the hand-off: everything fades to black, then the next section rises in and its headline lights up word by word */
-    track(fadeblk, 'opacity', [[FO, 0, 'ease'], [FO + 900, 1]]);
-    track(ghost, 'opacity', [[FI, 0, 'ease'], [FI + 700, 1]]);
-    track(ghost, 'transform', [[FI, 'translateY(18px)', E_OUT], [FI + 1100, 'none']]);
-    const wstep = Math.min(220, 1700 / ghostWords.length);
-    ghostWords.forEach((w, i) => {
-      const t = FI + 250 + i * wstep;
-      track(w, 'opacity', [[t, .12, 'ease'], [t + 450, 1]]);
-    });
     seek(Tcur);
   }
 
@@ -1083,9 +992,6 @@ html.open .after{display:block}
     on('p4d', T >= G + 10400);
     on('p4e', T >= G + 11900);
     on('solved', T >= G + 12400);
-    on('faded', T >= FO + 450);
-    on('fading', T >= FI);
-    on('settled', T >= FI + 1100);
     if (!c.contains('lost') && !raf && !reduce && !document.hidden) raf = requestAnimationFrame(loop);
   }
   function seek(T) {
@@ -1102,7 +1008,7 @@ html.open .after{display:block}
   const toY = T => T <= 0 ? 0 : Math.round(T * RATE + DEAD);
   // 100vh is the tallest the viewport gets, so the gate is always reachable
   const setHeight = () => { story.style.height = gate ? `calc(100vh + ${toY(gate)}px)` : ''; };
-  const setGate = g => { if (g !== gate) { gate = g; document.documentElement.classList.toggle('open', g > 0); if (g !== END) document.documentElement.classList.remove('handed', 'below'); setHeight(); } };
+  const setGate = g => { if (g !== gate) { gate = g; document.documentElement.classList.toggle('open', g > 0); setHeight(); } };
   let Tcur = 0, Tgoal = 0, auto = null, rafS = 0, lastNow = 0, wantY = -1;
   function tick(now) {
     rafS = 0;
@@ -1143,8 +1049,6 @@ html.open .after{display:block}
     if (auto) { if (Math.abs(scrollY - wantY) > 3) takeOver(); else return; }
     Tgoal = toT(scrollY);
     if (Tgoal <= 0) setGate(0);   // back at the prompt bar: locked again until Build my idea
-    document.documentElement.classList.toggle('handed', gate === END && scrollY >= toY(END) - 1);
-    document.documentElement.classList.toggle('below', gate === END && scrollY >= toY(END) + 24);
     if (Tgoal > 0 && document.activeElement === input) input.blur();
     if (!cur) { Tgoal = 0; return; }
     kick();
@@ -1207,90 +1111,6 @@ html.open .after{display:block}
   addEventListener('resize', remeasure);
   new ResizeObserver(remeasure).observe(hero);   // also catches a scrollbar appearing, which fires no resize event
 
-
-  /* ---------- one team: the freelancers snap into one team (plays once when it comes into view; the switch flips it) ---------- */
-  const team = $('team'), tstage = $('tstage'), tlines = $('tlines'), tnodes = [...tstage.querySelectorAll('.tn')], tbtns = [...team.querySelectorAll('.tsw button')];
-  // scattered, a little crooked, and the six lines to "you" cross each other
-  const SCAT = [[17, 17, -6], [80, 13, 4], [86, 56, -3], [72, 87, 6], [21, 83, -5], [12, 50, 3]];
-  const SCAT_SQ = [[27, 13, -6], [74, 11, 4], [77, 50, -3], [70, 88, 6], [28, 85, -5], [22, 47, 3]];
-  const ringAt = (i, sq) => { const a = (-90 + i * 60) * Math.PI / 180; return [50 + Math.cos(a) * (sq ? 31 : 33), 50 + Math.sin(a) * (sq ? 34 : 35), 0]; };
-  const CROSS = [[78, 70], [24, 72], [22, 20], [30, 34], [80, 30], [62, 18]];   // where each tangled line bends
-  let tk = 0, tto = 0, tanim = 0, tplayed = false, echoT = null;   // echoT: the same stage in the copy that fades in
-  const tease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
-  function tdraw() {
-    const k = tease(tk), sw = tstage.clientWidth, shh = tstage.clientHeight, sq = sw / shh < 1.15;
-    let d = '';
-    tnodes.forEach((n, i) => {
-      const [x0, y0, r0] = (sq ? SCAT_SQ : SCAT)[i], [x1, y1] = ringAt(i, sq);
-      const x = x0 + (x1 - x0) * k, y = y0 + (y1 - y0) * k;
-      const tf = `translate(${(x * sw / 100).toFixed(2)}px,${(y * shh / 100).toFixed(2)}px) translate(-50%,-50%) rotate(${(r0 * (1 - k)).toFixed(2)}deg)`;
-      for (const m of echoT ? [n, echoT.nodes[i]] : [n]) m.style.transform = tf;
-      const cxp = CROSS[i][0] + (50 + (x - 50) * .5 - CROSS[i][0]) * k, cyp = CROSS[i][1] + (50 + (y - 50) * .5 - CROSS[i][1]) * k;
-      d += `M50 50Q${cxp.toFixed(2)} ${cyp.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)}`;
-    });
-    tlines.innerHTML = `<path d="${d}" style="stroke:rgba(${Math.round(244 - 2 * k)},${Math.round(244 - 156 * k)},${Math.round(241 - 226 * k)},${(.22 + .26 * Math.abs(k - .5) * 2).toFixed(3)})"/>`;
-    tstage.style.setProperty('--k', k.toFixed(3));
-    if (echoT) { echoT.lines.innerHTML = tlines.innerHTML; echoT.stage.style.setProperty('--k', k.toFixed(3)); }
-  }
-  tlines.setAttribute('viewBox', '0 0 100 100'); tlines.setAttribute('preserveAspectRatio', 'none');
-  function tset(m, instant) {
-    tto = m;
-    for (const [st, sec] of echoT ? [[tstage, team], [echoT.stage, echoT.sec]] : [[tstage, team]]) { st.classList.toggle('one', !!m); sec.classList.toggle('one', !!m); }
-    [...tbtns, ...(echoT ? echoT.sec.querySelectorAll('.tsw button') : [])].forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.m === m)));
-    cancelAnimationFrame(tanim);
-    if (reduce || instant) { tk = m; tdraw(); return; }
-    let last = performance.now();
-    const step = now => {
-      const dt = Math.min(50, now - last); last = now;
-      tk = m ? Math.min(1, tk + dt / 1900) : Math.max(0, tk - dt / 1900);
-      tdraw();
-      if (tk !== m) tanim = requestAnimationFrame(step);
-    };
-    tanim = requestAnimationFrame(step);
-  }
-  tbtns.forEach(b => b.addEventListener('click', () => { tplayed = true; tset(+b.dataset.m); }));
-  new ResizeObserver(tdraw).observe(tstage);
-  // plays once by itself, when the real section is on screen (never while its copy is still fading in over the hero)
-  function teamCheck() {
-    if (tplayed || !document.documentElement.classList.contains('handed')) return;
-    const r = tstage.getBoundingClientRect();
-    if (r.top > innerHeight * .8 || r.bottom < innerHeight * .2) return;
-    tplayed = true;
-    setTimeout(() => { if (tto === 0) tset(1); }, reduce ? 0 : 1100);
-  }
-  addEventListener('scroll', teamCheck, { passive: true });
-  tdraw();
-
-  /* ---------- after the story: the nav, and the copy of the next section's first screen that fades in over the hero ---------- */
-  // its headline is split into words, so they can light up one by one
-  const teamH = $('th');
-  [...teamH.children].forEach(line => {
-    const f = document.createDocumentFragment();
-    line.textContent.split(/(\s+)/).forEach(t => {
-      if (!t) return;
-      if (/^\s+$/.test(t)) { f.append(t); return; }
-      const w = document.createElement('span'); w.className = 'w'; w.textContent = t; f.append(w);
-    });
-    line.replaceChildren(f);
-  });
-  // the nav for the rest of the page: a fixed copy of the hero's, in exactly the same place
-  const sitenav = nav.cloneNode(true);
-  sitenav.classList.add('sitenav');
-  sitenav.querySelector('.links').setAttribute('aria-label', 'Main');
-  team.before(sitenav);
-  sitenav.querySelectorAll('a[href="#top"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
-  const fadeblk = hero.querySelector('.fadeblk');
-  const ghost = team.cloneNode(true);
-  ghost.classList.remove('after'); ghost.classList.add('echo');
-  ghost.setAttribute('aria-hidden', 'true'); ghost.removeAttribute('aria-labelledby');
-  ghost.querySelectorAll('[aria-live]').forEach(e => e.removeAttribute('aria-live'));
-  ghost.removeAttribute('id'); ghost.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
-  ghost.querySelectorAll('a,button').forEach(e => e.setAttribute('tabindex', '-1'));
-  hero.append(ghost);
-  const ghostWords = [...ghost.querySelectorAll('h2 .w')];
-  const gst = ghost.querySelector('.tstage');
-  echoT = { sec: ghost, stage: gst, nodes: [...gst.querySelectorAll('.tn')], lines: gst.querySelector('svg') };
-  tdraw();
 
   setHeight();
   chips.forEach(o => o.setAttribute('aria-pressed', 'false'));
