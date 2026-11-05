@@ -507,7 +507,7 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 .kpost>.kq{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:5cqmin;padding:7cqmin}
 .kph{display:flex;align-items:center;gap:2.6cqmin;font-size:clamp(9px,2.6cqi + 1.4cqh,13px);line-height:1;white-space:nowrap;min-width:0}
 .kph b{font-weight:600}
-.kph span:last-child{opacity:.55;overflow:hidden;text-overflow:ellipsis}
+.kph>span:last-child{opacity:.55;overflow:hidden;text-overflow:ellipsis}
 .kav{width:clamp(14px,10cqmin,24px);height:clamp(14px,10cqmin,24px);border-radius:50%;background:var(--kb);display:grid;place-items:center;overflow:hidden}
 .kav .kmk{transform:scale(.62)}
 .kpq{margin:0;align-self:center;font-size:clamp(12px,5.2cqi + 4cqh,30px);line-height:1.04;text-wrap:balance;overflow:hidden}
@@ -568,8 +568,9 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 
 /* small tiles keep the essentials */
 @container (max-height:170px){.kes,.kef{display:none}}
-@container (max-height:120px){.kpf,.ketb,.kcap{display:none}.kr:nth-of-type(4){display:none}}
-@container (max-width:150px){.kph span:last-child,.ktn,.kmh span:last-child,.kr span,.keb span:first-child,.ksw b,.ksw span{display:none}}
+@container (max-height:120px){.kpf,.ketb,.kcap{display:none}}
+@container (max-height:150px){.kr:nth-of-type(4){display:none}}
+@container (max-width:150px){.kph>span:last-child,.ktn,.kmh span:last-child,.kr span,.keb span:first-child,.ksw b,.ksw span{display:none}}
 @container (max-width:200px){.ksw span{display:none}}
 
 /* tablets and phones: one column. The site sits on top, the other seven tiles in a 3×3 grid under it */
