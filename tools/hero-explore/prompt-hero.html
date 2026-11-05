@@ -320,8 +320,7 @@ html.below .sitenav{background:rgba(0,0,0,.78);-webkit-backdrop-filter:blur(14px
 .t-book .mh{display:block;font-family:var(--mono);font-size:11.5px;font-weight:500;opacity:.55;margin-bottom:6px}
 .t-book .tag{display:inline-block;margin-top:12px;padding:5px 12px;border-radius:999px;background:#16163a;color:#ffd84a;font-size:12.5px;font-weight:700}
 
-/* LexGPT: a quiet law-firm site. Paper white, one classic serif, a real photograph, square black buttons, and the
-   next section already peeking in below, like a page that keeps going */
+/* LexGPT: a quiet law-firm site. Paper white, one classic serif, a real photograph, square black buttons: just its hero */
 .ypg.t-lex{--pb:#f8f7f3;--pi:#191917;font-family:"Inter Tight",var(--sans);letter-spacing:0}
 .t-lex .yn{height:66px;padding:0 44px;border-bottom:1px solid #e9e6df}
 .t-lex .yl{font-size:17px;font-weight:500;letter-spacing:-.01em;gap:9px}
@@ -329,17 +328,14 @@ html.below .sitenav{background:rgba(0,0,0,.78);-webkit-backdrop-filter:blur(14px
 .t-lex .yk{gap:30px;font-size:12.5px;opacity:1;color:#5f5d57;margin-right:28px}
 .t-lex .yk span:first-child{color:#191917}
 .t-lex .yb{background:#191917;color:#f8f7f3;border-radius:3px;font-size:12px;font-weight:500;padding:8px 14px}
-.t-lex .lh{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:56px;padding:26px 44px 0;height:372px}
-.t-lex .lt{display:flex;flex-direction:column;justify-content:space-between;padding-top:8px}
+.t-lex .lh{display:grid;grid-template-columns:minmax(0,1fr) 404px;gap:56px;padding:34px 44px 44px;height:513px;box-sizing:border-box}
+.t-lex .lt{display:flex;flex-direction:column;justify-content:space-between;padding-top:6px}
 .t-lex .le{font-size:10.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#191917}
 .t-lex h3{margin-top:16px;font-family:Newsreader,"Instrument Serif",serif;font-weight:400;font-size:41px;line-height:1.1;letter-spacing:-.022em;max-width:13em;text-wrap:balance}
 .t-lex .ys{margin:0;font-size:12.5px;line-height:1.55;color:#5f5d57;max-width:40ch}
 .t-lex .lb{display:inline-block;margin-top:18px;background:#191917;color:#f8f7f3;font-size:12px;font-weight:500;padding:11px 16px;border-radius:2px}
 .t-lex .lp{position:relative;border-radius:2px;overflow:hidden;background:#cfc9bd linear-gradient(160deg,#ddd7cb,#b9b1a2)}
 .t-lex .lp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.t-lex .lband{position:absolute;left:0;right:0;top:476px;height:160px;background:#eeece6;display:grid;grid-template-columns:minmax(0,1fr) 456px;padding:34px 44px 0}
-.t-lex .lband .le{color:#5f5d57}
-.t-lex .lband p{margin:0;font-family:Newsreader,"Instrument Serif",serif;font-size:29px;line-height:1.14;letter-spacing:-.02em;color:#191917}
 
 /* SalesPilot: near-black green and one electric lime, tight bold type, a live call as the hero */
 .ypg.t-sales{--pb:#0b110d;--pi:#f1f5ee}
@@ -795,8 +791,7 @@ html.open .after{display:block}
           <h3>Read the contract in minutes. Bill for the judgement.</h3></div>
         <div><p class="ys">LexGPT redlines every clause, flags the risk and cites its sources, so your associates start from a reviewed first draft.</p>
           <span class="lb">Request a demo</span></div></div>
-        <div class="lp">${PHOTOS.lex ? `<img src="${PHOTOS.lex}" alt="">` : ''}</div></div>
-      <div class="lband"><span class="le">LexGPT</span><p>Used by 140 firms to review two million pages a month, with every change traced back to its source.</p></div>`],
+        <div class="lp">${PHOTOS.lex ? `<img src="${PHOTOS.lex}" alt="">` : ''}</div></div>`],
     'AI copilot for sales teams': ['t-sales', '#c4f24a', `
       <div class="yn"><span class="yl"><i class="mk"></i>SalesPilot</span><span class="yk"><span>Product</span><span>Customers</span><span>Pricing</span></span><span class="yb">Get a demo</span></div>
       <div class="yh"><div><h3>Know what to say <em>before</em> they ask.</h3>
