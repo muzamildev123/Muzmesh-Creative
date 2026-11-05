@@ -1,6 +1,6 @@
 <title>Prompt Bar Hero</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Serif:ital@0;1&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap">
 <style>
 /* Layout: parts one to four of the "prompt bar" story (prompt, build, launch, the answer). Pure black; a curtain of soft vertical copper-orange light rises from the bottom and the sides, leaving a dark centre. Nothing but the nav, one headline, the prompt bar and its chips, stacked in the middle: the bar is the only thing to do. Deliberately dark-only. */
 :root{
@@ -320,23 +320,26 @@ html.below .sitenav{background:rgba(0,0,0,.78);-webkit-backdrop-filter:blur(14px
 .t-book .mh{display:block;font-family:var(--mono);font-size:11.5px;font-weight:500;opacity:.55;margin-bottom:6px}
 .t-book .tag{display:inline-block;margin-top:12px;padding:5px 12px;border-radius:999px;background:#16163a;color:#ffd84a;font-size:12.5px;font-weight:700}
 
-/* LexGPT: ink and ivory, brass details, an editorial serif; a real redline instead of a gradient */
-.ypg.t-lex{--pb:#10141f;--pi:#ece5d6}
-.t-lex .yl{font-family:"Instrument Serif",serif;font-weight:400;font-size:30px;letter-spacing:.005em;gap:4px}
-.t-lex .yl b{font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.2em;color:#c9a96a}
-.t-lex .yb{box-shadow:inset 0 0 0 1px rgba(236,229,214,.42);border-radius:2px;font-weight:500}
-.t-lex h3{font-family:"Instrument Serif",serif;font-weight:400;font-size:58px;line-height:1.02}
-.t-lex h3 em{color:#c9a96a}
-.t-lex .ys{color:rgba(236,229,214,.68)}
-.t-lex .y1{background:#ece5d6;color:#10141f;border-radius:2px}
-.t-lex .y2{color:#c9a96a}
-.t-lex .doc{background:#f4efe4;color:#23201b;border-radius:3px;padding:24px 26px 22px;font-family:"Instrument Serif",serif;font-size:20px;line-height:1.4;box-shadow:0 40px 70px -30px rgba(0,0,0,.8)}
-.t-lex .dh{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#7a6e5c;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid #ddd3c0}
-.t-lex .doc p{margin:0}
-.t-lex s{color:#a23b34;text-decoration-thickness:1.5px}
-.t-lex u{color:#2f6b4f;text-decoration-color:#2f6b4f;text-underline-offset:3px}
-.t-lex .dn{margin-top:16px;padding:10px 12px;border-left:3px solid #a23b34;background:#f3e2dc;font-family:var(--sans);font-size:13px;line-height:1.45}
-.t-lex .dn b{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#a23b34;margin-bottom:2px}
+/* LexGPT: a quiet law-firm site. Paper white, one classic serif, a real photograph, square black buttons, and the
+   next section already peeking in below, like a page that keeps going */
+.ypg.t-lex{--pb:#f8f7f3;--pi:#191917;font-family:"Inter Tight",var(--sans);letter-spacing:0}
+.t-lex .yn{height:66px;padding:0 44px;border-bottom:1px solid #e9e6df}
+.t-lex .yl{font-size:17px;font-weight:500;letter-spacing:-.01em;gap:9px}
+.t-lex .yl svg{width:17px;height:17px}
+.t-lex .yk{gap:30px;font-size:12.5px;opacity:1;color:#5f5d57;margin-right:28px}
+.t-lex .yk span:first-child{color:#191917}
+.t-lex .yb{background:#191917;color:#f8f7f3;border-radius:3px;font-size:12px;font-weight:500;padding:8px 14px}
+.t-lex .lh{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:56px;padding:26px 44px 0;height:372px}
+.t-lex .lt{display:flex;flex-direction:column;justify-content:space-between;padding-top:8px}
+.t-lex .le{font-size:10.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#191917}
+.t-lex h3{margin-top:16px;font-family:Newsreader,"Instrument Serif",serif;font-weight:400;font-size:41px;line-height:1.1;letter-spacing:-.022em;max-width:13em;text-wrap:balance}
+.t-lex .ys{margin:0;font-size:12.5px;line-height:1.55;color:#5f5d57;max-width:40ch}
+.t-lex .lb{display:inline-block;margin-top:18px;background:#191917;color:#f8f7f3;font-size:12px;font-weight:500;padding:11px 16px;border-radius:2px}
+.t-lex .lp{position:relative;border-radius:2px;overflow:hidden;background:#cfc9bd linear-gradient(160deg,#ddd7cb,#b9b1a2)}
+.t-lex .lp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.t-lex .lband{position:absolute;left:0;right:0;top:476px;height:160px;background:#eeece6;display:grid;grid-template-columns:minmax(0,1fr) 456px;padding:34px 44px 0}
+.t-lex .lband .le{color:#5f5d57}
+.t-lex .lband p{margin:0;font-family:Newsreader,"Instrument Serif",serif;font-size:29px;line-height:1.14;letter-spacing:-.02em;color:#191917}
 
 /* SalesPilot: near-black green and one electric lime, tight bold type, a live call as the hero */
 .ypg.t-sales{--pb:#0b110d;--pi:#f1f5ee}
@@ -765,6 +768,7 @@ html.open .after{display:block}
   const ygi = $('ygi'), ywin = $('ywin'), yvp = $('yvp'), ypg = $('ypg'), ygen = $('ygen'), yedge = $('yedge'), sh = $('sh'), yslot = $('yslot');
   new ResizeObserver(() => yvp.style.setProperty('--s', (yvp.clientWidth / 960).toFixed(4))).observe(yvp);
   const WAVE = [6, 12, 22, 14, 30, 18, 9, 24, 34, 20, 12, 26, 16, 8, 19, 28, 13, 22, 10, 6, 15, 24, 30, 17, 9, 13, 21, 11, 7, 5];
+  const PHOTOS = { lex: '' };   // photographs for the hand-made pages, inlined so the page stays one file
   const DESIGNS = {
     'AI note-taker for doctors': ['t-med', '#3d7a5c', `
       <div class="yn"><span class="yl"><i class="mk"></i>MediScribe</span><span class="yk"><span>How it works</span><span>Security</span><span>Pricing</span></span><span class="yb">Book a demo</span></div>
@@ -784,14 +788,14 @@ html.open .after{display:block}
         <div class="yc"><span class="y1">Try it free</span><span>See how it works</span></div></div>
         <div class="mail"><div class="m1"><span class="mh">To: Sam · Cc: Bookly</span>Hi Sam, looping in Bookly to find us a time.</div>
           <div class="m2"><span class="mh">Bookly</span>Done. Tuesday at 14:30 works for you both. The invite is in your calendars.<br><span class="tag">Booked</span></div></div></div>`],
-    'ChatGPT for lawyers': ['t-lex', '#c9a96a', `
-      <div class="yn"><span class="yl">Lex<b>GPT</b></span><span class="yk"><span>Practice areas</span><span>Security</span><span>For firms</span></span><span class="yb">Book a demo</span></div>
-      <div class="yh"><div><h3>Read the contract in minutes. Bill for the <em>judgement</em>.</h3>
-        <p class="ys">LexGPT redlines, flags risk and cites every source, so your team starts from a reviewed first draft.</p>
-        <div class="yc"><span class="y1">Request access</span><span class="y2">See a redline →</span></div></div>
-        <div class="doc"><div class="dh">§ 12.3 Limitation of liability</div>
-          <p>The Supplier’s total liability <s>shall be unlimited</s> <u>shall not exceed the fees paid in the prior 12 months</u>, save for fraud.</p>
-          <div class="dn"><b>Risk flagged</b>Uncapped liability. See <i>Harlow v Crane</i> [2019].</div></div></div>`],
+    'ChatGPT for lawyers': ['t-lex', '#e9e1cf', `
+      <div class="yn"><span class="yl"><svg viewBox="0 0 17 17" aria-hidden="true"><path d="M2 15V2h3.2v10.2H15V15z" fill="#191917"/><path d="M8 2h7v3H8z" fill="#191917" opacity=".35"/></svg>LexGPT</span><span class="yk"><span>Platform</span><span>For firms</span><span>Security</span><span>Pricing</span></span><span class="yb">Book a demo</span></div>
+      <div class="lh"><div class="lt"><div><span class="le">Contract review for law firms</span>
+          <h3>Read the contract in minutes. Bill for the judgement.</h3></div>
+        <div><p class="ys">LexGPT redlines every clause, flags the risk and cites its sources, so your associates start from a reviewed first draft.</p>
+          <span class="lb">Request a demo</span></div></div>
+        <div class="lp">${PHOTOS.lex ? `<img src="${PHOTOS.lex}" alt="">` : ''}</div></div>
+      <div class="lband"><span class="le">LexGPT</span><p>Used by 140 firms to review two million pages a month, with every change traced back to its source.</p></div>`],
     'AI copilot for sales teams': ['t-sales', '#c4f24a', `
       <div class="yn"><span class="yl"><i class="mk"></i>SalesPilot</span><span class="yk"><span>Product</span><span>Customers</span><span>Pricing</span></span><span class="yb">Get a demo</span></div>
       <div class="yh"><div><h3>Know what to say <em>before</em> they ask.</h3>
