@@ -959,13 +959,24 @@ html.open .after{display:block}
     });
     // the idea lifts out of the bar and lands as the first line of the build log
     if (!fly) { fly = document.createElement('span'); fly.className = 'fly'; fly.setAttribute('aria-hidden', 'true'); hero.append(fly); }
-    const cs = getComputedStyle(input), ir = input.getBoundingClientRect(), bi = $('bidea'), br = bi.getBoundingClientRect();
-    const fs = parseFloat(cs.fontSize), ts = parseFloat(getComputedStyle(bi).fontSize);
-    fly.textContent = cur.idea; fly.style.fontSize = fs + 'px'; fly.style.fontFamily = cs.fontFamily;
+    // it grows by font size, not by scaling, so it is drawn exactly like the input text when it leaves and exactly
+    // like the title when it lands: the hand-over at the end is then invisible instead of two blurred copies
+    const cs = getComputedStyle(input), ir = input.getBoundingClientRect(), bi = $('bidea'), bcs = getComputedStyle(bi), br = bi.getBoundingClientRect();
+    const fs = parseFloat(cs.fontSize), ts = parseFloat(bcs.fontSize), fly8 = 'cubic-bezier(.5,0,.15,1)';
+    fly.textContent = cur.idea; fly.style.fontFamily = cs.fontFamily; fly.style.fontWeight = bcs.fontWeight;
     const x0 = ir.left - hr.left + parseFloat(cs.paddingLeft), y0 = ir.top - hr.top + (ir.height - fs * 1.3) / 2;
-    track(fly, 'transform', [[0, `translate(${x0}px,${y0}px) scale(1)`, 'cubic-bezier(.5,0,.15,1)'], [820, `translate(${br.left - hr.left}px,${br.top - hr.top}px) scale(${ts / fs})`]]);
-    track(fly, 'opacity', [[0, 0], [1, 1], [820, 1], [1070, 0]]);
-    track(bi, 'opacity', [[820, 0], [1070, 1]]);
+    track(fly, 'transform', [[0, `translate(${x0.toFixed(2)}px,${y0.toFixed(2)}px)`, fly8], [820, `translate(${(br.left - hr.left).toFixed(2)}px,${(br.top - hr.top).toFixed(2)}px)`]]);
+    track(fly, 'fontSize', [[0, fs + 'px', fly8], [820, ts + 'px']]);
+    track(fly, 'letterSpacing', [[0, cs.letterSpacing, fly8], [820, bcs.letterSpacing]]);
+    if (br.height < ts * 1.3 * 1.5) {
+      // one line: the copy has landed drawn exactly like the title, so they swap in a single frame and nothing on screen changes
+      track(fly, 'opacity', [[0, 0], [1, 1], [840, 1], [841, 0]]);
+      track(bi, 'opacity', [[840, 0], [841, 1]]);
+    } else {
+      // a long idea that wraps in the log (small phones): a soft crossfade instead
+      track(fly, 'opacity', [[0, 0], [1, 1], [760, 1, 'ease'], [1000, 0]]);
+      track(bi, 'opacity', [[760, 0, 'ease'], [1000, 1]]);
+    }
 
     /* part two: the build */
     track(buildEl, 'opacity', [[250, 0, 'ease'], [750, 1]]);
@@ -1040,6 +1051,7 @@ html.open .after{display:block}
   function discrete(T) {
     const c = hero.classList, on = (k, v) => c.toggle(k, v);
     on('leaving', T > 0); on('building', T > 0);
+    if (fly) fly.style.visibility = T > 0 && T < 1000 ? '' : 'hidden';   // never left behind once it has landed
     input.style.color = T > 0 ? 'transparent' : '';
     let lvl = T >= LEAD ? 1 : 0;
     steps.forEach((li, i) => {
