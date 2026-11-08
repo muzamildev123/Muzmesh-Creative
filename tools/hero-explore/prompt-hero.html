@@ -615,14 +615,20 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   .kcue{display:none}
 }
 
-/* ---------- after the story: pricing, as a receipt ----------
-   The story ends on the kit; the page then simply scrolls on. Hidden until Build my idea opens the story, so the prompt bar
-   still can't scroll. The receipt itemises the kit they just watched arrive, totals $500, then the monthly line. It prints
-   out of a slot as it scrolls into view (a scroll-driven reveal where the browser has them; otherwise it's simply there). */
-html:not(.open) .after{display:none}
-.price{position:relative;padding-block:clamp(96px,12vh,150px) max(clamp(110px,14vh,170px),calc(40vh - 200px));background:var(--bg)}   /* room below, so the receipt always finishes printing */
-.pwrap{width:min(1120px,100%);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:clamp(48px,7vw,110px);align-items:start}
-.ptext{display:grid;justify-items:start;padding-top:clamp(20px,5vh,64px)}
+/* ---------- part six: the price, as a receipt ----------
+   Still pinned. The kit folds into a receipt printer, the pricing words arrive, and the receipt prints with the scroll: the
+   header first, every deliverable from the kit, the $500 total, the monthly line, then the torn edge. On a short screen the
+   whole layer pans up while it prints, so the print line stays in view. */
+.prc{position:absolute;inset:0;pointer-events:none;visibility:hidden;overflow:hidden}
+.hero.pon .prc{visibility:visible}
+.prc::before{content:"";position:absolute;z-index:2;left:0;right:0;top:0;height:84px;background:linear-gradient(#000 60%,rgba(0,0,0,0));pointer-events:none}
+.hero.plive .pbtns{pointer-events:auto}
+.hero.kitgone .kit,.hero.kitgone .ywin{visibility:hidden}
+.prin{position:absolute;left:0;right:0;top:0;min-height:100%;display:grid;align-content:center;padding-top:92px;padding-bottom:28px}
+.prc .peye,.prc .ph span,.prc .pp,.prc .pbtns,.prc .pnotes,.prc .rc{opacity:0}
+.hero.pon:not(.pset) .prc .peye,.hero.pon:not(.pset) .prc .ph span,.hero.pon:not(.pset) .prc .pp,.hero.pon:not(.pset) .prc .pbtns,.hero.pon:not(.pset) .prc .pnotes,.hero.pon:not(.pset) .prc .rc,.hero.pon:not(.pset) .rcov,.hero.pon:not(.pset) .prin{will-change:transform,opacity}
+.pwrap{width:min(1120px,100%);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:clamp(48px,7vw,110px);align-items:center}
+.ptext{display:grid;justify-items:start;align-self:center}
 .peye{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
 .ph{margin:16px 0 0;font-weight:500;font-size:clamp(34px,3.7vw,56px);line-height:1.04;letter-spacing:-.03em}
 .ph span{display:block}
@@ -637,7 +643,8 @@ html:not(.open) .after{display:none}
 .rc{position:relative;--paper:#f3f0e8;--ink:#1d1d1f}
 .rslot{position:relative;z-index:2;height:18px;margin:0 -14px;border-radius:9px;background:linear-gradient(180deg,#2a2a30,#17171b);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 24px -8px #000}
 .rslot::after{content:"";position:absolute;left:12px;right:12px;top:8px;height:3px;border-radius:2px;background:#050506;box-shadow:0 1px 0 rgba(255,255,255,.06)}
-.rfeed{position:relative;margin:-9px -30px 0;padding:0 30px 48px;overflow:hidden}
+.rfeed{position:relative;margin:-9px -30px 0;padding:0 30px 40px;overflow:hidden}
+.rcov{position:absolute;z-index:1;inset:0;background:#000}   /* the page's colour: it slides off the paper as it prints (a transform, no repaint) */
 .rpaper{position:relative;padding:34px 28px 26px;background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:12.5px;line-height:1.45;letter-spacing:0;
   box-shadow:0 30px 60px -28px rgba(0,0,0,.9);background-image:linear-gradient(180deg,rgba(0,0,0,.07),transparent 26px)}
 .rpaper::after{content:"";position:absolute;left:0;right:0;bottom:-9px;height:9px;
@@ -659,21 +666,25 @@ html:not(.open) .after{display:none}
 .rbar{height:34px;margin:22px auto 8px;width:78%;
   background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 8px,var(--ink) 8px 11px,transparent 11px 12px,var(--ink) 12px 13px,transparent 13px 16px)}
 .rthx{margin:0;text-align:center;font-size:11px;color:rgba(29,29,31,.55)}
-/* it prints top to bottom while it's on screen: the header first, the totals last, then the torn edge. A cover the colour of
-   the page slides off the paper (a transform, so it never repaints); the print line stays in the lower part of the screen */
-@keyframes rprint{from{transform:none}to{transform:translateY(100%)}}
-@supports (animation-timeline:view()){
-  .rc{view-timeline-name:--rc}
-  .rfeed::after{content:"";position:absolute;z-index:1;inset:0;background:var(--bg);will-change:transform;
-    animation:rprint linear both;animation-timeline:--rc;animation-range:cover 25vh cover calc(25vh + 560px)}
+/* shorter screens: a tighter receipt */
+@media (max-height:900px){
+  .rpaper{padding:24px 24px 18px}
+  .rhd{padding-bottom:12px;gap:4px}
+  .rsec{padding:9px 0 2px;gap:3px}
+  .rtot,.rmo{margin-top:10px;padding-top:10px;gap:3px}
+  .rl.big b{font-size:26px}
+  .rbar{height:24px;margin:14px auto 6px}
+  .pnotes{margin-top:32px;padding-top:20px;gap:12px}
 }
 @media (max-width:900px){
-  .pwrap{grid-template-columns:minmax(0,1fr);width:min(560px,100%);gap:56px}
-  .ptext{padding-top:0}
+  .pwrap{grid-template-columns:minmax(0,1fr);width:min(560px,100%);gap:40px}
+  .prin{padding-top:80px}
   .rc{width:min(100%,420px);justify-self:center}
 }
 @media (max-width:760px){
-  .price{padding-block:84px max(150px,calc(40vh - 120px))}
+  .prin{padding-top:72px;padding-bottom:20px}
+  .pwrap{gap:28px}
+  .pnotes{display:none}
   .ph{font-size:32px}
   .pp{font-size:15.5px;margin-top:18px}
   .pbtns{margin-top:24px}
@@ -684,7 +695,6 @@ html:not(.open) .after{display:none}
   .rslot{margin:0 -8px}
   .rl.big b{font-size:26px}
 }
-@media (prefers-reduced-motion:reduce){.rfeed::after{display:none}}
 
 @media (prefers-reduced-motion:reduce){.nav,.main>*,.next,.bar,.chip,.go,.build,.win,.bfoot,.bdone,.slot>*,.pbg,.pcards,.steps li,.steps li *,.lgrid,.lpan,.ldim,.mc,.lmsg,.lmsg h2,.lmsg p,.ldim2,.sdim,#curtain,.sh .s1,.sh .s2,.sp,.sbtns,.sagain,.yslot::before,.yveil,.kcar,.cta,.boot,.sk::before,.launch::after{transition:none!important;animation:none!important}}
 </style>
@@ -807,12 +817,7 @@ html:not(.open) .after{display:none}
         </div>
       </div>
     </div>
-  </div>
-</div>
-</section>
-</div>
-
-<section class="after price pad" id="pricing" aria-labelledby="price-h">
+    <div class="prc" id="pricing" role="region" aria-labelledby="price-h"><div class="prin pad" id="prin">
   <div class="pwrap">
     <div class="ptext">
       <span class="peye">Pricing</span>
@@ -828,6 +833,7 @@ html:not(.open) .after{display:none}
     <div class="rc" role="group" aria-label="What you get and what it costs">
       <div class="rslot" aria-hidden="true"></div>
       <div class="rfeed">
+        <i class="rcov" aria-hidden="true"></i>
         <div class="rpaper">
           <div class="rhd"><b>muzmesh</b><span>Launch kit for <em id="rname">your startup</em></span></div>
           <div class="rsec"><span class="rgrp">Look</span>
@@ -853,7 +859,12 @@ html:not(.open) .after{display:none}
       </div>
     </div>
   </div>
+    </div></div>
+  </div>
+</div>
 </section>
+</div>
+
 
 
 
@@ -1175,7 +1186,13 @@ html:not(.open) .after{display:none}
     kit.querySelectorAll('.kt').forEach(t => { bottom = Math.max(bottom, t.getBoundingClientRect().bottom); });
     const over = Math.ceil(bottom - (hr.bottom - 14)), pan = over > 6 ? over : 0;   // a few px short of the margin isn't worth a move
     const to = dy => `translate(${(s.left - f.left).toFixed(2)}px,${(s.top - f.top - dy).toFixed(2)}px) scale(${z.toFixed(5)})`;
-    return { to: to(0), toPan: to(pan), pan, sx: s.left + s.width / 2, sy: s.top + s.height / 2 };
+    return { to: to(0), toPan: to(pan), pan, z, sx: s.left + s.width / 2, sy: s.top + s.height / 2 };
+  }
+
+  // where the receipt printer sits, and how far the price must pan up on a short screen
+  function layoutPrice() {
+    const r = document.querySelector('#pricing .rslot').getBoundingClientRect(), prin = $('prin');
+    return { sx: r.left + r.width / 2, sy: r.top + r.height / 2, pan: Math.max(0, Math.ceil(prin.offsetHeight - hero.clientHeight)) };
   }
 
   /* ---------- the grid of look-alikes ---------- */
@@ -1247,7 +1264,8 @@ html:not(.open) .after{display:none}
   const G = L + 250;                                     // the camera starts pulling back
   const SOLVED = G + 12900;                              // the answer is complete: where Launch now stops
   const K0 = SOLVED + 600;                               // keep scrolling: the kit unfolds
-  const END = K0 + 3600;                                 // the kit has arrived; a short hold, then the page ends
+  const P0 = K0 + 3900;                                  // the kit folds into the receipt printer
+  const END = P0 + 3700;                                 // the receipt has printed; a short hold, then the page ends
   const RATE = .3, DEAD = 24;                            // px of scroll per story-ms; a little dead zone at the top
   const E_OUT = 'cubic-bezier(.2,.7,.2,1)', E_IO = 'cubic-bezier(.4,0,.2,1)', SOFT = 'cubic-bezier(.42,0,.3,1)';
   const SPEED = .82;                                      // autoplay runs the story a little slower than real time
@@ -1364,10 +1382,12 @@ html:not(.open) .after{display:none}
     const f = ywin.getBoundingClientRect();
     const cx = geo.fx, cy = geo.fy - geo.row * 1.6;
     const lift = `translate(${(cx - f.left).toFixed(2)}px,${(cy - f.top).toFixed(2)}px) scale(${(geo.cw / f.width).toFixed(5)},${(geo.ch / f.height).toFixed(5)})`;
-    track(ywin, 'opacity', [[G + 7300, 0], [G + 7301, .01], [G + 9000, .01], [G + 9001, 1]]);
+    track(ywin, 'opacity', [[G + 7300, 0], [G + 7301, .01], [G + 9000, .01], [G + 9001, 1], [P0 + 600, 1, 'ease'], [P0 + 1000, 0]]);
     const kg = layoutKit(f), KE = 'cubic-bezier(.5,0,.15,1)';
+    const pf = layoutPrice(), z2 = kg.z * .2;
+    const yFold = `translate(${(pf.sx - f.width * z2 / 2 - f.left).toFixed(2)}px,${(pf.sy - f.height * z2 / 2 - f.top).toFixed(2)}px) scale(${z2.toFixed(5)})`;
     track(ywin, 'transform', [[G + 9080, lift, 'cubic-bezier(.62,0,.2,1)'], [G + 10380, 'none'], [K0 + 150, 'none', KE], [K0 + 1450, kg.to],
-      ...(kg.pan ? [[K0 + 2500, kg.to, 'ease'], [K0 + 3300, kg.toPan]] : [])]);
+      ...(kg.pan ? [[K0 + 2500, kg.to, 'ease'], [K0 + 3300, kg.toPan]] : []), [P0 + 250, kg.pan ? kg.toPan : kg.to, 'cubic-bezier(.55,0,.3,1)'], [P0 + 1000, yFold]]);
     track(yveil, 'opacity', [[G + 9100, .78, 'ease'], [G + 10100, 0]]);
     track(sdim, 'opacity', [[G + 9000, 0, 'ease'], [G + 10200, 1]]);
     // the hand-made page wipes across the generic one, led by a thin line of light: two opposing transforms, no repaint
@@ -1391,28 +1411,45 @@ html:not(.open) .after{display:none}
     track(document.querySelector('.kcue'), 'opacity', [[G + 12300, 0, 'ease'], [SOLVED, 1], [K0, 1, 'ease'], [K0 + 300, 0]]);
     track(document.querySelector('.kdim'), 'opacity', [[K0, 0, 'ease'], [K0 + 900, 1]]);
     const P = SOLVED + 150;   // nothing moves between the answer and the kit: the kit's layers are painted here, at 1%
-    const kIn = (el, t, d, dy) => {
-      track(el, 'opacity', [[P, 0], [P + 1, .01], [t, .01, 'ease'], [t + d, 1]]);
-      if (dy) track(el, 'transform', [[t, `translateY(${dy}px)`, E_OUT], [t + d + 200, 'none']]);
+    // in at t (painted at 1% from `from`), and out again at `out` if given
+    const kIn = (el, t, d, dy, out, from = P) => {
+      track(el, 'opacity', [[from, 0], [from + 1, .01], [t, .01, 'ease'], [t + d, 1], ...(out ? [[out, 1, 'ease'], [out + 400, 0]] : [])]);
+      if (dy) track(el, 'transform', [[t, `translateY(${dy}px)`, E_OUT], [t + d + 200, 'none'], ...(out ? [[out, 'none', 'ease'], [out + 400, 'translateY(-8px)']] : [])]);
     };
-    kIn(kit.querySelector('.k1'), K0 + 650, 700, 10);
-    kIn(kit.querySelector('.k2'), K0 + 850, 700, 10);
-    kIn(kit.querySelector('.kp'), K0 + 1100, 700, 8);
-    kIn(kit.querySelector('.klist'), K0 + 1250, 700, 8);
-    kIn(kslot, K0 + 1250, 350);
+    kIn(kit.querySelector('.k1'), K0 + 650, 700, 10, P0);
+    kIn(kit.querySelector('.k2'), K0 + 850, 700, 10, P0 + 40);
+    kIn(kit.querySelector('.kp'), K0 + 1100, 700, 8, P0 + 80);
+    kIn(kit.querySelector('.klist'), K0 + 1250, 700, 8, P0 + 80);
+    kIn(kslot, K0 + 1250, 350, 0, P0 + 250);
     const tiles = [...kit.querySelectorAll('.kt')].map(el => {
       const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
       return { el, dx: (kg.sx - x) * .32, dy: (kg.sy - y) * .32, d: Math.hypot(kg.sx - x, kg.sy - y) };
     }).sort((p, q) => p.d - q.d);
+    /* part six: everything folds into the receipt printer, farthest first */
+    const pg6 = layoutPrice(), FOLD = 'cubic-bezier(.55,0,.3,1)';
+    const fold = [...tiles].sort((p, q) => q.d - p.d);
     tiles.forEach((o, i) => {
-      const t = K0 + 1050 + i * 85;
-      kIn(o.el, t, 550);
-      track(o.el, 'transform', [[t, `translate(${o.dx.toFixed(1)}px,${o.dy.toFixed(1)}px)`, E_OUT], [t + 1050, 'none']]);
+      const t = K0 + 1050 + i * 85, r = o.el.getBoundingClientRect(), j = fold.indexOf(o), o2 = P0 + 150 + j * 45;
+      const fx2 = pg6.sx - (r.left + r.width / 2), fy2 = pg6.sy - (r.top + r.height / 2 - kg.pan);
+      kIn(o.el, t, 550, 0, o2 + 300);
+      track(o.el, 'transform', [[t, `translate(${o.dx.toFixed(1)}px,${o.dy.toFixed(1)}px)`, E_OUT], [t + 1050, 'none'],
+        [o2, 'none', FOLD], [o2 + 700, `translate(${fx2.toFixed(1)}px,${fy2.toFixed(1)}px) scale(.2)`]]);
     });
-    kit.querySelectorAll('.kch').forEach((el, i) => kIn(el, K0 + 1150 + i * 110, 650, 8));   // the list arrives with the headline, before the pieces
+    kit.querySelectorAll('.kch').forEach((el, i) => kIn(el, K0 + 1150 + i * 110, 650, 8, P0 + 40));   // the list arrives with the headline, before the pieces
     track(kit.querySelector('.kgr svg'), 'clipPath', [[K0 + 1750, 'inset(0 100% 0 0)', E_IO], [K0 + 2850, 'inset(0 0% 0 0)']]);
     track(kit.querySelector('.gd'), 'opacity', [[K0 + 2700, 0, 'ease'], [K0 + 2950, 1]]);
     if (kg.pan) track(kin, 'transform', [[K0 + 2500, 'none', 'ease'], [K0 + 3300, `translateY(${-kg.pan}px)`]]);
+
+    // the price: painted at 1% once the kit has settled, then the printer, the words, and the print itself
+    const PP = K0 + 3450, prc = $('pricing');
+    kIn(prc.querySelector('.rc'), P0 + 650, 450, 10, 0, PP);
+    kIn(prc.querySelector('.peye'), P0 + 900, 600, 8, 0, PP);
+    prc.querySelectorAll('.ph span').forEach((el, i) => kIn(el, P0 + 1000 + i * 180, 700, 10, 0, PP));
+    kIn(prc.querySelector('.pp'), P0 + 1400, 700, 8, 0, PP);
+    kIn(prc.querySelector('.pbtns'), P0 + 1550, 600, 8, 0, PP);
+    kIn(prc.querySelector('.pnotes'), P0 + 1750, 700, 8, 0, PP);
+    track(prc.querySelector('.rcov'), 'transform', [[P0 + 1150, 'translateY(0%)', 'cubic-bezier(.35,0,.65,1)'], [P0 + 3300, 'translateY(100%)']]);
+    if (pg6.pan) track($('prin'), 'transform', [[P0 + 1500, 'none', 'cubic-bezier(.35,0,.65,1)'], [P0 + 3300, `translateY(${-pg6.pan}px)`]]);
 
     seek(Tcur);
   }
@@ -1452,9 +1489,13 @@ html:not(.open) .after{display:none}
     on('p4e', T >= G + 11900);
     on('solved', T >= G + 12400);
     on('kitin', T >= SOLVED + 150);
-    on('kitfly', T >= K0 + 100 && T < K0 + 3300);   // their site keeps its layer until everything has landed
+    on('kitfly', (T >= K0 + 100 && T < K0 + 3300) || (T >= P0 + 150 && T < P0 + 1100));   // their site keeps its layer while it moves
     on('kitout', T >= K0 + 450);
     on('kitdark', T >= K0 + 900);
+    on('pon', T >= K0 + 3450);
+    on('kitgone', T >= P0 + 1100);
+    on('plive', T >= P0 + 1550);
+    on('pset', T >= P0 + 3400);
     if (!c.contains('lost') && !raf && !reduce && !document.hidden) raf = requestAnimationFrame(loop);
   }
   function seek(T) {
