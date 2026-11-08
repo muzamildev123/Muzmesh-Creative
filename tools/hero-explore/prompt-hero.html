@@ -659,11 +659,13 @@ html:not(.open) .after{display:none}
 .rbar{height:34px;margin:22px auto 8px;width:78%;
   background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 8px,var(--ink) 8px 11px,transparent 11px 12px,var(--ink) 12px 13px,transparent 13px 16px)}
 .rthx{margin:0;text-align:center;font-size:11px;color:rgba(29,29,31,.55)}
-/* it prints top to bottom: the header first, the totals last, then the torn edge */
-@keyframes rprint{from{clip-path:inset(0 -40px 100% -40px)}96%{clip-path:inset(0 -40px 0 -40px)}to{clip-path:inset(0 -40px -60px -40px)}}
+/* it prints top to bottom while it's on screen: the header first, the totals last, then the torn edge. A cover the colour of
+   the page slides off the paper (a transform, so it never repaints); the print line stays in the lower part of the screen */
+@keyframes rprint{from{transform:none}to{transform:translateY(100%)}}
 @supports (animation-timeline:view()){
   .rc{view-timeline-name:--rc}
-  .rpaper{animation:rprint linear both;animation-timeline:--rc;animation-range:entry 4% cover 40%}
+  .rfeed::after{content:"";position:absolute;z-index:1;inset:0;background:var(--bg);will-change:transform;
+    animation:rprint linear both;animation-timeline:--rc;animation-range:cover 25vh cover calc(25vh + 560px)}
 }
 @media (max-width:900px){
   .pwrap{grid-template-columns:minmax(0,1fr);width:min(560px,100%);gap:56px}
@@ -671,7 +673,7 @@ html:not(.open) .after{display:none}
   .rc{width:min(100%,420px);justify-self:center}
 }
 @media (max-width:760px){
-  .price{padding-block:84px max(96px,calc(40vh - 200px))}
+  .price{padding-block:84px max(150px,calc(40vh - 120px))}
   .ph{font-size:32px}
   .pp{font-size:15.5px;margin-top:18px}
   .pbtns{margin-top:24px}
@@ -682,7 +684,7 @@ html:not(.open) .after{display:none}
   .rslot{margin:0 -8px}
   .rl.big b{font-size:26px}
 }
-@media (prefers-reduced-motion:reduce){.rpaper{animation:none!important}}
+@media (prefers-reduced-motion:reduce){.rfeed::after{display:none}}
 
 @media (prefers-reduced-motion:reduce){.nav,.main>*,.next,.bar,.chip,.go,.build,.win,.bfoot,.bdone,.slot>*,.pbg,.pcards,.steps li,.steps li *,.lgrid,.lpan,.ldim,.mc,.lmsg,.lmsg h2,.lmsg p,.ldim2,.sdim,#curtain,.sh .s1,.sh .s2,.sp,.sbtns,.sagain,.yslot::before,.yveil,.kcar,.cta,.boot,.sk::before,.launch::after{transition:none!important;animation:none!important}}
 </style>
