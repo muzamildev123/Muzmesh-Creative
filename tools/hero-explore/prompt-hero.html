@@ -615,6 +615,75 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   .kcue{display:none}
 }
 
+/* ---------- after the story: pricing, as a receipt ----------
+   The story ends on the kit; the page then simply scrolls on. Hidden until Build my idea opens the story, so the prompt bar
+   still can't scroll. The receipt itemises the kit they just watched arrive, totals $500, then the monthly line. It prints
+   out of a slot as it scrolls into view (a scroll-driven reveal where the browser has them; otherwise it's simply there). */
+html:not(.open) .after{display:none}
+.price{position:relative;padding-block:clamp(96px,12vh,150px) max(clamp(110px,14vh,170px),calc(40vh - 200px));background:var(--bg)}   /* room below, so the receipt always finishes printing */
+.pwrap{width:min(1120px,100%);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:clamp(48px,7vw,110px);align-items:start}
+.ptext{display:grid;justify-items:start;padding-top:clamp(20px,5vh,64px)}
+.peye{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.ph{margin:16px 0 0;font-weight:500;font-size:clamp(34px,3.7vw,56px);line-height:1.04;letter-spacing:-.03em}
+.ph span{display:block}
+.ph span:first-child{color:#77777c}
+.pp{margin:24px 0 0;max-width:40ch;font-size:clamp(16px,1.25vw,18px);line-height:1.55;color:var(--muted);text-wrap:pretty}
+.pbtns{margin-top:30px}
+.pnotes{margin:44px 0 0;padding:0;list-style:none;display:grid;gap:16px;max-width:44ch;border-top:1px solid var(--hair);padding-top:26px}
+.pnotes li{display:grid;grid-template-columns:132px minmax(0,1fr);gap:16px;font-size:14.5px;line-height:1.5;color:var(--muted)}
+.pnotes b{font-weight:500;color:var(--fg)}
+
+/* the printer and its paper */
+.rc{position:relative;--paper:#f3f0e8;--ink:#1d1d1f}
+.rslot{position:relative;z-index:2;height:18px;margin:0 -14px;border-radius:9px;background:linear-gradient(180deg,#2a2a30,#17171b);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 24px -8px #000}
+.rslot::after{content:"";position:absolute;left:12px;right:12px;top:8px;height:3px;border-radius:2px;background:#050506;box-shadow:0 1px 0 rgba(255,255,255,.06)}
+.rfeed{position:relative;margin:-9px -30px 0;padding:0 30px 48px;overflow:hidden}
+.rpaper{position:relative;padding:34px 28px 26px;background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:12.5px;line-height:1.45;letter-spacing:0;
+  box-shadow:0 30px 60px -28px rgba(0,0,0,.9);background-image:linear-gradient(180deg,rgba(0,0,0,.07),transparent 26px)}
+.rpaper::after{content:"";position:absolute;left:0;right:0;bottom:-9px;height:9px;
+  background:linear-gradient(135deg,var(--paper) 50%,transparent 50%) 0 0/12px 9px repeat-x,linear-gradient(225deg,var(--paper) 50%,transparent 50%) 0 0/12px 9px repeat-x}
+.rhd{display:grid;justify-items:center;gap:6px;padding-bottom:18px;border-bottom:1px dashed rgba(29,29,31,.35);text-align:center}
+.rhd b{font-family:var(--sans);font-size:21px;font-weight:700;letter-spacing:-.015em}
+.rhd span{font-size:11.5px;color:rgba(29,29,31,.62)}
+.rhd em{font-style:normal;color:var(--ink)}
+.rsec{padding:14px 0 4px;display:grid;gap:5px}
+.rgrp{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(29,29,31,.5);margin-bottom:2px}
+.rl{display:flex;align-items:baseline;gap:8px;white-space:nowrap}
+.rl i{flex:1;min-width:12px;border-bottom:1px dotted rgba(29,29,31,.4);transform:translateY(-3px)}
+.rl .ok{color:rgba(29,29,31,.62)}
+.rtot,.rmo{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(29,29,31,.35);display:grid;gap:5px}
+.rl.big{font-size:14px;font-weight:500}
+.rl.big b{font-family:var(--sans);font-size:30px;font-weight:600;letter-spacing:-.03em;line-height:1}
+.rl.big b small{font-family:var(--mono);font-size:12px;font-weight:400;letter-spacing:0;margin-left:2px;color:rgba(29,29,31,.62)}
+.rmo p{margin:2px 0 0;font-size:11.5px;line-height:1.5;color:rgba(29,29,31,.62);white-space:normal}
+.rbar{height:34px;margin:22px auto 8px;width:78%;
+  background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 8px,var(--ink) 8px 11px,transparent 11px 12px,var(--ink) 12px 13px,transparent 13px 16px)}
+.rthx{margin:0;text-align:center;font-size:11px;color:rgba(29,29,31,.55)}
+/* it prints top to bottom: the header first, the totals last, then the torn edge */
+@keyframes rprint{from{clip-path:inset(0 -40px 100% -40px)}96%{clip-path:inset(0 -40px 0 -40px)}to{clip-path:inset(0 -40px -60px -40px)}}
+@supports (animation-timeline:view()){
+  .rc{view-timeline-name:--rc}
+  .rpaper{animation:rprint linear both;animation-timeline:--rc;animation-range:entry 4% cover 40%}
+}
+@media (max-width:900px){
+  .pwrap{grid-template-columns:minmax(0,1fr);width:min(560px,100%);gap:56px}
+  .ptext{padding-top:0}
+  .rc{width:min(100%,420px);justify-self:center}
+}
+@media (max-width:760px){
+  .price{padding-block:84px max(96px,calc(40vh - 200px))}
+  .ph{font-size:32px}
+  .pp{font-size:15.5px;margin-top:18px}
+  .pbtns{margin-top:24px}
+  .pnotes{margin-top:34px;padding-top:22px;gap:14px}
+  .pnotes li{grid-template-columns:minmax(0,1fr);gap:2px;font-size:14px}
+  .rpaper{padding:28px 20px 22px;font-size:12px}
+  .rfeed{margin:-9px -20px 0;padding:0 20px 40px}
+  .rslot{margin:0 -8px}
+  .rl.big b{font-size:26px}
+}
+@media (prefers-reduced-motion:reduce){.rpaper{animation:none!important}}
+
 @media (prefers-reduced-motion:reduce){.nav,.main>*,.next,.bar,.chip,.go,.build,.win,.bfoot,.bdone,.slot>*,.pbg,.pcards,.steps li,.steps li *,.lgrid,.lpan,.ldim,.mc,.lmsg,.lmsg h2,.lmsg p,.ldim2,.sdim,#curtain,.sh .s1,.sh .s2,.sp,.sbtns,.sagain,.yslot::before,.yveil,.kcar,.cta,.boot,.sk::before,.launch::after{transition:none!important;animation:none!important}}
 </style>
 
@@ -740,6 +809,49 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 </div>
 </section>
 </div>
+
+<section class="after price pad" id="pricing" aria-labelledby="price-h">
+  <div class="pwrap">
+    <div class="ptext">
+      <span class="peye">Pricing</span>
+      <h2 class="ph" id="price-h"><span>One price.</span> <span>No surprises.</span></h2>
+      <p class="pp">No tiers to compare and no “contact us”. Everything in the kit comes with the setup, and one monthly plan keeps it all running.</p>
+      <div class="pbtns"><a class="cta" href="#top">Plan my launch <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+      <ul class="pnotes">
+        <li><b>Next to an agency</b><span>Agencies often quote $10k and up, and take eight weeks.</span></li>
+        <li><b>You own it all</b><span>Domain, hosting, CMS, CRM and analytics sit on your own accounts.</span></li>
+        <li><b>Refer a founder</b><span>Get 40% off your next month when they launch with us.</span></li>
+      </ul>
+    </div>
+    <div class="rc" role="group" aria-label="What you get and what it costs">
+      <div class="rslot" aria-hidden="true"></div>
+      <div class="rfeed">
+        <div class="rpaper">
+          <div class="rhd"><b>muzmesh</b><span>Launch kit for <em id="rname">your startup</em></span></div>
+          <div class="rsec"><span class="rgrp">Look</span>
+            <div class="rl"><span>Logo</span><i></i><span class="ok">Included</span></div>
+            <div class="rl"><span>Brand guidelines</span><i></i><span class="ok">Included</span></div></div>
+          <div class="rsec"><span class="rgrp">Launch</span>
+            <div class="rl"><span>Landing page</span><i></i><span class="ok">Included</span></div>
+            <div class="rl"><span>Social post kit</span><i></i><span class="ok">Included</span></div>
+            <div class="rl"><span>Product intro video</span><i></i><span class="ok">Included</span></div></div>
+          <div class="rsec"><span class="rgrp">Run</span>
+            <div class="rl"><span>Analytics &amp; tracking</span><i></i><span class="ok">Included</span></div>
+            <div class="rl"><span>CRM &amp; waitlist</span><i></i><span class="ok">Included</span></div>
+            <div class="rl"><span>Site you can edit</span><i></i><span class="ok">Included</span></div></div>
+          <div class="rtot">
+            <div class="rl big"><span>Setup, one time</span><i></i><b>$500</b></div>
+            <div class="rl"><span>Live in</span><i></i><span>5 business days</span></div></div>
+          <div class="rmo">
+            <div class="rl big"><span>Then, monthly</span><i></i><b>$200<small>/mo</small></b></div>
+            <p>Site edits, social posts, support and a monthly report. Starts the month after launch.</p></div>
+          <div class="rbar" aria-hidden="true"></div>
+          <p class="rthx">Thank you. See you at launch.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
@@ -995,6 +1107,7 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
         post: `${name} is live. Get your hours back.`, m: ['Sign-ups', '312', '+24%'],
         crm: [['Priya Nair', 'Active'], ['Tom Becker', 'Invited'], ['Ana Lima', 'Waitlist']] };
     }
+    $('rname').textContent = name;
     kit.className = 'kit pad ' + cls;
     kit.style.cssText = ypg.getAttribute('style') || '';
     const mark = `<span class="kmk">${yl.firstElementChild.outerHTML}</span>`;
