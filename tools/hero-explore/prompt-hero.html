@@ -733,73 +733,69 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 @media (prefers-reduced-motion:reduce){.nav,.main>*,.next,.bar,.chip,.go,.build,.win,.bfoot,.bdone,.slot>*,.pbg,.pcards,.steps li,.steps li *,.lgrid,.lpan,.ldim,.mc,.lmsg,.lmsg h2,.lmsg p,.ldim2,.sdim,#curtain,.sh .s1,.sh .s2,.sp,.sbtns,.sagain,.yslot::before,.yveil,.kcar,.cta,.boot,.sk::before,.launch::after{transition:none!important;animation:none!important}}
 
 /* ---------- referral (section after the story; .rf- prefix) ----------
-   The text you'd send a founder friend, on a phone: your link, their reply, five days later they're live, and the
-   notification that your next month is 40% off. Mirrored from pricing (phone left) so the two don't echo. Only reachable
-   once the story is open. */
+   A departures board of startups going from Idea to Live. Its last row is open for a founder you send our way, with
+   40% off for you. The letters flip into place, once, as the board comes into view. Only reachable once the story is open. */
 html:not(.open) .rf{display:none}
-.rf{position:relative;overflow:hidden;background:var(--bg);padding-top:clamp(96px,11vw,160px);padding-bottom:clamp(96px,10vw,140px);border-top:1px solid var(--hair)}
-.rf-in{width:min(1120px,100%);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,560px);gap:clamp(40px,6vw,96px);align-items:center}
+.rf{position:relative;background:var(--bg);padding-top:clamp(96px,11vw,160px);padding-bottom:clamp(96px,10vw,140px);border-top:1px solid var(--hair)}
+.rf-in{width:min(1120px,100%);margin:0 auto}
+.rf-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,400px);gap:24px 64px;align-items:end}
 .rf-eye{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
 .rf-h{margin:16px 0 0;font-weight:500;font-size:clamp(34px,3.7vw,56px);line-height:1.04;letter-spacing:-.03em}
 .rf-h span{display:block;color:#77777c}
-.rf-p{margin:24px 0 0;max-width:40ch;font-size:clamp(16px,1.25vw,18px);line-height:1.55;color:var(--muted);text-wrap:pretty}
-.rf-steps{margin:32px 0 0;padding:0;list-style:none;display:grid;gap:14px;counter-reset:rf}
-.rf-steps li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:14px;align-items:baseline;font-size:15px;line-height:1.45;color:var(--muted);counter-increment:rf}
-.rf-steps li::before{content:counter(rf);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;box-shadow:inset 0 0 0 1px var(--hair);font-family:var(--mono);font-size:11.5px;color:var(--fg);transform:translateY(7px)}
+.rf-p{margin:0;font-size:clamp(16px,1.25vw,18px);line-height:1.55;color:var(--muted);text-wrap:pretty}
+.rf-btns{margin-top:24px}
+/* the board */
+.rf-bd{margin-top:56px;border-radius:18px;padding:18px clamp(16px,2.4vw,30px) 22px;background:#0b0b0c;box-shadow:inset 0 0 0 1px var(--hair),0 40px 80px -40px rgba(0,0,0,.9);
+  font-family:var(--mono);font-size:clamp(12px,1.3vw,18px);overflow:hidden}
+.rf-bh{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-bottom:14px;margin-bottom:6px;border-bottom:1px solid var(--hair);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.rf-bh b{font-weight:500;color:var(--fg)}
+.rf-bh em{font-style:normal}
+.rf-bh span{white-space:nowrap}
+.rf-bh span:first-child{display:flex;align-items:center;gap:10px}
+.rf-bh span:first-child::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--y)}
+.rf-t{width:100%;border-collapse:separate;border-spacing:0 9px;font:inherit;color:inherit}
+.rf-t th{padding:6px 1.4em 0 0;text-align:left;font-weight:400;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.rf-t td{padding:0 1.4em 0 0;white-space:nowrap;vertical-align:middle}
+.rf-t th:last-child,.rf-t td:last-child{padding-right:0;text-align:right}
+.fl{display:inline-flex;gap:2px;vertical-align:middle}
+.fl i{position:relative;display:inline-grid;place-items:center;width:calc(1ch + 6px);height:1.75em;border-radius:3px;background:#19191b;color:var(--fg);font-style:normal;line-height:1;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),inset 0 -1px 0 rgba(0,0,0,.6)}
+.fl i::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.7)}
+.rf-t .dim i{color:rgba(var(--fg-c),.55)}
+.rf-t .hot i{color:var(--y)}
+.rf-t tr.you td{padding-top:4px}
+.rf-t tr.you .fl i{background:#1f1611}
+.rf-blink{display:inline-block;width:7px;height:7px;margin-right:9px;border-radius:50%;background:var(--y);vertical-align:middle;animation:rf-blink 1.2s steps(2,start) infinite}
+@keyframes rf-blink{to{visibility:hidden}}
+.rf-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+/* three steps, in the board's language */
+.rf-steps{margin:22px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 32px}
+.rf-steps li{display:grid;gap:6px;padding-top:14px;border-top:1px solid var(--hair);font-size:15px;line-height:1.45;color:var(--muted)}
+.rf-steps li span{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
 .rf-steps b{font-weight:500;color:var(--fg)}
-.rf-btns{margin-top:34px}
-/* the phone: the text you'd send a founder friend, their reply, and the notification five days later.
-   It plays once, as it comes into view (.play), one message after another */
-.rf-in{grid-template-columns:minmax(0,440px) minmax(0,1fr)}
-.rf-text{order:2}
-.rf-ph{order:1;position:relative;justify-self:center;width:min(340px,100%);border-radius:44px;padding:12px;background:#121214;
-  box-shadow:inset 0 0 0 1px rgba(var(--fg-c),.12),0 40px 80px -30px rgba(0,0,0,.9),0 0 0 1px #000}
-.rf-ph::before{content:"";position:absolute;z-index:-1;inset:12% -18% 6%;border-radius:50%;background:radial-gradient(closest-side,rgba(var(--y-c),.18),transparent);pointer-events:none}
-.rf-scr{position:relative;overflow:hidden;border-radius:33px;background:#f6f4ef;color:#1d1d1f;height:560px;display:flex;flex-direction:column}
-.rf-top{display:grid;justify-items:center;gap:3px;padding:26px 16px 10px;border-bottom:1px solid rgba(29,29,31,.08);background:#efece5}
-.rf-av{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#2f5d50;color:#f6f4ef;font-weight:600;font-size:15px}
-.rf-top b{font-size:13px;font-weight:600}
-.rf-top small{font-size:11px;color:rgba(29,29,31,.5)}
-.rf-msgs{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;padding:14px 12px 16px}
-.rf-msgs>*{flex-shrink:0}
-.rf-b{max-width:78%;padding:9px 13px;border-radius:18px;font-size:14px;line-height:1.38;text-wrap:pretty}
-.rf-me{align-self:flex-end;background:var(--y);color:var(--on-y);border-bottom-right-radius:6px}
-.rf-them{align-self:flex-start;background:#e6e2d9;border-bottom-left-radius:6px}
-.rf-card{align-self:flex-end;width:78%;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px rgba(29,29,31,.1)}
-.rf-card-i{height:58px;display:grid;place-items:center;background:#0b0b0c;color:#f4f4f1;font-weight:700;font-size:20px;letter-spacing:-.02em}
-.rf-card-i span{color:var(--y)}
-.rf-card-t{padding:9px 12px 10px;display:grid;gap:2px}
-.rf-card-t b{font-size:13px;font-weight:600}
-.rf-card-t small{font-size:11px;color:rgba(29,29,31,.5)}
-.rf-gap{align-self:center;margin:6px 0 2px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(29,29,31,.42)}
-.rf-dots{align-self:flex-start;display:flex;gap:4px;padding:12px 14px;border-radius:18px;background:#e6e2d9}
-.rf-dots i{width:6px;height:6px;border-radius:50%;background:rgba(29,29,31,.4);animation:rf-dot 1s infinite}
-.rf-dots i:nth-child(2){animation-delay:.15s}.rf-dots i:nth-child(3){animation-delay:.3s}
-@keyframes rf-dot{0%,60%,100%{transform:none;opacity:.5}30%{transform:translateY(-3px);opacity:1}}
-/* the notification that drops in last */
-.rf-note{position:absolute;left:8px;right:8px;top:8px;z-index:2;display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:center;padding:11px 12px;border-radius:20px;
-  background:rgba(22,22,24,.94);color:#f4f4f1;box-shadow:0 14px 30px -12px rgba(0,0,0,.55)}
-.rf-note i{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--y);color:var(--on-y);font-style:normal;font-weight:700;font-size:13px}
-.rf-note b{display:block;font-size:12.5px;font-weight:600}
-.rf-note span{display:block;margin-top:1px;font-size:12.5px;line-height:1.35;color:rgba(244,244,241,.78)}
-/* the sequence: hidden until .play, then each piece in turn (--d) */
-.rf-q{opacity:0;transform:translateY(10px) scale(.98);transform-origin:50% 100%}
-.rf-ph.play .rf-q{opacity:1;transform:none;transition:opacity .35s ease var(--d),transform .5s cubic-bezier(.2,.7,.2,1) var(--d)}
-.rf-dots.rf-q{display:none}
-.rf-ph.play .rf-dots{display:flex}
-.rf-ph.typed .rf-dots{display:none}
-.rf-note{opacity:0;transform:translateY(-120%)}
-.rf-ph.play .rf-note{opacity:1;transform:none;transition:opacity .3s ease var(--d),transform .6s cubic-bezier(.2,1.2,.3,1) var(--d)}
+@media (max-width:1000px){
+  .rf-t th,.rf-t td{padding-right:1em}
+  .fl i{width:calc(1ch + 4px)}
+}
 @media (max-width:900px){
-  .rf-in{grid-template-columns:minmax(0,1fr)}
-  .rf-text{order:1}
-  .rf-ph{order:2}
+  .rf-head{grid-template-columns:minmax(0,1fr);align-items:start}
+  .rf-bd{margin-top:40px}
 }
-@media (max-width:560px){
-  .rf-scr{height:576px}
-  .rf-b{font-size:13.5px}
+@media (max-width:760px){
+  .rf-t th:nth-child(1),.rf-t td:nth-child(1),.rf-t th:nth-child(3),.rf-t td:nth-child(3){display:none}
+  .rf-bd{font-size:11px;padding:16px 14px 18px}
+  .rf-bh span:first-child{gap:8px}
+  .rf-bh em{display:none}
+  .rf-t th,.rf-t td{padding-right:.8em}
+  .fl{gap:1px}
+  .fl i{width:calc(1ch + 3px)}
+  .rf-blink{width:6px;height:6px;margin-right:5px}
+  .rf-steps{grid-template-columns:minmax(0,1fr);gap:0}
+  .rf-steps li{padding:14px 0}
 }
-@media (prefers-reduced-motion:reduce){.rf-q,.rf-note{opacity:1;transform:none;transition:none!important}.rf-dots{display:none!important}}
+@media (max-width:370px){.rf-bd{font-size:10px}}
+@media (max-width:340px){.rf-bd{font-size:9.5px;padding-left:10px;padding-right:10px}.rf-blink{display:none}}
+@media (prefers-reduced-motion:reduce){.rf-blink{animation:none}}
 
 /* ---------- FAQ (section after the story; .fq- prefix) ----------
    Questions on the left, the answer on a dark dotted "bench" on the right that stays in view as you read.
@@ -1143,31 +1139,28 @@ html:not(.open) .ft{display:none}
 
 <section class="rf pad" id="referral" aria-labelledby="rf-h">
 <div class="rf-in">
-  <div class="rf-text">
-    <span class="rf-eye">Referral</span>
-    <h2 class="rf-h" id="rf-h">Know a founder? <span>Send them our way.</span></h2>
-    <p class="rf-p">When a founder you send our way launches with us, your next month is 40% off. Your link is ready the day you go live.</p>
-    <ol class="rf-steps">
-      <li><span><b>Send your link</b> to a founder who needs a launch.</span></li>
-      <li><span><b>They launch</b> with us, in five days like you did.</span></li>
-      <li><span><b>Your next month is $120</b> instead of $200.</span></li>
-    </ol>
-    <div class="rf-btns"><a class="cta" href="#top">Plan my launch <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
-  </div>
-  <div class="rf-ph" id="rf-ph" role="img" aria-label="A chat: you send a founder friend your muzmesh link, they reply that they're booking a call, five days later they say they're live, and a notification says your next month is $120.">
-    <div class="rf-scr" aria-hidden="true">
-      <div class="rf-note" style="--d:6.4s"><i>m</i><div><b>muzmesh</b><span>Sam launched. Your next month is $120, 40% off.</span></div></div>
-      <div class="rf-top"><span class="rf-av">S</span><b>Sam</b><small>Founder, Notely</small></div>
-      <div class="rf-msgs">
-        <p class="rf-b rf-me rf-q" style="--d:.2s">We launched <span class="rf-nm">your startup</span> with these guys. Logo, site, video, all of it in 5 days.</p>
-        <div class="rf-card rf-q" style="--d:.9s"><div class="rf-card-i"><b>muzmesh<span>.</span></b></div><div class="rf-card-t"><b>Your launch, done in five days</b><small>muzmesh.com · invited by <span class="rf-nm">your startup</span></small></div></div>
-        <div class="rf-dots rf-q" style="--d:1.6s"><i></i><i></i><i></i></div>
-        <p class="rf-b rf-them rf-q" style="--d:2.9s">Wait, 5 days? Booking a call now.</p>
-        <span class="rf-gap rf-q" style="--d:3.9s">5 days later</span>
-        <p class="rf-b rf-them rf-q" style="--d:4.6s">We’re live 🎉 Thanks for the intro.</p>
-      </div>
+  <div class="rf-head">
+    <div>
+      <span class="rf-eye">Referral</span>
+      <h2 class="rf-h" id="rf-h">Know a founder? <span>Put them on the board.</span></h2>
+    </div>
+    <div>
+      <p class="rf-p">When a founder you send our way launches with us, your next month is 40% off: $120 instead of $200.</p>
+      <div class="rf-btns"><a class="cta" href="#top">Plan my launch <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
     </div>
   </div>
+  <div class="rf-bd" id="rf-bd">
+    <div class="rf-bh"><span><b>Departures</b><em>Idea → Live</em></span><span id="rf-clock">Today</span></div>
+    <table class="rf-t">
+      <thead><tr><th scope="col">Flight</th><th scope="col">Startup</th><th scope="col">Invited by</th><th scope="col">Status</th><th scope="col">For you</th></tr></thead>
+      <tbody id="rf-rows"></tbody>
+    </table>
+  </div>
+  <ol class="rf-steps">
+    <li><span>01</span><b>Send your link</b>to a founder who needs a launch.</li>
+    <li><span>02</span><b>They launch with us</b>in five days, like you did.</li>
+    <li><span>03</span><b>Your next month is $120</b>instead of $200.</li>
+  </ol>
 </div>
 </section>
 
@@ -1518,7 +1511,7 @@ html:not(.open) .ft{display:none}
         crm: [['Priya Nair', 'Active'], ['Tom Becker', 'Invited'], ['Ana Lima', 'Waitlist']] };
     }
     $('rname').textContent = name;
-    document.querySelectorAll('.rf-nm').forEach(e => { e.textContent = name; });
+    if (window.rfSetName) window.rfSetName(name);
     kit.className = 'kit pad ' + cls;
     kit.style.cssText = ypg.getAttribute('style') || '';
     const mark = `<span class="kmk">${yl.firstElementChild.outerHTML}</span>`;
@@ -2124,11 +2117,73 @@ html:not(.open) .ft{display:none}
 })();
 </script>
 <script>
-/* referral: the chat plays once, when most of the phone is in view */
+/* referral: the departures board. Each field has a fixed width in letters, like a real board; the letters flip
+   through the alphabet and settle, row by row, once the board is in view */
 (() => {
-  const ph = document.getElementById('rf-ph');
-  if (!ph) return;
-  new IntersectionObserver((es, io) => { if (es.some(e => e.isIntersecting)) { ph.classList.add('play'); setTimeout(() => ph.classList.add('typed'), 2850); io.disconnect(); } }, { threshold: .55 }).observe(ph);
+  const body = document.getElementById('rf-rows'), bd = document.getElementById('rf-bd');
+  if (!body) return;
+  const W = [5, 11, 8, 9, 4], AZ = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let name = 'YOU', played = false, raf = 0;
+  const rows = () => {
+    const n = name.toUpperCase().replace(/[^A-Z0-9 &.-]/g, '');
+    return [
+      { cls: '', f: ['MZ501', n, '', 'LIVE', ''], tone: ['dim', '', 'dim', '', 'dim'] },
+      { cls: '', f: ['MZ502', 'NOTELY', n, 'LIVE', '-40%'], tone: ['dim', '', 'dim', '', 'hot'] },
+      { cls: '', f: ['MZ503', 'FIELDNOTE', n, 'BOARDING', 'SOON'], tone: ['dim', '', 'dim', 'dim', 'dim'] },
+      { cls: 'you', f: ['MZ504', 'YOUR FRIEND', 'YOU', 'GATE OPEN', '-40%'], tone: ['dim', '', 'dim', 'hot', 'hot'] }
+    ];
+  };
+  let cells = [];
+  function build() {
+    cancelAnimationFrame(raf);
+    body.innerHTML = '';
+    cells = [];
+    rows().forEach((r, ri) => {
+      const tr = document.createElement('tr');
+      if (r.cls) tr.className = r.cls;
+      r.f.forEach((v, ci) => {
+        const td = document.createElement('td'), txt = v.slice(0, W[ci]).padEnd(W[ci], ' ');
+        if (r.tone[ci]) td.className = r.tone[ci];
+        const sr = document.createElement('span'); sr.className = 'rf-sr'; sr.textContent = v.trim() || '–';
+        td.appendChild(sr);
+        if (ri === 3 && ci === 3) { const b = document.createElement('i'); b.className = 'rf-blink'; b.setAttribute('aria-hidden', 'true'); td.appendChild(b); }
+        const fl = document.createElement('span'); fl.className = 'fl'; fl.setAttribute('aria-hidden', 'true');
+        [...txt].forEach((ch, k) => {
+          const i = document.createElement('i'); fl.appendChild(i);
+          // when this letter settles: rows in turn, left to right within a row
+          cells.push({ i, ch: ch === ' ' ? ' ' : ch, at: ri * 380 + ci * 90 + k * 34 + 260, cur: '' });
+        });
+        td.appendChild(fl); tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+    if (still || played) cells.forEach(c => { c.i.textContent = c.ch; });
+    else cells.forEach(c => { c.i.textContent = ' '; });
+  }
+  function play() {
+    played = true;
+    const t0 = performance.now();
+    let last = 0;
+    const tick = now => {
+      const t = now - t0, step = t - last > 55;
+      let busy = false;
+      if (step) last = t;
+      for (const c of cells) {
+        if (c.cur === c.ch) continue;
+        busy = true;
+        if (t >= c.at) { c.i.textContent = c.cur = c.ch; continue; }
+        if (step && t > c.at - 520 && c.ch !== ' ') { const r = AZ[(Math.random() * AZ.length) | 0]; c.i.textContent = r; }
+      }
+      if (busy) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+  }
+  window.rfSetName = n => { name = n || 'YOU'; build(); };
+  const ck = document.getElementById('rf-clock'), d = new Date();
+  ck.textContent = 'Today ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  build();
+  if (!still) new IntersectionObserver((es, io) => { if (es.some(e => e.isIntersecting)) { io.disconnect(); play(); } }, { threshold: .45 }).observe(bd);
 })();
 </script>
 <script>
