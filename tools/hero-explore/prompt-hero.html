@@ -650,9 +650,10 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   background:radial-gradient(circle at 0 0,transparent var(--n),var(--paper) calc(var(--n) + .5px)) left/51% 100% no-repeat,
              radial-gradient(circle at 100% 0,transparent var(--n),var(--paper) calc(var(--n) + .5px)) right/51% 100% no-repeat}
 .tks::before{content:"";position:absolute;left:calc(var(--n) + 8px);right:calc(var(--n) + 8px);top:0;border-top:2px dashed rgba(29,29,31,.22)}
-.tkh{display:flex;justify-content:space-between;align-items:center;margin:0 -26px;padding:13px 26px;border-radius:18px 18px 0 0;background:var(--y);color:var(--on-y)}
+.tkh{display:flex;justify-content:space-between;align-items:center;margin:0 -26px;padding:13px 26px;border-radius:18px 18px 0 0;background:#e8e4d9;border-bottom:1px solid rgba(29,29,31,.1)}
 .tkh b{font-size:17px;font-weight:700;letter-spacing:-.015em}
-.tkh span{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase}
+.tkh span{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft)}
+.tkh span::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--y)}
 .tkl{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
 .tkr{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;padding:20px 0 16px}
 .tke{display:grid;gap:3px}
@@ -1466,11 +1467,21 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 
     // the price: painted at 1% once the kit has settled, then the pass, the words, and the trip
     const PP = K0 + 3450, prc = $('pricing'), RIDE = 'cubic-bezier(.45,0,.4,1)';
+    // on a short screen the words pan up under the menu bar: each one fades out just before it gets there
+    const prinEl = $('prin'), PAN0 = P0 + 1250, PAN1 = P0 + 2700, NAVZ = 112;
+    const away = (el, after) => {
+      if (!pg6.pan) return 0;
+      let y = 0;   // `after`: not before it has finished arriving
+      for (let e = el; e && e !== prinEl; e = e.offsetParent) y += e.offsetTop;
+      if (y - pg6.pan >= NAVZ) return 0;   // still clear of the menu bar at the end
+      const f = Math.max(0, Math.min(1, (y - NAVZ) / pg6.pan));
+      return Math.round(Math.max(after + 220, Math.min(PAN1 - 400, PAN0 + (PAN1 - PAN0) * f - 250)));
+    };
     kIn(prc.querySelector('.tk'), P0 + 650, 500, 14, 0, PP);
-    kIn(prc.querySelector('.peye'), P0 + 900, 600, 8, 0, PP);
-    prc.querySelectorAll('.ph span').forEach((el, i) => kIn(el, P0 + 1000 + i * 180, 700, 10, 0, PP));
-    kIn(prc.querySelector('.pp'), P0 + 1400, 700, 8, 0, PP);
-    kIn(prc.querySelector('.pbtns'), P0 + 1550, 600, 8, 0, PP);
+    kIn(prc.querySelector('.peye'), P0 + 900, 600, 8, away(prc.querySelector('.peye'), P0 + 1500), PP);
+    prc.querySelectorAll('.ph span').forEach((el, i) => kIn(el, P0 + 1000 + i * 180, 700, 10, away(el, P0 + 1700 + i * 180), PP));
+    kIn(prc.querySelector('.pp'), P0 + 1400, 700, 8, away(prc.querySelector('.pp'), P0 + 2100), PP);
+    kIn(prc.querySelector('.pbtns'), P0 + 1550, 600, 8, away(prc.querySelector('.pbtns'), P0 + 2150), PP);
     kIn(prc.querySelector('.pnotes'), P0 + 1750, 700, 8, 0, PP);
     // the dot flies Idea → Live, and Live lights up as it lands
     track(prc.querySelector('.tkfill'), 'transform', [[P0 + 1200, 'scaleX(0)', RIDE], [P0 + 2200, 'scaleX(1)']]);
@@ -1481,7 +1492,7 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
     kIn(prc.querySelector('.tkp'), P0 + 2350, 450, 8, 0, PP);
     // the monthly stub tears away along the perforation
     track(prc.querySelector('.tks'), 'transform', [[P0 + 2750, 'none', 'cubic-bezier(.5,0,.2,1)'], [P0 + 3150, 'translate(4px,16px) rotate(2.2deg)'], [P0 + 3350, 'translate(6px,20px) rotate(1.6deg)']]);
-    if (pg6.pan) track($('prin'), 'transform', [[P0 + 1250, 'none', 'cubic-bezier(.3,0,.5,1)'], [P0 + 2700, `translateY(${-pg6.pan}px)`]]);
+    if (pg6.pan) track(prinEl, 'transform', [[PAN0, 'none', 'cubic-bezier(.3,0,.5,1)'], [PAN1, `translateY(${-pg6.pan}px)`]]);
 
     seek(Tcur);
   }
