@@ -365,6 +365,19 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .
 .g-ph span { font-size: 12px; color: var(--bk-text-muted); }
 .g-photos figcaption { padding: 10px 14px; font-size: 12.5px; color: var(--bk-text-muted); background: var(--bk-surface); }
 
+/* prompt library */
+.g-pl-base { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 860px) { .g-pl-base { grid-template-columns: minmax(0, 1fr); } }
+.g-pl { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 16px; }
+.g-pl-card { border-radius: var(--bk-radius-lg); overflow: hidden; background: var(--bk-surface); box-shadow: inset 0 0 0 1px var(--bk-hair); display: flex; flex-direction: column; min-width: 0; }
+.g-pl-card > img, .g-pl-card > .g-ph { display: block; width: 100%; height: 140px; aspect-ratio: auto; object-fit: cover; }
+.g-pl-card .b { padding: 16px 18px 18px; display: grid; gap: 10px; flex: 1; align-content: start; }
+.g-pl-card .t { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.g-pl-card .t b { font-weight: 600; font-size: 15.5px; }
+.g-pl-card .u { margin: 0; font-size: 13px; color: var(--bk-text-faint); }
+.g-pl-card pre { margin: 0; max-height: 132px; overflow: auto; white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; line-height: 1.6; color: var(--bk-text-muted); padding: 10px 12px; border-radius: 8px; background: var(--bk-surface-2); }
+.g-pl-card .a { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+
 /* components */
 .g-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 @media (max-width: 860px) { .g-two { grid-template-columns: minmax(0, 1fr); } }
@@ -547,7 +560,21 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .
     <figure><div class="g-ph" aria-hidden="true"><span>Texture · place</span></div><figcaption>Close crops of pages and margins.</figcaption></figure>
   </div>
   <div class="g-dd"><div class="g-do"><h4>Do</h4><ul><li>Books on tables, in hands, on trains.</li><li>Warm natural light, muted colour.</li><li>Close crops of pages and margins.</li></ul></div><div class="g-dont"><h4>Don’t</h4><ul><li>AI-generated people or robots.</li><li>Neon, gradients, glowing brains.</li><li>Stacks of money, trophies, mountain summits.</li></ul></div></div>
-  <p class="g-p"><b>Generating a photo?</b> Prompt for: “documentary photo, warm window light, a person reading a paperback in a quiet corner, linen and wood tones, muted colour, shallow depth of field, no text, no logos”. Never ask an image model for text or logos.</p>
+  <h3>Prompt library</h3>
+  <p class="g-p">Copy-ready prompts for ChatGPT, Gemini, Midjourney, Firefly and other image tools. Every prompt is one subject plus the same brand style and avoid list, so images made by different people with different tools still look like one brand.</p>
+  <div class="g-pl-base">
+    <div class="g-prompt"><div class="bar"><span class="bk-label">Brand style · add to every prompt</span><div><button class="bk-btn is-ghost is-sm" type="button" data-copy="pl-style">Copy</button></div></div><pre id="pl-style">Documentary photograph, calm and unhurried. Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain. Leave quiet space on one side for a headline.</pre></div>
+    <div class="g-prompt"><div class="bar"><span class="bk-label">Always avoid</span><div><button class="bk-btn is-ghost is-sm" type="button" data-copy="pl-avoid">Copy</button></div></div><pre id="pl-avoid">text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles, extra fingers</pre></div>
+  </div>
+  <div class="g-pl"><article class="g-pl-card"><div class="g-ph"></div><div class="b"><div class="t"><b>Reading corner</b><span class="bk-micro">4:5</span></div><p class="u">Hero and app store images</p><pre id="pl-p0">A person in their thirties reading a paperback in a deep armchair by a window, legs tucked up, a mug of tea on the side table, late afternoon light. Documentary photograph, calm and unhurried. Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain. Leave quiet space on one side for a headline. Aspect ratio 4:5. Avoid: text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles, extra fingers.</pre><pre hidden id="pl-p0-mj">A person in their thirties reading a paperback in a deep armchair by a window, legs tucked up, a mug of tea on the side table, late afternoon light, Documentary photograph, calm and unhurried, Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain, Leave quiet space on one side for a headline --ar 4:5 --style raw --stylize 50 --no text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles</pre><div class="a"><button class="bk-btn is-ghost is-sm" type="button" data-copy="pl-p0">Copy prompt</button><button class="bk-btn is-ghost is-sm" type="button" data-copy="pl-p0-mj">Midjourney</button></div></div></article><article class="g-pl-card"><div class="g-ph"></div><div class="b"><div class="t"><b>Commute chapter</b><span class="bk-micro">4:5</span></div><p class="u">Social posts about reading in ten minutes</p><pre id="pl-p1">A commuter reading a phone held low on a quiet morning train, a paperback poking out of their bag, soft light through the window, other passengers blurred. Documentary photograph, calm and unhurried. Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain. Leave quiet space on one side for a headline. Aspect ratio 4:5. Avoid: text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles, extra fingers.</pre><pre hidden id="pl-p1-mj">A commuter reading a phone held low on a quiet morning train, a paperback poking out of their bag, soft light through the window, other passengers blurred, Documentary photograph, calm and unhurried, Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain, Leave quiet space on one side for a headline --ar 4:5 --style raw --stylize 50 --no text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles</pre><div class="a"><button class="bk-btn is-ghost is-sm" type="button" data-copy="pl-p1">Copy prompt</button><button class="bk-btn is-ghost is-sm" type="button" data-copy="pl-p1-mj">Midjourney</button></div></div></article><article class="g-pl-card"><div class="g-ph"></div><div class="b"><div class="t"><b>Margins</b><span class="bk-micro">1:1</span></div><p class="u">Quote posts and carousel covers</p><pre id="pl-p2">Close-up of an open book with pencil underlines and a small handwritten note in the margin, a green ribbon bookmark across the page. Documentary photograph, calm and unhurried. Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain. Leave quiet space on one side for a headline. Aspect ratio 1:1. Avoid: text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles, extra fingers.</pre><pre hidden id="pl-p2-mj">Close-up of an open book with pencil underlines and a small handwritten note in the margin, a green ribbon bookmark across the page, Documentary photograph, calm and unhurried, Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain, Leave quiet space on one side for a headline --ar 1:1 --style raw --stylize 50 --no text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles</pre><div class="a"><button class="bk-btn is-ghost is-sm" type="button" data-copy="pl-p2">Copy prompt</button><button class="bk-btn is-ghost is-sm" type="button" data-copy="pl-p2-mj">Midjourney</button></div></div></article><article class="g-pl-card"><div class="g-ph"></div><div class="b"><div class="t"><b>The shelf</b><span class="bk-micro">16:9</span></div><p class="u">Website section backgrounds, newsletter headers</p><pre id="pl-p3">A wooden bookshelf at home with books lying at different angles, a small plant, a reading lamp switched on, most of the frame calm and uncluttered. Documentary photograph, calm and unhurried. Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain. Leave quiet space on one side for a headline. Aspect ratio 16:9. Avoid: text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles, extra fingers.</pre><pre hidden id="pl-p3-mj">A wooden bookshelf at home with books lying at different angles, a small plant, a reading lamp switched on, most of the frame calm and uncluttered, Documentary photograph, calm and unhurried, Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain, Leave quiet space on one side for a headline --ar 16:9 --style raw --stylize 50 --no text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles</pre><div class="a"><button class="bk-btn is-ghost is-sm" type="button" data-copy="pl-p3">Copy prompt</button><button class="bk-btn is-ghost is-sm" type="button" data-copy="pl-p3-mj">Midjourney</button></div></div></article><article class="g-pl-card"><div class="g-ph"></div><div class="b"><div class="t"><b>Bedside</b><span class="bk-micro">9:16</span></div><p class="u">Story backgrounds with text on top</p><pre id="pl-p4">A bedside table at night with a closed book, reading glasses and a small warm lamp, the rest of the room in soft darkness. Documentary photograph, calm and unhurried. Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain. Leave quiet space on one side for a headline. Aspect ratio 9:16. Avoid: text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles, extra fingers.</pre><pre hidden id="pl-p4-mj">A bedside table at night with a closed book, reading glasses and a small warm lamp, the rest of the room in soft darkness, Documentary photograph, calm and unhurried, Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain, Leave quiet space on one side for a headline --ar 9:16 --style raw --stylize 50 --no text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles</pre><div class="a"><button class="bk-btn is-ghost is-sm" type="button" data-copy="pl-p4">Copy prompt</button><button class="bk-btn is-ghost is-sm" type="button" data-copy="pl-p4-mj">Midjourney</button></div></div></article><article class="g-pl-card"><div class="g-ph"></div><div class="b"><div class="t"><b>Desk notes</b><span class="bk-micro">3:2</span></div><p class="u">Blog headers about remembering what you read</p><pre id="pl-p5">Top-down view of a linen-covered desk with an open notebook of short handwritten summaries, a pen and a cup of coffee, generous empty space. Documentary photograph, calm and unhurried. Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain. Leave quiet space on one side for a headline. Aspect ratio 3:2. Avoid: text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles, extra fingers.</pre><pre hidden id="pl-p5-mj">Top-down view of a linen-covered desk with an open notebook of short handwritten summaries, a pen and a cup of coffee, generous empty space, Documentary photograph, calm and unhurried, Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain, Leave quiet space on one side for a headline --ar 3:2 --style raw --stylize 50 --no text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles</pre><div class="a"><button class="bk-btn is-ghost is-sm" type="button" data-copy="pl-p5">Copy prompt</button><button class="bk-btn is-ghost is-sm" type="button" data-copy="pl-p5-mj">Midjourney</button></div></div></article></div>
+  <div class="g-card"><span class="bk-label is-quiet">Write your own</span><p><b>[Subject: who or what, doing what, where]</b> + the brand style + <b>Aspect ratio [4:5 · 1:1 · 16:9 · 9:16]</b> + “Avoid: …”. Describe a real scene a photographer could shoot. Name the light, not the mood.</p></div>
+  <div class="g-table-wrap"><table class="g-table"><thead><tr><th>Tool</th><th>How</th></tr></thead><tbody>
+    <tr><td>ChatGPT, Gemini, Copilot</td><td>Paste the full prompt as it is.</td></tr>
+    <tr><td>Midjourney</td><td>Use the Midjourney button: it adds <code>--ar</code>, <code>--style raw --stylize 50</code> and the <code>--no</code> list. Add a reference image with <code>--sref</code> to lock the look.</td></tr>
+    <tr><td>Adobe Firefly, Ideogram, Flux</td><td>Content type Photo, effects off, avoid list in the negative prompt.</td></tr>
+    <tr><td>Any tool</td><td>Generate four, keep one. Never ask for words inside the image.</td></tr>
+  </tbody></table></div>
+  <div class="g-dd"><div class="g-do"><h4>After you generate</h4><ul><li>Keep the natural grade: warm, muted, no filters or heavy presets.</li><li>Check hands, faces and pages at 100%. Reject warped fingers, fake lettering and plastic skin.</li><li>Crop so the subject sits on one third and the quiet space holds the headline.</li></ul></div><div class="g-dont"><h4>Where generated images can’t go</h4><ul><li>Generated images are for mood, backgrounds and editorial scenes.</li><li>Never present a generated person as a real customer, author, team member or testimonial.</li><li>Never generate the logo, real book covers or app screens. Add those afterwards in the layout.</li></ul></div></div>
 </section>
 
 <section class="g-ch" id="components">
@@ -662,7 +689,7 @@ Personality: Warm, clear, quietly clever, never smug.
 6. Fonts: **Fraunces** for headlines (display, H2, H3, big numbers). **Inter** for everything else. No other fonts.
 7. Headlines can be two-tone: the setup in the faint text colour, the payoff in full text colour. Example: “Read less. Remember more.”
 8. Sections start with an UPPERCASE label with a 6px accent dot before it.
-9. No emoji in headlines or buttons, no stock 3D, no AI-generated images of people.
+9. No emoji in headlines or buttons, no stock 3D. Generated images follow the prompt library in section 9 and are never presented as real people.
 10. Copy is short, exact and true. No invented numbers, testimonials or client logos.
 
 ## 3. Colour
@@ -819,7 +846,69 @@ Don’t:
 - Neon, gradients, glowing brains.
 - Stacks of money, trophies, mountain summits.
 
-If you generate a photo with an image model, prompt for: “documentary photo, warm window light, a person reading a paperback in a quiet corner, linen and wood tones, muted colour, shallow depth of field, no text, no logos”. Never ask an image model for text or logos; set type afterwards.
+### Image prompt library
+
+Every image prompt is: **[subject] + brand style + aspect ratio + avoid list.** Use these as they are, or write a new subject in the same shape. Describe a real scene a photographer could shoot; name the light, not the mood.
+
+Brand style (add to every prompt):
+
+```
+Documentary photograph, calm and unhurried. Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain. Leave quiet space on one side for a headline.
+```
+
+Always avoid:
+
+```
+text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles, extra fingers
+```
+
+**Reading corner** (4:5, Hero and app store images)
+
+```
+A person in their thirties reading a paperback in a deep armchair by a window, legs tucked up, a mug of tea on the side table, late afternoon light. Documentary photograph, calm and unhurried. Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain. Leave quiet space on one side for a headline. Aspect ratio 4:5. Avoid: text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles, extra fingers.
+```
+
+**Commute chapter** (4:5, Social posts about reading in ten minutes)
+
+```
+A commuter reading a phone held low on a quiet morning train, a paperback poking out of their bag, soft light through the window, other passengers blurred. Documentary photograph, calm and unhurried. Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain. Leave quiet space on one side for a headline. Aspect ratio 4:5. Avoid: text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles, extra fingers.
+```
+
+**Margins** (1:1, Quote posts and carousel covers)
+
+```
+Close-up of an open book with pencil underlines and a small handwritten note in the margin, a green ribbon bookmark across the page. Documentary photograph, calm and unhurried. Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain. Leave quiet space on one side for a headline. Aspect ratio 1:1. Avoid: text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles, extra fingers.
+```
+
+**The shelf** (16:9, Website section backgrounds, newsletter headers)
+
+```
+A wooden bookshelf at home with books lying at different angles, a small plant, a reading lamp switched on, most of the frame calm and uncluttered. Documentary photograph, calm and unhurried. Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain. Leave quiet space on one side for a headline. Aspect ratio 16:9. Avoid: text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles, extra fingers.
+```
+
+**Bedside** (9:16, Story backgrounds with text on top)
+
+```
+A bedside table at night with a closed book, reading glasses and a small warm lamp, the rest of the room in soft darkness. Documentary photograph, calm and unhurried. Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain. Leave quiet space on one side for a headline. Aspect ratio 9:16. Avoid: text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles, extra fingers.
+```
+
+**Desk notes** (3:2, Blog headers about remembering what you read)
+
+```
+Top-down view of a linen-covered desk with an open notebook of short handwritten summaries, a pen and a cup of coffee, generous empty space. Documentary photograph, calm and unhurried. Warm daylight from a window, linen, paper and wood tones, a little deep green, muted colour, soft contrast, shallow depth of field, 50mm lens, fine film grain. Leave quiet space on one side for a headline. Aspect ratio 3:2. Avoid: text, letters, logos, watermarks, readable book titles or screens, robots, glowing brains, neon, gradients, 3D renders, stacks of money, trophies, mountain summits, posed stock smiles, extra fingers.
+```
+
+In Midjourney, add `--ar <ratio> --style raw --stylize 50 --no <avoid list>`. In Firefly, Ideogram or Flux, set content type to Photo, effects off, and put the avoid list in the negative prompt.
+
+After generating:
+- Keep the natural grade: warm, muted, no filters or heavy presets.
+- Check hands, faces and pages at 100%. Reject warped fingers, fake lettering and plastic skin.
+- Crop so the subject sits on one third and the quiet space holds the headline.
+
+Where generated images can’t go:
+- Generated images are for mood, backgrounds and editorial scenes.
+- Never present a generated person as a real customer, author, team member or testimonial.
+- Never generate the logo, real book covers or app screens. Add those afterwards in the layout.
 
 ## 10. Recipes
 

@@ -201,8 +201,20 @@ const icon = (n) => icons[n] || '';
 // ---------- images ----------
 const imgs = (cfg.imagery?.images || []).filter((r) => existsSync(resolve(clientDir, r))).map((r) => ({ src: `data:image/${extname(r).slice(1).replace('jpg', 'jpeg')};base64,` + readFileSync(resolve(clientDir, r)).toString('base64'), file: r }));
 
+// ---------- image prompt library ----------
+const IM = cfg.imagery || {};
+const imagePrompts = {
+  style: IM.style || 'Documentary photograph, honest and unstaged, natural light, muted colour, soft contrast, shallow depth of field, fine film grain. Leave calm space on one side for a headline.',
+  avoid: IM.avoid || 'text, letters, logos, watermarks, readable screens, robots, glowing brains, neon, 3D renders, posed stock smiles, extra fingers',
+  prompts: (IM.prompts || []).map((q, i) => ({ id: 'p' + i, ...q })),
+  after: IM.after || ['Check hands, faces and edges at 100%. Reject warped fingers, fake lettering and plastic skin.', 'Crop so the subject sits on one third and the empty space holds the headline.'],
+  rules: IM.rules || ['Generated images are for mood, backgrounds and editorial scenes.', 'Never present a generated person as a real customer, team member or testimonial.', 'Never generate the logo or product UI; add them afterwards in the layout.'],
+};
+imagePrompts.full = (q) => `${q.subject}. ${q.style || imagePrompts.style} Aspect ratio ${q.ar}. Avoid: ${imagePrompts.avoid}.`;
+imagePrompts.mj = (q) => `${q.subject}, ${(q.style || imagePrompts.style).replace(/\.\s*/g, ', ').replace(/,\s*$/, '')} --ar ${q.ar} --style raw --stylize 50 --no ${imagePrompts.avoid.replace(/, extra fingers/, '')}`;
+
 // ---------- write everything ----------
-const ctx = { cfg, p, themes, def, alt, core, pairs, type, fonts, fontUrl, radius, space, layout, motion, logo, svgUri, icons, icon, imgs, esc, warnings, labelFont, ratio, rgba, mix };
+const ctx = { imagePrompts, cfg, p, themes, def, alt, core, pairs, type, fonts, fontUrl, radius, space, layout, motion, logo, svgUri, icons, icon, imgs, esc, warnings, labelFont, ratio, rgba, mix };
 ctx.tokensCss = tokensCss;
 ctx.componentsCss = components(p, { ...cfg, labelMarker: cfg.labelMarker || 'square' });
 ctx.brandMd = brandMd(ctx);

@@ -2,7 +2,7 @@
 // so the guideline is a working demo of the kit. "Q_" is replaced with the client prefix at the end.
 export default (x) => {
   const { cfg, p, themes, def, alt, core, pairs, type, fonts, fontUrl, radius, space, layout, motion, logo, svgUri, icons, icon, imgs, esc, labelFont } = x;
-  const v = cfg.voice || {}, im = cfg.imagery || {}, idea = cfg.idea || {};
+  const v = cfg.voice || {}, im = cfg.imagery || {}, idea = cfg.idea || {}, IP = x.imagePrompts;
   const [setup, payoff] = idea.headline || [`${cfg.name}.`, 'On brand.'];
   const T = themes[def], U = themes[alt];
   const L = themes.light, D = themes.dark;
@@ -161,6 +161,19 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .
 .g-ph { display: grid; place-items: end start; padding: 16px; background: radial-gradient(120% 90% at 20% 10%, color-mix(in srgb, var(--Q_c-accent) 22%, var(--Q_surface-2)), var(--Q_surface-2) 70%); }
 .g-ph span { font-size: 12px; color: var(--Q_text-muted); }
 .g-photos figcaption { padding: 10px 14px; font-size: 12.5px; color: var(--Q_text-muted); background: var(--Q_surface); }
+
+/* prompt library */
+.g-pl-base { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 860px) { .g-pl-base { grid-template-columns: minmax(0, 1fr); } }
+.g-pl { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 16px; }
+.g-pl-card { border-radius: var(--Q_radius-lg); overflow: hidden; background: var(--Q_surface); box-shadow: inset 0 0 0 1px var(--Q_hair); display: flex; flex-direction: column; min-width: 0; }
+.g-pl-card > img, .g-pl-card > .g-ph { display: block; width: 100%; height: 140px; aspect-ratio: auto; object-fit: cover; }
+.g-pl-card .b { padding: 16px 18px 18px; display: grid; gap: 10px; flex: 1; align-content: start; }
+.g-pl-card .t { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.g-pl-card .t b { font-weight: 600; font-size: 15.5px; }
+.g-pl-card .u { margin: 0; font-size: 13px; color: var(--Q_text-faint); }
+.g-pl-card pre { margin: 0; max-height: 132px; overflow: auto; white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; line-height: 1.6; color: var(--Q_text-muted); padding: 10px 12px; border-radius: 8px; background: var(--Q_surface-2); }
+.g-pl-card .a { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
 
 /* components */
 .g-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
@@ -322,7 +335,21 @@ ${chapters.map(([id, t], i) => `  <a href="#${id}"><span>${String(i + 1).padStar
     <figure>${photo(2, 'Texture · place')}<figcaption>${esc((im.do || [])[2] || '')}</figcaption></figure>
   </div>
   ${dd('Do', (im.do || []).map(esc), 'Don’t', (im.dont || []).map(esc))}
-  ${im.photoPrompt ? `<p class="g-p"><b>Generating a photo?</b> Prompt for: “${esc(im.photoPrompt)}”. Never ask an image model for text or logos.</p>` : ''}
+  <h3>Prompt library</h3>
+  <p class="g-p">Copy-ready prompts for ChatGPT, Gemini, Midjourney, Firefly and other image tools. Every prompt is one subject plus the same brand style and avoid list, so images made by different people with different tools still look like one brand.</p>
+  <div class="g-pl-base">
+    <div class="g-prompt"><div class="bar"><span class="Q_label">Brand style · add to every prompt</span><div><button class="Q_btn is-ghost is-sm" type="button" data-copy="pl-style">Copy</button></div></div><pre id="pl-style">${esc(IP.style)}</pre></div>
+    <div class="g-prompt"><div class="bar"><span class="Q_label">Always avoid</span><div><button class="Q_btn is-ghost is-sm" type="button" data-copy="pl-avoid">Copy</button></div></div><pre id="pl-avoid">${esc(IP.avoid)}</pre></div>
+  </div>
+  <div class="g-pl">${IP.prompts.map((q, i) => `<article class="g-pl-card">${imgs[i] ? `<img src="${imgs[i].src}" alt="">` : '<div class="g-ph"></div>'}<div class="b"><div class="t"><b>${esc(q.title)}</b><span class="Q_micro">${esc(q.ar)}</span></div><p class="u">${esc(q.use || '')}</p><pre id="pl-${q.id}">${esc(IP.full(q))}</pre><pre hidden id="pl-${q.id}-mj">${esc(IP.mj(q))}</pre><div class="a"><button class="Q_btn is-ghost is-sm" type="button" data-copy="pl-${q.id}">Copy prompt</button><button class="Q_btn is-ghost is-sm" type="button" data-copy="pl-${q.id}-mj">Midjourney</button></div></div></article>`).join('')}</div>
+  <div class="g-card"><span class="Q_label is-quiet">Write your own</span><p><b>[Subject: who or what, doing what, where]</b> + the brand style + <b>Aspect ratio [4:5 · 1:1 · 16:9 · 9:16]</b> + “Avoid: …”. Describe a real scene a photographer could shoot. Name the light, not the mood.</p></div>
+  <div class="g-table-wrap"><table class="g-table"><thead><tr><th>Tool</th><th>How</th></tr></thead><tbody>
+    <tr><td>ChatGPT, Gemini, Copilot</td><td>Paste the full prompt as it is.</td></tr>
+    <tr><td>Midjourney</td><td>Use the Midjourney button: it adds <code>--ar</code>, <code>--style raw --stylize 50</code> and the <code>--no</code> list. Add a reference image with <code>--sref</code> to lock the look.</td></tr>
+    <tr><td>Adobe Firefly, Ideogram, Flux</td><td>Content type Photo, effects off, avoid list in the negative prompt.</td></tr>
+    <tr><td>Any tool</td><td>Generate four, keep one. Never ask for words inside the image.</td></tr>
+  </tbody></table></div>
+  ${dd('After you generate', IP.after.map(esc), 'Where generated images can’t go', IP.rules.map(esc))}
 </section>
 
 <section class="g-ch" id="components">

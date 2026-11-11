@@ -22,7 +22,7 @@ Personality: considered, plain-spoken, quietly confident, founder-to-founder.
 6. Headlines are two-tone: the setup in a dim grey, the payoff in full bone. Example: <dim>Every AI startup looks the same.</dim> Yours won’t.
 7. Every section starts with a mono UPPERCASE label with a 5px orange square before it.
 8. Square = label or list item. Circle = something live (a status dot).
-9. No emoji, no sparkle or “AI” symbols, no stock 3D, no AI-generated images of people, robots or brains.
+9. No emoji, no sparkle or “AI” symbols, no stock 3D, no robots or glowing brains. Generated images follow the prompt library in section 8 and are never presented as real people or real work.
 10. Copy is short, exact and true. No invented numbers, testimonials or client logos.
 
 ## 3. Colour
@@ -112,8 +112,37 @@ Icons: 16px grid, 1.6px stroke, round caps and joins, no fills, `currentColor`. 
 - Show real work (in a browser window), real people and hands at work, and the textures above.
 - Two photo grades only: **natural** (saturation about 72%, warm light) or **duotone** (black `#0A0A0C` to bone `#F4F4F1`). One grade per layout.
 - Text over a photo always sits on a dark gradient.
-- Never: AI-generated people, robots, glowing brains, circuit boards, handshake stock, 3D blobs, neon gradients, device mockups with fake UI, invented client logos, orange-tinted photos, mascots.
-- If you generate a photo with an image model, prompt for: “documentary photo, natural window light, real designer workspace, hands sketching or working on a laptop, muted colour, shallow depth of field, no text, no logos, no screens with readable UI”. Then convert it to duotone for black layouts.
+- Never: sci-fi AI renders, robots, glowing brains, circuit boards, handshake stock, 3D blobs, neon gradients, device mockups with fake UI, invented client logos, orange-tinted photos, mascots.
+
+### Image prompt library
+
+Every image prompt is: **[subject] + brand style + aspect ratio + avoid list.** Use these as they are, or write a new subject in the same shape. Describe a real scene a photographer could shoot; name the light, not the mood.
+
+Brand style (add to every prompt):
+
+```
+{{IMAGE_STYLE}}
+```
+
+Always avoid:
+
+```
+{{IMAGE_AVOID}}
+```
+
+Ready prompts:
+
+{{IMAGE_PROMPTS_MD}}
+
+In Midjourney, add `--ar <ratio> --style raw --stylize 50 --no <avoid list>`. In Firefly, Ideogram or Flux, set content type to Photo, effects off, and put the avoid list in the negative prompt.
+
+After generating:
+
+{{IMAGE_AFTER_MD}}
+
+Where generated images can’t go:
+
+{{IMAGE_RULES_MD}}
 
 ## 9. Voice and copy
 
@@ -216,7 +245,7 @@ Plain and short. Name, MuzMesh, one link in the signature. No image banners.
 - [ ] One orange primary button per view, with dark text on it.
 - [ ] Every section starts with a mono label; headlines are two-tone.
 - [ ] Text contrast at least 4.5:1 (use the pairs in section 3).
-- [ ] No emoji, sparkles, robots, gradients on text or AI-generated people.
+- [ ] No emoji, sparkles, robots or gradients on text. Generated images use the prompt library and aren’t shown as real people or work.
 - [ ] Copy is short and every number is true.
 - [ ] Works at 360px wide with no sideways scroll; respects reduced motion.
 

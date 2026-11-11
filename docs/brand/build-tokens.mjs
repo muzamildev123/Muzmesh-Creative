@@ -331,6 +331,37 @@ const imgUri = (p) => 'data:image/jpeg;base64,' + Buffer.from(readFileSync(resol
 
 const dataUri = (p) => 'data:image/svg+xml;base64,' + Buffer.from(readFileSync(resolve(here, p))).toString('base64');
 let page = readFileSync(resolve(here, 'guideline.src.html'), 'utf8');
+// ---------- image prompt library: one style block + one subject per image type, for any image model ----------
+const imagery = {
+  style: 'Documentary photograph, honest and unstaged. Natural window light with a warm desk lamp, muted colour (about 70% saturation), soft contrast, shadows that fall to near-black, shallow depth of field, 35mm lens, fine film grain. Real, slightly lived-in workspace. Leave calm dark space on one side for a headline.',
+  avoid: 'text, letters, logos, watermarks, readable screens or UI, robots, glowing brains, circuit boards, holograms, neon, purple or blue gradients, 3D renders, lens flare, posed stock smiles, handshakes, extra fingers',
+  after: [
+    'For black layouts, convert to the duotone grade: black #0A0A0C to bone #F4F4F1 (Photoshop Gradient Map, Figma “Luminosity” blend over a black fill, or any duotone tool).',
+    'For case studies and the founder’s own photos, keep the natural grade: saturation down to about 72%, no filters.',
+    'Check hands, faces and edges at 100%. Reject anything with warped fingers, fake lettering or plastic skin.',
+    'Crop so the subject sits on one third and the dark space holds the headline. Text over a photo always sits on the dark gradient.',
+  ],
+  rules: [
+    'Generated images are for mood, backgrounds, textures and editorial scenes.',
+    'Never present a generated person as a real client, founder, team member or testimonial, and never use generated images in case studies. Those use real photos and real screenshots.',
+    'Never generate our logo, a client’s logo or UI. Add type and screens afterwards in the layout.',
+  ],
+  prompts: [
+    { id: 'founder', title: 'Founder at work', ar: '4:5', use: 'Hero and social posts about the founder’s problem', img: 'IMG_PEOPLE_MONO', subject: 'A startup founder in their late twenties working late at a wooden desk, face lit softly by a laptop and a small desk lamp, looking at the screen rather than the camera, notebook and coffee beside the laptop, quiet evening room' },
+    { id: 'hands', title: 'Hands sketching', ar: '3:2', use: 'Process posts, “designed by people” sections', img: 'IMG_HANDS_MONO', subject: 'Close-up of a designer’s hands sketching logo ideas in pencil in a paper notebook, eraser crumbs on the page, a mug at the edge of the frame, shot from slightly above' },
+    { id: 'desk', title: 'Desk detail', ar: '1:1', use: 'Backgrounds for quotes, carousel covers, blog headers', img: 'IMG_DESK_MONO', subject: 'Top-down view of a dark wooden desk with an open notebook of website wireframe sketches, a pencil, a phone lying face down and a printed colour card with one small orange square, generous empty space around the objects' },
+    { id: 'review', title: 'Design review', ar: '16:9', use: 'About page, case-study openers (as mood, not proof)', subject: 'Two people seen from behind reviewing printed pages of a website design pinned to a dark studio wall, one pointing at a detail, warm evening light from a side window' },
+    { id: 'launch', title: 'Launch moment', ar: '4:5', use: 'Launch announcements, “now live” posts', subject: 'A hand holding a phone at night, the screen glowing a soft blank warm white with nothing readable on it, blurred city lights far behind, the phone held low as if just about to share something' },
+    { id: 'studio', title: 'Quiet studio corner', ar: '9:16', use: 'Story and reel backgrounds with text on top', subject: 'An empty corner of a small design studio at dusk, one chair, a desk lamp switched on, a pinboard with paper sketches, most of the frame in deep shadow' },
+    { id: 'paper', title: 'Paper prototypes', ar: '4:5', use: 'Carousel slides about process, “how we work”', subject: 'Printed paper screens of a landing page laid out in a row on a dark table, a hand moving one of them, pencil marks and arrows on the paper, shot at a low angle' },
+    { id: 'window', title: 'Late-night window', ar: '16:9', use: 'Blog headers, newsletter covers, website section breaks', subject: 'A desk by a large window at night, a laptop closed, a notebook open with a few handwritten lines, city lights softly out of focus outside, the room almost dark' },
+    { id: 'curtain', title: 'Copper light texture', ar: '16:9', use: 'Campaign covers, hero backgrounds, banners (no people)', subject: 'Abstract soft vertical streaks of warm copper light rising from the bottom of a pure black frame, like evening light through tall blinds, heavily blurred, no objects, minimal', style: 'Minimal abstract photograph, pure black background, warm copper and amber light only, soft blur, fine film grain.' },
+  ],
+};
+const mjAvoid = imagery.avoid.replace(/, extra fingers/, '');
+const promptFor = (q) => `${q.subject}. ${q.style || imagery.style} Aspect ratio ${q.ar}. Avoid: ${imagery.avoid}.`;
+const promptMj = (q) => `${q.subject}, ${(q.style || imagery.style).replace(/\.\s*/g, ', ').replace(/,\s*$/, '')} --ar ${q.ar} --style raw --stylize 50 --no ${mjAvoid}`;
+
 // ---------- AI brand pack (docs/brand/ai/): the same rules as plain text, for ChatGPT, DeepSeek, Claude, Gemini, Cursor … ----------
 const VERSION = 'v2 · Nov 2026';
 const BRAND_NAME = 'MuzMesh';
@@ -348,6 +379,9 @@ const aiFills = {
   RADIUS_LIST: Object.entries(radius).map(([k, [v, d]]) => `${k} ${v} (${d.toLowerCase()})`).join('; '),
   ICON_COUNT: String(Object.keys(icons).length), ICON_LIST: Object.keys(icons).join(', '),
   TOKENS_CSS: css.trim(),
+  IMAGE_STYLE: imagery.style, IMAGE_AVOID: imagery.avoid,
+  IMAGE_PROMPTS_MD: imagery.prompts.map((q) => `**${q.title}** (${q.ar}, ${q.use})\n\n\`\`\`\n${promptFor(q)}\n\`\`\``).join('\n\n'),
+  IMAGE_AFTER_MD: imagery.after.map((t) => '- ' + t).join('\n'), IMAGE_RULES_MD: imagery.rules.map((t) => '- ' + t).join('\n'),
 };
 const brandMd = readFileSync(resolve(here, 'ai/brand.src.md'), 'utf8')
   .replace(/<!--[\s\S]*?-->\n\n/, '<!-- Generated by docs/brand/build-tokens.mjs from ai/brand.src.md. Do not edit by hand. -->\n\n')
@@ -378,6 +412,25 @@ const starter = readFileSync(resolve(here, 'ai/starter.src.html'), 'utf8')
   .replace('{{WORDMARK_SVG}}', readFileSync(resolve(here, 'muzmesh-wordmark-light.svg'), 'utf8').replace(/<\?xml[^>]*>/, '').replace('<svg', '<svg role="img" aria-label="muzmesh" height="22"'));
 out('docs/brand/ai/starter.html', starter);
 
+const promptLib = (() => {
+  const card = (q) => `<article class="g-pl-card">${q.img ? `<img src="{{${q.img}}}" alt="">` : `<div class="g-pl-ph${q.id === 'curtain' ? ' cu' : ''}" aria-hidden="true"></div>`}<div class="b"><div class="t"><b>${esc(q.title)}</b><span class="mm-micro">${q.ar}</span></div><p class="u">${esc(q.use)}</p><pre id="pl-${q.id}">${esc(promptFor(q))}</pre><pre hidden id="pl-${q.id}-mj">${esc(promptMj(q))}</pre><div class="a"><button class="mm-btn is-ghost is-sm" type="button" data-copy="pl-${q.id}">Copy prompt</button><button class="mm-btn is-ghost is-sm" type="button" data-copy="pl-${q.id}-mj">Midjourney</button></div></div></article>`;
+  return `<div class="g-pl-base">
+  <div class="g-prompt"><div class="bar"><span class="mm-label">Brand style · add to every prompt</span><div><button class="mm-btn is-ghost is-sm" type="button" data-copy="pl-style">Copy</button></div></div><pre id="pl-style">${esc(imagery.style)}</pre></div>
+  <div class="g-prompt"><div class="bar"><span class="mm-label">Always avoid</span><div><button class="mm-btn is-ghost is-sm" type="button" data-copy="pl-avoid">Copy</button></div></div><pre id="pl-avoid">${esc(imagery.avoid)}</pre></div>
+</div>
+<div class="g-pl">${imagery.prompts.map(card).join('')}</div>
+<div class="g-pl-write g-card"><span class="mm-label is-quiet">Write your own</span><p><b>[Subject: who or what, doing what, where]</b> + the brand style + <b>Aspect ratio [4:5 · 1:1 · 16:9 · 9:16]</b> + “Avoid: …”. Describe a real scene a photographer could shoot. Name the light, not the mood: “desk lamp and window light”, not “inspiring”.</p></div>
+<div class="g-table-wrap"><table class="g-table"><thead><tr><th>Tool</th><th>How</th></tr></thead><tbody>
+  <tr><td>ChatGPT, Gemini, Copilot</td><td>Paste the full prompt as it is. They read the aspect ratio and the avoid list from the sentence.</td></tr>
+  <tr><td>Midjourney</td><td>Use the Midjourney button: it adds <code>--ar</code>, <code>--style raw --stylize 50</code> and the <code>--no</code> list. Use a reference image from this page with <code>--sref</code> to lock the look.</td></tr>
+  <tr><td>Adobe Firefly, Ideogram, Flux</td><td>Paste the prompt; set content type to Photo, visual intensity low, effects and styles off. Put the avoid list in the negative prompt field if there is one.</td></tr>
+  <tr><td>Any tool</td><td>Generate four, keep one. Upscale before grading. Never ask for words inside the image.</td></tr>
+</tbody></table></div>
+<div class="g-dd">
+  <div class="g-do"><h4>After you generate</h4><ul>${imagery.after.map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div>
+  <div class="g-dont"><h4>Where generated images can’t go</h4><ul>${imagery.rules.map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div>
+</div>`;
+})();
 const fills = {
   TOKENS: css, BRAND: readFileSync(resolve(root, 'web/src/styles/brand.css'), 'utf8'),
   WORDMARK: dataUri('muzmesh-wordmark.svg'), WORDMARK_LIGHT: dataUri('muzmesh-wordmark-light.svg'),
@@ -387,10 +440,11 @@ const fills = {
   ICON: Object.fromEntries(Object.keys(icons).map((k) => [k, iconSvg(k)])),
   IMG_PEOPLE: imgUri('imagery/people-desk.jpg'), IMG_PEOPLE_MONO: imgUri('imagery/people-desk-mono.jpg'),
   IMG_HANDS: imgUri('imagery/hands-writing.jpg'), IMG_HANDS_MONO: imgUri('imagery/hands-writing-mono.jpg'),
-  AI_PROMPT: esc(systemPrompt), AI_BRAND_MD: brandMd.replace(/<\/script/gi, '<\\/script'),
+  PROMPT_LIB: promptLib, AI_PROMPT: esc(systemPrompt), AI_BRAND_MD: brandMd.replace(/<\/script/gi, '<\\/script'),
   IMG_DESK: imgUri('imagery/desk-detail.jpg'), IMG_DESK_MONO: imgUri('imagery/desk-detail-mono.jpg'), RADIUS_ROWS: radiusRows, LAYOUT_ROWS: layoutRows, MOTION_ROWS: motionRows,
 };
 page = page.replace(/\{\{ICON:([a-z-]+)\}\}/g, (m, k) => { if (!icons[k]) throw new Error('unknown icon ' + k); return iconSvg(k); });
+page = page.replace(/\{\{([A-Z_]+)\}\}/g, (m, k) => { if (!(k in fills) || typeof fills[k] !== 'string') throw new Error('unknown placeholder ' + k); return fills[k]; });
 page = page.replace(/\{\{([A-Z_]+)\}\}/g, (m, k) => { if (!(k in fills) || typeof fills[k] !== 'string') throw new Error('unknown placeholder ' + k); return fills[k]; });
 // repo copy is a full document; the published artifact gets its skeleton from the host
 const [headPart, bodyPart] = page.split('</style>');

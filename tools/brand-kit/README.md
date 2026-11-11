@@ -31,7 +31,7 @@ Open `clients/acme/kit/brand-guidelines.html` to review, then zip `clients/acme/
 | `logo.files` | `onLight`, `onDark`, `mark` SVG paths (relative to the client folder). Leave empty to use a typeset wordmark until a logo exists. |
 | `logo.wordmark` | The text, font (`display` or `body`), weight and tracking for that typeset wordmark. |
 | `voice` | `headline`, `summary`, `use`, `avoid` (also the checker's banned words), `write`, `not`, `ctaPrimary`, `ctaSecondary`, `names`. |
-| `imagery` | `headline`, `summary`, `do`, `dont`, `photoPrompt`, and `images[]` (paths to up to three photos shown in the guideline and social kit). |
+| `imagery` | `headline`, `summary`, `do`, `dont`, `images[]` (photos shown in the guideline, social kit and prompt cards), and the prompt library: `style` (added to every prompt), `avoid`, `prompts[]` (`title`, `ar`, `use`, `subject`), `after`, `rules`. |
 
 ## Files
 

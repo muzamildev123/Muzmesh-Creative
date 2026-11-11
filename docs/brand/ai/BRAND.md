@@ -22,7 +22,7 @@ Personality: considered, plain-spoken, quietly confident, founder-to-founder.
 6. Headlines are two-tone: the setup in a dim grey, the payoff in full bone. Example: Every AI startup looks the same. Yours won’t.
 7. Every section starts with a mono UPPERCASE label with a 5px orange square before it.
 8. Square = label or list item. Circle = something live (a status dot).
-9. No emoji, no sparkle or “AI” symbols, no stock 3D, no AI-generated images of people, robots or brains.
+9. No emoji, no sparkle or “AI” symbols, no stock 3D, no robots or glowing brains. Generated images follow the prompt library in section 8 and are never presented as real people or real work.
 10. Copy is short, exact and true. No invented numbers, testimonials or client logos.
 
 ## 3. Colour
@@ -181,8 +181,94 @@ Icons: 16px grid, 1.6px stroke, round caps and joins, no fills, `currentColor`. 
 - Show real work (in a browser window), real people and hands at work, and the textures above.
 - Two photo grades only: **natural** (saturation about 72%, warm light) or **duotone** (black `#0A0A0C` to bone `#F4F4F1`). One grade per layout.
 - Text over a photo always sits on a dark gradient.
-- Never: AI-generated people, robots, glowing brains, circuit boards, handshake stock, 3D blobs, neon gradients, device mockups with fake UI, invented client logos, orange-tinted photos, mascots.
-- If you generate a photo with an image model, prompt for: “documentary photo, natural window light, real designer workspace, hands sketching or working on a laptop, muted colour, shallow depth of field, no text, no logos, no screens with readable UI”. Then convert it to duotone for black layouts.
+- Never: sci-fi AI renders, robots, glowing brains, circuit boards, handshake stock, 3D blobs, neon gradients, device mockups with fake UI, invented client logos, orange-tinted photos, mascots.
+
+### Image prompt library
+
+Every image prompt is: **[subject] + brand style + aspect ratio + avoid list.** Use these as they are, or write a new subject in the same shape. Describe a real scene a photographer could shoot; name the light, not the mood.
+
+Brand style (add to every prompt):
+
+```
+Documentary photograph, honest and unstaged. Natural window light with a warm desk lamp, muted colour (about 70% saturation), soft contrast, shadows that fall to near-black, shallow depth of field, 35mm lens, fine film grain. Real, slightly lived-in workspace. Leave calm dark space on one side for a headline.
+```
+
+Always avoid:
+
+```
+text, letters, logos, watermarks, readable screens or UI, robots, glowing brains, circuit boards, holograms, neon, purple or blue gradients, 3D renders, lens flare, posed stock smiles, handshakes, extra fingers
+```
+
+Ready prompts:
+
+**Founder at work** (4:5, Hero and social posts about the founder’s problem)
+
+```
+A startup founder in their late twenties working late at a wooden desk, face lit softly by a laptop and a small desk lamp, looking at the screen rather than the camera, notebook and coffee beside the laptop, quiet evening room. Documentary photograph, honest and unstaged. Natural window light with a warm desk lamp, muted colour (about 70% saturation), soft contrast, shadows that fall to near-black, shallow depth of field, 35mm lens, fine film grain. Real, slightly lived-in workspace. Leave calm dark space on one side for a headline. Aspect ratio 4:5. Avoid: text, letters, logos, watermarks, readable screens or UI, robots, glowing brains, circuit boards, holograms, neon, purple or blue gradients, 3D renders, lens flare, posed stock smiles, handshakes, extra fingers.
+```
+
+**Hands sketching** (3:2, Process posts, “designed by people” sections)
+
+```
+Close-up of a designer’s hands sketching logo ideas in pencil in a paper notebook, eraser crumbs on the page, a mug at the edge of the frame, shot from slightly above. Documentary photograph, honest and unstaged. Natural window light with a warm desk lamp, muted colour (about 70% saturation), soft contrast, shadows that fall to near-black, shallow depth of field, 35mm lens, fine film grain. Real, slightly lived-in workspace. Leave calm dark space on one side for a headline. Aspect ratio 3:2. Avoid: text, letters, logos, watermarks, readable screens or UI, robots, glowing brains, circuit boards, holograms, neon, purple or blue gradients, 3D renders, lens flare, posed stock smiles, handshakes, extra fingers.
+```
+
+**Desk detail** (1:1, Backgrounds for quotes, carousel covers, blog headers)
+
+```
+Top-down view of a dark wooden desk with an open notebook of website wireframe sketches, a pencil, a phone lying face down and a printed colour card with one small orange square, generous empty space around the objects. Documentary photograph, honest and unstaged. Natural window light with a warm desk lamp, muted colour (about 70% saturation), soft contrast, shadows that fall to near-black, shallow depth of field, 35mm lens, fine film grain. Real, slightly lived-in workspace. Leave calm dark space on one side for a headline. Aspect ratio 1:1. Avoid: text, letters, logos, watermarks, readable screens or UI, robots, glowing brains, circuit boards, holograms, neon, purple or blue gradients, 3D renders, lens flare, posed stock smiles, handshakes, extra fingers.
+```
+
+**Design review** (16:9, About page, case-study openers (as mood, not proof))
+
+```
+Two people seen from behind reviewing printed pages of a website design pinned to a dark studio wall, one pointing at a detail, warm evening light from a side window. Documentary photograph, honest and unstaged. Natural window light with a warm desk lamp, muted colour (about 70% saturation), soft contrast, shadows that fall to near-black, shallow depth of field, 35mm lens, fine film grain. Real, slightly lived-in workspace. Leave calm dark space on one side for a headline. Aspect ratio 16:9. Avoid: text, letters, logos, watermarks, readable screens or UI, robots, glowing brains, circuit boards, holograms, neon, purple or blue gradients, 3D renders, lens flare, posed stock smiles, handshakes, extra fingers.
+```
+
+**Launch moment** (4:5, Launch announcements, “now live” posts)
+
+```
+A hand holding a phone at night, the screen glowing a soft blank warm white with nothing readable on it, blurred city lights far behind, the phone held low as if just about to share something. Documentary photograph, honest and unstaged. Natural window light with a warm desk lamp, muted colour (about 70% saturation), soft contrast, shadows that fall to near-black, shallow depth of field, 35mm lens, fine film grain. Real, slightly lived-in workspace. Leave calm dark space on one side for a headline. Aspect ratio 4:5. Avoid: text, letters, logos, watermarks, readable screens or UI, robots, glowing brains, circuit boards, holograms, neon, purple or blue gradients, 3D renders, lens flare, posed stock smiles, handshakes, extra fingers.
+```
+
+**Quiet studio corner** (9:16, Story and reel backgrounds with text on top)
+
+```
+An empty corner of a small design studio at dusk, one chair, a desk lamp switched on, a pinboard with paper sketches, most of the frame in deep shadow. Documentary photograph, honest and unstaged. Natural window light with a warm desk lamp, muted colour (about 70% saturation), soft contrast, shadows that fall to near-black, shallow depth of field, 35mm lens, fine film grain. Real, slightly lived-in workspace. Leave calm dark space on one side for a headline. Aspect ratio 9:16. Avoid: text, letters, logos, watermarks, readable screens or UI, robots, glowing brains, circuit boards, holograms, neon, purple or blue gradients, 3D renders, lens flare, posed stock smiles, handshakes, extra fingers.
+```
+
+**Paper prototypes** (4:5, Carousel slides about process, “how we work”)
+
+```
+Printed paper screens of a landing page laid out in a row on a dark table, a hand moving one of them, pencil marks and arrows on the paper, shot at a low angle. Documentary photograph, honest and unstaged. Natural window light with a warm desk lamp, muted colour (about 70% saturation), soft contrast, shadows that fall to near-black, shallow depth of field, 35mm lens, fine film grain. Real, slightly lived-in workspace. Leave calm dark space on one side for a headline. Aspect ratio 4:5. Avoid: text, letters, logos, watermarks, readable screens or UI, robots, glowing brains, circuit boards, holograms, neon, purple or blue gradients, 3D renders, lens flare, posed stock smiles, handshakes, extra fingers.
+```
+
+**Late-night window** (16:9, Blog headers, newsletter covers, website section breaks)
+
+```
+A desk by a large window at night, a laptop closed, a notebook open with a few handwritten lines, city lights softly out of focus outside, the room almost dark. Documentary photograph, honest and unstaged. Natural window light with a warm desk lamp, muted colour (about 70% saturation), soft contrast, shadows that fall to near-black, shallow depth of field, 35mm lens, fine film grain. Real, slightly lived-in workspace. Leave calm dark space on one side for a headline. Aspect ratio 16:9. Avoid: text, letters, logos, watermarks, readable screens or UI, robots, glowing brains, circuit boards, holograms, neon, purple or blue gradients, 3D renders, lens flare, posed stock smiles, handshakes, extra fingers.
+```
+
+**Copper light texture** (16:9, Campaign covers, hero backgrounds, banners (no people))
+
+```
+Abstract soft vertical streaks of warm copper light rising from the bottom of a pure black frame, like evening light through tall blinds, heavily blurred, no objects, minimal. Minimal abstract photograph, pure black background, warm copper and amber light only, soft blur, fine film grain. Aspect ratio 16:9. Avoid: text, letters, logos, watermarks, readable screens or UI, robots, glowing brains, circuit boards, holograms, neon, purple or blue gradients, 3D renders, lens flare, posed stock smiles, handshakes, extra fingers.
+```
+
+In Midjourney, add `--ar <ratio> --style raw --stylize 50 --no <avoid list>`. In Firefly, Ideogram or Flux, set content type to Photo, effects off, and put the avoid list in the negative prompt.
+
+After generating:
+
+- For black layouts, convert to the duotone grade: black #0A0A0C to bone #F4F4F1 (Photoshop Gradient Map, Figma “Luminosity” blend over a black fill, or any duotone tool).
+- For case studies and the founder’s own photos, keep the natural grade: saturation down to about 72%, no filters.
+- Check hands, faces and edges at 100%. Reject anything with warped fingers, fake lettering or plastic skin.
+- Crop so the subject sits on one third and the dark space holds the headline. Text over a photo always sits on the dark gradient.
+
+Where generated images can’t go:
+
+- Generated images are for mood, backgrounds, textures and editorial scenes.
+- Never present a generated person as a real client, founder, team member or testimonial, and never use generated images in case studies. Those use real photos and real screenshots.
+- Never generate our logo, a client’s logo or UI. Add type and screens afterwards in the layout.
 
 ## 9. Voice and copy
 
@@ -427,7 +513,7 @@ Plain and short. Name, MuzMesh, one link in the signature. No image banners.
 - [ ] One orange primary button per view, with dark text on it.
 - [ ] Every section starts with a mono label; headlines are two-tone.
 - [ ] Text contrast at least 4.5:1 (use the pairs in section 3).
-- [ ] No emoji, sparkles, robots, gradients on text or AI-generated people.
+- [ ] No emoji, sparkles, robots or gradients on text. Generated images use the prompt library and aren’t shown as real people or work.
 - [ ] Copy is short and every number is true.
 - [ ] Works at 360px wide with no sideways scroll; respects reduced motion.
 

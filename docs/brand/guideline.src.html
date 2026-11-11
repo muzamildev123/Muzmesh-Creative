@@ -277,6 +277,23 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
 .g-term { margin: 0; padding: 18px 20px; border-radius: var(--mm-radius-md); background: var(--mm-c-raise-2); box-shadow: var(--mm-shadow-ring); font-family: var(--mm-font-mono); font-size: 12.5px; line-height: 1.75; color: var(--mm-text-muted); white-space: pre-wrap; overflow-x: auto; }
 .g-term b { color: var(--mm-text); font-weight: 400; } .g-term i { color: var(--mm-c-danger-dark); font-style: normal; } .g-term u { color: var(--mm-c-success-dark); text-decoration: none; }
 
+/* prompt library */
+.g-pl-base { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 860px) { .g-pl-base { grid-template-columns: minmax(0, 1fr); } }
+.g-pl { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 16px; }
+.g-pl-card { border-radius: var(--mm-radius-lg); overflow: hidden; background: var(--mm-surface); box-shadow: var(--mm-shadow-ring); display: flex; flex-direction: column; min-width: 0; }
+.g-pl-card > img, .g-pl-ph { display: block; width: 100%; height: 150px; object-fit: cover; }
+.g-pl-ph { background: radial-gradient(70% 90% at 30% 30%, rgba(242,88,15,.16), transparent 70%), var(--mm-c-raise-2); }
+.g-pl-ph.cu { background: linear-gradient(180deg, transparent 20%, rgba(204,61,8,.5)); -webkit-mask: repeating-linear-gradient(90deg, #000 0 8%, rgba(0,0,0,.35) 8% 14%); mask: repeating-linear-gradient(90deg, #000 0 8%, rgba(0,0,0,.35) 8% 14%); background-color: #000; }
+.g-pl-card .b { padding: 16px 18px 18px; display: grid; gap: 10px; flex: 1; align-content: start; }
+.g-pl-card .t { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.g-pl-card .t b { font-weight: 600; font-size: 15.5px; }
+.g-pl-card .u { margin: 0; font-size: 13px; color: var(--mm-text-faint); }
+.g-pl-card pre { margin: 0; max-height: 132px; overflow: auto; white-space: pre-wrap; font-family: var(--mm-font-mono); font-size: 11.5px; line-height: 1.6; color: var(--mm-text-muted); padding: 10px 12px; border-radius: 8px; background: var(--mm-surface-2); }
+.g-pl-card .a { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+.g-pl-write p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--mm-text-muted); }
+.g-pl-write b { color: var(--mm-text); font-weight: 500; }
+
 /* hero mosaic */
 .g-mosaic { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: 118px; gap: 12px; grid-auto-flow: dense; margin-top: 18px; }
 .g-mosaic > * { border-radius: var(--mm-radius-lg); overflow: hidden; position: relative; min-width: 0; box-shadow: var(--mm-shadow-ring); }
@@ -640,7 +657,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
       <header>
         <span class="mm-label">06 · Imagery</span>
         <h2 class="mm-h2"><span class="mm-dim">Real work.</span> Real people.</h2>
-        <p class="mm-lead">Our pictures prove a person made this. We show three things: the finished work, the people and hands behind it, and the quiet textures of the homepage. Nothing generated, nothing staged to look techy.</p>
+        <p class="mm-lead">Our pictures prove a person made this. We show three things: the finished work, the people and hands behind it, and the quiet textures of the homepage. Nothing staged to look techy. When we do generate an image, we use the prompt library below so it looks like the rest.</p>
       </header>
       <h3>1 · The work</h3>
       <div class="g-cols-2">
@@ -657,7 +674,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
       <div class="g-ba">
         <figure><img src="{{IMG_DESK}}" alt="Desk photo in natural colour"><figcaption><b>Natural grade</b>Saturation down to about 72%, no filters, warm window light. For case studies and the founder’s own photos.</figcaption></figure>
         <figure><img src="{{IMG_DESK_MONO}}" alt="Desk photo in black-and-bone duotone"><figcaption><b>Duotone grade</b>Black #0A0A0C to bone #F4F4F1. For photos placed on black, behind text or beside orange.</figcaption></figure>
-        <figure><div class="g-stage" style="aspect-ratio:1;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#2b1055,#7597de);text-align:center;padding:14px;position:relative"><span style="font-size:13px;color:#fff;font-family:system-ui">AI render · robot hand · glowing brain</span><span style="position:absolute;inset:0;background:linear-gradient(to top right,transparent calc(50% - 1px),rgba(255,122,89,.9) 50%,transparent calc(50% + 1px))"></span></div><figcaption><b>Never</b>AI-generated images, robots, glowing brains, circuit boards, handshake stock, 3D blobs or neon gradients.</figcaption></figure>
+        <figure><div class="g-stage" style="aspect-ratio:1;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#2b1055,#7597de);text-align:center;padding:14px;position:relative"><span style="font-size:13px;color:#fff;font-family:system-ui">AI render · robot hand · glowing brain</span><span style="position:absolute;inset:0;background:linear-gradient(to top right,transparent calc(50% - 1px),rgba(255,122,89,.9) 50%,transparent calc(50% + 1px))"></span></div><figcaption><b>Never</b>Sci-fi AI renders, robots, glowing brains, circuit boards, handshake stock, 3D blobs or neon gradients.</figcaption></figure>
       </div>
       <h3>3 · Texture</h3>
       <div class="g-tex">
@@ -679,6 +696,9 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
           <li>Use illustrations of people, mascots or abstract 3D shapes.</li>
         </ul></div>
       </div>
+      <h3>4 · Prompt library</h3>
+      <p class="g-p">Copy-ready prompts for ChatGPT, Gemini, Midjourney, Firefly and other image tools. Every prompt is one subject plus the same brand style and avoid list, so images made by different people with different tools still look like one brand. The pictures above are the reference look.</p>
+      {{PROMPT_LIB}}
     </section>
 
     <!-- 07 -->
@@ -1009,6 +1029,7 @@ landing.html
         <div><span class="g-tag fix">Added</span><span><b>Iconography and imagery.</b> v2 first shipped without them. There is now a 28-icon set on one grid, a photo grade (natural and duotone), texture rules and visual do/don’t examples.</span></div>
         <div><span class="g-tag fix">Added</span><span><b>Social kit.</b> Profiles, banner safe zones, feed rhythm, a carousel structure, story safe zones, a caption template and a size table for every platform we use.</span></div>
         <div><span class="g-tag fix">Added</span><span><b>AI ready.</b> The rules now ship as <code>BRAND.md</code>, a short system prompt, a starter page and a checker, generated from the same tokens, so any AI tool produces on-brand work.</span></div>
+        <div><span class="g-tag fix">Added</span><span><b>Image prompt library.</b> One brand style block, an avoid list and seven ready prompts with Midjourney versions, plus where generated images may and may not be used. The old “never generated” rule now reads: never as proof of real people or work.</span></div>
         <div><span class="g-tag">Follow-up</span><span><b>Point home.css at the tokens.</b> Once the homepage PR is merged, its local <code>--y</code>, <code>--fg</code> and <code>--raise</code> variables can read from tokens.css. Values already match, apart from the hover and faint fixes above.</span></div>
         <div><span class="g-tag open">Open</span><span><b>Our own photos.</b> The example photos are stock (credited). Shoot a few real work sessions to replace them.</span></div>
         <div><span class="g-tag open">Open</span><span><b>Custom logo.</b> The outlined wordmark and “m.” avatar are the working logo. Commission a drawn mark later, or keep this one.</span></div>

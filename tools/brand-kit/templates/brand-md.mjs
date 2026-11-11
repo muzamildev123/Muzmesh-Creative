@@ -34,7 +34,7 @@ ${(idea.pillars || []).map((q) => `- **${q.title}.** ${q.body}`).join('\n')}
 6. Fonts: **${cfg.fonts.display.family}** for headlines (display, H2, H3, big numbers). **${cfg.fonts.body.family}** for everything else.${labelFont.family !== cfg.fonts.body.family ? ` **${labelFont.family}** only for UPPERCASE labels.` : ''} No other fonts.
 7. Headlines can be two-tone: the setup in the faint text colour, the payoff in full text colour. Example: “${setup} ${payoff}”
 8. Sections start with an UPPERCASE label with ${marker} before it.
-9. No emoji in headlines or buttons, no stock 3D, no AI-generated images of people.
+9. No emoji in headlines or buttons, no stock 3D. Generated images follow the prompt library in section 9 and are never presented as real people.
 10. Copy is short, exact and true. No invented numbers, testimonials or client logos.
 
 ## 3. Colour
@@ -129,7 +129,31 @@ ${(im.do || []).map((s) => `- ${s}`).join('\n')}
 Don’t:
 ${(im.dont || []).map((s) => `- ${s}`).join('\n')}
 
-${im.photoPrompt ? `If you generate a photo with an image model, prompt for: “${im.photoPrompt}”. Never ask an image model for text or logos; set type afterwards.` : ''}
+### Image prompt library
+
+Every image prompt is: **[subject] + brand style + aspect ratio + avoid list.** Use these as they are, or write a new subject in the same shape. Describe a real scene a photographer could shoot; name the light, not the mood.
+
+Brand style (add to every prompt):
+
+\`\`\`
+${x.imagePrompts.style}
+\`\`\`
+
+Always avoid:
+
+\`\`\`
+${x.imagePrompts.avoid}
+\`\`\`
+
+${x.imagePrompts.prompts.map((q) => `**${q.title}** (${q.ar}, ${q.use})\n\n\`\`\`\n${x.imagePrompts.full(q)}\n\`\`\``).join('\n\n')}
+
+In Midjourney, add \`--ar <ratio> --style raw --stylize 50 --no <avoid list>\`. In Firefly, Ideogram or Flux, set content type to Photo, effects off, and put the avoid list in the negative prompt.
+
+After generating:
+${x.imagePrompts.after.map((t) => `- ${t}`).join('\n')}
+
+Where generated images can’t go:
+${x.imagePrompts.rules.map((t) => `- ${t}`).join('\n')}
 
 ## 10. Recipes
 
