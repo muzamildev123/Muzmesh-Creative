@@ -205,7 +205,7 @@ export const homeDefaults = {
   },
   footer: {
     tagline: '**MuzMesh** is the design partner for AI startups. Logo, brand, landing page and launch kit, designed by people.',
-    email: 'hello@muzmeshcreative.com',
+    email: 'muzamilawez@gmail.com',
     location: 'Pakistan',
     timeZone: 'Asia/Karachi',
     status: 'Proposals the same day',
