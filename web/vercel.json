@@ -3,7 +3,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/studio/:path*", "destination": "/studio/index.html" }
+    { "source": "/studio/:path*", "destination": "/studio" }
   ],
   "headers": [
     { "source": "/studio/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] },
