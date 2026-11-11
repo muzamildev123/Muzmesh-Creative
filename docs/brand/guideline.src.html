@@ -32,7 +32,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .g-toc a[aria-current="true"]::before { content: ""; position: absolute; left: -14px; top: 50%; width: 5px; height: 5px; margin-top: -2.5px; background: var(--mm-accent); }
 @media (max-width: 1000px) { .g-grid { grid-template-columns: minmax(0, 1fr); gap: 0; } .g-toc { display: none; } }
 .g-main { min-width: 0; }
-.g-hero { padding-block: clamp(64px, 9vw, 120px) clamp(48px, 7vw, 96px); display: grid; gap: 26px; }
+.g-hero { padding-block: clamp(56px, 7vw, 96px) clamp(48px, 7vw, 96px); scroll-margin-top: var(--mm-nav-h); display: grid; gap: 26px; }
 .g-hero .mm-display { max-width: 14ch; }
 .g-meta { display: flex; flex-wrap: wrap; gap: 10px 28px; padding-top: 22px; border-top: 1px solid var(--mm-hair); }
 .g-ch { padding-block: clamp(64px, 8vw, 112px); border-top: 1px solid var(--mm-hair); display: grid; gap: 28px; scroll-margin-top: var(--mm-nav-h); }
@@ -186,6 +186,36 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
 .g-doc .lb { font-family: var(--mm-font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #595857; }
 .g-doc .acc { color: var(--mm-c-signal-ink); }
 
+/* cover: full-bleed, the homepage's copper light curtain behind one big headline */
+.g-cover { position: relative; overflow: hidden; background: #000; border-bottom: 1px solid var(--mm-hair); min-height: min(92vh, 900px); display: flex; }
+.g-cover canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.g-cover .shade { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(60% 58% at 30% 48%, rgba(0,0,0,.86), rgba(0,0,0,.4) 62%, transparent 100%), linear-gradient(180deg, #000 0, rgba(0,0,0,.6) 18%, transparent 42%); }
+.g-cover .g-grain { opacity: .06; }
+.g-cover-in { position: relative; z-index: 2; width: 100%; max-width: var(--mm-frame); margin: 0 auto; display: grid; grid-template-rows: auto 1fr auto; gap: 40px; padding-block: 36px 34px; }
+.g-cover-top { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.g-cover-mid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 48px; align-items: center; }
+.g-cover h1 { margin: 0; font-weight: 500; font-size: clamp(50px, 8.2vw, 144px); line-height: .96; letter-spacing: -.045em; max-width: 11ch; text-wrap: balance; }
+.g-cover h1 .d { color: rgba(244, 244, 241, .42); display: block; }
+.g-cover h1 .y { position: relative; display: inline-block; }
+.g-cover h1 .y::after { content: ""; position: absolute; right: -.02em; bottom: .14em; width: .16em; height: .16em; background: var(--mm-accent); transform: translateX(100%); }
+.g-cover .lead { margin: 30px 0 0; max-width: 46ch; font-size: clamp(16px, 1.35vw, 19px); line-height: 1.55; color: var(--mm-text-muted); }
+.g-cover .acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.g-cover .acts .mm-btn { text-decoration: none; }
+.g-cover-tix { position: relative; width: 330px; transform: rotate(-5deg); animation: g-float 7s ease-in-out infinite; filter: drop-shadow(0 50px 60px rgba(0,0,0,.7)); }
+.g-cover-tix .g-ticket { width: 100%; }
+.g-cover-tix .g-av-chip { position: absolute; left: -44px; top: -52px; width: 96px; height: 96px; border-radius: 22px; transform: rotate(9deg); box-shadow: 0 0 0 1px rgba(244,244,241,.18), 0 30px 50px -10px #000; }
+@keyframes g-float { 0%, 100% { transform: rotate(-5deg) translateY(0); } 50% { transform: rotate(-4deg) translateY(-12px); } }
+.g-cover-foot { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; padding-top: 22px; border-top: 1px solid rgba(244, 244, 241, .14); }
+.g-swatches { display: flex; gap: 22px; flex-wrap: wrap; }
+.g-swatches span { display: inline-flex; align-items: center; gap: 9px; font-family: var(--mm-font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--mm-text-faint); }
+.g-swatches i { width: 14px; height: 14px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(244, 244, 241, .3); }
+.g-scroll { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mm-font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--mm-text); text-decoration: none; }
+.g-scroll svg { animation: g-bob 2s ease-in-out infinite; }
+@keyframes g-bob { 50% { transform: translateY(4px); } }
+@media (max-width: 1000px) { .g-cover-mid { grid-template-columns: minmax(0, 1fr); } .g-cover-tix { display: none; } }
+@media (max-width: 600px) { .g-cover { min-height: 0; } .g-cover-in { gap: 28px; } }
+@media (prefers-reduced-motion: reduce) { .g-cover-tix, .g-scroll svg { animation: none; } }
+
 /* hero mosaic */
 .g-mosaic { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: 118px; gap: 12px; grid-auto-flow: dense; margin-top: 18px; }
 .g-mosaic > * { border-radius: var(--mm-radius-lg); overflow: hidden; position: relative; min-width: 0; box-shadow: var(--mm-shadow-ring); }
@@ -312,6 +342,36 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
   </div>
 </nav>
 
+<header class="g-cover">
+  <canvas id="g-curtain" width="150" height="56" aria-hidden="true"></canvas>
+  <div class="shade" aria-hidden="true"></div>
+  <div class="g-grain" aria-hidden="true"></div>
+  <div class="g-cover-in g-wrap">
+    <div class="g-cover-top"><span class="mm-label">MuzMesh brand guideline</span><span class="mm-label is-quiet">v2 · 11 Nov 2026 · Pakistan</span></div>
+    <div class="g-cover-mid">
+      <div>
+        <h1><span class="d">Every AI startup looks the same.</span><span class="y">Yours won’t</span></h1>
+        <p class="lead">How MuzMesh looks, sounds and builds: logo, colour, type, icons, imagery, components and voice, matched to the live homepage and generated from the same tokens.</p>
+        <div class="acts"><a class="mm-btn is-primary" href="#idea">Read the guideline {{ICON:arrow-down}}</a><a class="mm-btn is-ghost" href="#tokens">Get the tokens</a></div>
+      </div>
+      <div class="g-cover-tix" aria-hidden="true">
+        <div class="g-ticket">
+          <div class="h"><b>muzmesh</b><span>Brand pass</span></div>
+          <div class="b"><span class="lbl">From · To</span><div class="route"><span>V1</span><i></i><span>V2</span></div>
+          <div class="row"><div><span class="lbl">Passenger</span>MuzMesh</div><div><span class="lbl">Chapters</span>14</div><div><span class="lbl">Class</span>Launch</div></div></div>
+          <div class="tear"></div>
+          <div class="f"><div><span class="lbl">Accent</span></div><b>#F2580F</b></div>
+        </div>
+        <img class="g-av-chip" src="{{AVATAR}}" alt="">
+      </div>
+    </div>
+    <div class="g-cover-foot">
+      <div class="g-swatches"><span><i style="background:#000"></i>Black</span><span><i style="background:#f4f4f1"></i>Bone</span><span><i style="background:#f2580f"></i>Signal</span><span><i style="background:#f3f0e8"></i>Paper</span><span style="text-transform:none;letter-spacing:0;font-family:var(--mm-font-sans);font-size:13px;color:var(--mm-text-muted)">Inter Tight · JetBrains Mono</span></div>
+      <a class="g-scroll" href="#glance">Scroll {{ICON:arrow-down}}</a>
+    </div>
+  </div>
+</header>
+
 <div class="g-wrap">
 <div class="g-grid">
   <aside class="g-toc" aria-label="Contents">
@@ -332,10 +392,9 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
   </aside>
 
   <main class="g-main">
-    <section class="g-hero">
-      <span class="mm-label">MuzMesh brand guideline</span>
-      <h1 class="mm-display"><span class="mm-dim">Every AI startup looks the same.</span> Yours won’t.</h1>
-      <p class="mm-lead">This is how MuzMesh looks, sounds and builds. It matches the homepage as it is built today, and every value here comes from the same token file the website imports. Use it for new pages, social posts, decks, proposals and anything else with our name on it.</p>
+    <section class="g-hero" id="glance">
+      <span class="mm-label">The brand at a glance</span>
+      <p class="mm-lead">Every value in this guideline comes from the same token file the website imports. Use it for new pages, social posts, decks, proposals and anything else with our name on it.</p>
       <div class="g-meta">
         <span class="mm-micro">Theme · Launch (dark) + Paper (light)</span>
         <span class="mm-micro">Type · Inter Tight + JetBrains Mono</span>
@@ -777,5 +836,45 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
   update();
+})();
+</script>
+
+<script>
+/* the copper light curtain from the homepage hero: a 150×56 canvas stretched to full size, so the browser's smoothing blurs it */
+(function () {
+  var cv = document.getElementById('g-curtain'); if (!cv) return;
+  var cx = cv.getContext('2d'), W = cv.width, H = cv.height, img = cx.createImageData(W, H), d = img.data;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function nz(a) { return .5 + .3 * Math.sin(a * 1.7) + .2 * Math.sin(a * 3.3 + 1.3); }
+  function sm(a, b, x) { var t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
+  var col = new Float32Array(W), top = new Float32Array(W);
+  function draw(t) {
+    var phone = innerWidth < 760;
+    for (var x = 0; x < W; x++) {
+      var u = x / W;
+      var warp = Math.sin(x * .09 + t * .2) * 2.2 + Math.sin(x * .027 - t * .09) * 3.1;
+      var p = .5 + .5 * Math.sin(x * .62 + warp + t * .3);
+      var amp = .35 + .65 * nz(x * .17 + t * .06);
+      col[x] = Math.pow(p, 2.2) * amp * (phone ? .6 : .3 + .7 * sm(.05, .75, u));
+      top[x] = .2 + .55 * nz(x * .045 + t * .07) + .2 * nz(x * .21 - t * .11);
+    }
+    for (var y = 0; y < H; y++) {
+      var v = y / (H - 1);
+      for (var x2 = 0; x2 < W; x2++) {
+        var reach = 1 - top[x2];
+        var k = Math.min(1, col[x2] * (.06 + .94 * sm(reach - .18, reach + .5, v)));
+        var i = (y * W + x2) * 4;
+        d[i] = 255 * Math.min(1, k * 1.15); d[i + 1] = 118 * Math.pow(k, 1.35); d[i + 2] = 34 * k * k; d[i + 3] = 255;
+      }
+    }
+    cx.putImageData(img, 0, 0);
+  }
+  var t0 = performance.now(), last = 0, raf = 0, visible = true;
+  function loop(now) { raf = requestAnimationFrame(loop); if (!visible || now - last < 16) return; last = now; draw(4 + (now - t0) / 1000); }
+  draw(4);
+  if (!reduce) {
+    raf = requestAnimationFrame(loop);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(cv);
+  }
 })();
 </script>
