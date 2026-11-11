@@ -83,8 +83,9 @@ const sections = [
   .nf-main{display:flex;align-items:center;padding-block:clamp(48px,8vh,96px)}
   .nf-in{width:min(1120px,100%);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,460px);gap:64px;align-items:center}
 
-  .nf-h{margin:22px 0 0;max-width:13ch}
+  .nf-h{margin:22px 0 0;max-width:none}
   .nf-h span{color:#77777c}
+  @media (min-width:901px){.nf-h span{display:block}}
   .nf-lead{margin:24px 0 0;max-width:40ch;font-size:clamp(17px,1.35vw,20px);line-height:1.5;letter-spacing:-.01em;color:var(--muted);text-wrap:pretty}
 
   .nf-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:40px}
