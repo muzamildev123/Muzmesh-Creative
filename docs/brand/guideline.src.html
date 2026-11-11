@@ -47,8 +47,9 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
 .g-card { border-radius: var(--mm-radius-lg); background: var(--mm-surface); box-shadow: var(--mm-shadow-ring); padding: 24px; display: grid; gap: 10px; align-content: start; min-width: 0; }
 .g-card p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--mm-text-muted); }
 .g-card b { font-weight: 600; color: var(--mm-text); font-size: 15.5px; }
-.g-stage { position: relative; border-radius: var(--mm-radius-lg); box-shadow: var(--mm-shadow-ring); overflow: hidden; min-width: 0; display: flex; flex-direction: column; }
+.g-stage { position: relative; border-radius: var(--mm-radius-lg); overflow: hidden; min-width: 0; display: flex; flex-direction: column; }
 .g-stage > :first-child { flex: 1; }
+.g-stage::after { content: ""; position: absolute; inset: 0; z-index: 3; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(244, 244, 241, .16); pointer-events: none; }
 .g-cap { display: flex; justify-content: space-between; gap: 12px; padding: 12px 16px; border-top: 1px solid var(--mm-hair); font-family: var(--mm-font-mono); font-size: 11px; letter-spacing: .04em; color: var(--mm-text-faint); background: var(--mm-c-black); }
 .g-cap.on-paper { background: var(--mm-c-paper-2); color: #595857; border-top-color: rgba(29, 29, 31, .12); }
 /* do / don't */
@@ -153,8 +154,8 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
 .g-radii figcaption { font-family: var(--mm-font-mono); font-size: 10.5px; color: var(--mm-text-faint); text-align: center; }
 
 /* applications */
-.g-apps { display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 16px; align-items: start; }
-@media (max-width: 1000px) { .g-apps { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.g-apps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; align-items: start; }
+@media (max-width: 1200px) { .g-apps { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
 @media (max-width: 640px) { .g-apps { grid-template-columns: minmax(0, 1fr); } }
 .g-post { aspect-ratio: 4 / 5; max-width: 100%; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 8%; background: #000; color: var(--mm-c-bone); container-type: inline-size; }
 .g-post .ttl { margin: 0; font-weight: 500; font-size: 9.5cqi; line-height: 1.04; letter-spacing: -.03em; text-wrap: balance; }
@@ -185,6 +186,111 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
 .g-doc .lb { font-family: var(--mm-font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #595857; }
 .g-doc .acc { color: var(--mm-c-signal-ink); }
 
+/* hero mosaic */
+.g-mosaic { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: 118px; gap: 12px; grid-auto-flow: dense; margin-top: 18px; }
+.g-mosaic > * { border-radius: var(--mm-radius-lg); overflow: hidden; position: relative; min-width: 0; box-shadow: var(--mm-shadow-ring); }
+.g-m-hero { grid-column: span 3; grid-row: span 3; background: #000; display: flex; flex-direction: column; justify-content: space-between; padding: 26px; }
+.g-m-hero .ttl { position: relative; margin: 0; font-size: clamp(26px, 3vw, 44px); font-weight: 500; letter-spacing: -.03em; line-height: 1.04; }
+.g-m-hero .ttl span { color: var(--mm-text-faint); display: block; }
+.g-m-photo { grid-column: span 2; grid-row: span 2; }
+.g-m-photo img, .g-m-photo2 img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.g-m-av { grid-column: span 1; grid-row: span 1; background: #000; display: grid; place-items: center; }
+.g-m-av img { width: 72%; height: auto; }
+.g-m-or { grid-column: span 1; grid-row: span 1; background: var(--mm-c-signal); color: var(--mm-c-on-accent); display: flex; flex-direction: column; justify-content: space-between; padding: 14px; font-family: var(--mm-font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; }
+.g-m-or b { font-family: var(--mm-font-sans); font-size: 26px; letter-spacing: -.04em; text-transform: none; font-weight: 600; }
+.g-m-icons { grid-column: span 2; grid-row: span 1; background: var(--mm-surface); display: grid; grid-template-columns: repeat(5, 1fr); place-items: center; padding: 10px; color: var(--mm-text); }
+.g-m-icons svg { width: 22px; height: 22px; }
+.g-m-icons svg:nth-child(3) { color: var(--mm-accent); }
+.g-m-paper { grid-column: span 1; grid-row: span 2; background: #f3f0e8; color: #1d1d1f; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; }
+.g-m-paper b { font-size: 34px; font-weight: 600; letter-spacing: -.045em; line-height: 1; }
+.g-m-paper span { font-family: var(--mm-font-mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: #595857; }
+.g-m-log { grid-column: span 4; grid-row: span 1; padding: 16px 18px; display: grid; align-content: center; gap: 8px; font-size: 13px; color: rgba(244, 244, 241, .82); }
+.g-m-log div { display: flex; align-items: center; gap: 10px; }
+.g-m-log svg { color: var(--mm-text); }
+.g-m-log div:last-child { color: var(--mm-text); }
+.g-m-log div:last-child i { width: 8px; height: 8px; background: var(--mm-accent); margin: 0 4px; }
+.g-m-photo2 { grid-column: span 1; grid-row: span 1; }
+@media (max-width: 900px) {
+  .g-mosaic { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 96px; }
+  .g-m-hero { grid-column: span 4; grid-row: span 3; }
+  .g-m-photo { grid-column: span 2; grid-row: span 2; }
+  .g-m-icons { grid-column: span 2; } .g-m-log { grid-column: span 4; }
+}
+@media (max-width: 520px) { .g-mosaic { grid-template-columns: repeat(2, minmax(0, 1fr)); } .g-m-hero, .g-m-photo, .g-m-log, .g-m-icons { grid-column: span 2; } .g-m-photo2 { display: none; } }
+
+/* logo misuse */
+.g-misuse { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 760px) { .g-misuse { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.g-misuse figure { margin: 0; display: grid; gap: 8px; }
+.g-misuse .t { position: relative; height: 110px; border-radius: 12px; display: grid; place-items: center; overflow: hidden; box-shadow: var(--mm-shadow-ring); background: #000; }
+.g-misuse .t::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top right, transparent calc(50% - 1px), rgba(255, 122, 89, .9) 50%, transparent calc(50% + 1px)); }
+.g-misuse figcaption { font-size: 12.5px; color: var(--mm-text-muted); }
+.g-misuse .wm { font-weight: 700; font-size: 26px; letter-spacing: -.015em; }
+
+/* iconography */
+.g-icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 0; border-radius: var(--mm-radius-lg); box-shadow: var(--mm-shadow-ring); overflow: hidden; }
+.g-ico { margin: 0; display: grid; justify-items: center; gap: 12px; padding: 22px 8px 16px; box-shadow: inset -1px -1px 0 var(--mm-hair); color: var(--mm-text); transition: color var(--mm-dur-base), background var(--mm-dur-base); }
+.g-ico:hover { color: var(--mm-accent); background: var(--mm-surface); }
+.g-ico figcaption { font-family: var(--mm-font-mono); font-size: 10.5px; color: var(--mm-text-faint); text-align: center; }
+.g-build { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 16px; }
+@media (max-width: 800px) { .g-build { grid-template-columns: minmax(0, 1fr); } }
+.g-keyline { position: relative; aspect-ratio: 1; width: 100%; max-width: 300px; margin: 0 auto; background-color: var(--mm-surface);
+  background-image: linear-gradient(rgba(244, 244, 241, .07) 1px, transparent 1px), linear-gradient(90deg, rgba(244, 244, 241, .07) 1px, transparent 1px); background-size: calc(100% / 16) calc(100% / 16); }
+.g-keyline::before { content: ""; position: absolute; inset: 12.5%; outline: 1px dashed rgba(242, 88, 15, .55); }
+.g-keyline svg { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--mm-text); }
+.g-keyline span { position: absolute; font-family: var(--mm-font-mono); font-size: 10px; color: var(--mm-c-signal); }
+.g-specs { display: grid; gap: 0; }
+.g-specs div { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--mm-hair); font-size: 14px; color: var(--mm-text-muted); }
+.g-specs div b { color: var(--mm-text); font-weight: 500; }
+.g-sizes2 { display: flex; align-items: end; gap: 28px; flex-wrap: wrap; padding-top: 18px; }
+.g-sizes2 figure { margin: 0; display: grid; gap: 8px; justify-items: center; color: var(--mm-text); }
+.g-sizes2 span svg { width: 100%; height: 100%; }
+.g-sizes2 figcaption { font-family: var(--mm-font-mono); font-size: 10px; color: var(--mm-text-faint); }
+.g-inctx { display: grid; gap: 10px; }
+.g-inctx li { display: flex; align-items: center; gap: 12px; font-size: 15px; }
+.g-inctx li svg { color: var(--mm-accent); flex: none; }
+.g-bad-ico { display: flex; gap: 18px; align-items: center; font-size: 30px; line-height: 1; }
+.g-bad-ico i { font-style: normal; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; }
+
+/* imagery */
+.g-img3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 900px) { .g-img3 { grid-template-columns: minmax(0, 1fr); } }
+.g-photo { position: relative; aspect-ratio: 4 / 5; overflow: hidden; }
+.g-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.g-photo::before { content: ""; position: absolute; inset: 50% 0 0; z-index: 1; background: linear-gradient(transparent, rgba(0, 0, 0, .78)); }
+.g-photo .tag { position: absolute; left: 14px; bottom: 14px; z-index: 2; }
+.g-photo .tag.mm-label { color: #f4f4f1; text-shadow: 0 0 10px #000; }
+.g-ba { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 700px) { .g-ba { grid-template-columns: minmax(0, 1fr); } }
+.g-ba figure { margin: 0; display: grid; gap: 8px; }
+.g-ba img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 12px; display: block; }
+.g-ba figcaption { font-size: 13px; color: var(--mm-text-muted); }
+.g-ba figcaption b { color: var(--mm-text); font-weight: 500; display: block; }
+.g-work { padding: 34px; background: #000; display: grid; place-items: center; }
+.g-mini { width: 100%; aspect-ratio: 960 / 560; background: #f2eee5; color: #15332a; position: relative; container-type: inline-size; overflow: hidden; }
+.g-mini .n { display: flex; justify-content: space-between; align-items: center; padding: 3cqi 4.5cqi; font-size: 2.2cqi; }
+.g-mini .n b { font-size: 2.8cqi; font-weight: 600; letter-spacing: -.02em; }
+.g-mini .n i { font-style: normal; background: #15332a; color: #f2eee5; padding: .8cqi 1.8cqi; border-radius: 1cqi; }
+.g-mini .h { display: grid; grid-template-columns: 1.1fr 1fr; gap: 4cqi; padding: 3cqi 4.5cqi; align-items: center; }
+.g-mini h6 { margin: 0; font-size: 5.8cqi; font-weight: 500; line-height: 1; letter-spacing: -.035em; }
+.g-mini h6 em { font-style: normal; color: #3d7a5c; }
+.g-mini p { margin: 2cqi 0 0; font-size: 1.8cqi; line-height: 1.5; opacity: .7; }
+.g-mini .card { background: #fffdf8; border-radius: 2cqi; padding: 2.5cqi; display: grid; gap: 1.4cqi; box-shadow: 0 0 0 1px #e2dac8; font-size: 1.7cqi; }
+.g-mini .card div { display: flex; justify-content: space-between; border-bottom: 1px solid #ebe4d4; padding-bottom: 1.2cqi; }
+.g-mini .card span { font-family: var(--mm-font-mono); opacity: .6; }
+.g-slop { width: 100%; aspect-ratio: 960 / 560; background: radial-gradient(60% 70% at 50% 0%, rgba(139, 92, 246, .55), transparent 70%), linear-gradient(160deg, #120a2e, #1e1048 55%, #0c1638); color: #fff; display: grid; place-items: center; text-align: center; font-family: system-ui, sans-serif; container-type: inline-size; position: relative; }
+.g-slop b { display: block; font-size: 5cqi; font-weight: 800; letter-spacing: -.02em; background: linear-gradient(180deg, #fff 30%, #c4b5fd); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.g-slop span { display: inline-block; margin-top: 2cqi; padding: 1.2cqi 3cqi; border-radius: 99px; font-size: 1.8cqi; font-weight: 600; background: linear-gradient(135deg, #8b5cf6, #3b82f6); box-shadow: 0 0 24px rgba(139, 92, 246, .6); }
+.g-slop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top right, transparent calc(50% - 1px), rgba(255, 122, 89, .9) 50%, transparent calc(50% + 1px)); }
+.g-tex { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 700px) { .g-tex { grid-template-columns: minmax(0, 1fr); } }
+.g-tex > div { height: 150px; border-radius: 12px; position: relative; overflow: hidden; background: #000; box-shadow: var(--mm-shadow-ring); }
+.g-tex span { position: absolute; left: 12px; bottom: 10px; }
+.g-grain { position: absolute; inset: 0; opacity: .09; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.g-casepost img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.g-casepost::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(0,0,0,.2), rgba(0,0,0,.1) 40%, rgba(0,0,0,.85)); }
+.g-casepost > :not(img) { position: relative; z-index: 2; }
+
 /* changelog */
 .g-log2 { display: grid; gap: 0; border-radius: var(--mm-radius-lg); box-shadow: var(--mm-shadow-ring); overflow: hidden; }
 .g-log2 > div { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 18px; padding: 16px 20px; border-bottom: 1px solid var(--mm-hair); font-size: 14px; line-height: 1.5; color: var(--mm-text-muted); }
@@ -213,14 +319,16 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     <a href="#logo"><span>02</span>Logo</a>
     <a href="#colour"><span>03</span>Colour</a>
     <a href="#type"><span>04</span>Type</a>
-    <a href="#elements"><span>05</span>Signature elements</a>
-    <a href="#components"><span>06</span>Components</a>
-    <a href="#layout"><span>07</span>Layout and space</a>
-    <a href="#motion"><span>08</span>Motion</a>
-    <a href="#voice"><span>09</span>Voice and copy</a>
-    <a href="#apply"><span>10</span>Applying it</a>
-    <a href="#tokens"><span>11</span>Tokens and files</a>
-    <a href="#audit"><span>12</span>Audit and open items</a>
+    <a href="#icons"><span>05</span>Iconography</a>
+    <a href="#imagery"><span>06</span>Imagery</a>
+    <a href="#elements"><span>07</span>Signature elements</a>
+    <a href="#components"><span>08</span>Components</a>
+    <a href="#layout"><span>09</span>Layout and space</a>
+    <a href="#motion"><span>10</span>Motion</a>
+    <a href="#voice"><span>11</span>Voice and copy</a>
+    <a href="#apply"><span>12</span>Applying it</a>
+    <a href="#tokens"><span>13</span>Tokens and files</a>
+    <a href="#audit"><span>14</span>Audit and open items</a>
   </aside>
 
   <main class="g-main">
@@ -233,6 +341,16 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
         <span class="mm-micro">Type · Inter Tight + JetBrains Mono</span>
         <span class="mm-micro">Accent · Signal orange #F2580F</span>
         <span class="mm-micro">Replaces · v1 (yellow, Archivo)</span>
+      </div>
+      <div class="g-mosaic" aria-label="The brand at a glance">
+        <div class="g-m-hero"><div class="g-curtain" aria-hidden="true" style="height:75%"></div><span class="mm-label" style="position:relative">Every AI founder starts here.</span><p class="ttl"><span>You have the idea.</span>We design the launch.</p><span style="position:relative;display:flex;gap:10px;flex-wrap:wrap"><span class="mm-btn is-primary is-sm" style="height:38px">Plan my launch {{ICON:arrow-right}}</span><span class="mm-btn is-ghost is-sm" style="height:38px">See what’s included</span></span></div>
+        <div class="g-m-photo"><img src="{{IMG_PEOPLE_MONO}}" alt="A founder working at a desk, black-and-bone duotone"></div>
+        <div class="g-m-av"><img src="{{AVATAR}}" alt="muzmesh avatar"></div>
+        <div class="g-m-paper"><span>Setup, one time</span><b>$500</b><span>Then $200 / mo</span></div>
+        <div class="g-m-or"><span>Launch pass</span><b>5 days</b></div>
+        <div class="g-m-icons" aria-hidden="true">{{ICON:pen}}{{ICON:window}}{{ICON:ticket}}{{ICON:video}}{{ICON:chart}}</div>
+        <div class="g-m-log mm-dots"><div>{{ICON:check}}Generating your brand</div><div>{{ICON:check}}Designing the landing page</div><div><i></i>You’re live</div></div>
+        <div class="g-m-photo2"><img src="{{IMG_HANDS_MONO}}" alt="A hand writing in a notebook, duotone"></div>
       </div>
     </section>
 
@@ -286,6 +404,12 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
           <li>Capitalise it in the logo. In running text, write <b>MuzMesh</b>.</li>
           <li>Stretch, rotate or re-track it, or set it smaller than 72px wide.</li>
         </ul></div>
+      </div>
+      <div class="g-misuse">
+        <figure><div class="t"><span class="wm" style="color:#f2580f">muzmesh</span></div><figcaption>Not in orange</figcaption></figure>
+        <figure><div class="t"><span class="wm" style="background:linear-gradient(90deg,#8b5cf6,#3b82f6);-webkit-background-clip:text;background-clip:text;color:transparent">muzmesh</span></div><figcaption>No gradients or glows</figcaption></figure>
+        <figure><div class="t"><span class="wm" style="color:#f4f4f1">✦ muzmesh</span></div><figcaption>No sparkle or AI symbol</figcaption></figure>
+        <figure><div class="t"><span class="wm" style="color:#f4f4f1;transform:scaleX(1.4);letter-spacing:.08em">muzmesh</span></div><figcaption>No stretching or re-tracking</figcaption></figure>
       </div>
       <p class="g-p"><b>Status:</b> this wordmark is the working logo until a custom-drawn mark is commissioned. The files are named so a future logo can replace them without touching any page.</p>
     </section>
@@ -356,9 +480,89 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     </section>
 
     <!-- 05 -->
+    <section class="g-ch" id="icons">
+      <header>
+        <span class="mm-label">05 · Iconography</span>
+        <h2 class="mm-h2"><span class="mm-dim">Thin lines,</span> drawn on one grid.</h2>
+        <p class="mm-lead">Icons are quiet line drawings that match Inter Tight’s stroke. They label and point; they never decorate. The set covers what our pages and posts need today, and new icons follow the same grid.</p>
+      </header>
+      <div class="g-icons">{{ICON_GRID}}</div>
+      <div class="g-build">
+        <div class="g-stage" style="padding:22px"><div class="g-keyline" role="img" aria-label="The ticket icon on a 16 by 16 grid with a 2px safe area"><svg viewBox="0 0 16 16" fill="none" stroke-linecap="round" stroke-linejoin="round"><g stroke="currentColor" stroke-width="1.6" opacity=".22"><path d="M2.5 4.5h11v2.2a1.3 1.3 0 0 0 0 2.6v2.2h-11V9.3a1.3 1.3 0 0 0 0-2.6z"/><path d="M9.5 5v1.2M9.5 7.4v1.2M9.5 9.8V11"/></g><g stroke="currentColor" stroke-width=".07"><path d="M2.5 4.5h11v2.2a1.3 1.3 0 0 0 0 2.6v2.2h-11V9.3a1.3 1.3 0 0 0 0-2.6z"/><path d="M9.5 5v1.2M9.5 7.4v1.2M9.5 9.8V11"/></g><g fill="#F2580F"><circle cx="2.5" cy="4.5" r=".22"/><circle cx="13.5" cy="4.5" r=".22"/><circle cx="2.5" cy="11.5" r=".22"/><circle cx="13.5" cy="11.5" r=".22"/></g></svg><span style="left:4px;top:4px">16</span><span style="left:14%;top:14%">2px safe area</span><span style="right:6px;bottom:6px">stroke 1.6 · round</span></div></div>
+        <div class="g-card" style="gap:0">
+          <div class="g-specs">
+            <div><b>Grid</b><span>16 × 16, 2px safe area. Draw inside 12 × 12.</span></div>
+            <div><b>Stroke</b><span>1.6 at 16 and 20px, 1.4 at 24px and up. Round caps and joins. No fills.</span></div>
+            <div><b>Colour</b><span><code>currentColor</code>: icons take the text colour. Orange only when the icon is the signal (a check in a kit list).</span></div>
+            <div><b>Sizes</b><span>16 in buttons and lists, 20 in nav and cards, 24 for feature rows. Never above 32.</span></div>
+            <div><b>Files</b><span><code>docs/brand/icons/*.svg</code> and <code>&lt;Icon name="…" /&gt;</code> in Astro.</span></div>
+          </div>
+          <div class="g-sizes2">
+            <figure>{{ICON:layers}}<figcaption>16</figcaption></figure>
+            <figure><span style="display:block;width:20px;height:20px">{{ICON:layers}}</span><figcaption>20</figcaption></figure>
+            <figure><span style="display:block;width:24px;height:24px">{{ICON:layers}}</span><figcaption>24</figcaption></figure>
+            <figure><span style="display:block;width:32px;height:32px">{{ICON:layers}}</span><figcaption>32 max</figcaption></figure>
+          </div>
+        </div>
+      </div>
+      <div class="g-cols-2">
+        <div class="g-stage"><div class="g-demo col" style="align-items:flex-start;gap:16px"><span class="mm-label is-quiet">In your kit</span><ul class="g-inctx" style="list-style:none;margin:0;padding:0">
+          <li>{{ICON:check}}Logo and brand guidelines</li><li>{{ICON:check}}Landing page you can edit</li><li>{{ICON:check}}Social post kit and intro video</li></ul>
+          <span style="display:flex;gap:10px;flex-wrap:wrap"><span class="mm-btn is-primary is-sm">Plan my launch {{ICON:arrow-right}}</span><span class="mm-btn is-ghost is-sm">Read the case study {{ICON:arrow-up-right}}</span></span></div><div class="g-cap"><span>Icons in context</span><span>check · arrow-right · arrow-up-right</span></div></div>
+        <div class="g-stage"><div class="g-demo col" style="gap:20px"><div class="g-bad-ico" aria-hidden="true"><i style="background:linear-gradient(135deg,#8b5cf6,#3b82f6)">✨</i><i style="background:#1b1b20">🚀</i><i style="background:#1b1b20;color:#c4b5fd">✦</i><i style="background:linear-gradient(135deg,#f472b6,#fb923c);border-radius:50%">🧠</i></div><p class="g-p" style="font-size:14.5px">No emoji, sparkles, rockets, brains, robots, filled 3D icons or icons in gradient bubbles. They are the visual shorthand of the AI-made sites we sell against.</p></div><div class="g-cap"><span>Don’t</span><span>emoji · sparkle · gradient tiles</span></div></div>
+      </div>
+    </section>
+
+    <!-- 06 -->
+    <section class="g-ch" id="imagery">
+      <header>
+        <span class="mm-label">06 · Imagery</span>
+        <h2 class="mm-h2"><span class="mm-dim">Real work.</span> Real people.</h2>
+        <p class="mm-lead">Our pictures prove a person made this. We show three things: the finished work, the people and hands behind it, and the quiet textures of the homepage. Nothing generated, nothing staged to look techy.</p>
+      </header>
+      <h3>1 · The work</h3>
+      <div class="g-cols-2">
+        <div class="g-stage"><div class="g-work"><div class="mm-window" style="width:100%"><div class="mm-window-bar"><i></i><i></i><i></i></div><div class="g-mini"><div class="n"><b>MediScribe</b><span>How it works · Pricing</span><i>Book a demo</i></div><div class="h"><div><h6>Look at your <em>patient</em>, not your screen.</h6><p>Notes that write themselves while you talk, signed off in one tap.</p></div><div class="card"><div><b>Visit note</b><span>09:42</span></div><div><span>S</span>Cough for 3 days</div><div><span>A</span>Viral URI</div><span>Signed · Dr. Amin</span></div></div></div></div></div><div class="g-cap"><span>Do · client work, framed in a window, in their own brand</span><span>.mm-window</span></div></div>
+        <div class="g-stage"><div class="g-work"><div class="mm-window" style="width:100%"><div class="mm-window-bar"><i></i><i></i><i></i></div><div class="g-slop"><div><b>✦ The Future of AI Notes</b><span>Get Started Free</span></div></div></div></div><div class="g-cap"><span>Don’t · generic “AI startup” mockups as our work</span><span>purple glow, sparkle</span></div></div>
+      </div>
+      <p class="g-p">Show work at real size inside <code>.mm-window</code>, with a real URL in the bar. Crop to the hero and one proof block. Client fonts and colours stay inside the frame; everything around it stays MuzMesh.</p>
+      <h3>2 · People and hands</h3>
+      <div class="g-img3">
+        <div class="g-stage g-photo"><img src="{{IMG_PEOPLE_MONO}}" alt="A founder working at a laptop, duotone"><span class="tag mm-label">Duotone · on black</span></div>
+        <div class="g-stage g-photo"><img src="{{IMG_HANDS}}" alt="A hand writing in a notebook by a window, natural colour"><span class="tag mm-label">Natural · 72% colour</span></div>
+        <div class="g-stage g-photo"><img src="{{IMG_DESK_MONO}}" alt="Hands writing at a wooden desk, duotone"><span class="tag mm-label">Detail · hands at work</span></div>
+      </div>
+      <div class="g-ba">
+        <figure><img src="{{IMG_DESK}}" alt="Desk photo in natural colour"><figcaption><b>Natural grade</b>Saturation down to about 72%, no filters, warm window light. For case studies and the founder’s own photos.</figcaption></figure>
+        <figure><img src="{{IMG_DESK_MONO}}" alt="Desk photo in black-and-bone duotone"><figcaption><b>Duotone grade</b>Black #0A0A0C to bone #F4F4F1. For photos placed on black, behind text or beside orange.</figcaption></figure>
+        <figure><div class="g-stage" style="aspect-ratio:1;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#2b1055,#7597de);text-align:center;padding:14px;position:relative"><span style="font-size:13px;color:#fff;font-family:system-ui">AI render · robot hand · glowing brain</span><span style="position:absolute;inset:0;background:linear-gradient(to top right,transparent calc(50% - 1px),rgba(255,122,89,.9) 50%,transparent calc(50% + 1px))"></span></div><figcaption><b>Never</b>AI-generated images, robots, glowing brains, circuit boards, handshake stock, 3D blobs or neon gradients.</figcaption></figure>
+      </div>
+      <h3>3 · Texture</h3>
+      <div class="g-tex">
+        <div class="mm-dots"><span class="mm-label is-quiet">Dotted workbench · 24px</span></div>
+        <div><div class="g-curtain" style="height:100%"></div><span class="mm-label is-quiet">Copper light curtain · hero only</span></div>
+        <div style="background:#141418"><div class="g-grain"></div><span class="mm-label is-quiet">Grain · 5% on full-bleed dark</span></div>
+      </div>
+      <div class="g-dd">
+        <div class="g-do"><h4>Do</h4><ul>
+          <li>Photograph real work sessions, sketches, Figma files and the people doing them.</li>
+          <li>Crop tight on hands and faces; leave dark space for type on the side.</li>
+          <li>Use one grade per layout: all natural or all duotone.</li>
+          <li>Credit stock photos in <code>docs/brand/imagery/SOURCES.md</code> and swap them for our own when we have them.</li>
+        </ul></div>
+        <div class="g-dont"><h4>Don’t</h4><ul>
+          <li>Put text over busy parts of a photo, or over a photo without the dark gradient.</li>
+          <li>Tint photos orange. Orange stays for signals.</li>
+          <li>Use device mockups with fake UI or invented client logos.</li>
+          <li>Use illustrations of people, mascots or abstract 3D shapes.</li>
+        </ul></div>
+      </div>
+    </section>
+
+    <!-- 07 -->
     <section class="g-ch" id="elements">
       <header>
-        <span class="mm-label">05 · Signature elements</span>
+        <span class="mm-label">07 · Signature elements</span>
         <h2 class="mm-h2"><span class="mm-dim">Small things,</span> used every time.</h2>
         <p class="mm-lead">These are what make a page look like MuzMesh with the logo covered. Each one has a job; none is decoration.</p>
       </header>
@@ -385,11 +589,11 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     <!-- 06 -->
     <section class="g-ch" id="components">
       <header>
-        <span class="mm-label">06 · Components</span>
+        <span class="mm-label">08 · Components</span>
         <h2 class="mm-h2"><span class="mm-dim">The parts</span> new pages are built from.</h2>
         <p class="mm-lead">Every example below is the real <code>brand.css</code> class the website ships. On the site, add <code>class="mm"</code> to a wrapper and use these directly.</p>
       </header>
-      <div class="g-stage"><div class="g-demo"><button class="mm-btn is-primary" type="button">Plan my launch <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button><button class="mm-btn is-ghost" type="button">See what’s included</button><button class="mm-btn is-solid is-sm" type="button">Plan my launch</button><button class="mm-btn is-primary" type="button" disabled>Build my idea</button><a class="mm-link" href="#components">hello@muzmeshcreative.com</a></div><div class="g-cap"><span>.mm-btn.is-primary · .is-ghost · .is-solid.is-sm · disabled · .mm-link</span><span>52px / 34px pills</span></div></div>
+      <div class="g-stage"><div class="g-demo"><button class="mm-btn is-primary" type="button">Plan my launch {{ICON:arrow-right}}</button><button class="mm-btn is-ghost" type="button">See what’s included</button><button class="mm-btn is-solid is-sm" type="button">Plan my launch</button><button class="mm-btn is-primary" type="button" disabled>Build my idea</button><a class="mm-link" href="#components">hello@muzmeshcreative.com</a></div><div class="g-cap"><span>.mm-btn.is-primary · .is-ghost · .is-solid.is-sm · disabled · .mm-link</span><span>52px / 34px pills</span></div></div>
       <div class="g-cols-2">
         <div class="g-stage"><div class="g-demo"><button class="mm-chip" type="button">AI note-taker for doctors</button><button class="mm-chip" type="button" aria-pressed="true">ChatGPT for lawyers</button><button class="mm-chip" type="button">AI copilot for sales teams</button></div><div class="g-cap"><span>.mm-chip · pressed</span><span>30px</span></div></div>
         <div class="g-stage"><div class="g-demo col"><label class="mm-micro" for="g-in1">Work email</label><input class="mm-input" id="g-in1" placeholder="you@startup.ai"><input class="mm-input" id="g-in2" value="founder@" aria-invalid="true" aria-describedby="g-err"><span class="mm-error" id="g-err">Add the rest of your email so we can send the plan.</span></div><div class="g-cap"><span>.mm-input · invalid · .mm-error</span><span>focus = orange ring</span></div></div>
@@ -404,7 +608,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     <!-- 07 -->
     <section class="g-ch" id="layout">
       <header>
-        <span class="mm-label">07 · Layout and space</span>
+        <span class="mm-label">09 · Layout and space</span>
         <h2 class="mm-h2"><span class="mm-dim">Wide frame,</span> narrow content.</h2>
         <p class="mm-lead">The nav runs to a 1640px frame; section content stops at 1120px. Sections breathe: 96 to 160px above, 96 to 140px below, with a hairline between them.</p>
       </header>
@@ -419,7 +623,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     <!-- 08 -->
     <section class="g-ch" id="motion">
       <header>
-        <span class="mm-label">08 · Motion</span>
+        <span class="mm-label">10 · Motion</span>
         <h2 class="mm-h2"><span class="mm-dim">One story,</span> scrubbed by scroll.</h2>
         <p class="mm-lead">The homepage is a single timeline you scroll through: build, launch, get lost, get found. Everything else moves quietly.</p>
       </header>
@@ -441,7 +645,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     <!-- 09 -->
     <section class="g-ch" id="voice">
       <header>
-        <span class="mm-label">09 · Voice and copy</span>
+        <span class="mm-label">11 · Voice and copy</span>
         <h2 class="mm-h2"><span class="mm-dim">Say it plainly.</span> Then stop.</h2>
         <p class="mm-lead">We write like a founder talking to a founder: short sentences, real numbers, no hype. The reader should finish a section knowing exactly what they get and what it costs.</p>
       </header>
@@ -469,12 +673,13 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     <!-- 10 -->
     <section class="g-ch" id="apply">
       <header>
-        <span class="mm-label">10 · Applying it</span>
+        <span class="mm-label">12 · Applying it</span>
         <h2 class="mm-h2"><span class="mm-dim">Same rules,</span> every surface.</h2>
         <p class="mm-lead">Starting points for the things we make most. Social posts are 1080×1350, link previews 1200×630, documents A4 or Letter in the Paper theme.</p>
       </header>
       <div class="g-apps">
         <div class="g-stage"><div class="g-post"><span class="mm-label">Launch notes</span><p class="ttl"><span>Your AI startup looks like the last 40 you saw.</span>Here’s how to fix it in five days.</p><div class="ft"><img src="{{WORDMARK_LIGHT}}" alt="muzmesh"><span class="mm-label is-quiet">1 / 6</span></div></div><div class="g-cap"><span>Social · Launch</span><span>1080×1350</span></div></div>
+        <div class="g-stage"><div class="g-post g-casepost"><img src="{{IMG_PEOPLE_MONO}}" alt=""><span class="mm-label">Case study</span><p class="ttl"><span>LexGPT, before and after.</span>Five days, one person, no prompts.</p><div class="ft"><img src="{{WORDMARK_LIGHT}}" alt="muzmesh"><span class="mm-label is-quiet">Swipe {{ICON:arrow-right}}</span></div></div><div class="g-cap"><span>Social · Photo + duotone</span><span>1080×1350</span></div></div>
         <div class="g-stage"><div class="g-post paper"><span class="mm-label">Before / after</span><p class="ttl"><span>Generated in a minute.</span>Designed in five days.</p><div class="ft"><img src="{{WORDMARK}}" alt="muzmesh"><span class="mm-label is-quiet" style="color:#686764">bookly</span></div></div><div class="g-cap on-paper"><span>Social · Paper</span><span>1080×1350</span></div></div>
         <div class="g-stage"><div class="g-doc"><div class="top"><img src="{{WORDMARK}}" alt="muzmesh"><span class="lb">Proposal · Nov 2026</span></div><span class="lb">Prepared for Bookly</span><h5>Your launch kit, live in five business days.</h5><table><tr><td>Logo and brand guidelines</td><td>Day 1</td></tr><tr><td>Landing page and editable site</td><td>Day 2</td></tr><tr><td>Social kit and intro video</td><td>Day 3</td></tr><tr><td>Analytics, CRM and waitlist</td><td>Day 4</td></tr></table><div class="tot"><span class="lb">Setup, one time</span><b>$500</b></div><span class="acc" style="font-size:12.5px">Then $200 a month, from the month after launch.</span></div><div class="g-cap on-paper"><span>Proposal / invoice · Paper</span><span>A4</span></div></div>
       </div>
@@ -493,7 +698,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     <!-- 11 -->
     <section class="g-ch" id="tokens">
       <header>
-        <span class="mm-label">11 · Tokens and files</span>
+        <span class="mm-label">13 · Tokens and files</span>
         <h2 class="mm-h2"><span class="mm-dim">One source,</span> four outputs.</h2>
         <p class="mm-lead">Every value on this page is generated from <code>docs/brand/build-tokens.mjs</code>. Change it there, run the script, and the JSON, the CSS, the Tailwind theme and this guideline update together.</p>
       </header>
@@ -503,6 +708,8 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
         <tr><td><code>docs/brand/muzmesh-tokens.json</code></td><td>W3C design-tokens JSON for Figma (Tokens Studio) and other tools.</td></tr>
         <tr><td><code>docs/brand/tailwind-theme.css</code></td><td>Tailwind v4 theme: <code>bg-mm-bg</code>, <code>text-mm-muted</code>, <code>bg-mm-accent</code> …</td></tr>
         <tr><td><code>docs/brand/*.svg</code></td><td>Wordmark (ink, light), avatar, favicon.</td></tr>
+        <tr><td><code>docs/brand/icons/*.svg</code>, <code>web/src/components/Icon.astro</code></td><td>The icon set, generated from the same script.</td></tr>
+        <tr><td><code>docs/brand/imagery/</code></td><td>Example photos in both grades, with credits in SOURCES.md.</td></tr>
         <tr><td><code>docs/brand/archive/v1/</code></td><td>The retired yellow and Archivo kit, kept for reference.</td></tr>
       </tbody></table></div>
       <h3>In a new Astro page</h3>
@@ -519,7 +726,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     <!-- 12 -->
     <section class="g-ch" id="audit">
       <header>
-        <span class="mm-label">12 · Audit and open items</span>
+        <span class="mm-label">14 · Audit and open items</span>
         <h2 class="mm-h2"><span class="mm-dim">What we checked,</span> what we changed.</h2>
         <p class="mm-lead">The guideline was audited against the homepage stylesheet (<code>web/src/styles/home.css</code>) and the rest of the site. These are the gaps found, how they were settled, and what still needs a decision.</p>
       </header>
@@ -532,7 +739,9 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
         <div><span class="g-tag fix">Fixed</span><span><b>One-off colours.</b> Footer grey, the dim headline grey and the form error colours now have names (stone, ash, danger) instead of loose hex values.</span></div>
         <div><span class="g-tag fix">Fixed</span><span><b>Dots vs squares.</b> Rule written down: a square marks a label or list item, a circle marks something live or a position.</span></div>
         <div><span class="g-tag fix">Fixed</span><span><b>Retired v1.</b> Yellow #FFD60A, Archivo and the paper-first layout are archived. The four hero test palettes (Oxblood, Teal, Magenta, Green) were explorations for an earlier hero and are not part of the brand.</span></div>
+        <div><span class="g-tag fix">Added</span><span><b>Iconography and imagery.</b> v2 first shipped without them. There is now a 28-icon set on one grid, a photo grade (natural and duotone), texture rules and visual do/don’t examples.</span></div>
         <div><span class="g-tag">Follow-up</span><span><b>Point home.css at the tokens.</b> Once the homepage PR is merged, its local <code>--y</code>, <code>--fg</code> and <code>--raise</code> variables can read from tokens.css. Values already match, apart from the hover and faint fixes above.</span></div>
+        <div><span class="g-tag open">Open</span><span><b>Our own photos.</b> The example photos are stock (credited). Shoot a few real work sessions to replace them.</span></div>
         <div><span class="g-tag open">Open</span><span><b>Custom logo.</b> The outlined wordmark and “m.” avatar are the working logo. Commission a drawn mark later, or keep this one.</span></div>
         <div><span class="g-tag open">Open</span><span><b>“Designed by people” or “human-led, AI-assisted”.</b> The homepage says the first. Pick one and use it everywhere.</span></div>
       </div>
