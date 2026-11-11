@@ -615,19 +615,19 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   .kcue{display:none}
 }
 
-/* ---------- part six: the price, as a receipt ----------
-   Still pinned. The kit folds into a receipt printer, the pricing words arrive, and the receipt prints with the scroll: the
-   header first, every deliverable from the kit, the $500 total, the monthly line, then the torn edge. On a short screen the
-   whole layer pans up while it prints, so the print line stays in view. */
+/* ---------- part six: the price, as a launch pass ----------
+   Still pinned. The kit folds into a ticket from Idea to Live, the pricing words arrive, and with the scroll the dot flies
+   the route, the kit is ticked off, the $500 fare lands, and the monthly stub tears away. On a short screen the whole layer
+   pans up as it goes, so the part that's moving stays in view. */
 .prc{position:absolute;inset:0;pointer-events:none;visibility:hidden;overflow:hidden}
 .hero.pon .prc{visibility:visible}
 .prc::before{content:"";position:absolute;z-index:2;left:0;right:0;top:0;height:108px;background:linear-gradient(#000 74px,rgba(0,0,0,0));pointer-events:none}
 .hero.plive .pbtns{pointer-events:auto}
 .hero.kitgone .kit,.hero.kitgone .ywin{visibility:hidden}
 .prin{position:absolute;left:0;right:0;top:0;min-height:100%;display:grid;align-content:center;padding-top:92px;padding-bottom:28px}
-.prc .peye,.prc .ph span,.prc .pp,.prc .pbtns,.prc .pnotes,.prc .rc{opacity:0}
-.hero.pon:not(.pset) .prc .peye,.hero.pon:not(.pset) .prc .ph span,.hero.pon:not(.pset) .prc .pp,.hero.pon:not(.pset) .prc .pbtns,.hero.pon:not(.pset) .prc .pnotes,.hero.pon:not(.pset) .prc .rc,.hero.pon:not(.pset) .rcov,.hero.pon:not(.pset) .prin{will-change:transform,opacity}
-.pwrap{width:min(1120px,100%);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:clamp(48px,7vw,110px);align-items:center}
+.prc .peye,.prc .ph span,.prc .pp,.prc .pbtns,.prc .pnotes{opacity:0}
+.hero.pon:not(.pset) .prc .peye,.hero.pon:not(.pset) .prc .ph span,.hero.pon:not(.pset) .prc .pp,.hero.pon:not(.pset) .prc .pbtns,.hero.pon:not(.pset) .prc .pnotes,.hero.pon:not(.pset) .prin{will-change:transform,opacity}
+.pwrap{width:min(1120px,100%);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:clamp(48px,7vw,110px);align-items:center}
 .ptext{display:grid;justify-items:start;align-self:center}
 .peye{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
 .ph{margin:16px 0 0;font-weight:500;font-size:clamp(34px,3.7vw,56px);line-height:1.04;letter-spacing:-.03em}
@@ -639,47 +639,66 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 .pnotes li{display:grid;grid-template-columns:132px minmax(0,1fr);gap:16px;font-size:14.5px;line-height:1.5;color:var(--muted)}
 .pnotes b{font-weight:500;color:var(--fg)}
 
-/* the printer and its paper */
-.rc{position:relative;--paper:#f3f0e8;--ink:#1d1d1f}
-.rslot{position:relative;z-index:2;height:18px;margin:0 -14px;border-radius:9px;background:linear-gradient(180deg,#2a2a30,#17171b);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 24px -8px #000}
-.rslot::after{content:"";position:absolute;left:12px;right:12px;top:8px;height:3px;border-radius:2px;background:#050506;box-shadow:0 1px 0 rgba(255,255,255,.06)}
-.rfeed{position:relative;margin:-9px -30px 0;padding:0 30px 40px;overflow:hidden}
-.rcov{position:absolute;z-index:1;inset:0;background:#000}   /* the page's colour: it slides off the paper as it prints (a transform, no repaint) */
-.rpaper{position:relative;padding:34px 28px 26px;background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:12.5px;line-height:1.45;letter-spacing:0;
-  box-shadow:0 30px 60px -28px rgba(0,0,0,.9);background-image:linear-gradient(180deg,rgba(0,0,0,.07),transparent 26px)}
-.rpaper::after{content:"";position:absolute;left:0;right:0;bottom:-9px;height:9px;
-  background:linear-gradient(135deg,var(--paper) 50%,transparent 50%) 0 0/12px 9px repeat-x,linear-gradient(225deg,var(--paper) 50%,transparent 50%) 0 0/12px 9px repeat-x}
-.rhd{display:grid;justify-items:center;gap:6px;padding-bottom:18px;border-bottom:1px dashed rgba(29,29,31,.35);text-align:center}
-.rhd b{font-family:var(--sans);font-size:21px;font-weight:700;letter-spacing:-.015em}
-.rhd span{font-size:11.5px;color:rgba(29,29,31,.62)}
-.rhd em{font-style:normal;color:var(--ink)}
-.rsec{padding:14px 0 4px;display:grid;gap:5px}
-.rgrp{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(29,29,31,.5);margin-bottom:2px}
-.rl{display:flex;align-items:baseline;gap:8px;white-space:nowrap}
-.rl i{flex:1;min-width:12px;border-bottom:1px dotted rgba(29,29,31,.4);transform:translateY(-3px)}
-.rl .ok{color:rgba(29,29,31,.62)}
-.rtot,.rmo{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(29,29,31,.35);display:grid;gap:5px}
-.rl.big{font-size:14px;font-weight:500}
-.rl.big b{font-family:var(--sans);font-size:30px;font-weight:600;letter-spacing:-.03em;line-height:1}
-.rl.big b small{font-family:var(--mono);font-size:12px;font-weight:400;letter-spacing:0;margin-left:2px;color:rgba(29,29,31,.62)}
-.rmo p{margin:2px 0 0;font-size:11.5px;line-height:1.5;color:rgba(29,29,31,.62);white-space:normal}
-.rbar{height:34px;margin:22px auto 8px;width:78%;
-  background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 8px,var(--ink) 8px 11px,transparent 11px 12px,var(--ink) 12px 13px,transparent 13px 16px)}
-.rthx{margin:0;text-align:center;font-size:11px;color:rgba(29,29,31,.55)}
-/* shorter screens: a tighter receipt */
+/* the launch pass: a ticket from Idea to Live. The stub, the monthly part, tears off at the end */
+.tk{position:relative;--paper:#f3f0e8;--ink:#1d1d1f;--soft:rgba(29,29,31,.58);--n:11px;color:var(--ink);margin-bottom:26px}
+.tkm,.tks{position:relative}
+.tks{transform-origin:0 0}
+.tkm{border-radius:18px 18px 0 0;padding:0 26px 22px;
+  background:radial-gradient(circle at 0 100%,transparent var(--n),var(--paper) calc(var(--n) + .5px)) left/51% 100% no-repeat,
+             radial-gradient(circle at 100% 100%,transparent var(--n),var(--paper) calc(var(--n) + .5px)) right/51% 100% no-repeat}
+.tks{border-radius:0 0 18px 18px;padding:20px 26px 22px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;
+  background:radial-gradient(circle at 0 0,transparent var(--n),var(--paper) calc(var(--n) + .5px)) left/51% 100% no-repeat,
+             radial-gradient(circle at 100% 0,transparent var(--n),var(--paper) calc(var(--n) + .5px)) right/51% 100% no-repeat}
+.tks::before{content:"";position:absolute;left:calc(var(--n) + 8px);right:calc(var(--n) + 8px);top:0;border-top:2px dashed rgba(29,29,31,.22)}
+.tkh{display:flex;justify-content:space-between;align-items:center;margin:0 -26px;padding:13px 26px;border-radius:18px 18px 0 0;background:var(--y);color:var(--on-y)}
+.tkh b{font-size:17px;font-weight:700;letter-spacing:-.015em}
+.tkh span{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase}
+.tkl{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+.tkr{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;padding:20px 0 16px}
+.tke{display:grid;gap:3px}
+.tke.r{text-align:right}
+.tke b{font-size:40px;font-weight:700;letter-spacing:-.035em;line-height:.95}
+.tke>span:last-child{font-size:12.5px;color:var(--soft)}
+.tkway{position:relative;height:2px;margin-top:8px;background:repeating-linear-gradient(90deg,rgba(29,29,31,.28) 0 5px,transparent 5px 10px)}
+.tkfill{position:absolute;inset:0;background:var(--ink);transform-origin:0 50%;transform:scaleX(0)}
+.tkgo{position:absolute;left:0;right:0;top:50%}
+.tkgo i{position:absolute;left:0;top:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--y);box-shadow:0 0 0 4px rgba(var(--y-c),.22)}
+.tkf{display:grid;grid-template-columns:1.1fr 1.15fr .95fr;gap:12px;padding:14px 0;border-top:1px solid rgba(29,29,31,.13);border-bottom:1px solid rgba(29,29,31,.13)}
+.tkf b{display:block;margin-top:4px;font-size:14px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tki{padding:14px 0 4px}
+.tki ul{margin:9px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px 14px}
+.tki li{display:flex;align-items:center;gap:8px;font-size:13.5px;line-height:1.3;white-space:nowrap}
+.tki li::before{content:"";flex:none;width:14px;height:14px;border-radius:50%;background:var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M4 7.2 6.1 9.2 10 5' fill='none' stroke='%23f3f0e8' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px}
+.tkp{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(29,29,31,.13)}
+.tkp span{font-size:14px;font-weight:500}
+.tkp b,.tkst b{font-size:36px;font-weight:600;letter-spacing:-.035em;line-height:1}
+.tkst b{display:block;margin-top:6px;font-size:30px}
+.tkst small{font-family:var(--mono);font-size:12px;font-weight:400;letter-spacing:0;margin-left:3px;color:var(--soft)}
+.tkst p{margin:8px 0 0;font-size:12.5px;line-height:1.45;color:var(--soft);text-wrap:pretty}
+.tkbar{align-self:stretch;width:30px;min-height:72px;
+  background:repeating-linear-gradient(180deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 8px,var(--ink) 8px 11px,transparent 11px 12px,var(--ink) 12px 13px,transparent 13px 16px)}
+.prc .tk,.prc .tki li,.prc .tkp,.prc .tkto{opacity:0}
+.hero.pon:not(.pset) .tk,.hero.pon:not(.pset) .tki li,.hero.pon:not(.pset) .tkp,.hero.pon:not(.pset) .tkto,.hero.pon:not(.pset) .tkfill,.hero.pon:not(.pset) .tkgo,.hero.pon:not(.pset) .tks{will-change:transform,opacity}
+/* shorter screens: a tighter pass */
 @media (max-height:900px){
-  .rpaper{padding:24px 24px 18px}
-  .rhd{padding-bottom:12px;gap:4px}
-  .rsec{padding:9px 0 2px;gap:3px}
-  .rtot,.rmo{margin-top:10px;padding-top:10px;gap:3px}
-  .rl.big b{font-size:26px}
-  .rbar{height:24px;margin:14px auto 6px}
+  .tkr{padding:15px 0 12px}
+  .tke b{font-size:34px}
+  .tkf{padding:11px 0}
+  .tki{padding:11px 0 2px}
+  .tki ul{gap:4px 14px;margin-top:7px}
+  .tki li{font-size:13px}
+  .tkp{margin-top:12px;padding-top:11px}
+  .tkp b{font-size:32px}
+  .tkm{padding-bottom:18px}
+  .tks{padding:16px 26px 18px}
+  .tkst b{font-size:27px}
+  .tkst p{margin-top:6px}
   .pnotes{margin-top:32px;padding-top:20px;gap:12px}
 }
 @media (max-width:900px){
   .pwrap{grid-template-columns:minmax(0,1fr);width:min(560px,100%);gap:40px}
   .prin{padding-top:80px}
-  .rc{width:min(100%,420px);justify-self:center}
+  .tk{width:min(100%,440px);justify-self:center}
 }
 @media (max-width:760px){
   .prin{padding-top:72px;padding-bottom:20px}
@@ -690,10 +709,17 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   .pbtns{margin-top:24px}
   .pnotes{margin-top:34px;padding-top:22px;gap:14px}
   .pnotes li{grid-template-columns:minmax(0,1fr);gap:2px;font-size:14px}
-  .rpaper{padding:28px 20px 22px;font-size:12px}
-  .rfeed{margin:-9px -20px 0;padding:0 20px 40px}
-  .rslot{margin:0 -8px}
-  .rl.big b{font-size:26px}
+  .tkm{padding:0 18px 18px}
+  .tkh{margin:0 -18px;padding:12px 18px}
+  .tks{padding:16px 18px 18px;gap:14px}
+  .tke b{font-size:32px}
+  .tkr{gap:10px}
+  .tkf{gap:8px}
+  .tkf b{font-size:13px}
+  .tki li{font-size:12.5px;gap:7px}
+  .tki ul{gap:4px 10px}
+  .tkp b{font-size:30px}
+  .tkst b{font-size:26px}
 }
 
 @media (prefers-reduced-motion:reduce){.nav,.main>*,.next,.bar,.chip,.go,.build,.win,.bfoot,.bdone,.slot>*,.pbg,.pcards,.steps li,.steps li *,.lgrid,.lpan,.ldim,.mc,.lmsg,.lmsg h2,.lmsg p,.ldim2,.sdim,#curtain,.sh .s1,.sh .s2,.sp,.sbtns,.sagain,.yslot::before,.yveil,.kcar,.cta,.boot,.sk::before,.launch::after{transition:none!important;animation:none!important}}
@@ -830,32 +856,30 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
         <li><b>Refer a founder</b><span>Get 40% off your next month when they launch with us.</span></li>
       </ul>
     </div>
-    <div class="rc" role="group" aria-label="What you get and what it costs">
-      <div class="rslot" aria-hidden="true"></div>
-      <div class="rfeed">
-        <i class="rcov" aria-hidden="true"></i>
-        <div class="rpaper">
-          <div class="rhd"><b>muzmesh</b><span>Launch kit for <em id="rname">your startup</em></span></div>
-          <div class="rsec"><span class="rgrp">Look</span>
-            <div class="rl"><span>Logo</span><i></i><span class="ok">Included</span></div>
-            <div class="rl"><span>Brand guidelines</span><i></i><span class="ok">Included</span></div></div>
-          <div class="rsec"><span class="rgrp">Launch</span>
-            <div class="rl"><span>Landing page</span><i></i><span class="ok">Included</span></div>
-            <div class="rl"><span>Social post kit</span><i></i><span class="ok">Included</span></div>
-            <div class="rl"><span>Product intro video</span><i></i><span class="ok">Included</span></div></div>
-          <div class="rsec"><span class="rgrp">Run</span>
-            <div class="rl"><span>Analytics &amp; tracking</span><i></i><span class="ok">Included</span></div>
-            <div class="rl"><span>CRM &amp; waitlist</span><i></i><span class="ok">Included</span></div>
-            <div class="rl"><span>Site you can edit</span><i></i><span class="ok">Included</span></div></div>
-          <div class="rtot">
-            <div class="rl big"><span>Setup, one time</span><i></i><b>$500</b></div>
-            <div class="rl"><span>Live in</span><i></i><span>5 business days</span></div></div>
-          <div class="rmo">
-            <div class="rl big"><span>Then, monthly</span><i></i><b>$200<small>/mo</small></b></div>
-            <p>Site edits, social posts, support and a monthly report. Starts the month after launch.</p></div>
-          <div class="rbar" aria-hidden="true"></div>
-          <p class="rthx">Thank you. See you at launch.</p>
+    <div class="tk" role="group" aria-label="Your launch pass: what you get and what it costs">
+      <div class="tkm">
+        <div class="tkh"><b>muzmesh</b><span>Launch pass</span></div>
+        <div class="tkr">
+          <div class="tke"><span class="tkl">From</span><b>IDEA</b><span>Today</span></div>
+          <div class="tkway" aria-hidden="true"><i class="tkfill"></i><span class="tkgo"><i></i></span></div>
+          <div class="tke r"><span class="tkl">To</span><b class="tkto">LIVE</b><span>Day 5</span></div>
         </div>
+        <div class="tkf">
+          <div><span class="tkl">Passenger</span><b id="rname">your startup</b></div>
+          <div><span class="tkl">Flight time</span><b>5 business days</b></div>
+          <div><span class="tkl">Class</span><b>All included</b></div>
+        </div>
+        <div class="tki"><span class="tkl">In your kit</span>
+          <ul>
+            <li>Logo</li><li>Brand guidelines</li><li>Landing page</li><li>Social post kit</li>
+            <li>Product intro video</li><li>Analytics &amp; tracking</li><li>CRM &amp; waitlist</li><li>Site you can edit</li>
+          </ul></div>
+        <div class="tkp"><span>Setup, one time</span><b>$500</b></div>
+      </div>
+      <div class="tks">
+        <div class="tkst"><span class="tkl">Then, monthly</span><b>$200<small>/mo</small></b>
+          <p>Site edits, social posts, support and a monthly report. Starts the month after launch.</p></div>
+        <i class="tkbar" aria-hidden="true"></i>
       </div>
     </div>
   </div>
@@ -1189,9 +1213,9 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
     return { to: to(0), toPan: to(pan), pan, z, sx: s.left + s.width / 2, sy: s.top + s.height / 2 };
   }
 
-  // where the receipt printer sits, and how far the price must pan up on a short screen
+  // where the pass sits, and how far the price must pan up on a short screen
   function layoutPrice() {
-    const r = document.querySelector('#pricing .rslot').getBoundingClientRect(), prin = $('prin');
+    const r = document.querySelector('#pricing .tkm').getBoundingClientRect(), prin = $('prin');
     return { sx: r.left + r.width / 2, sy: r.top + r.height / 2, pan: Math.max(0, Math.ceil(prin.offsetHeight - hero.clientHeight)) };
   }
 
@@ -1425,7 +1449,7 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
       const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
       return { el, dx: (kg.sx - x) * .32, dy: (kg.sy - y) * .32, d: Math.hypot(kg.sx - x, kg.sy - y) };
     }).sort((p, q) => p.d - q.d);
-    /* part six: everything folds into the receipt printer, farthest first */
+    /* part six: everything folds into the pass, farthest first */
     const pg6 = layoutPrice(), FOLD = 'cubic-bezier(.55,0,.3,1)';
     const fold = [...tiles].sort((p, q) => q.d - p.d);
     tiles.forEach((o, i) => {
@@ -1440,16 +1464,24 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
     track(kit.querySelector('.gd'), 'opacity', [[K0 + 2700, 0, 'ease'], [K0 + 2950, 1]]);
     if (kg.pan) track(kin, 'transform', [[K0 + 2500, 'none', 'ease'], [K0 + 3300, `translateY(${-kg.pan}px)`]]);
 
-    // the price: painted at 1% once the kit has settled, then the printer, the words, and the print itself
-    const PP = K0 + 3450, prc = $('pricing');
-    kIn(prc.querySelector('.rc'), P0 + 650, 450, 10, 0, PP);
+    // the price: painted at 1% once the kit has settled, then the pass, the words, and the trip
+    const PP = K0 + 3450, prc = $('pricing'), RIDE = 'cubic-bezier(.45,0,.4,1)';
+    kIn(prc.querySelector('.tk'), P0 + 650, 500, 14, 0, PP);
     kIn(prc.querySelector('.peye'), P0 + 900, 600, 8, 0, PP);
     prc.querySelectorAll('.ph span').forEach((el, i) => kIn(el, P0 + 1000 + i * 180, 700, 10, 0, PP));
     kIn(prc.querySelector('.pp'), P0 + 1400, 700, 8, 0, PP);
     kIn(prc.querySelector('.pbtns'), P0 + 1550, 600, 8, 0, PP);
     kIn(prc.querySelector('.pnotes'), P0 + 1750, 700, 8, 0, PP);
-    track(prc.querySelector('.rcov'), 'transform', [[P0 + 1150, 'translateY(0%)', 'cubic-bezier(.35,0,.65,1)'], [P0 + 3300, 'translateY(100%)']]);
-    if (pg6.pan) track($('prin'), 'transform', [[P0 + 1500, 'none', 'cubic-bezier(.35,0,.65,1)'], [P0 + 3300, `translateY(${-pg6.pan}px)`]]);
+    // the dot flies Idea → Live, and Live lights up as it lands
+    track(prc.querySelector('.tkfill'), 'transform', [[P0 + 1200, 'scaleX(0)', RIDE], [P0 + 2200, 'scaleX(1)']]);
+    track(prc.querySelector('.tkgo'), 'transform', [[P0 + 1200, 'translateX(0%)', RIDE], [P0 + 2200, 'translateX(100%)']]);
+    track(prc.querySelector('.tkto'), 'opacity', [[PP, 0], [PP + 1, .3], [P0 + 2050, .3, 'ease'], [P0 + 2300, 1]]);
+    // the kit is ticked off, then the fare
+    prc.querySelectorAll('.tki li').forEach((el, i) => kIn(el, P0 + 1450 + i * 95, 380, 0, 0, PP));
+    kIn(prc.querySelector('.tkp'), P0 + 2350, 450, 8, 0, PP);
+    // the monthly stub tears away along the perforation
+    track(prc.querySelector('.tks'), 'transform', [[P0 + 2750, 'none', 'cubic-bezier(.5,0,.2,1)'], [P0 + 3150, 'translate(4px,16px) rotate(2.2deg)'], [P0 + 3350, 'translate(6px,20px) rotate(1.6deg)']]);
+    if (pg6.pan) track($('prin'), 'transform', [[P0 + 1250, 'none', 'cubic-bezier(.3,0,.5,1)'], [P0 + 2700, `translateY(${-pg6.pan}px)`]]);
 
     seek(Tcur);
   }
