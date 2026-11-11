@@ -2,6 +2,13 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    { "source": "/studio/:path*", "destination": "/studio" }
+  ],
+  "headers": [
+    { "source": "/studio/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] },
+    { "source": "/studio", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] }
+  ],
   "redirects": [
     { "source": "/blogs", "destination": "/blog", "statusCode": 301 },
     { "source": "/search", "destination": "/blog", "statusCode": 301 },

@@ -7,14 +7,21 @@ import type { Loader } from 'astro/loaders';
 // Vercel deploy hook, which rebuilds the site with the new content.
 let client: SanityClient | undefined;
 
+// Our own names first; the SANITY_API_* names are the ones the Sanity
+// integration on Vercel sets, so either way of connecting works.
+export const sanityProjectId = () => import.meta.env.SANITY_PROJECT_ID || import.meta.env.SANITY_API_PROJECT_ID;
+const sanityDataset = () => import.meta.env.SANITY_DATASET || import.meta.env.SANITY_API_DATASET || 'production';
+
 export function sanityClient() {
-  const projectId = import.meta.env.SANITY_PROJECT_ID;
+  const projectId = sanityProjectId();
   if (!projectId) {
     throw new Error('SANITY_PROJECT_ID is not set. Copy web/.env.example to web/.env and fill it in (see README).');
   }
   client ??= createClient({
     projectId,
-    dataset: import.meta.env.SANITY_DATASET || 'production',
+    dataset: sanityDataset(),
+    // Only used at build time, never sent to the browser. Lets the build read a private dataset.
+    token: import.meta.env.SANITY_API_READ_TOKEN || undefined,
     apiVersion: '2026-10-01',
     // Skip the CDN so a rebuild right after Publish never gets stale content.
     useCdn: false,
@@ -65,7 +72,7 @@ export function sanityLoader(query: string): Loader {
     load: async ({ store, parseData, generateDigest, logger }) => {
       // Lets the team work on design locally before Sanity is set up.
       // Production builds still fail loudly without a project ID.
-      if (!import.meta.env.SANITY_PROJECT_ID && import.meta.env.DEV) {
+      if (!sanityProjectId() && import.meta.env.DEV) {
         logger.warn('SANITY_PROJECT_ID is not set, so this collection is empty. See README to connect Sanity.');
         store.clear();
         return;
@@ -79,6 +86,23 @@ export function sanityLoader(query: string): Loader {
         store.set({ id, data, rendered: { html }, digest: generateDigest({ data, html }) });
       }
       logger.info(`Loaded ${docs.length} entries from Sanity`);
+    },
+  };
+}
+
+/**
+ * Uses `fallback` when Sanity has no entries yet. Until the old posts are
+ * imported (cd studio && npm run migrate), the site builds them from the same
+ * Markdown files the import reads, so old /blog and /work URLs never 404.
+ */
+export function withFallback(primary: Loader, fallback: Loader): Loader {
+  return {
+    name: 'sanity-or-legacy',
+    load: async (context) => {
+      await primary.load(context);
+      if (context.store.keys().length) return;
+      context.logger.warn('Nothing in Sanity yet, so this collection is built from studio/scripts/legacy.');
+      await fallback.load(context);
     },
   };
 }

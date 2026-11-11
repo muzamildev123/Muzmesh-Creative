@@ -1,0 +1,55 @@
+---
+// The final call to action: a fill-in-the-blanks launch brief.
+// Sends to PUBLIC_LEAD_ENDPOINT (same as the contact form). Script: src/scripts/home/brief.js
+import type { HomeContent } from '@/data/home';
+import { rich } from '@/lib/home';
+import { site } from '@/data/site';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  c: HomeContent;
+  t: Record<string, string>;
+}
+const { c, t } = Astro.props;
+const b = c.brief;
+const promise = rich(b.promise, { ...t, startup: '<b class="lc-nm">your startup</b>' });
+const fromEnv = import.meta.env.PUBLIC_BOOKING_URL;
+const booking = b.bookingUrl || fromEnv || `mailto:${c.footer.email}?subject=${encodeURIComponent('Our launch call')}`;
+const endpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? '';
+const firstName = c.faq.answeredBy.split(',')[0].trim() || site.name;
+---
+
+<section class="lc pad" id="launch-brief" aria-labelledby="lc-h">
+<div class="lc-in">
+  <span class="lab hint">{b.eyebrow}</span>
+  <h2 class="lc-h" id="lc-h">{b.line1} <span>{b.line2}</span></h2>
+  <form class="lc-box" id="lc-form" novalidate autocomplete="on" data-endpoint={endpoint} data-dev={import.meta.env.DEV ? '' : undefined} data-email={c.footer.email}>
+    <p class="lc-s">Hi, I’m <label class="lc-lab" for="lc-name">Your name</label><input class="lc-f" id="lc-name" name="name" placeholder="your name" autocomplete="name" required maxlength="60" /> from{' '}<label class="lc-lab" for="lc-startup">Startup name</label><input class="lc-f" id="lc-startup" name="startup" placeholder="startup name" autocomplete="organization" required maxlength="60" />.
+      We’re building <label class="lc-lab" for="lc-what">What you’re building</label><input class="lc-f" id="lc-what" name="building" placeholder="what it does, in one line" maxlength="90" />,
+      and we want to launch <label class="lc-lab" for="lc-when">When you want to launch</label><select class="lc-f" id="lc-when" name="launch">{b.timings.map((x, i) => <option selected={i === 1}>{x}</option>)}</select>.
+      Our site today is <label class="lc-lab" for="lc-site">Your current site</label><input class="lc-f" id="lc-site" name="site" placeholder="URL, or “we don’t have one”" maxlength="90" inputmode="url" />.
+      Reach me at <label class="lc-lab" for="lc-email">Email</label><input class="lc-f" id="lc-email" name="email" type="email" placeholder="you@startup.ai" autocomplete="email" required maxlength="90" />.</p>
+    <input class="lc-hp" name="company_url" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    <div class="lc-help" role="group" aria-label="What you need help with"><span>We need</span>
+      {b.needs.map((x) => <button type="button" class="lc-chip" aria-pressed="false">{x}</button>)}<button type="button" class="lc-chip" data-all aria-pressed="true">All of it</button>
+    </div>
+    <div class="lc-go">
+      <p set:html={promise} />
+      <button type="submit" class="pill white lc-send" id="lc-send" aria-disabled="true">{c.ctaLabel} <Arrow weight={1.7} /></button>
+    </div>
+    <p class="lc-need" id="lc-need" aria-live="polite"></p>
+  </form>
+  <div class="lc-done" id="lc-done" tabindex="-1" aria-live="polite">
+    <ol class="lc-log" aria-label="What happens next">
+      <li><b>Now</b><span>Your brief is with us. Nothing was generated.</span></li>
+      <li><b>Today</b><span>A person reads it and looks at your site.</span></li>
+      <li class="y"><b>Same day</b><span>Your one-page proposal for <span class="lc-nm">your startup</span>.</span></li>
+    </ol>
+    <h3 class="lc-dh">Thanks, <span id="lc-first">there</span>. <span class="lc-nm">Your startup</span> is on our list.</h3>
+    <p class="lc-dp" set:html={rich(b.thanks, t)} />
+    <div class="lc-who"><span class="fq-av" aria-hidden="true">{firstName.charAt(0)}</span><span><b>{c.faq.answeredBy}</b>{b.reader}</span>
+      <a class="cta" href={booking} rel={/^https?:/.test(booking) ? 'noopener' : undefined} target={/^https?:/.test(booking) ? '_blank' : undefined}>Pick a time <Arrow /></a></div>
+    <button type="button" class="lc-edit" id="lc-edit">Change my answers</button>
+  </div>
+</div>
+</section>
