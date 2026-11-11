@@ -17,7 +17,7 @@ body { margin: 0; color: var(--mm-text); font-family: var(--mm-font-sans); }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 40; background: var(--mm-bg); }
 .g-wrap { padding-left: max(var(--mm-gutter), env(safe-area-inset-left, 0px)); padding-right: max(var(--mm-gutter), env(safe-area-inset-right, 0px)); }
 @media (max-width: 600px) { .g-wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); } }
-.g-nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; background: rgba(0, 0, 0, .86); border-bottom: 1px solid var(--mm-hair); }
+.g-nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; background: var(--mm-bg); border-bottom: 1px solid var(--mm-hair); }
 .g-nav .g-in { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: var(--mm-nav-h); }
 .g-nav img { height: 19px; width: auto; display: block; }
 .g-in { max-width: var(--mm-frame); margin: 0 auto; }
@@ -26,6 +26,10 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .g-toc a { display: grid; grid-template-columns: 28px 1fr; padding: 6px 0; font-size: 13.5px; color: var(--mm-text-muted); text-decoration: none; }
 .g-toc a span { font-family: var(--mm-font-mono); font-size: 11px; color: var(--mm-text-faint); padding-top: 2px; }
 .g-toc a:hover { color: var(--mm-text); }
+.g-toc a { position: relative; transition: color var(--mm-dur-base); }
+.g-toc a[aria-current="true"] { color: var(--mm-text); }
+.g-toc a[aria-current="true"] span { color: var(--mm-accent); }
+.g-toc a[aria-current="true"]::before { content: ""; position: absolute; left: -14px; top: 50%; width: 5px; height: 5px; margin-top: -2.5px; background: var(--mm-accent); }
 @media (max-width: 1000px) { .g-grid { grid-template-columns: minmax(0, 1fr); gap: 0; } .g-toc { display: none; } }
 .g-main { min-width: 0; }
 .g-hero { padding-block: clamp(64px, 9vw, 120px) clamp(48px, 7vw, 96px); display: grid; gap: 26px; }
@@ -543,3 +547,26 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
 </div>
 <div class="g-mark" aria-hidden="true">muzmesh</div>
 </div>
+
+<script>
+/* contents: highlight the chapter being read. The active one is the last chapter whose top has passed a line 35% down the screen. */
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('.g-toc a'));
+  var items = links.map(function (a) { return { a: a, el: document.getElementById(a.getAttribute('href').slice(1)) }; }).filter(function (x) { return x.el; });
+  var current = null, ticking = false;
+  function update() {
+    ticking = false;
+    var line = window.innerHeight * 0.35, active = null;
+    for (var i = 0; i < items.length; i++) { if (items[i].el.getBoundingClientRect().top <= line) active = items[i]; }
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) active = items[items.length - 1];
+    if (active === current) return;
+    if (current) current.a.removeAttribute('aria-current');
+    if (active) active.a.setAttribute('aria-current', 'true');
+    current = active;
+  }
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
+})();
+</script>
