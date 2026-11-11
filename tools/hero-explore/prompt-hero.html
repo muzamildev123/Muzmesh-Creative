@@ -724,6 +724,76 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 }
 
 @media (prefers-reduced-motion:reduce){.nav,.main>*,.next,.bar,.chip,.go,.build,.win,.bfoot,.bdone,.slot>*,.pbg,.pcards,.steps li,.steps li *,.lgrid,.lpan,.ldim,.mc,.lmsg,.lmsg h2,.lmsg p,.ldim2,.sdim,#curtain,.sh .s1,.sh .s2,.sp,.sbtns,.sagain,.yslot::before,.yveil,.kcar,.cta,.boot,.sk::before,.launch::after{transition:none!important;animation:none!important}}
+
+/* ---------- FAQ (section after the story; .fq- prefix) ----------
+   Questions on the left, the answer on a dark dotted "bench" on the right that stays in view as you read.
+   Every answer is real text in the page (and in the FAQPage schema). Only reachable once the story is open. */
+html:not(.open) .fq{display:none}
+.fq{position:relative;background:var(--bg);padding-top:clamp(96px,11vw,160px);padding-bottom:clamp(96px,10vw,140px);border-top:1px solid var(--hair)}
+.fq-in{width:min(1120px,100%);margin:0 auto}
+.fq-eye{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.fq-h{margin:16px 0 0;font-weight:500;font-size:clamp(34px,3.7vw,56px);line-height:1.04;letter-spacing:-.03em;max-width:14ch;text-wrap:balance}
+.fq-h span{color:var(--faint)}
+.fq-list{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);column-gap:64px;margin-top:56px;align-items:start}
+.fq-item{display:contents}
+.fq-g{grid-column:1;margin:30px 0 8px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.fq-g:first-child{margin-top:0}
+.fq-q{all:unset;box-sizing:border-box;grid-column:1;cursor:pointer;display:grid;grid-template-columns:10px minmax(0,1fr) 14px;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--hair);font-size:17px;line-height:1.35;letter-spacing:-.01em;color:var(--muted);transition:color .2s}
+.fq-q:hover{color:var(--fg)}
+.fq-q:focus-visible{outline:2px solid var(--y);outline-offset:3px;border-radius:4px}
+.fq-q i{width:7px;height:7px;background:var(--y);opacity:0;transform:scale(.4);transition:opacity .2s,transform .25s}
+.fq-q svg{width:14px;height:14px;color:var(--faint);transition:transform .25s,color .2s}
+.fq-q[aria-expanded="true"]{color:var(--fg)}
+.fq-q[aria-expanded="true"] i{opacity:1;transform:none}
+.fq-q[aria-expanded="true"] svg{color:var(--y)}
+/* every answer shares the right-hand cell and sticks below the menu bar; only the open one shows */
+.fq-a{grid-column:2;grid-row:1 / span 15;position:sticky;top:64px;align-self:start;
+  border-radius:16px;padding:34px 34px 26px;background:var(--raise);
+  background-image:radial-gradient(rgba(var(--fg-c),.09) 1px,transparent 1.2px);background-size:22px 22px;background-position:11px 11px;
+  box-shadow:inset 0 0 0 1px var(--hair);opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .28s ease,transform .35s cubic-bezier(.2,.7,.2,1),visibility 0s .35s}
+.fq-a.on{opacity:1;visibility:visible;transform:none;transition:opacity .28s ease,transform .35s cubic-bezier(.2,.7,.2,1)}
+.fq-a .fq-aq{margin:0 0 18px;font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--faint)}
+.fq-a p{margin:0;font-size:clamp(17px,1.35vw,20px);line-height:1.5;letter-spacing:-.01em;color:var(--fg);text-wrap:pretty;max-width:46ch}
+.fq-a p+p{margin-top:14px;color:var(--muted);font-size:clamp(15.5px,1.1vw,17px)}
+.fq-a b{font-weight:600}
+/* small visuals inside some answers */
+.fq-days{list-style:none;margin:26px 0 0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.fq-days li{display:grid;gap:6px;padding:12px 10px;border-radius:9px;background:rgba(var(--fg-c),.05);box-shadow:inset 0 0 0 1px var(--hair);font-size:13px;line-height:1.25;color:var(--muted)}
+.fq-days li b{font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.06em;color:var(--faint);text-transform:uppercase}
+.fq-days li:last-child{background:var(--y);color:var(--on-y);box-shadow:none}
+.fq-days li:last-child b{color:rgba(14,14,16,.6)}
+.fq-own{list-style:none;margin:24px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px}
+.fq-own li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--hair);font-size:14.5px;color:var(--muted)}
+.fq-own li span{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--y)}
+.fq-mo{list-style:none;margin:24px 0 0;padding:0;display:grid;gap:0}
+.fq-mo li{display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px;padding:10px 0;border-bottom:1px solid var(--hair);font-size:14.5px;color:var(--muted)}
+.fq-mo li b{font-weight:500;color:var(--fg)}
+/* the sign-off: a person answered this */
+.fq-by{display:flex;align-items:center;gap:10px;margin-top:28px;padding-top:18px;border-top:1px solid var(--hair);font-size:13px;color:var(--muted)}
+.fq-av{width:26px;height:26px;border-radius:50%;background:var(--fg);color:var(--bg);display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
+.fq-by small{margin-left:auto;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+.fq-end{display:flex;flex-wrap:wrap;align-items:center;gap:18px 28px;margin-top:72px;padding-top:30px;border-top:1px solid var(--hair)}
+.fq-end p{margin:0;font-size:clamp(18px,1.5vw,22px);letter-spacing:-.015em;color:var(--muted)}
+.fq-end p b{color:var(--fg);font-weight:500}
+/* phones and tablets: a plain accordion, the answer opens under its question */
+@media (max-width:900px){
+  .fq-list{display:block;margin-top:40px}
+  .fq-item{display:block}
+  .fq-g{margin:32px 0 6px}
+  .fq-q{width:100%;font-size:16px;padding:15px 0}
+  .fq-q[aria-expanded="true"] svg{transform:rotate(45deg)}
+  .fq-a{position:static;display:none;margin:4px 0 14px;padding:22px 20px 18px;border-radius:12px;opacity:1;visibility:visible;transform:none;transition:none}
+  .fq-a.on{display:block}
+  .fq-a .fq-aq{display:none}
+  .fq-a p{font-size:16px}
+  .fq-a p+p{font-size:15px}
+  .fq-days{grid-template-columns:minmax(0,1fr);gap:4px}
+  .fq-days li{grid-template-columns:52px minmax(0,1fr);align-items:baseline;padding:9px 12px}
+  .fq-own{grid-template-columns:minmax(0,1fr)}
+  .fq-mo li{grid-template-columns:minmax(0,1fr);gap:2px}
+  .fq-end{margin-top:48px}
+}
+@media (prefers-reduced-motion:reduce){.fq-a,.fq-a.on,.fq-q,.fq-q i,.fq-q svg{transition:none!important}}
 </style>
 
 <div class="story" id="story">
@@ -889,6 +959,40 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 </div>
 </section>
 </div>
+
+<section class="fq pad" id="faq" aria-labelledby="fq-h">
+<div class="fq-in">
+  <span class="fq-eye">FAQ</span>
+  <h2 class="fq-h" id="fq-h">Questions founders ask us. <span>Answered by us.</span></h2>
+  <div class="fq-list" id="fq-list">
+    <h3 class="fq-g">Before you start</h3>
+    <div class="fq-item"><button type="button" class="fq-q" id="fq-q1" aria-expanded="true" aria-controls="fq-a1"><i aria-hidden="true"></i><span>Is this for us?</span><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="fq-a on" id="fq-a1" role="region" aria-labelledby="fq-q1"><p class="fq-aq" aria-hidden="true">Is this for us?</p><p>If you’re an AI startup, from pre-launch to seed, and you don’t have a designer or marketer yet, yes. That’s who we built this for.</p><p>It’s not the right fit if you need a multi-page marketing site, app or product UI, paid ads or daily community management. We can quote those separately.</p><div class="fq-by"><span class="fq-av" aria-hidden="true">M</span><span>Muzamil, MuzMesh</span><small>Answered by a person</small></div></div></div>
+    <div class="fq-item"><button type="button" class="fq-q" id="fq-q2" aria-expanded="false" aria-controls="fq-a2"><i aria-hidden="true"></i><span>Is it really designed by people?</span><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="fq-a" id="fq-a2" role="region" aria-labelledby="fq-q2"><p class="fq-aq" aria-hidden="true">Is it really designed by people?</p><p>Yes. A designer draws your logo, sets your brand and designs your page in Figma. No site generators, no stock templates, no sparkle icon.</p><p>That’s the whole point. If your launch looks generated, people assume the product was too.</p><div class="fq-by"><span class="fq-av" aria-hidden="true">M</span><span>Muzamil, MuzMesh</span><small>Answered by a person</small></div></div></div>
+    <div class="fq-item"><button type="button" class="fq-q" id="fq-q3" aria-expanded="false" aria-controls="fq-a3"><i aria-hidden="true"></i><span>How can all of this cost $500?</span><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="fq-a" id="fq-a3" role="region" aria-labelledby="fq-q3"><p class="fq-aq" aria-hidden="true">How can all of this cost $500?</p><p>We reuse everything that doesn’t need to be yours: our own design system, site starter, tracking and CRM setup. You pay for the design decisions, not for us rebuilding the plumbing every time.</p><p>Need more pages or a fully custom build? We’ll quote it before we start, never after.</p><div class="fq-by"><span class="fq-av" aria-hidden="true">M</span><span>Muzamil, MuzMesh</span><small>Answered by a person</small></div></div></div>
+    <div class="fq-item"><button type="button" class="fq-q" id="fq-q4" aria-expanded="false" aria-controls="fq-a4"><i aria-hidden="true"></i><span>What do you need from us?</span><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="fq-a" id="fq-a4" role="region" aria-labelledby="fq-q4"><p class="fq-aq" aria-hidden="true">What do you need from us?</p><p>A 15-minute call, a rough draft of your copy, a few product screenshots and access to your accounts.</p><p>We shape and edit your words, but we don’t write them from scratch. Nobody knows your product better than you.</p><div class="fq-by"><span class="fq-av" aria-hidden="true">M</span><span>Muzamil, MuzMesh</span><small>Answered by a person</small></div></div></div>
+    <h3 class="fq-g">The 5 days</h3>
+    <div class="fq-item"><button type="button" class="fq-q" id="fq-q5" aria-expanded="false" aria-controls="fq-a5"><i aria-hidden="true"></i><span>Is it really 5 days?</span><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="fq-a" id="fq-a5" role="region" aria-labelledby="fq-q5"><p class="fq-aq" aria-hidden="true">Is it really 5 days?</p><p><b>5 business days</b>, counted from the day we have your content and account access. The sooner you send them, the sooner you’re live.</p><ol class="fq-days" aria-label="A typical week"><li><b>Day 1</b>Logo and brand</li><li><b>Day 2</b>Page design</li><li><b>Day 3</b>Build and CMS</li><li><b>Day 4</b>Social kit, video, tracking</li><li><b>Day 5</b>You’re live</li></ol><div class="fq-by"><span class="fq-av" aria-hidden="true">M</span><span>Muzamil, MuzMesh</span><small>Answered by a person</small></div></div></div>
+    <div class="fq-item"><button type="button" class="fq-q" id="fq-q6" aria-expanded="false" aria-controls="fq-a6"><i aria-hidden="true"></i><span>What if we don’t like the first design?</span><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="fq-a" id="fq-a6" role="region" aria-labelledby="fq-q6"><p class="fq-aq" aria-hidden="true">What if we don’t like the first design?</p><p>Tell us. One round of changes fits inside the 5 days, on a live preview link, and you get a second round after launch.</p><p>We show you the direction early, so nothing big changes at the last minute.</p><div class="fq-by"><span class="fq-av" aria-hidden="true">M</span><span>Muzamil, MuzMesh</span><small>Answered by a person</small></div></div></div>
+    <div class="fq-item"><button type="button" class="fq-q" id="fq-q7" aria-expanded="false" aria-controls="fq-a7"><i aria-hidden="true"></i><span>Will ChatGPT actually mention us?</span><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="fq-a" id="fq-a7" role="region" aria-labelledby="fq-q7"><p class="fq-aq" aria-hidden="true">Will ChatGPT actually mention us?</p><p>Nobody can promise that, and you should be wary of anyone who does.</p><p>What we can do is set up everything that makes it more likely: clean structure, schema, an FAQ like this one, <code>llms.txt</code>, a sitemap and Search Console.</p><div class="fq-by"><span class="fq-av" aria-hidden="true">M</span><span>Muzamil, MuzMesh</span><small>Answered by a person</small></div></div></div>
+    <h3 class="fq-g">After launch</h3>
+    <div class="fq-item"><button type="button" class="fq-q" id="fq-q8" aria-expanded="false" aria-controls="fq-a8"><i aria-hidden="true"></i><span>What’s in the $200 a month?</span><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="fq-a" id="fq-a8" role="region" aria-labelledby="fq-q8"><p class="fq-aq" aria-hidden="true">What’s in the $200 a month?</p><p>Everything that keeps your launch from going quiet. It starts the month after you’re live.</p><ul class="fq-mo"><li><b>Site</b>Edits, updates, backups and CMS help</li><li><b>Social</b>Posts made in your brand and scheduled for you</li><li><b>Support</b>One channel, straight to the people doing the work</li><li><b>Report</b>One page a month: visits, sign-ups and leads</li></ul><div class="fq-by"><span class="fq-av" aria-hidden="true">M</span><span>Muzamil, MuzMesh</span><small>Answered by a person</small></div></div></div>
+    <div class="fq-item"><button type="button" class="fq-q" id="fq-q9" aria-expanded="false" aria-controls="fq-a9"><i aria-hidden="true"></i><span>Who owns everything?</span><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="fq-a" id="fq-a9" role="region" aria-labelledby="fq-q9"><p class="fq-aq" aria-hidden="true">Who owns everything?</p><p>You do. It all sits on your own accounts, so if you ever leave, it keeps working.</p><ul class="fq-own"><li>Logo files<span>Yours</span></li><li>Brand guidelines<span>Yours</span></li><li>Domain<span>Yours</span></li><li>Hosting<span>Yours</span></li><li>CMS<span>Yours</span></li><li>CRM and analytics<span>Yours</span></li></ul><div class="fq-by"><span class="fq-av" aria-hidden="true">M</span><span>Muzamil, MuzMesh</span><small>Answered by a person</small></div></div></div>
+    <div class="fq-item"><button type="button" class="fq-q" id="fq-q10" aria-expanded="false" aria-controls="fq-a10"><i aria-hidden="true"></i><span>Can we cancel?</span><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="fq-a" id="fq-a10" role="region" aria-labelledby="fq-q10"><p class="fq-aq" aria-hidden="true">Can we cancel?</p><p>Yes. After the first three months it’s month to month, with 30 days’ notice.</p><p>Your site, brand and accounts stay with you, exactly as they are.</p><div class="fq-by"><span class="fq-av" aria-hidden="true">M</span><span>Muzamil, MuzMesh</span><small>Answered by a person</small></div></div></div>
+  </div>
+  <div class="fq-end"><p>Still wondering about something? <b>Ask us on the 15-minute call.</b></p><a class="cta" href="#top">Plan my launch <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+</div>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is this for us?", "acceptedAnswer": {"@type": "Answer", "text": "If you’re an AI startup, from pre-launch to seed, and you don’t have a designer or marketer yet, yes. That’s who we built this for. It’s not the right fit if you need a multi-page marketing site, app or product UI, paid ads or daily community management. We can quote those separately."}}, {"@type": "Question", "name": "Is it really designed by people?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. A designer draws your logo, sets your brand and designs your page in Figma. No site generators, no stock templates, no sparkle icon. That’s the whole point. If your launch looks generated, people assume the product was too."}}, {"@type": "Question", "name": "How can all of this cost $500?", "acceptedAnswer": {"@type": "Answer", "text": "We reuse everything that doesn’t need to be yours: our own design system, site starter, tracking and CRM setup. You pay for the design decisions, not for us rebuilding the plumbing every time. Need more pages or a fully custom build? We’ll quote it before we start, never after."}}, {"@type": "Question", "name": "What do you need from us?", "acceptedAnswer": {"@type": "Answer", "text": "A 15-minute call, a rough draft of your copy, a few product screenshots and access to your accounts. We shape and edit your words, but we don’t write them from scratch. Nobody knows your product better than you."}}, {"@type": "Question", "name": "Is it really 5 days?", "acceptedAnswer": {"@type": "Answer", "text": "5 business days, counted from the day we have your content and account access. The sooner you send them, the sooner you’re live. Day 1: Logo and brand. Day 2: Page design. Day 3: Build and CMS. Day 4: Social kit, video, tracking. Day 5: You’re live."}}, {"@type": "Question", "name": "What if we don’t like the first design?", "acceptedAnswer": {"@type": "Answer", "text": "Tell us. One round of changes fits inside the 5 days, on a live preview link, and you get a second round after launch. We show you the direction early, so nothing big changes at the last minute."}}, {"@type": "Question", "name": "Will ChatGPT actually mention us?", "acceptedAnswer": {"@type": "Answer", "text": "Nobody can promise that, and you should be wary of anyone who does. What we can do is set up everything that makes it more likely: clean structure, schema, an FAQ like this one, llms.txt , a sitemap and Search Console."}}, {"@type": "Question", "name": "What’s in the $200 a month?", "acceptedAnswer": {"@type": "Answer", "text": "Everything that keeps your launch from going quiet. It starts the month after you’re live. Site: Edits, updates, backups and CMS help. Social: Posts made in your brand and scheduled for you. Support: One channel, straight to the people doing the work. Report: One page a month: visits, sign-ups and leads."}}, {"@type": "Question", "name": "Who owns everything?", "acceptedAnswer": {"@type": "Answer", "text": "You do. It all sits on your own accounts, so if you ever leave, it keeps working. Logo files. Brand guidelines. Domain. Hosting. CMS. CRM and analytics."}}, {"@type": "Question", "name": "Can we cancel?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. After the first three months it’s month to month, with 30 days’ notice. Your site, brand and accounts stay with you, exactly as they are."}}]}</script>
+</section>
 
 
 
@@ -1664,4 +1768,29 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   sync();
 })();
 
+</script>
+<script>
+/* ---------- FAQ: one answer open at a time (on phones it can also be closed) ---------- */
+(() => {
+  const qs = [...document.querySelectorAll('.fq-q')];
+  const small = matchMedia('(max-width:900px)');
+  const open = (q, toggle) => {
+    const was = q.getAttribute('aria-expanded') === 'true';
+    if (was && !(toggle && small.matches)) return;
+    for (const o of qs) {
+      const on = o === q && !was;
+      o.setAttribute('aria-expanded', on);
+      document.getElementById(o.getAttribute('aria-controls')).classList.toggle('on', on);
+    }
+  };
+  qs.forEach((q, i) => {
+    q.addEventListener('click', () => open(q, true));
+    q.addEventListener('keydown', e => {
+      const d = e.key === 'ArrowDown' ? 1 : e.key === 'ArrowUp' ? -1 : 0;
+      if (!d) return;
+      e.preventDefault(); e.stopPropagation();
+      const n = qs[(i + d + qs.length) % qs.length]; n.focus(); if (!small.matches) open(n);
+    });
+  });
+})();
 </script>
