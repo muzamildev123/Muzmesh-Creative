@@ -926,6 +926,40 @@ select.lc-f option{background:#141418;color:var(--fg)}
   .lc-log li{grid-template-columns:64px minmax(0,1fr)}
 }
 @media (prefers-reduced-motion:reduce){.lc.sent .lc-done{animation:none}.lc-box,.lc-f,.lc-chip,.lc-send{transition:none!important}}
+
+/* ---------- Footer (.ft- prefix): links, a sign-off with their startup's name, a live status line, the wordmark ---------- */
+html:not(.open) .ft{display:none}
+.ft{position:relative;overflow:hidden;background:var(--bg);padding-top:clamp(72px,8vw,110px);border-top:1px solid var(--hair)}
+.ft-in{width:min(1120px,100%);margin:0 auto}
+.ft-top{display:grid;grid-template-columns:minmax(0,1.3fr) repeat(3,minmax(0,.6fr));gap:40px}
+.ft-tag{margin:0;max-width:30ch;font-size:16px;line-height:1.55;color:var(--muted)}
+.ft-tag b{color:var(--fg);font-weight:500}
+.ft-mail{display:inline-block;margin-top:18px;font-size:16px;color:var(--fg);text-decoration:none;border-bottom:1px solid rgba(var(--y-c),.7);padding-bottom:2px;transition:border-color .2s}
+.ft-mail:hover{border-color:var(--y)}
+.ft-col h3{margin:0 0 14px;font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.ft-col ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ft-col a{font-size:15px;color:var(--muted);text-decoration:none;transition:color .2s}
+.ft-col a:hover{color:var(--fg)}
+.ft-bye{margin:clamp(64px,7vw,96px) 0 0;font-weight:500;font-size:clamp(26px,2.8vw,40px);line-height:1.15;letter-spacing:-.025em;color:var(--faint);text-wrap:balance}
+.ft-bye b{color:var(--fg);font-weight:500}
+.ft-stat{display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;margin-top:28px;padding:16px 0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--faint)}
+.ft-stat span{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.ft-dot{width:6px;height:6px;border-radius:50%;background:var(--y);box-shadow:0 0 0 0 rgba(var(--y-c),.5);animation:ft-pulse 2.4s ease-out infinite}
+@keyframes ft-pulse{70%{box-shadow:0 0 0 7px rgba(var(--y-c),0)}100%{box-shadow:0 0 0 0 rgba(var(--y-c),0)}}
+.ft-stat .ft-r{margin-left:auto}
+.ft-time{color:var(--muted);font-variant-numeric:tabular-nums}
+/* the wordmark, cropped by the bottom of the page */
+.ft-mark{display:block;margin:clamp(28px,4vw,56px) 0 0;height:.74em;overflow:hidden;font-weight:700;font-size:21vw;line-height:.98;letter-spacing:-.045em;color:var(--fg);text-align:center;user-select:none;white-space:nowrap}
+@media (max-width:900px){
+  .ft-top{grid-template-columns:repeat(3,minmax(0,1fr));gap:36px 24px}
+  .ft-brand{grid-column:1 / -1}
+}
+@media (max-width:560px){
+  .ft-top{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ft-stat .ft-r{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){.ft-dot{animation:none}}
 </style>
 
 <div class="story" id="story">
@@ -1192,6 +1226,28 @@ select.lc-f option{background:#141418;color:var(--fg)}
   </div>
 </div>
 </section>
+<footer class="ft pad" id="footer">
+<div class="ft-in">
+  <div class="ft-top">
+    <div class="ft-brand">
+      <p class="ft-tag"><b>MuzMesh</b> is the design partner for AI startups. Logo, brand, landing page and launch kit, designed by people.</p>
+      <a class="ft-mail" href="mailto:hello@muzmeshcreative.com">hello@muzmeshcreative.com</a>
+    </div>
+    <nav class="ft-col" aria-label="Offer"><h3>Offer</h3><ul><li><a href="#top">What’s included</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#faq">FAQ</a></li><li><a href="#top">Referral</a></li></ul></nav>
+    <nav class="ft-col" aria-label="Company"><h3>Company</h3><ul><li><a href="#top">Work</a></li><li><a href="#top">About</a></li><li><a href="#top">Blog</a></li><li><a href="#launch-brief">Contact</a></li></ul></nav>
+    <nav class="ft-col" aria-label="Legal"><h3>Legal</h3><ul><li><a href="#top">Privacy</a></li><li><a href="#top">Terms</a></li></ul></nav>
+  </div>
+  <p class="ft-bye">Good luck with <b class="ft-nm">your startup</b>. We’d love to help you launch it.</p>
+  <div class="ft-stat">
+    <span><i class="ft-dot" aria-hidden="true"></i>Pakistan</span>
+    <span><time class="ft-time" id="ft-time">—</time>&nbsp;here</span>
+    <span>Proposals the same day</span>
+    <span class="ft-r">© 2026 MuzMesh Creative</span>
+  </div>
+</div>
+<div class="ft-mark" aria-hidden="true"><span>muzmesh</span></div>
+</footer>
+
 
 
 
@@ -2062,5 +2118,27 @@ select.lc-f option{background:#141418;color:var(--fg)}
   if (!pass) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) { pass.classList.add('torn'); return; }
   new IntersectionObserver((es, io) => { if (es.some(e => e.isIntersecting)) { setTimeout(() => pass.classList.add('torn'), 350); io.disconnect(); } }, { threshold: .7 }).observe(pass);
+})();
+</script>
+<script>
+/* ---------- Footer: their startup's name, and the time where we are ---------- */
+(() => {
+  const ft = document.getElementById('footer'); if (!ft) return;
+  const t = document.getElementById('ft-time');
+  const fmt = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Karachi' });
+  const tick = () => { t.textContent = fmt.format(new Date()); };
+  tick(); setInterval(tick, 30000);
+  // the wordmark fills the width exactly, edge to edge inside the page margins
+  const mark = ft.querySelector('.ft-mark');
+  const fitMark = () => { mark.style.fontSize = '100px'; const w = mark.firstChild.getBoundingClientRect().width, room = mark.clientWidth; mark.style.fontSize = (100 * room / w * .995) + 'px'; };
+  const ro = new ResizeObserver(fitMark); ro.observe(ft);
+  document.fonts && document.fonts.ready.then(fitMark);
+  // the sign-off uses the startup name from the launch brief if they typed one, otherwise the name the story gave them
+  const nm = () => {
+    const typed = document.getElementById('lc-startup'), gen = document.getElementById('rname');
+    const v = (typed && typed.value.trim()) || (gen && gen.textContent.trim()) || 'your startup';
+    ft.querySelectorAll('.ft-nm').forEach(el => el.textContent = v);
+  };
+  new IntersectionObserver(es => es.some(e => e.isIntersecting) && nm(), { rootMargin: '300px 0px' }).observe(ft);
 })();
 </script>
