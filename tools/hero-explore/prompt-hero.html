@@ -667,9 +667,14 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 .tkf{display:grid;grid-template-columns:1.1fr 1.15fr .95fr;gap:12px;padding:14px 0;border-top:1px solid rgba(29,29,31,.13);border-bottom:1px solid rgba(29,29,31,.13)}
 .tkf b{display:block;margin-top:4px;font-size:14px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tki{padding:14px 0 4px}
-.tki ul{margin:9px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px 14px}
-.tki li{display:flex;align-items:center;gap:8px;font-size:13.5px;line-height:1.3;white-space:nowrap}
-.tki li::before{content:"";flex:none;width:14px;height:14px;border-radius:50%;background:var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M4 7.2 6.1 9.2 10 5' fill='none' stroke='%23f3f0e8' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px}
+/* the five days: each one is punched as the dot passes it */
+.tkd{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:2px}
+.tkd li{display:grid;grid-template-columns:16px 52px minmax(0,1fr);align-items:center;gap:12px;padding:5px 0;font-size:13.5px;line-height:1.3;opacity:.38}
+.tkdn{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft)}
+.tkdl span:last-child{font-weight:600}
+.tkx{position:relative;width:16px;height:16px;border-radius:50%;box-shadow:inset 0 0 0 1.5px rgba(29,29,31,.32)}
+.tkx b{position:absolute;inset:-1px;border-radius:50%;background:#000;box-shadow:inset 0 2px 3px rgba(255,255,255,.08);transform:scale(0)}
+.tkdl .tkx b{background:var(--y);box-shadow:0 0 0 4px rgba(var(--y-c),.2)}
 .tkp{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(29,29,31,.13)}
 .tkp span{font-size:14px;font-weight:500}
 .tkp b,.tkst b{font-size:36px;font-weight:600;letter-spacing:-.035em;line-height:1}
@@ -678,16 +683,16 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
 .tkst p{margin:8px 0 0;font-size:12.5px;line-height:1.45;color:var(--soft);text-wrap:pretty}
 .tkbar{align-self:stretch;width:30px;min-height:72px;
   background:repeating-linear-gradient(180deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 8px,var(--ink) 8px 11px,transparent 11px 12px,var(--ink) 12px 13px,transparent 13px 16px)}
-.prc .tk,.prc .tki li,.prc .tkp,.prc .tkto{opacity:0}
-.hero.pon:not(.pset) .tk,.hero.pon:not(.pset) .tki li,.hero.pon:not(.pset) .tkp,.hero.pon:not(.pset) .tkto,.hero.pon:not(.pset) .tkfill,.hero.pon:not(.pset) .tkgo,.hero.pon:not(.pset) .tks{will-change:transform,opacity}
+.prc .tk,.prc .tkp,.prc .tkto{opacity:0}
+.hero.pon:not(.pset) .tk,.hero.pon:not(.pset) .tkd li,.hero.pon:not(.pset) .tkx b,.hero.pon:not(.pset) .tkp,.hero.pon:not(.pset) .tkto,.hero.pon:not(.pset) .tkfill,.hero.pon:not(.pset) .tkgo,.hero.pon:not(.pset) .tks{will-change:transform,opacity}
 /* shorter screens: a tighter pass */
 @media (max-height:900px){
   .tkr{padding:15px 0 12px}
   .tke b{font-size:34px}
   .tkf{padding:11px 0}
   .tki{padding:11px 0 2px}
-  .tki ul{gap:4px 14px;margin-top:7px}
-  .tki li{font-size:13px}
+  .tkd{margin-top:7px;gap:0}
+  .tkd li{padding:4px 0;font-size:13px}
   .tkp{margin-top:12px;padding-top:11px}
   .tkp b{font-size:32px}
   .tkm{padding-bottom:18px}
@@ -717,11 +722,13 @@ h1{margin:0;font-weight:500;font-size:clamp(40px,4.5vw,70px);line-height:1.06;le
   .tkr{gap:10px}
   .tkf{gap:8px}
   .tkf b{font-size:13px}
-  .tki li{font-size:12.5px;gap:7px}
-  .tki ul{gap:4px 10px}
+  .tkd li{font-size:12.5px;gap:10px;grid-template-columns:16px 46px minmax(0,1fr)}
   .tkp b{font-size:30px}
   .tkst b{font-size:26px}
 }
+
+/* short phones: drop the passenger row so the whole pass fits below the menu bar once it has panned */
+@media (max-width:760px) and (max-height:720px){.tkf{display:none}}
 
 @media (prefers-reduced-motion:reduce){.nav,.main>*,.next,.bar,.chip,.go,.build,.win,.bfoot,.bdone,.slot>*,.pbg,.pcards,.steps li,.steps li *,.lgrid,.lpan,.ldim,.mc,.lmsg,.lmsg h2,.lmsg p,.ldim2,.sdim,#curtain,.sh .s1,.sh .s2,.sp,.sbtns,.sagain,.yslot::before,.yveil,.kcar,.cta,.boot,.sk::before,.launch::after{transition:none!important;animation:none!important}}
 
@@ -940,11 +947,14 @@ html:not(.open) .fq{display:none}
           <div><span class="tkl">Flight time</span><b>5 business days</b></div>
           <div><span class="tkl">Class</span><b>All included</b></div>
         </div>
-        <div class="tki"><span class="tkl">In your kit</span>
-          <ul>
-            <li>Logo</li><li>Brand guidelines</li><li>Landing page</li><li>Social post kit</li>
-            <li>Product intro video</li><li>Analytics &amp; tracking</li><li>CRM &amp; waitlist</li><li>Site you can edit</li>
-          </ul></div>
+        <div class="tki"><span class="tkl">Your five days</span>
+          <ol class="tkd">
+            <li><i class="tkx"><b></b></i><span class="tkdn">Day 1</span><span>Logo, brand guidelines</span></li>
+            <li><i class="tkx"><b></b></i><span class="tkdn">Day 2</span><span>Landing page, site you can edit</span></li>
+            <li><i class="tkx"><b></b></i><span class="tkdn">Day 3</span><span>Social post kit, product intro video</span></li>
+            <li><i class="tkx"><b></b></i><span class="tkdn">Day 4</span><span>Analytics &amp; tracking, CRM &amp; waitlist</span></li>
+            <li class="tkdl"><i class="tkx"><b></b></i><span class="tkdn">Day 5</span><span>You’re live</span></li>
+          </ol></div>
         <div class="tkp"><span>Setup, one time</span><b>$500</b></div>
       </div>
       <div class="tks">
@@ -1587,15 +1597,20 @@ html:not(.open) .fq{display:none}
     kIn(prc.querySelector('.pp'), P0 + 1400, 700, 8, away(prc.querySelector('.pp'), P0 + 2100), PP);
     kIn(prc.querySelector('.pbtns'), P0 + 1550, 600, 8, away(prc.querySelector('.pbtns'), P0 + 2150), PP);
     kIn(prc.querySelector('.pnotes'), P0 + 1750, 700, 8, 0, PP);
-    // the dot flies Idea → Live, and Live lights up as it lands
-    track(prc.querySelector('.tkfill'), 'transform', [[P0 + 1200, 'scaleX(0)', RIDE], [P0 + 2200, 'scaleX(1)']]);
-    track(prc.querySelector('.tkgo'), 'transform', [[P0 + 1200, 'translateX(0%)', RIDE], [P0 + 2200, 'translateX(100%)']]);
-    track(prc.querySelector('.tkto'), 'opacity', [[PP, 0], [PP + 1, .3], [P0 + 2050, .3, 'ease'], [P0 + 2300, 1]]);
-    // the kit is ticked off, then the fare
-    prc.querySelectorAll('.tki li').forEach((el, i) => kIn(el, P0 + 1450 + i * 95, 380, 0, 0, PP));
-    kIn(prc.querySelector('.tkp'), P0 + 2350, 450, 8, 0, PP);
+    // the dot rides Idea → Live at an even pace and punches each day as it passes; Live lights up as it lands
+    const R0 = P0 + 1200, R1 = P0 + 2600, PUNCH = 'cubic-bezier(.3,1.5,.55,1)';
+    track(prc.querySelector('.tkfill'), 'transform', [[R0, 'scaleX(0)'], [R1, 'scaleX(1)']]);
+    track(prc.querySelector('.tkgo'), 'transform', [[R0, 'translateX(0%)'], [R1, 'translateX(100%)']]);
+    track(prc.querySelector('.tkto'), 'opacity', [[PP, 0], [PP + 1, .3], [R1 - 150, .3, 'ease'], [R1 + 100, 1]]);
+    prc.querySelectorAll('.tkd li').forEach((el, i) => {
+      const t = Math.round(R0 + (R1 - R0) * (i + 1) / 5) - 120;
+      track(el, 'opacity', [[t, .38, 'ease'], [t + 260, 1]]);
+      track(el.querySelector('.tkx b'), 'transform', [[t, 'scale(0)', PUNCH], [t + 280, 'scale(1)']]);
+    });
+    // then the fare
+    kIn(prc.querySelector('.tkp'), R1 + 100, 450, 8, 0, PP);
     // the monthly stub tears away along the perforation
-    track(prc.querySelector('.tks'), 'transform', [[P0 + 2750, 'none', 'cubic-bezier(.5,0,.2,1)'], [P0 + 3150, 'translate(4px,16px) rotate(2.2deg)'], [P0 + 3350, 'translate(6px,20px) rotate(1.6deg)']]);
+    track(prc.querySelector('.tks'), 'transform', [[P0 + 2900, 'none', 'cubic-bezier(.5,0,.2,1)'], [P0 + 3220, 'translate(4px,16px) rotate(2.2deg)'], [P0 + 3390, 'translate(6px,20px) rotate(1.6deg)']]);
     if (pg6.pan) track(prinEl, 'transform', [[PAN0, 'none', 'cubic-bezier(.3,0,.5,1)'], [PAN1, `translateY(${-pg6.pan}px)`]]);
 
     seek(Tcur);
