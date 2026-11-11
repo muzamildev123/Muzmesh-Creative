@@ -196,8 +196,8 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
 .g-cover-mid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 48px; align-items: center; }
 .g-cover h1 { margin: 0; font-weight: 500; font-size: clamp(50px, 8.2vw, 144px); line-height: .96; letter-spacing: -.045em; max-width: 11ch; text-wrap: balance; }
 .g-cover h1 .d { color: rgba(244, 244, 241, .42); display: block; }
-.g-cover h1 .y { position: relative; display: inline-block; }
-.g-cover h1 .y::after { content: ""; position: absolute; right: -.02em; bottom: .14em; width: .16em; height: .16em; background: var(--mm-accent); transform: translateX(100%); }
+.g-cover h1 .y { white-space: nowrap; }
+.g-cover h1 .y::after { content: ""; display: inline-block; width: .15em; height: .15em; margin-left: .07em; background: var(--mm-accent); vertical-align: baseline; }
 .g-cover .lead { margin: 30px 0 0; max-width: 46ch; font-size: clamp(16px, 1.35vw, 19px); line-height: 1.55; color: var(--mm-text-muted); }
 .g-cover .acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
 .g-cover .acts .mm-btn { text-decoration: none; }
