@@ -216,6 +216,57 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
 @media (max-width: 600px) { .g-cover { min-height: 0; } .g-cover-in { gap: 28px; } }
 @media (prefers-reduced-motion: reduce) { .g-cover-tix, .g-scroll svg { animation: none; } }
 
+/* social kit */
+.g-banner { position: relative; aspect-ratio: 1584 / 396; background: #000; overflow: hidden; container-type: inline-size; display: flex; align-items: center; padding: 0 5% 0 30%; }
+.g-banner .g-curtain { height: 100%; }
+.g-banner .ttl { position: relative; margin: 0; font-size: 4.6cqi; font-weight: 500; letter-spacing: -.035em; line-height: 1.02; }
+.g-banner .ttl span { color: rgba(244, 244, 241, .5); }
+.g-banner .lbl { position: absolute; right: 3%; bottom: 9%; font-family: var(--mm-font-mono); font-size: 1.05cqi; letter-spacing: .1em; text-transform: uppercase; color: rgba(244, 244, 241, .7); }
+.g-banner .safe { position: absolute; left: 0; top: 0; bottom: 0; width: 26%; border-right: 1px dashed rgba(244, 244, 241, .3); display: flex; align-items: end; padding: 1.2cqi; font-family: var(--mm-font-mono); font-size: .95cqi; letter-spacing: .08em; text-transform: uppercase; color: rgba(244, 244, 241, .45); }
+.g-profile { display: flex; align-items: center; gap: 18px; padding: 0 22px 20px; margin-top: -38px; position: relative; z-index: 2; }
+.g-profile img { width: 88px; height: 88px; border-radius: 50%; box-shadow: 0 0 0 4px var(--mm-c-raise-1); }
+.g-profile b { display: block; font-size: 17px; font-weight: 600; letter-spacing: -.015em; margin-top: 30px; }
+.g-profile small { font-size: 13.5px; color: var(--mm-text-muted); }
+.g-avs { display: flex; gap: 18px; align-items: center; padding: 26px; flex-wrap: wrap; justify-content: center; background: var(--mm-c-raise-1); }
+.g-avs img { width: 72px; height: 72px; }
+.g-avs .c { border-radius: 50%; } .g-avs .r { border-radius: 16px; }
+.g-avs .s { width: 36px; height: 36px; border-radius: 50%; }
+.g-feed { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px; background: #000; padding: 3px; }
+.g-feed .g-post { padding: 9%; }
+.g-feed .g-post .ttl { font-size: 11cqi; }
+.g-feed .g-post .mm-label { font-size: 5cqi; }
+.g-feed .g-post .ft img { height: 6cqi; }
+.g-feed .stat { font-size: 30cqi; font-weight: 600; letter-spacing: -.06em; line-height: .9; }
+.g-feed .stat i { color: var(--mm-c-signal); font-style: normal; }
+.g-carousel { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(170px, 1fr); gap: 10px; overflow-x: auto; padding: 18px; background: var(--mm-c-raise-1); scrollbar-width: thin; }
+.g-carousel .g-post { border-radius: 6px; padding: 9%; }
+.g-carousel .g-post .ttl { font-size: 10.5cqi; }
+.g-carousel .g-post .mm-label { font-size: 5cqi; }
+.g-carousel .g-post .ft img { height: 6cqi; }
+.g-carousel .g-post .ft span { font-family: var(--mm-font-mono); font-size: 4.6cqi; letter-spacing: .08em; color: rgba(244, 244, 241, .56); }
+.g-carousel .g-post.paper .ft span { color: #686764; }
+.g-carousel ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 4cqi; font-size: 6.4cqi; line-height: 1.2; }
+.g-carousel ol li { display: grid; grid-template-columns: 9cqi 1fr; }
+.g-carousel ol li b { font-family: var(--mm-font-mono); font-weight: 400; font-size: 4.6cqi; color: var(--mm-c-signal); padding-top: .5cqi; }
+.g-carousel .pill { align-self: start; display: inline-flex; align-items: center; height: 13cqi; padding: 0 7cqi; border-radius: 999px; background: var(--mm-c-signal); color: var(--mm-c-on-accent); font-size: 5.6cqi; font-weight: 600; }
+.g-social-row { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 900px) { .g-social-row { grid-template-columns: minmax(0, 1fr); } }
+.g-story-wrap { display: flex; gap: 16px; justify-content: center; padding: 22px; background: var(--mm-c-raise-1); flex-wrap: wrap; }
+.g-story { position: relative; width: 220px; aspect-ratio: 9 / 16; border-radius: 14px; background: #000; overflow: hidden; container-type: inline-size; display: flex; flex-direction: column; justify-content: center; padding: 0 9%; gap: 6cqi; box-shadow: 0 0 0 1px rgba(244, 244, 241, .16); }
+.g-story .g-curtain { height: 55%; }
+.g-story .ttl { position: relative; margin: 0; font-size: 11cqi; font-weight: 500; line-height: 1.02; letter-spacing: -.035em; }
+.g-story .ttl span { color: rgba(244, 244, 241, .5); display: block; }
+.g-story .mm-label { font-size: 5cqi; position: relative; }
+.g-story .zone { position: absolute; left: 0; right: 0; background: repeating-linear-gradient(135deg, rgba(255, 122, 89, .16) 0 4px, transparent 4px 9px); border-color: rgba(255, 122, 89, .55); border-style: dashed; border-width: 0; font-family: var(--mm-font-mono); font-size: 4.2cqi; letter-spacing: .06em; text-transform: uppercase; color: #ff9a80; display: flex; align-items: center; justify-content: center; }
+.g-story .zone.t { top: 0; height: 14%; border-bottom-width: 1px; }
+.g-story .zone.b { bottom: 0; height: 20%; border-top-width: 1px; }
+.g-story .stk { position: relative; align-self: start; display: inline-flex; align-items: center; gap: 2cqi; height: 12cqi; padding: 0 5cqi; border-radius: 999px; background: var(--mm-c-bone); color: #0e0e10; font-size: 5.4cqi; font-weight: 600; }
+.g-story .stk svg { width: 5.6cqi; height: 5.6cqi; }
+.g-caption { border-radius: var(--mm-radius-lg); box-shadow: var(--mm-shadow-ring); padding: 20px 22px; display: grid; gap: 12px; background: var(--mm-surface); }
+.g-caption p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--mm-text-muted); }
+.g-caption p b { color: var(--mm-text); font-weight: 500; }
+.g-caption .tags { font-family: var(--mm-font-mono); font-size: 12px; color: var(--mm-text-faint); }
+
 /* hero mosaic */
 .g-mosaic { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: 118px; gap: 12px; grid-auto-flow: dense; margin-top: 18px; }
 .g-mosaic > * { border-radius: var(--mm-radius-lg); overflow: hidden; position: relative; min-width: 0; box-shadow: var(--mm-shadow-ring); }
@@ -358,7 +409,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
         <div class="g-ticket">
           <div class="h"><b>muzmesh</b><span>Brand pass</span></div>
           <div class="b"><span class="lbl">From · To</span><div class="route"><span>V1</span><i></i><span>V2</span></div>
-          <div class="row"><div><span class="lbl">Passenger</span>MuzMesh</div><div><span class="lbl">Chapters</span>14</div><div><span class="lbl">Class</span>Launch</div></div></div>
+          <div class="row"><div><span class="lbl">Passenger</span>MuzMesh</div><div><span class="lbl">Chapters</span>15</div><div><span class="lbl">Class</span>Launch</div></div></div>
           <div class="tear"></div>
           <div class="f"><div><span class="lbl">Accent</span></div><b>#F2580F</b></div>
         </div>
@@ -387,8 +438,9 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     <a href="#motion"><span>10</span>Motion</a>
     <a href="#voice"><span>11</span>Voice and copy</a>
     <a href="#apply"><span>12</span>Applying it</a>
-    <a href="#tokens"><span>13</span>Tokens and files</a>
-    <a href="#audit"><span>14</span>Audit and open items</a>
+    <a href="#social"><span>13</span>Social kit</a>
+    <a href="#tokens"><span>14</span>Tokens and files</a>
+    <a href="#audit"><span>15</span>Audit and open items</a>
   </aside>
 
   <main class="g-main">
@@ -734,7 +786,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
       <header>
         <span class="mm-label">12 · Applying it</span>
         <h2 class="mm-h2"><span class="mm-dim">Same rules,</span> every surface.</h2>
-        <p class="mm-lead">Starting points for the things we make most. Social posts are 1080×1350, link previews 1200×630, documents A4 or Letter in the Paper theme.</p>
+        <p class="mm-lead">Starting points for the things we make most. Documents are A4 or Letter in the Paper theme. The full social kit, with every size, is in the next chapter.</p>
       </header>
       <div class="g-apps">
         <div class="g-stage"><div class="g-post"><span class="mm-label">Launch notes</span><p class="ttl"><span>Your AI startup looks like the last 40 you saw.</span>Here’s how to fix it in five days.</p><div class="ft"><img src="{{WORDMARK_LIGHT}}" alt="muzmesh"><span class="mm-label is-quiet">1 / 6</span></div></div><div class="g-cap"><span>Social · Launch</span><span>1080×1350</span></div></div>
@@ -754,10 +806,97 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
       </tbody></table></div>
     </section>
 
+    <!-- social -->
+    <section class="g-ch" id="social">
+      <header>
+        <span class="mm-label">13 · Social kit</span>
+        <h2 class="mm-h2"><span class="mm-dim">Same voice,</span> every feed.</h2>
+        <p class="mm-lead">Profiles, feed posts, carousels, stories and captions for LinkedIn, Instagram, X and Fiverr. Every template uses the type, colours and labels above, so a post looks like the homepage at a glance.</p>
+      </header>
+
+      <h3>Profiles</h3>
+      <div class="g-social-row">
+        <div class="g-stage" style="background:var(--mm-c-raise-1)"><div>
+          <div class="g-banner"><div class="g-curtain" aria-hidden="true"></div><span class="safe">Avatar covers this</span><p class="ttl"><span>Every AI startup looks the same.</span> Yours won’t.</p><span class="lbl">Brand · site · launch kit · 5 days</span></div>
+          <div class="g-profile"><img src="{{AVATAR}}" alt=""><div><b>MuzMesh Creative</b><small>Launch kits for AI startups. Brand, site and socials in five days.</small></div></div>
+        </div><div class="g-cap"><span>Cover / banner · keep text right of the avatar</span><span>LinkedIn 1584×396 · X 1500×500</span></div></div>
+        <div class="g-stage"><div class="g-avs"><img class="c" src="{{AVATAR}}" alt="Round crop"><img class="r" src="{{AVATAR}}" alt="Rounded square crop"><img class="s" src="{{AVATAR}}" alt="Small round crop"></div><div class="g-cap"><span>Avatar · same file everywhere</span><span>800×800 · round-safe</span></div></div>
+      </div>
+
+      <h3>Feed rhythm</h3>
+      <div class="g-social-row">
+        <div class="g-stage"><div class="g-feed">
+          <div class="g-post"><span class="mm-label">Launch notes</span><p class="ttl"><span>Your startup looks like the last 40.</span>Fix it in five days.</p><div class="ft"><img src="{{WORDMARK_LIGHT}}" alt=""></div></div>
+          <div class="g-post g-casepost"><img src="{{IMG_PEOPLE_MONO}}" alt=""><span class="mm-label">Case study</span><p class="ttl">LexGPT, before and after.</p><div class="ft"><img src="{{WORDMARK_LIGHT}}" alt=""></div></div>
+          <div class="g-post paper"><span class="mm-label">Before / after</span><p class="ttl"><span>Generated in a minute.</span>Designed in five days.</p><div class="ft"><img src="{{WORDMARK}}" alt=""></div></div>
+          <div class="g-post paper"><span class="mm-label">Number</span><p class="stat">5<i>.</i></p><p class="ttl" style="font-size:7cqi"><span>Days from brief</span>to a live launch kit.</p></div>
+          <div class="g-post"><div class="g-curtain" aria-hidden="true"></div><span class="mm-label" style="position:relative">Launch pass</span><p class="ttl" style="position:relative"><span>Brand, site, socials.</span>$500 once.</p><div class="ft" style="position:relative"><img src="{{WORDMARK_LIGHT}}" alt=""></div></div>
+          <div class="g-post g-casepost"><img src="{{IMG_HANDS_MONO}}" alt=""><span class="mm-label">Process</span><p class="ttl">Day 1: the name on paper.</p><div class="ft"><img src="{{WORDMARK_LIGHT}}" alt=""></div></div>
+          <div class="g-post g-casepost"><img src="{{IMG_DESK_MONO}}" alt=""><span class="mm-label">Behind it</span><p class="ttl">One person, one week.</p><div class="ft"><img src="{{WORDMARK_LIGHT}}" alt=""></div></div>
+          <div class="g-post"><span class="mm-label">Tip</span><p class="ttl"><span>Cut the gradient.</span>Keep one colour.</p><div class="ft"><img src="{{WORDMARK_LIGHT}}" alt=""></div></div>
+          <div class="g-post paper"><span class="mm-label">Quote</span><p class="ttl" style="font-size:9cqi">“Looks like we raised a Series A.”</p><div class="ft"><span class="mm-label is-quiet" style="color:#686764">Founder, Bookly</span></div></div>
+        </div><div class="g-cap"><span>Instagram grid · 4:5 posts</span><span>Black · photo · paper</span></div></div>
+        <div class="g-dd" style="grid-template-columns:minmax(0,1fr)">
+          <div class="g-do"><h4>Mix</h4><ul>
+            <li>About half the grid is black, a quarter photos in duotone, a quarter Paper. Never three Paper posts in a row.</li>
+            <li>One idea per post. If it needs a second sentence, make it a carousel.</li>
+            <li>The orange stays small: the label square, one full stop, one button. Never an orange background post.</li>
+          </ul></div>
+          <div class="g-dont"><h4>Don’t</h4><ul>
+            <li>Stock 3D blobs, robot hands, glowing brains, emoji in headlines.</li>
+            <li>Text over a busy photo without the dark gradient.</li>
+            <li>Templates from Canva with their own fonts. Rebuild them in Inter Tight.</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <h3>Carousel</h3>
+      <div class="g-stage"><div class="g-carousel">
+        <div class="g-post"><span class="mm-label">Launch notes</span><p class="ttl"><span>5 signs your AI startup</span>looks generic.</p><div class="ft"><img src="{{WORDMARK_LIGHT}}" alt=""><span>SWIPE →</span></div></div>
+        <div class="g-post"><span class="mm-label">01</span><p class="ttl"><span>A purple gradient.</span>So does everyone.</p><div class="ft"><img src="{{WORDMARK_LIGHT}}" alt=""><span>2 / 6</span></div></div>
+        <div class="g-post"><span class="mm-label">The fix</span><ol><li><b>01</b>One brand colour, used rarely.</li><li><b>02</b>One typeface, two weights.</li><li><b>03</b>Real screenshots, framed.</li></ol><div class="ft"><img src="{{WORDMARK_LIGHT}}" alt=""><span>5 / 6</span></div></div>
+        <div class="g-post paper"><span class="mm-label">Before / after</span><p class="ttl"><span>Same product.</span>Different first impression.</p><div class="ft"><img src="{{WORDMARK}}" alt=""><span>4 / 6</span></div></div>
+        <div class="g-post"><div class="g-curtain" aria-hidden="true"></div><span class="mm-label" style="position:relative">Your turn</span><p class="ttl" style="position:relative"><span>Launch kit in five days.</span>Link in bio.</p><span class="pill" style="position:relative">Plan my launch</span></div>
+      </div><div class="g-cap"><span>Cover · point · list · proof · CTA (6–8 slides)</span><span>1080×1350 each</span></div></div>
+
+      <h3>Stories and reels</h3>
+      <div class="g-social-row">
+        <div class="g-stage"><div class="g-story-wrap">
+          <div class="g-story"><div class="g-curtain" aria-hidden="true"></div><span class="zone t">Keep clear · 250px</span><span class="mm-label">New case study</span><p class="ttl"><span>LexGPT went live</span>in five days.</p><span class="stk">See it {{ICON:arrow-right}}</span><span class="zone b">Keep clear · 340px</span></div>
+          <div class="g-story" style="background:#f3f0e8;color:#1d1d1f"><span class="zone t">Keep clear</span><span class="mm-label" style="color:#1d1d1f">Poll</span><p class="ttl"><span style="color:#8a8884">Which hero</span>would you ship?</p><span class="stk" style="background:#1d1d1f;color:#f4f4f1">A or B</span><span class="zone b">Keep clear</span></div>
+        </div><div class="g-cap"><span>Story / reel cover · text in the middle 60%</span><span>1080×1920</span></div></div>
+        <div class="g-caption">
+          <span class="mm-label">Caption template</span>
+          <p><b>Your AI startup looks like the last 40 you scrolled past.</b></p>
+          <p>It isn’t the product. It’s the purple gradient, the robot hand and the stock font. We fix that in five days: one name, one colour, one site that looks like you meant it.</p>
+          <p><b>Plan your launch →</b> muzmeshcreative.com</p>
+          <span class="tags">#AIstartups #branding #launch  ·  3 tags max, at the end</span>
+          <div class="g-dd" style="grid-template-columns:minmax(0,1fr);gap:10px"><ul>
+            <li>First line is the headline. It has to work before “more”.</li>
+            <li>Short sentences, no emoji bullets, one link, one ask.</li>
+            <li>Alt text on every image: what it shows, not “image of”.</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <h3>Sizes</h3>
+      <div class="g-table-wrap"><table class="g-table"><thead><tr><th>Asset</th><th>Size</th><th>Theme</th><th>Notes</th></tr></thead><tbody>
+        <tr><td>Feed post, carousel slide</td><td>1080×1350 (4:5)</td><td>Launch, Paper, photo</td><td>Instagram, LinkedIn. Label top left, wordmark bottom left, 86px margin.</td></tr>
+        <tr><td>Square post</td><td>1080×1080</td><td>Launch</td><td>X and Facebook only. Same layout, tighter headline.</td></tr>
+        <tr><td>Story, reel cover</td><td>1080×1920 (9:16)</td><td>Launch</td><td>Keep the top 250px and bottom 340px clear of text.</td></tr>
+        <tr><td>Link preview (OG)</td><td>1200×630</td><td>Launch</td><td>See “Applying it”. Headline left, wordmark and pill right.</td></tr>
+        <tr><td>LinkedIn banner</td><td>1584×396</td><td>Launch + curtain</td><td>Text starts at 30% from the left; the avatar covers the bottom left.</td></tr>
+        <tr><td>X header</td><td>1500×500</td><td>Launch + curtain</td><td>Same art as LinkedIn, re-cropped. Keep text in the middle 60%.</td></tr>
+        <tr><td>Avatar</td><td>800×800</td><td>Black</td><td><code>muzmesh-avatar.svg</code>. Works round and square. Never the full wordmark.</td></tr>
+        <tr><td>YouTube / reel thumbnail</td><td>1280×720</td><td>Launch</td><td>Max five words. One real screen in <code>.mm-window</code>, no faces pulling expressions.</td></tr>
+        <tr><td>Fiverr gig image</td><td>1280×769</td><td>Launch</td><td>Two-tone headline, one framed project, no badges or stickers.</td></tr>
+      </tbody></table></div>
+    </section>
+
     <!-- 11 -->
     <section class="g-ch" id="tokens">
       <header>
-        <span class="mm-label">13 · Tokens and files</span>
+        <span class="mm-label">14 · Tokens and files</span>
         <h2 class="mm-h2"><span class="mm-dim">One source,</span> four outputs.</h2>
         <p class="mm-lead">Every value on this page is generated from <code>docs/brand/build-tokens.mjs</code>. Change it there, run the script, and the JSON, the CSS, the Tailwind theme and this guideline update together.</p>
       </header>
@@ -785,7 +924,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     <!-- 12 -->
     <section class="g-ch" id="audit">
       <header>
-        <span class="mm-label">14 · Audit and open items</span>
+        <span class="mm-label">15 · Audit and open items</span>
         <h2 class="mm-h2"><span class="mm-dim">What we checked,</span> what we changed.</h2>
         <p class="mm-lead">The guideline was audited against the homepage stylesheet (<code>web/src/styles/home.css</code>) and the rest of the site. These are the gaps found, how they were settled, and what still needs a decision.</p>
       </header>
@@ -799,6 +938,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
         <div><span class="g-tag fix">Fixed</span><span><b>Dots vs squares.</b> Rule written down: a square marks a label or list item, a circle marks something live or a position.</span></div>
         <div><span class="g-tag fix">Fixed</span><span><b>Retired v1.</b> Yellow #FFD60A, Archivo and the paper-first layout are archived. The four hero test palettes (Oxblood, Teal, Magenta, Green) were explorations for an earlier hero and are not part of the brand.</span></div>
         <div><span class="g-tag fix">Added</span><span><b>Iconography and imagery.</b> v2 first shipped without them. There is now a 28-icon set on one grid, a photo grade (natural and duotone), texture rules and visual do/don’t examples.</span></div>
+        <div><span class="g-tag fix">Added</span><span><b>Social kit.</b> Profiles, banner safe zones, feed rhythm, a carousel structure, story safe zones, a caption template and a size table for every platform we use.</span></div>
         <div><span class="g-tag">Follow-up</span><span><b>Point home.css at the tokens.</b> Once the homepage PR is merged, its local <code>--y</code>, <code>--fg</code> and <code>--raise</code> variables can read from tokens.css. Values already match, apart from the hover and faint fixes above.</span></div>
         <div><span class="g-tag open">Open</span><span><b>Our own photos.</b> The example photos are stock (credited). Shoot a few real work sessions to replace them.</span></div>
         <div><span class="g-tag open">Open</span><span><b>Custom logo.</b> The outlined wordmark and “m.” avatar are the working logo. Commission a drawn mark later, or keep this one.</span></div>
