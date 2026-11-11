@@ -2,7 +2,7 @@
 // The homepage has its own nav, footer and styles (the scroll story), so it
 // doesn't use BaseLayout or the Tailwind base styles.
 import '@/styles/home.css';
-import VercelAnalytics from '@/components/VercelAnalytics.astro';
+import Analytics from '@vercel/analytics/astro';
 
 interface Props {
   title: string;
@@ -33,7 +33,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Serif:ital@0;1&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap"
     />
-    <VercelAnalytics />
+    <Analytics />
   </head>
   <body>
     <slot />
