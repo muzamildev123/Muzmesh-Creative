@@ -4,6 +4,8 @@ The new muzmeshcreative.com: an Astro + TypeScript + Tailwind site in `web/`, bl
 
 Start with **[docs/project-brief.md](docs/project-brief.md)**: goals, team, phases and open questions on one page.
 
+Brand: **[docs/brand/brand-guidelines.html](docs/brand/brand-guidelines.html)** (logo, colours, type, components, voice, tokens). Every page and asset follows it.
+
 Strategy, offer, copy, sitemap and the 301 redirect map live in **[docs/positioning.md](docs/positioning.md)**. Site copy comes from there.
 
 ## Two folders, two apps

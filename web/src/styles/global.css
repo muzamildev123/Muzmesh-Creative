@@ -1,16 +1,46 @@
 @import 'tailwindcss';
+@import './tokens.css';
+@import './brand.css';
 @plugin '@tailwindcss/typography';
 
-/* Brand tokens. Placeholder values until the Figma design system is final. */
+/* MuzMesh brand tokens (v2). Source of truth: docs/brand/build-tokens.mjs. Guideline: docs/brand/brand-guidelines.html.
+   The --color-mm-* utilities follow the theme of the element they sit in (Launch by default, Paper under data-theme="paper"). */
+@theme inline {
+  --font-sans: var(--mm-font-sans);
+  --font-mono: var(--mm-font-mono);
+  --color-mm-bg: var(--mm-bg);
+  --color-mm-surface: var(--mm-surface);
+  --color-mm-surface-2: var(--mm-surface-2);
+  --color-mm-text: var(--mm-text);
+  --color-mm-muted: var(--mm-text-muted);
+  --color-mm-faint: var(--mm-text-faint);
+  --color-mm-dim: var(--mm-text-dim);
+  --color-mm-hair: var(--mm-hair);
+  --color-mm-border: var(--mm-border);
+  --color-mm-accent: var(--mm-accent);
+  --color-mm-accent-hover: var(--mm-accent-hover);
+  --color-mm-on-accent: var(--mm-on-accent);
+  --color-mm-accent-text: var(--mm-accent-text);
+  --color-mm-danger: var(--mm-danger);
+  --color-mm-success: var(--mm-success);
+  --radius-mm-md: var(--mm-radius-md);
+  --radius-mm-lg: var(--mm-radius-lg);
+  --radius-mm-pill: var(--mm-radius-pill);
+  --shadow-mm-window: var(--mm-shadow-window);
+  --shadow-mm-glow: var(--mm-shadow-glow);
+}
+
+/* The older light pages (plans, services, industries ...) still use these names.
+   They now point at the Paper theme so those pages stay readable and on-brand until they are redesigned.
+   brand = signal-ink (orange that passes AA as text and behind white text). */
 @theme {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --color-ink: #0f172a;
-  --color-muted: #475569;
-  --color-line: #e2e8f0;
-  --color-surface: #f8fafc;
-  --color-brand: #4f46e5;
-  --color-brand-dark: #3730a3;
-  --color-warn: #b45309;
+  --color-ink: #1d1d1f;
+  --color-muted: #595857;
+  --color-line: #d9d4c7;
+  --color-surface: #f3f0e8;
+  --color-brand: #b33a06;
+  --color-brand-dark: #9e3608;
+  --color-warn: #b42318;
 }
 
 html {
