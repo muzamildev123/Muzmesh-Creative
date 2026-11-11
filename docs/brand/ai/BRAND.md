@@ -315,6 +315,7 @@ We write like a founder talking to a founder: short sentences, real numbers, no 
 - **Numbers:** exact and true. “$500 to set up, $200 a month.” “Live in five business days.” Never invent stats, testimonials, client names or “10x”.
 - **Words we use:** launch, kit, pass, founder, live, yours.
 - **Words we never use:** revolutionary, unlock, seamless, supercharge, cutting-edge, AI-powered, game-changer, elevate, leverage, world-class, pixel-perfect, and emoji.
+- **The human line:** “designed by people”, word for word, everywhere. Never “made by people”, “human-led, AI-assisted” or “handcrafted”.
 - **Names:** MuzMesh in text, muzmesh (lowercase) in the logo, MuzMesh Creative for the legal name. “Five days” in copy, “5 days” in labels.
 
 Write: “A designer draws your logo, sets your brand and designs your page in Figma.”
