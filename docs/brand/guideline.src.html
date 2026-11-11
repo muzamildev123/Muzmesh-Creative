@@ -442,6 +442,76 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
 .g-punct p { margin: 6px 0 0; font-size: 14px; line-height: 1.45; color: var(--mm-text-muted); }
 @media (max-width: 900px) { .g-wt { grid-template-columns: repeat(2, minmax(0, 1fr)); } .g-punct { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .g-track > div { grid-template-columns: minmax(0, 1fr); gap: 8px; } .g-nums, .g-kern, .g-punct { grid-template-columns: minmax(0, 1fr); } .g-kern .w { font-size: 30px; } }
+
+/* motion chapter: live demos */
+.g-motion { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.g-mo-bar { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.g-mo { display: grid; gap: 16px; align-content: start; padding: 22px 24px; min-width: 0; }
+.g-mo-wide { grid-column: 1 / -1; }
+.g-mo p { margin: 0; font-size: 14px; line-height: 1.45; color: var(--mm-text-muted); }
+.g-mo-c { display: grid; place-items: center; min-height: 132px; }
+.g-motion.is-paused *, .g-motion.is-paused *::before, .g-motion.is-paused *::after { animation-play-state: paused !important; }
+/* 1 story */
+.g-scroll { display: grid; gap: 18px; padding: 8px 0 4px; }
+.g-scroll .track { position: relative; height: 2px; background: var(--mm-hair); border-radius: 2px; }
+.g-scroll .fill { position: absolute; inset: 0; background: var(--mm-accent); transform-origin: left; transform: scaleX(var(--p)); }
+.g-scroll .head { position: absolute; top: -5px; left: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--mm-accent); transform: translateX(calc(var(--p) * (var(--w, 600px) - 12px))); box-shadow: 0 0 0 5px rgba(242,88,15,.18); }
+.g-scroll ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.g-scroll li { font-family: var(--mm-font-sans); text-transform: none; font-size: 22px; font-weight: 600; letter-spacing: -.015em; color: var(--mm-text-faint); transition: color var(--mm-dur-base) var(--mm-ease-out); }
+.g-scroll li.on { color: var(--mm-text); }
+.g-scroll .tk { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 14px 18px; border-radius: var(--mm-radius-md, 12px); background: var(--mm-surface-2); box-shadow: var(--mm-shadow-ring); transform: translateY(calc((1 - var(--p)) * 6px)) rotate(calc((0.5 - var(--p)) * 2deg)); }
+.g-scroll .tk b { font-family: var(--mm-font-sans); text-transform: none; font-size: 22px; font-weight: 700; letter-spacing: -.015em; }
+.g-scroll-pct { font-family: var(--mm-font-mono); font-size: 12px; color: var(--mm-accent); font-feature-settings: var(--mm-features-num); }
+.g-scrub { display: flex; align-items: center; gap: 14px; }
+.g-scrub input { flex: 1; accent-color: var(--mm-accent); }
+/* 2 easing */
+.g-race { display: grid; gap: 14px; }
+.g-race .ln { display: grid; gap: 6px; container-type: inline-size; }
+.g-race .ln i { display: block; width: 12px; height: 12px; border-radius: 50%; background: var(--mm-accent); animation: g-race-o 2.6s infinite; }
+.g-race .ln.io i { animation-name: g-race-io; } .g-race .ln.bad i { animation-name: g-race-l; }
+.g-race .ln.bad i { background: var(--mm-text-faint); }
+.g-race .ln span { font-family: var(--mm-font-mono); font-size: 12px; color: var(--mm-text-muted); }
+@keyframes g-race-o { 0%, 12% { transform: translateX(0); animation-timing-function: cubic-bezier(.2,.7,.2,1); } 52%, 100% { transform: translateX(calc(100cqw - 12px)); } }
+@keyframes g-race-io { 0%, 12% { transform: translateX(0); animation-timing-function: cubic-bezier(.45,0,.55,1); } 52%, 100% { transform: translateX(calc(100cqw - 12px)); } }
+@keyframes g-race-l { 0%, 12% { transform: translateX(0); animation-timing-function: linear; } 52%, 100% { transform: translateX(calc(100cqw - 12px)); } }
+/* 3 durations */
+.g-durs { display: grid; gap: 14px; }
+.g-durs > div { display: grid; grid-template-columns: 52px minmax(0, 1fr); column-gap: 12px; row-gap: 4px; align-items: center; }
+.g-durs .b { height: 8px; border-radius: 8px; background: var(--mm-hair); overflow: hidden; }
+.g-durs .b i { display: block; height: 100%; background: var(--mm-accent); transform-origin: left; transform: scaleX(0); animation: 2s infinite; }
+.g-durs em { grid-column: 2; font-style: normal; font-size: 13px; color: var(--mm-text-faint); }
+.g-durs .d1 { animation-name: g-d1; } .g-durs .d2 { animation-name: g-d2; } .g-durs .d3 { animation-name: g-d3; }
+@keyframes g-d1 { 0%, 20% { transform: scaleX(0); animation-timing-function: var(--mm-ease-out); } 27.5%, 85% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+@keyframes g-d2 { 0%, 20% { transform: scaleX(0); animation-timing-function: var(--mm-ease-out); } 30%, 85% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+@keyframes g-d3 { 0%, 20% { transform: scaleX(0); animation-timing-function: var(--mm-ease-out); } 55%, 85% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+/* 4 button */
+.g-auto-btn { animation: g-btn 3.2s infinite; pointer-events: none; }
+@keyframes g-btn {
+  0%, 30% { transform: none; background: var(--mm-accent); animation-timing-function: var(--mm-ease-out); }
+  36.25%, 70% { transform: translateY(-1px); background: var(--mm-accent-hover); animation-timing-function: var(--mm-ease-out); }
+  74.7%, 80% { transform: translateY(0) scale(.98); background: var(--mm-accent-press); animation-timing-function: var(--mm-ease-out); }
+  86%, 100% { transform: none; background: var(--mm-accent); }
+}
+/* 5 arrival */
+.g-arrive { display: grid; gap: 6px; padding: 16px 18px; border-radius: 12px; background: var(--mm-surface-2); box-shadow: var(--mm-shadow-ring); animation: g-arrive 3.6s infinite; }
+.g-arrive b { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+@keyframes g-arrive { 0%, 8% { opacity: 0; transform: translateY(12px); animation-timing-function: var(--mm-ease-out); } 27.4%, 82% { opacity: 1; transform: none; animation-timing-function: var(--mm-ease-in-out); } 92%, 100% { opacity: 0; transform: none; } }
+/* 6 live */
+.g-livepill { display: inline-flex; align-items: center; gap: 10px; padding: 9px 16px; border-radius: 999px; box-shadow: var(--mm-shadow-ring); font-size: 14px; color: var(--mm-text-muted); }
+/* 7 clock */
+.g-clock { font-size: 44px; font-weight: 500; letter-spacing: -.04em; line-height: 1; font-feature-settings: var(--mm-features-num); }
+/* 8 don't */
+.g-mo-no { grid-column: 1 / -1; box-shadow: inset 0 0 0 1px rgba(180,35,24,.55); }
+.g-nos { display: flex; flex-wrap: wrap; gap: 14px 48px; min-height: 72px; align-items: center; }
+.g-nos span { font-size: 22px; font-weight: 600; letter-spacing: -.015em; }
+.g-shimmer { background: linear-gradient(100deg, var(--mm-text-faint) 30%, var(--mm-text) 50%, var(--mm-text-faint) 70%); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: g-shim 2s linear infinite; }
+@keyframes g-shim { from { background-position: 100% 0; } to { background-position: -150% 0; } }
+.g-glowpulse { color: var(--mm-accent); animation: g-glow 1.6s ease-in-out infinite; }
+@keyframes g-glow { 50% { text-shadow: 0 0 18px rgba(242,88,15,.9); } }
+.g-blurin { animation: g-blur 2.4s infinite; }
+@keyframes g-blur { 0% { filter: blur(10px); opacity: 0; } 40%, 80% { filter: none; opacity: 1; } 100% { filter: blur(10px); opacity: 0; } }
+@media (max-width: 1000px) { .g-motion { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .g-motion { grid-template-columns: minmax(0, 1fr); } .g-scroll li { font-size: 15px; letter-spacing: 0; } .g-scroll .tk b { font-size: 17px; } }
 </style>
 
 <div class="mm">
@@ -866,8 +936,76 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
       <header>
         <span class="mm-label">10 · Motion</span>
         <h2 class="mm-h2"><span class="mm-dim">One story,</span> scrubbed by scroll.</h2>
-        <p class="mm-lead">The homepage is a single timeline you scroll through: build, launch, get lost, get found. Everything else moves quietly.</p>
+        <p class="mm-lead">The homepage is a single timeline you scroll through: build, launch, get lost, get found. Everything else moves quietly. Watch it below.</p>
       </header>
+      <div class="g-motion" id="g-motion">
+        <div class="g-mo-bar"><span class="mm-label is-quiet">Live examples · they loop</span><button type="button" class="mm-btn is-ghost is-sm" id="g-mo-toggle" aria-pressed="false">Pause motion</button></div>
+
+        <div class="g-stage g-mo g-mo-wide">
+          <span class="mm-label is-quiet">1 · The story, scrubbed by scroll</span>
+          <div class="g-scroll" id="g-scroll" style="--p:0">
+            <div class="track"><i class="fill"></i><i class="head"></i></div>
+            <ol><li>Build</li><li>Launch</li><li>Get lost</li><li>Get found</li></ol>
+            <div class="tk"><span class="mm-micro">Launch pass · Gate 04</span><b>muzmesh</b><span class="g-scroll-pct">0%</span></div>
+          </div>
+          <label class="g-scrub"><span class="mm-micro">Drag to scrub</span><input type="range" min="0" max="1000" value="0" id="g-scroll-range" aria-label="Scrub the story"></label>
+          <p>Progress follows the scroll position one to one. No easing of its own, no autoplay on the real page.</p>
+        </div>
+
+        <div class="g-stage g-mo">
+          <span class="mm-label is-quiet">2 · Easing</span>
+          <div class="g-race">
+            <div class="ln"><i></i><span>ease-out · reveals, lifts</span></div>
+            <div class="ln io"><i></i><span>ease-in-out · loops, blinks</span></div>
+            <div class="ln bad"><i></i><span>linear · never for UI</span></div>
+          </div>
+          <p>Ease-out arrives fast and settles. Same distance, same time, different feel.</p>
+        </div>
+
+        <div class="g-stage g-mo">
+          <span class="mm-label is-quiet">3 · Duration</span>
+          <div class="g-durs">
+            <div><span class="mm-data">150ms</span><span class="b"><i class="d1"></i></span><em>press, lift</em></div>
+            <div><span class="mm-data">200ms</span><span class="b"><i class="d2"></i></span><em>colour, hover</em></div>
+            <div><span class="mm-data">700ms</span><span class="b"><i class="d3"></i></span><em>reveals</em></div>
+          </div>
+          <p>Anything the hand triggers answers in 200ms or less.</p>
+        </div>
+
+        <div class="g-stage g-mo">
+          <span class="mm-label is-quiet">4 · Button hover and press</span>
+          <div class="g-mo-c"><span class="mm-btn is-primary g-auto-btn">Plan my launch <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5"/></svg></span></div>
+          <p>Hover: 1px lift and a lighter orange in 200ms. Press: drops back, darker, in 150ms.</p>
+        </div>
+
+        <div class="g-stage g-mo">
+          <span class="mm-label is-quiet">5 · Arrival</span>
+          <div class="g-mo-c"><div class="g-arrive"><span class="mm-micro">Booked · Slot 03</span><b>Kickoff, Monday 10:00</b><span class="mm-data">Confirmation sent to your inbox</span></div></div>
+          <p>New things (a ticket, a toast) rise 12px and fade in over 700ms. Page content is never hidden at rest.</p>
+        </div>
+
+        <div class="g-stage g-mo">
+          <span class="mm-label is-quiet">6 · Live signal</span>
+          <div class="g-mo-c"><span class="g-livepill"><i class="mm-live"></i>3 launch slots left in December</span></div>
+          <p>One soft ring every 2.4s, only on things that are actually live.</p>
+        </div>
+
+        <div class="g-stage g-mo">
+          <span class="mm-label is-quiet">7 · Ticking numbers</span>
+          <div class="g-mo-c"><span class="g-clock" id="g-clock">04:23:59:08</span></div>
+          <p>Countdowns change the digits only. Tabular figures keep them from jumping.</p>
+        </div>
+
+        <div class="g-stage g-mo g-mo-no">
+          <span class="mm-label is-quiet">8 · Don’t</span>
+          <div class="g-nos">
+            <span class="g-shimmer">Shimmer text</span>
+            <span class="g-glowpulse">Glow pulse</span>
+            <span class="g-blurin">Blur fade-in</span>
+          </div>
+          <p>Shimmer, glow pulses and blur reveals feel like a template. They also animate expensive properties.</p>
+        </div>
+      </div>
       <div class="g-table-wrap"><table class="g-table"><thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead><tbody>{{MOTION_ROWS}}</tbody></table></div>
       <div class="g-dd">
         <div class="g-do"><h4>Do</h4><ul>
@@ -1221,4 +1359,43 @@ document.querySelectorAll('[data-copy]').forEach(function (b) {
     if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(function () { done(true); }, fallback); else fallback();
   });
 });
+</script>
+
+<script>
+/* motion chapter: play/pause, the scroll story and the countdown */
+(function () {
+  var box = document.getElementById('g-motion'); if (!box) return;
+  var btn = document.getElementById('g-mo-toggle');
+  var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var paused = false;
+  function setPaused(v) { paused = v; box.classList.toggle('is-paused', v); btn.textContent = v ? 'Play motion' : 'Pause motion'; btn.setAttribute('aria-pressed', v ? 'true' : 'false'); }
+  btn.addEventListener('click', function () { setPaused(!paused); });
+  if (reduced) setPaused(true);
+  var story = document.getElementById('g-scroll'), range = document.getElementById('g-scroll-range');
+  var steps = story.querySelectorAll('li'), pct = story.querySelector('.g-scroll-pct'), track = story.querySelector('.track');
+  var p = 0, dragging = false, last = null, LOOP = 7000;
+  function draw() {
+    story.style.setProperty('--p', p.toFixed(4));
+    story.style.setProperty('--w', track.offsetWidth + 'px');
+    for (var i = 0; i < steps.length; i++) steps[i].classList.toggle('on', p >= i / steps.length + 0.02 || (i === 0 && p > 0.01));
+    pct.textContent = Math.round(p * 100) + '%';
+    if (!dragging) range.value = Math.round(p * 1000);
+  }
+  range.addEventListener('input', function () { dragging = true; p = range.value / 1000; draw(); });
+  range.addEventListener('change', function () { dragging = false; });
+  range.addEventListener('pointerup', function () { dragging = false; });
+  function frame(t) {
+    if (last != null && !paused && !dragging) { p += (t - last) / LOOP; if (p > 1.15) p = 0; }
+    last = t; var shown = p; if (p > 1) { p = 1; draw(); p = shown; } else draw();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  var clock = document.getElementById('g-clock'), left = ((4 * 24 + 23) * 60 + 59) * 60 + 8;
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  setInterval(function () {
+    if (paused) return; left = left > 0 ? left - 1 : 400000;
+    var d = Math.floor(left / 86400), h = Math.floor(left % 86400 / 3600), m = Math.floor(left % 3600 / 60), s = left % 60;
+    clock.textContent = pad(d) + ':' + pad(h) + ':' + pad(m) + ':' + pad(s);
+  }, 1000);
+})();
 </script>
