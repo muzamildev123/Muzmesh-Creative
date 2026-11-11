@@ -801,6 +801,74 @@ html:not(.open) .fq{display:none}
   .fq-end{margin-top:48px}
 }
 @media (prefers-reduced-motion:reduce){.fq-a,.fq-a.on,.fq-q,.fq-q i,.fq-q svg{transition:none!important}}
+
+/* ---------- Final CTA: the prompt bar comes back (.lc- prefix) ----------
+   The page ends on the object it opened with. Instead of an idea to generate, a short launch brief written as a
+   sentence, pre-filled from the idea they typed and the name the story gave it. Sending it gets a person, not a build. */
+html:not(.open) .lc{display:none}
+.lc{position:relative;overflow:hidden;background:var(--bg);padding-top:clamp(110px,12vw,170px);padding-bottom:clamp(110px,11vw,160px);border-top:1px solid var(--hair)}
+.lc::before{content:"";position:absolute;inset:auto -10% -40% -10%;height:80%;pointer-events:none;
+  background:radial-gradient(50% 60% at 50% 100%,rgba(var(--y-c),.20),rgba(var(--y-c),.06) 55%,transparent 75%)}
+.lc-in{position:relative;width:min(860px,100%);margin:0 auto;display:grid;justify-items:center;text-align:center}
+.lc-h{margin:0;font-weight:500;font-size:clamp(36px,4.2vw,64px);line-height:1.05;letter-spacing:-.03em;max-width:21ch;text-wrap:balance}
+.lc-h span{color:var(--faint)}
+.lc-box{width:100%;margin-top:44px;text-align:left;border-radius:28px;padding:30px 34px 22px;background:rgba(6,6,7,.86);
+  box-shadow:inset 0 0 0 1px rgba(var(--fg-c),.2),0 30px 90px -20px rgba(0,0,0,.9);transition:box-shadow .3s}
+.lc-box:focus-within{box-shadow:inset 0 0 0 1px rgba(var(--y-c),.85),0 0 0 4px rgba(var(--y-c),.14),0 30px 90px -20px rgba(0,0,0,.9)}
+.lc-s{margin:0;font-size:clamp(19px,1.9vw,26px);line-height:1.75;letter-spacing:-.015em;color:var(--muted);text-wrap:pretty}
+.lc-f{display:inline-block;vertical-align:baseline;min-width:4ch;max-width:100%;margin:0 1px 0 2px;padding:0 1px 1px;border:0;border-bottom:1.5px solid rgba(var(--fg-c),.28);border-radius:0;
+  background:none;color:var(--fg);font:inherit;letter-spacing:inherit;line-height:1.3;outline:none;caret-color:var(--y);field-sizing:content;transition:border-color .2s}
+.lc-f::placeholder{color:rgba(var(--fg-c),.32)}
+.lc-f:focus{border-bottom-color:var(--y)}
+.lc-f.bad{border-bottom-color:#ff7a59}
+select.lc-f{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:20px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%23f2580f' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") right 2px center/12px no-repeat}
+select.lc-f option{background:#141418;color:var(--fg)}
+.lc-lab{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.lc-help{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:22px;padding-top:20px;border-top:1px solid var(--hair)}
+.lc-help>span{margin-right:6px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+.lc-chip{all:unset;cursor:pointer;height:30px;padding:0 13px;border-radius:999px;display:inline-flex;align-items:center;gap:7px;font-size:13.5px;color:rgba(var(--fg-c),.68);
+  box-shadow:inset 0 0 0 1px rgba(var(--fg-c),.18);transition:color .2s,box-shadow .2s,background .2s}
+.lc-chip:hover{color:var(--fg)}
+.lc-chip:focus-visible{outline:2px solid var(--y);outline-offset:3px}
+.lc-chip[aria-pressed="true"]{color:var(--fg);background:rgba(var(--y-c),.14);box-shadow:inset 0 0 0 1px rgba(var(--y-c),.7)}
+.lc-chip[aria-pressed="true"]::before{content:"";width:6px;height:6px;background:var(--y)}
+.lc-go{display:flex;align-items:center;justify-content:space-between;gap:16px 24px;margin-top:22px}
+.lc-go p{margin:0;font-size:13.5px;line-height:1.5;color:var(--faint);max-width:44ch}
+.lc-go p b{color:var(--muted);font-weight:500}
+.lc-send{flex:none;height:54px;padding:0 26px;font-size:15.5px;font-weight:500;transition:background .2s,color .2s,transform .15s}
+.lc-send[aria-disabled="true"]{opacity:.45;cursor:default}
+.lc-send:not([aria-disabled="true"]):active{transform:scale(.97)}
+.lc-send svg{width:16px;height:16px}
+.lc-need{min-height:20px;margin:10px 0 0;font-size:13px;color:#ff9a7f;text-align:right}
+/* sent: a person, not a build */
+.lc-done{display:none;width:100%;margin-top:44px;text-align:left;border-radius:28px;padding:30px 34px;background:var(--raise);
+  background-image:radial-gradient(rgba(var(--fg-c),.09) 1px,transparent 1.2px);background-size:22px 22px;background-position:11px 11px;box-shadow:inset 0 0 0 1px var(--hair)}
+.lc.sent .lc-box{display:none}
+.lc.sent .lc-done{display:block;animation:lc-in .5s cubic-bezier(.2,.7,.2,1)}
+@keyframes lc-in{from{opacity:0;transform:translateY(8px)}}
+.lc-log{list-style:none;margin:0;padding:0;display:grid;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:.03em;color:var(--faint)}
+.lc-log li{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px}
+.lc-log li b{font-weight:500;color:var(--muted)}
+.lc-log li.y b{color:var(--y)}
+.lc-dh{margin:26px 0 0;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.15;letter-spacing:-.025em;color:var(--fg);text-wrap:balance}
+.lc-dp{margin:12px 0 0;font-size:16.5px;line-height:1.55;color:var(--muted);max-width:52ch}
+.lc-who{display:flex;align-items:center;flex-wrap:wrap;gap:12px 14px;margin-top:26px;padding-top:20px;border-top:1px solid var(--hair)}
+.lc-who .fq-av{width:34px;height:34px;font-size:14px}
+.lc-who>span:not(.fq-av){font-size:14px;color:var(--muted)}
+.lc-who>span b{display:block;color:var(--fg);font-weight:500}
+.lc-who .cta{margin-left:auto}
+.lc-edit{all:unset;cursor:pointer;margin-top:18px;font-size:13px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+@media (max-width:760px){
+  .lc-box,.lc-done{padding:22px 20px 18px;border-radius:22px}
+  .lc-s{font-size:18px;line-height:1.8}
+  .lc-go{flex-direction:column-reverse;align-items:stretch}
+  .lc-send{width:100%}
+  .lc-need{text-align:left}
+  .lc-who .cta{margin-left:0;width:100%;justify-content:center}
+  .lc-log li{grid-template-columns:64px minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){.lc.sent .lc-done{animation:none}.lc-box,.lc-f,.lc-chip,.lc-send{transition:none!important}}
 </style>
 
 <div class="story" id="story">
@@ -1003,6 +1071,41 @@ html:not(.open) .fq{display:none}
 </div>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is this for us?", "acceptedAnswer": {"@type": "Answer", "text": "If you’re an AI startup, from pre-launch to seed, and you don’t have a designer or marketer yet, yes. That’s who we built this for. It’s not the right fit if you need a multi-page marketing site, app or product UI, paid ads or daily community management. We can quote those separately."}}, {"@type": "Question", "name": "Is it really designed by people?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. A designer draws your logo, sets your brand and designs your page in Figma. No site generators, no stock templates, no sparkle icon. That’s the whole point. If your launch looks generated, people assume the product was too."}}, {"@type": "Question", "name": "How can all of this cost $500?", "acceptedAnswer": {"@type": "Answer", "text": "We reuse everything that doesn’t need to be yours: our own design system, site starter, tracking and CRM setup. You pay for the design decisions, not for us rebuilding the plumbing every time. Need more pages or a fully custom build? We’ll quote it before we start, never after."}}, {"@type": "Question", "name": "What do you need from us?", "acceptedAnswer": {"@type": "Answer", "text": "A 15-minute call, a rough draft of your copy, a few product screenshots and access to your accounts. We shape and edit your words, but we don’t write them from scratch. Nobody knows your product better than you."}}, {"@type": "Question", "name": "Is it really 5 days?", "acceptedAnswer": {"@type": "Answer", "text": "5 business days, counted from the day we have your content and account access. The sooner you send them, the sooner you’re live. Day 1: Logo and brand. Day 2: Page design. Day 3: Build and CMS. Day 4: Social kit, video, tracking. Day 5: You’re live."}}, {"@type": "Question", "name": "What if we don’t like the first design?", "acceptedAnswer": {"@type": "Answer", "text": "Tell us. One round of changes fits inside the 5 days, on a live preview link, and you get a second round after launch. We show you the direction early, so nothing big changes at the last minute."}}, {"@type": "Question", "name": "Will ChatGPT actually mention us?", "acceptedAnswer": {"@type": "Answer", "text": "Nobody can promise that, and you should be wary of anyone who does. What we can do is set up everything that makes it more likely: clean structure, schema, an FAQ like this one, llms.txt , a sitemap and Search Console."}}, {"@type": "Question", "name": "What’s in the $200 a month?", "acceptedAnswer": {"@type": "Answer", "text": "Everything that keeps your launch from going quiet. It starts the month after you’re live. Site: Edits, updates, backups and CMS help. Social: Posts made in your brand and scheduled for you. Support: One channel, straight to the people doing the work. Report: One page a month: visits, sign-ups and leads."}}, {"@type": "Question", "name": "Who owns everything?", "acceptedAnswer": {"@type": "Answer", "text": "You do. It all sits on your own accounts, so if you ever leave, it keeps working. Logo files. Brand guidelines. Domain. Hosting. CMS. CRM and analytics."}}, {"@type": "Question", "name": "Can we cancel?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. After the first three months it’s month to month, with 30 days’ notice. Your site, brand and accounts stay with you, exactly as they are."}}]}</script>
 </section>
+<section class="lc pad" id="launch-brief" aria-labelledby="lc-h">
+<div class="lc-in">
+  <span class="lab hint">Every launch ends here. With a person.</span>
+  <h2 class="lc-h" id="lc-h">Tell us about your launch. <span>We’ll plan it around you.</span></h2>
+  <form class="lc-box" id="lc-form" novalidate autocomplete="on">
+    <p class="lc-s">Hi, I’m <label class="lc-lab" for="lc-name">Your name</label><input class="lc-f" id="lc-name" name="name" placeholder="your name" autocomplete="name" required maxlength="60">
+      from <label class="lc-lab" for="lc-startup">Startup name</label><input class="lc-f" id="lc-startup" name="startup" placeholder="startup name" autocomplete="organization" required maxlength="60">.
+      We’re building <label class="lc-lab" for="lc-what">What you’re building</label><input class="lc-f" id="lc-what" name="building" placeholder="what it does, in one line" maxlength="90">,
+      and we want to launch <label class="lc-lab" for="lc-when">When you want to launch</label><select class="lc-f" id="lc-when" name="launch"><option>this month</option><option selected>next month</option><option>in 2–3 months</option><option>when it’s ready</option></select>.
+      Our site today is <label class="lc-lab" for="lc-site">Your current site</label><input class="lc-f" id="lc-site" name="site" placeholder="URL, or “we don’t have one”" maxlength="90" inputmode="url">.
+      Reach me at <label class="lc-lab" for="lc-email">Email</label><input class="lc-f" id="lc-email" name="email" type="email" placeholder="you@startup.ai" autocomplete="email" required maxlength="90">.</p>
+    <div class="lc-help" role="group" aria-label="What you need help with"><span>We need</span>
+      <button type="button" class="lc-chip" aria-pressed="false">Logo &amp; brand</button><button type="button" class="lc-chip" aria-pressed="false">Landing page</button><button type="button" class="lc-chip" aria-pressed="false">Social</button><button type="button" class="lc-chip" aria-pressed="false">Intro video</button><button type="button" class="lc-chip" aria-pressed="false">Tracking &amp; CRM</button><button type="button" class="lc-chip" data-all aria-pressed="true">All of it</button>
+    </div>
+    <div class="lc-go">
+      <p>A calendar link straight away, and a one-page proposal for <b class="lc-nm">your startup</b> the same day. $500 to set up, $200 a month.</p>
+      <button type="submit" class="pill white lc-send" id="lc-send" aria-disabled="true">Plan my launch <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <p class="lc-need" id="lc-need" aria-live="polite"></p>
+  </form>
+  <div class="lc-done" id="lc-done" tabindex="-1" aria-live="polite">
+    <ol class="lc-log" aria-label="What happens next">
+      <li><b>Now</b><span>Your brief is with us. Nothing was generated.</span></li>
+      <li><b>Today</b><span>A person reads it and looks at your site.</span></li>
+      <li class="y"><b>Same day</b><span>Your one-page proposal for <span class="lc-nm">your startup</span>.</span></li>
+    </ol>
+    <h3 class="lc-dh">Thanks, <span id="lc-first">there</span>. <span class="lc-nm">Your startup</span> is on our list.</h3>
+    <p class="lc-dp">Pick a time for your 15-minute call. We’ll read what you sent before we talk, so the call is about your launch, not a pitch.</p>
+    <div class="lc-who"><span class="fq-av" aria-hidden="true">M</span><span><b>Muzamil, MuzMesh</b>Reads every brief</span>
+      <a class="cta" href="#top">Pick a time <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+    <button type="button" class="lc-edit" id="lc-edit">Change my answers</button>
+  </div>
+</div>
+</section>
+
 
 
 
@@ -1807,5 +1910,60 @@ html:not(.open) .fq{display:none}
       const n = qs[(i + d + qs.length) % qs.length]; n.focus(); if (!small.matches) open(n);
     });
   });
+})();
+</script>
+<script>
+/* ---------- Final CTA: the launch brief ---------- */
+(() => {
+  const sec = document.getElementById('launch-brief'); if (!sec) return;
+  const f = id => document.getElementById(id);
+  const form = f('lc-form'), send = f('lc-send'), need = f('lc-need');
+  const name = f('lc-name'), startup = f('lc-startup'), what = f('lc-what'), email = f('lc-email');
+  const fields = [...sec.querySelectorAll('.lc-f')];
+  const chips = [...sec.querySelectorAll('.lc-chip')], all = chips.find(c => c.hasAttribute('data-all'));
+  const touched = new Set();
+  // browsers without field-sizing: size each blank to its text
+  const fit = !CSS.supports('field-sizing', 'content');
+  const size = el => { if (fit && el.tagName === 'INPUT') el.style.width = Math.max(4, (el.value || el.placeholder).length * .58 + 1) + 'em'; };
+  const okMail = v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+  const missing = () => [[name, 'your name'], [startup, 'your startup’s name'], [email, 'an email']].filter(([el]) => el === email ? !okMail(el.value.trim()) : !el.value.trim());
+  const sync = () => {
+    const nm = startup.value.trim() || 'your startup';
+    sec.querySelectorAll('.lc-nm').forEach((el, i) => el.textContent = i === sec.querySelectorAll('.lc-nm').length - 1 && nm === 'your startup' ? 'Your startup' : nm);
+    send.setAttribute('aria-disabled', missing().length ? 'true' : 'false');
+    fields.forEach(size);
+  };
+  // pre-fill from the story: the idea they typed, and the name it was given (only until they edit those blanks)
+  const prefill = () => {
+    const idea = (f('idea') && f('idea').value.trim()) || '';
+    const gen = (f('rname') && f('rname').textContent.trim()) || '';
+    if (!touched.has(what) && idea) what.value = idea.replace(/^(an?|the)\s+/i, m => m.toLowerCase());
+    if (!touched.has(startup) && gen && gen !== 'your startup') startup.value = gen;
+    sync();
+  };
+  new IntersectionObserver(es => es.some(e => e.isIntersecting) && prefill(), { rootMargin: '400px 0px' }).observe(sec);
+  fields.forEach(el => el.addEventListener('input', () => { touched.add(el); el.classList.remove('bad'); need.textContent = ''; sync(); }));
+  chips.forEach(c => c.addEventListener('click', () => {
+    const on = c.getAttribute('aria-pressed') !== 'true';
+    if (c === all) chips.forEach(o => o.setAttribute('aria-pressed', o === all && on));
+    else { c.setAttribute('aria-pressed', on); all.setAttribute('aria-pressed', 'false'); if (!chips.some(o => o.getAttribute('aria-pressed') === 'true')) all.setAttribute('aria-pressed', 'true'); }
+  }));
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const m = missing();
+    if (m.length) {
+      m.forEach(([el]) => el.classList.add('bad'));
+      need.textContent = 'Add ' + m.map(x => x[1]).join(', ').replace(/, ([^,]*)$/, ' and $1') + ' and we’re ready.';
+      m[0][0].focus(); return;
+    }
+    // prototype: nothing is sent anywhere yet. Production posts these fields to the CRM.
+    f('lc-first').textContent = name.value.trim().split(/\s+/)[0];
+    sync(); sec.classList.add('sent'); f('lc-done').focus({ preventScroll: true });
+    f('lc-done').scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth' });
+  });
+  f('lc-edit').addEventListener('click', () => { sec.classList.remove('sent'); name.focus(); });
+  // the hero's global key handler shouldn't treat typing here as scrolling
+  sec.addEventListener('keydown', e => { if (e.key === ' ' || e.key.startsWith('Arrow')) e.stopPropagation(); });
+  sync();
 })();
 </script>
