@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
+import { homeDefaults } from '../../web/src/data/home';
 
 // One fixed document (_id "homePage") with every word, price and FAQ on the homepage.
 // An empty field falls back to the copy built into the site (web/src/data/home.ts),
@@ -43,6 +44,24 @@ const notes = (name: string, title: string, count: number) =>
 // Two-line headings: the second line shows in grey.
 const lines = [str('line1', 'Heading, first line'), str('line2', 'Heading, second line (grey)')];
 
+// The first time the Homepage is opened it starts from the copy on the site today.
+// Objects inside arrays need a _key and their _type; empty text is left out.
+const ITEM_TYPE: Record<string, string> = { notes: 'note', steps: 'note', groups: 'faqGroup', 'groups.items': 'faqItem', 'list.items': 'listItem' };
+const key = () => Math.random().toString(36).slice(2, 14);
+function initial(v: unknown, path = ''): unknown {
+  if (Array.isArray(v)) {
+    const _type = ITEM_TYPE[path.split('.').slice(-2).join('.')] ?? ITEM_TYPE[path.split('.').pop() ?? ''];
+    return v.map((x) => (x && typeof x === 'object' ? { _key: key(), ...(_type ? { _type } : {}), ...(initial(x, path) as object) } : x));
+  }
+  if (v && typeof v === 'object')
+    return Object.fromEntries(
+      Object.entries(v)
+        .filter(([, x]) => x !== '' && x != null)
+        .map(([k, x]) => [k, initial(x, path.split('.').pop() + '.' + k)]),
+    );
+  return v;
+}
+
 const section = (name: string, title: string, group: string, fields: ReturnType<typeof defineField>[]) =>
   defineField({ name, title, type: 'object', group, options: { collapsible: false }, fields });
 
@@ -50,6 +69,7 @@ export const homePage = defineType({
   name: 'homePage',
   title: 'Homepage',
   type: 'document',
+  initialValue: () => initial(homeDefaults) as Record<string, unknown>,
   groups: [
     { name: 'story', title: 'Story', default: true },
     { name: 'pricing', title: 'Pricing' },
