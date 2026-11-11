@@ -12,3 +12,7 @@ For any page, section, social post, deck, document or other asset, follow the br
 - `docs/brand/archive/v1/` (yellow, Archivo) is retired. Don't use it.
 
 In short: a black page, bone text (#F4F4F1), one orange (#F2580F) with dark text on it, Inter Tight for all text and JetBrains Mono for labels only. The light Paper theme is for documents. The guideline has the full rules.
+
+## Client brand kits
+
+Brand guidelines for clients are generated, not hand-made: `node tools/brand-kit/build.mjs --new <client>`, edit `clients/<client>/brand.config.json`, then `node tools/brand-kit/build.mjs clients/<client>`. See `tools/brand-kit/README.md`. `clients/bookly/` is the worked example.
