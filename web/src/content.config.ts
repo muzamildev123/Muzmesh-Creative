@@ -1,7 +1,10 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
-import { sanityLoader } from '@/lib/sanity';
+import { sanityLoader, withFallback } from '@/lib/sanity';
+
+// The old Webflow posts, kept for the one-off import. Used only while Sanity is empty.
+const legacy = (folder: string) => glob({ pattern: '*.md', base: `../studio/scripts/legacy/${folder}` });
 
 // `placeholder: true` shows a visible "not verified" banner on the page.
 // Anything with invented or unconfirmed content must keep it set.
@@ -9,10 +12,10 @@ const placeholder = z.boolean().default(false);
 
 // Blog posts and projects (case studies) are edited in Sanity Studio (../studio).
 const blog = defineCollection({
-  loader: sanityLoader(`*[_type == "post" && defined(slug.current)]{
+  loader: withFallback(sanityLoader(`*[_type == "post" && defined(slug.current)]{
     "slug": slug.current, title, description, "author": author->name,
     "image": coverImage.asset->url, pubDate, updatedDate, body, placeholder
-  }`),
+  }`), legacy('blog')),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -25,12 +28,12 @@ const blog = defineCollection({
 });
 
 const work = defineCollection({
-  loader: sanityLoader(`*[_type == "caseStudy" && defined(slug.current)]{
+  loader: withFallback(sanityLoader(`*[_type == "caseStudy" && defined(slug.current)]{
     "slug": slug.current, title, client, description, industry, pillars, stack,
     "results": results[]{label, value}, liveUrl, order, body, placeholder,
     "image": coverImage.asset->url, "imageAlt": coverImage.alt,
     "gallery": gallery[]{"src": asset->url, alt, caption}
-  }`),
+  }`), legacy('work')),
   schema: z.object({
     title: z.string(),
     client: z.string(),

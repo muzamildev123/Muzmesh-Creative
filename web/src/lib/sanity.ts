@@ -89,3 +89,20 @@ export function sanityLoader(query: string): Loader {
     },
   };
 }
+
+/**
+ * Uses `fallback` when Sanity has no entries yet. Until the old posts are
+ * imported (cd studio && npm run migrate), the site builds them from the same
+ * Markdown files the import reads, so old /blog and /work URLs never 404.
+ */
+export function withFallback(primary: Loader, fallback: Loader): Loader {
+  return {
+    name: 'sanity-or-legacy',
+    load: async (context) => {
+      await primary.load(context);
+      if (context.store.keys().length) return;
+      context.logger.warn('Nothing in Sanity yet, so this collection is built from studio/scripts/legacy.');
+      await fallback.load(context);
+    },
+  };
+}
