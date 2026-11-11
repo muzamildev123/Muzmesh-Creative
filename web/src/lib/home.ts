@@ -1,5 +1,5 @@
 import { homeDefaults, type HomeContent } from '@/data/home';
-import { sanityClient } from '@/lib/sanity';
+import { sanityClient, sanityProjectId } from '@/lib/sanity';
 
 // The Homepage is one fixed document in Sanity (_id "homePage").
 const query = `*[_id == "homePage"][0]`;
@@ -44,7 +44,7 @@ function shape(like: Plain, item: unknown): Plain {
 }
 
 export async function getHome(): Promise<HomeContent> {
-  if (!import.meta.env.SANITY_PROJECT_ID) {
+  if (!sanityProjectId()) {
     if (!import.meta.env.DEV) throw new Error('SANITY_PROJECT_ID is not set (see README).');
     return homeDefaults;
   }
