@@ -1,0 +1,175 @@
+---
+// The pinned scroll story: prompt, build, launch, "Yours won't", the kit and the pricing pass.
+// The animation lives in src/scripts/home/story.js. It reads the example ideas
+// from the .chip buttons and expects five days on the pass and the kit lists as they are.
+import type { HomeContent } from '@/data/home';
+import { rich } from '@/lib/home';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  c: HomeContent;
+  t: Record<string, string>;
+}
+const { c, t } = Astro.props;
+const { hero, launch, answer, kit, pricing } = c;
+const kitAll = [...kit.look, ...kit.launch, ...kit.run];
+---
+
+<div class="story" id="story">
+<section class="hero" id="hero" aria-label="Homepage hero">
+  <canvas id="curtain" width="150" height="56" aria-hidden="true"></canvas>
+  <div class="shade" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav pad"><div class="in">
+    <a class="logo" href="/" id="home" aria-label="muzmesh home">muzmesh</a>
+    <div class="navr">
+      <nav class="links" aria-label="Main"><a href="#included">What's included</a><a href="#pricing">Pricing</a><a href="/work">Work</a><a href="#referral">Referral</a><a href="/blog">Blog</a></nav>
+      <a class="pill white" href="#launch-brief">{c.ctaLabel}</a>
+    </div>
+  </div></header>
+
+  <div class="main pad">
+    <span class="lab hint">{hero.eyebrow}</span>
+    <h1>{hero.headline}</h1>
+    <form class="ask" id="ask" autocomplete="off">
+      <div class="bar">
+        <label for="idea">Your startup idea</label>
+        <input id="idea" maxlength="80" spellcheck="false" placeholder={hero.placeholder} />
+        <button type="submit" class="pill white go" id="go" disabled>{hero.button} <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Example ideas">
+        {hero.ideas.map((idea) => <button type="button" class="chip">{idea}</button>)}
+      </div>
+    </form>
+  </div>
+
+  <div class="build pad" id="build">
+    <div class="bwrap">
+      <div class="blog">
+        <div class="bhead"><span class="lab" id="bstate">Building</span><span class="bclock" id="bclock">00:00</span></div>
+        <p class="bidea" id="bidea"></p>
+        <ol class="steps" id="steps" aria-live="polite">
+          <li><span class="st"></span>Reading your idea<small>Turning it into a product brief</small></li>
+          <li><span class="st"></span>Setting up the app<small>Next.js · Supabase · Vercel</small></li>
+          <li><span class="st"></span>Creating the database<small>users · plans · payments</small></li>
+          <li><span class="st"></span>Generating your brand<small>name · logo · colours</small></li>
+          <li><span class="st"></span>Writing the copy<small>headline · features · CTA</small></li>
+          <li><span class="st"></span>Designing the landing page<small>hero · buttons · cards</small></li>
+        </ol>
+        <div class="bdone" id="bdone"><b>Ready in 15 seconds.</b> <span id="bname"></span> is live on your screen.</div>
+      </div>
+      <div class="bright">
+      <div class="win" id="win" aria-hidden="true">
+        <div class="wbar"><i></i><i></i><i></i><span class="wurl" id="wurl">localhost:3000</span></div>
+        <div class="vp" id="vp"><div class="pg" id="pg">
+          <div class="pbg"></div>
+          <div class="pnav">
+            <span class="slot plogo" data-at="4"><span class="sk"></span><span class="rl"><i>&#10022;</i><span class="pname"></span></span></span>
+            <span class="plinks"><span class="slot" data-at="5"><span class="sk"></span><span class="rl">Product</span></span><span class="slot" data-at="5"><span class="sk"></span><span class="rl">Solutions</span></span><span class="slot" data-at="5"><span class="sk"></span><span class="rl">Pricing</span></span></span>
+            <span class="slot pgo" data-at="6"><span class="sk"></span><span class="rl">Get started</span></span>
+          </div>
+          <div class="phero">
+            <span class="slot pbadge" data-at="6"><span class="sk"></span><span class="rl">&#10024; Powered by GPT-5 &rarr;</span></span>
+            <span class="slot ph1" data-at="5"><span class="sk"></span><span class="rl" id="ph1"></span></span>
+            <span class="slot psub" data-at="5"><span class="sk"></span><span class="rl" id="psub"></span></span>
+            <span class="pbtns"><span class="slot a" data-at="6"><span class="sk"></span><span class="rl">Get started free</span></span><span class="slot b" data-at="6"><span class="sk"></span><span class="rl">Watch demo &#9654;</span></span></span>
+          </div>
+          <div class="pcards">
+            <span class="slot" data-at="6"><span class="sk"></span><span class="rl"><b>&#9889; Lightning fast</b><span>Get results in seconds, not hours.</span></span></span>
+            <span class="slot" data-at="6"><span class="sk"></span><span class="rl"><b>&#129302; AI-powered</b><span>Smart automation that learns from you.</span></span></span>
+            <span class="slot" data-at="6"><span class="sk"></span><span class="rl"><b>&#128274; Secure by default</b><span>Enterprise-grade security built in.</span></span></span>
+          </div>
+        </div><span class="boot">Starting dev server…</span></div>
+      </div>
+      <div class="bfoot">
+        <button type="button" class="launch" id="launch">Launch now <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M5 13 13 5M6.5 5H13v6.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+        <button type="button" class="again" id="again">Start over</button>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lstage" id="lstage" aria-live="polite">
+    <div class="lpan" id="lpan"><div class="lgrid" id="lgrid" aria-hidden="true"></div><div class="lgrid gskin" id="lgridg" aria-hidden="true"></div></div>
+    <div class="ldim"></div>
+    <div class="lmsg"><h2>{launch.headline}</h2><p>{launch.subline}</p></div>
+    <div class="ldim2"></div>
+    <div class="sdim"></div>
+    <div class="kdim"></div>
+    <div class="solve pad" id="solve">
+      <div class="swrap">
+        <div class="stext">
+          <h2 class="sh" id="sh"><span class="s1">{answer.line1}</span><span class="s2">{answer.line2}</span></h2>
+          <p class="sp" set:html={rich(answer.intro, t)} />
+          <div class="sbtns"><a class="cta" id="cta" href="#launch-brief">{c.ctaLabel} <Arrow /></a><a class="ghost" href="#top">{answer.secondary}</a></div>
+          <button type="button" class="again sagain" id="again2">Start over</button>
+        </div>
+        <div class="yslot" id="yslot">
+          <div class="ywin" id="ywin" aria-hidden="true">
+            <div class="wbar"><i></i><i></i><i></i><span class="wurl" id="yurl"></span></div>
+            <div class="vp" id="yvp"><div class="ypg" id="ypg"></div><div class="ygen" id="ygen"><div class="ygi" id="ygi"></div></div><i class="yedge" id="yedge"></i></div>
+            <div class="yveil"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kcue" aria-hidden="true">{kit.cue} <svg viewBox="0 0 12 12"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+    <div class="kit pad" id="kit">
+      <div class="kin" id="kin">
+        <div class="khead">
+          <h2 class="kh"><span class="k1">{kit.line1}</span> <span class="k2">{kit.line2}</span></h2>
+          <ul class="kul klist" aria-label="What you get">{kitAll.map((x) => <li>{x}</li>)}</ul>
+          <p class="kp" set:html={rich(kit.intro, t)} />
+        </div>
+        <div class="kbento" id="kbento" aria-hidden="true">
+          <div class="kcol kc1"><div class="kch"><b>Look</b><ul class="kul">{kit.look.map((x) => <li>{x}</li>)}</ul></div><div class="kt klogo"></div><div class="kt kbrand kp-s"></div></div>
+          <div class="kcol kc2"><div class="kch"><b>Launch</b><ul class="kul">{kit.launch.map((x) => <li>{x}</li>)}</ul></div><div class="kslot" id="kslot"></div>
+            <div class="krow"><div class="kt kpost kx-s"></div><div class="kt kvid"></div></div></div>
+          <div class="kcol kc3"><div class="kch"><b>Run</b><ul class="kul">{kit.run.map((x) => <li>{x}</li>)}</ul></div><div class="kt ktrack kp-s"></div><div class="kt kcrm"></div><div class="kt kedit kp-s"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="prc" id="pricing" role="region" aria-labelledby="price-h"><div class="prin pad" id="prin">
+  <div class="pwrap">
+    <div class="ptext">
+      <span class="peye">{pricing.eyebrow}</span>
+      <h2 class="ph" id="price-h"><span>{pricing.line1}</span> <span>{pricing.line2}</span></h2>
+      <p class="pp" set:html={rich(pricing.intro, t)} />
+      <div class="pbtns"><a class="cta" href="#launch-brief">{c.ctaLabel} <Arrow /></a></div>
+      <ul class="pnotes">
+        {pricing.notes.map((n) => <li><b>{n.title}</b><span set:html={rich(n.text, t)} /></li>)}
+      </ul>
+    </div>
+    <div class="tk" role="group" aria-label="Your launch pass: what you get and what it costs">
+      <div class="tkm">
+        <div class="tkh"><b>muzmesh</b><span>Launch pass</span></div>
+        <div class="tkr">
+          <div class="tke"><span class="tkl">From</span><b>IDEA</b><span>Today</span></div>
+          <div class="tkway" aria-hidden="true"><i class="tkfill"></i><span class="tkgo"><i></i></span></div>
+          <div class="tke r"><span class="tkl">To</span><b class="tkto">LIVE</b><span>Day 5</span></div>
+        </div>
+        <div class="tkf">
+          <div><span class="tkl">Passenger</span><b id="rname">your startup</b></div>
+          <div><span class="tkl">Flight time</span><b>5 business days</b></div>
+          <div><span class="tkl">Class</span><b>All included</b></div>
+        </div>
+        <div class="tki"><span class="tkl">Your five days</span>
+          <ol class="tkd">
+            {pricing.days.map((d, i) => (
+              <li class={i === pricing.days.length - 1 ? 'tkdl' : undefined}><i class="tkx"><b></b></i><span class="tkdn">Day {i + 1}</span><span>{d}</span></li>
+            ))}
+          </ol></div>
+        <div class="tkp"><span>{pricing.setupLabel}</span><b>{t.setup}</b></div>
+      </div>
+      <div class="tks">
+        <div class="tkst"><span class="tkl">{pricing.monthlyLabel}</span><b>{t.monthly}<small>/mo</small></b>
+          <p set:html={rich(pricing.monthlyText, t)} /></div>
+        <i class="tkbar" aria-hidden="true"></i>
+      </div>
+    </div>
+  </div>
+    </div></div>
+  </div>
+</section>
+</div>

@@ -1,0 +1,34 @@
+---
+import type { HomeContent } from '@/data/home';
+import { rich } from '@/lib/home';
+
+interface Props {
+  c: HomeContent;
+  t: Record<string, string>;
+}
+const { c, t } = Astro.props;
+const f = c.footer;
+const year = new Date().getFullYear();
+---
+
+<footer class="ft pad" id="footer">
+<div class="ft-in">
+  <div class="ft-top">
+    <div class="ft-brand">
+      <p class="ft-tag" set:html={rich(f.tagline, t)} />
+      <a class="ft-mail" href={`mailto:${f.email}`}>{f.email}</a>
+    </div>
+    <nav class="ft-col" aria-label="Offer"><h3>Offer</h3><ul><li><a href="#included">What’s included</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#faq">FAQ</a></li><li><a href="#referral">Referral</a></li></ul></nav>
+    <nav class="ft-col" aria-label="Company"><h3>Company</h3><ul><li><a href="/work">Work</a></li><li><a href="/about">About</a></li><li><a href="/blog">Blog</a></li><li><a href="#launch-brief">Contact</a></li></ul></nav>
+    <nav class="ft-col" aria-label="Legal"><h3>Legal</h3><ul><li><a href="/privacy">Privacy</a></li><li><a href="/terms">Terms</a></li></ul></nav>
+  </div>
+  <p class="ft-bye">Good luck with <b class="ft-nm">your startup</b>. We’d love to help you launch it.</p>
+  <div class="ft-stat">
+    <span><i class="ft-dot" aria-hidden="true"></i>{f.location}</span>
+    <span><time class="ft-time" id="ft-time" data-tz={f.timeZone}>—</time>&nbsp;here</span>
+    <span>{f.status}</span>
+    <span class="ft-r">© {year} MuzMesh Creative</span>
+  </div>
+</div>
+<div class="ft-mark" aria-hidden="true"><span>muzmesh</span></div>
+</footer>
