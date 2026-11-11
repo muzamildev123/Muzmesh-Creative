@@ -5,6 +5,7 @@
 For any page, section, social post, deck, document or other asset, follow the brand guideline first:
 
 - `docs/brand/brand-guidelines.html`: logo, colours, type, components, voice and examples (v2, Nov 2026).
+- `docs/brand/ai/BRAND.md`: the same rules as plain text, with recipes and a checklist. Read it before making anything; run `node docs/brand/ai/check-brand.mjs <file>` on the result.
 - `docs/brand/README.md`: how the token files fit together.
 - New site pages use `web/src/styles/tokens.css` and `web/src/styles/brand.css` (`.mm`, `.mm-btn`, `.mm-label` …). Don't add new raw hex colours or fonts.
 - To change a colour, size or font, edit `docs/brand/build-tokens.mjs` and run `node docs/brand/build-tokens.mjs`. Never hand-edit the generated files.

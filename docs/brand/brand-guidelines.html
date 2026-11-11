@@ -528,6 +528,16 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
 .g-caption p b { color: var(--mm-text); font-weight: 500; }
 .g-caption .tags { font-family: var(--mm-font-mono); font-size: 12px; color: var(--mm-text-faint); }
 
+/* use with AI */
+.g-ai-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 16px; }
+.g-ai-tools .g-card ol { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; line-height: 1.5; color: var(--mm-text-muted); }
+.g-prompt { border-radius: var(--mm-radius-lg); box-shadow: var(--mm-shadow-ring); background: var(--mm-surface); overflow: hidden; }
+.g-prompt .bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px 10px 18px; border-bottom: 1px solid var(--mm-hair); flex-wrap: wrap; }
+.g-prompt .bar div { display: flex; gap: 8px; flex-wrap: wrap; }
+.g-prompt pre { margin: 0; padding: 18px; white-space: pre-wrap; font-family: var(--mm-font-mono); font-size: 12.5px; line-height: 1.7; color: var(--mm-text-muted); }
+.g-term { margin: 0; padding: 18px 20px; border-radius: var(--mm-radius-md); background: var(--mm-c-raise-2); box-shadow: var(--mm-shadow-ring); font-family: var(--mm-font-mono); font-size: 12.5px; line-height: 1.75; color: var(--mm-text-muted); white-space: pre-wrap; overflow-x: auto; }
+.g-term b { color: var(--mm-text); font-weight: 400; } .g-term i { color: var(--mm-c-danger-dark); font-style: normal; } .g-term u { color: var(--mm-c-success-dark); text-decoration: none; }
+
 /* hero mosaic */
 .g-mosaic { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: 118px; gap: 12px; grid-auto-flow: dense; margin-top: 18px; }
 .g-mosaic > * { border-radius: var(--mm-radius-lg); overflow: hidden; position: relative; min-width: 0; box-shadow: var(--mm-shadow-ring); }
@@ -672,7 +682,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
         <div class="g-ticket">
           <div class="h"><b>muzmesh</b><span>Brand pass</span></div>
           <div class="b"><span class="lbl">From · To</span><div class="route"><span>V1</span><i></i><span>V2</span></div>
-          <div class="row"><div><span class="lbl">Passenger</span>MuzMesh</div><div><span class="lbl">Chapters</span>15</div><div><span class="lbl">Class</span>Launch</div></div></div>
+          <div class="row"><div><span class="lbl">Passenger</span>MuzMesh</div><div><span class="lbl">Chapters</span>16</div><div><span class="lbl">Class</span>Launch</div></div></div>
           <div class="tear"></div>
           <div class="f"><div><span class="lbl">Accent</span></div><b>#F2580F</b></div>
         </div>
@@ -702,8 +712,9 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     <a href="#voice"><span>11</span>Voice and copy</a>
     <a href="#apply"><span>12</span>Applying it</a>
     <a href="#social"><span>13</span>Social kit</a>
-    <a href="#tokens"><span>14</span>Tokens and files</a>
-    <a href="#audit"><span>15</span>Audit and open items</a>
+    <a href="#ai"><span>14</span>Use with AI</a>
+    <a href="#tokens"><span>15</span>Tokens and files</a>
+    <a href="#audit"><span>16</span>Audit and open items</a>
   </aside>
 
   <main class="g-main">
@@ -1156,10 +1167,507 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
       </tbody></table></div>
     </section>
 
+    <!-- ai -->
+    <section class="g-ch" id="ai">
+      <header>
+        <span class="mm-label">14 · Use with AI</span>
+        <h2 class="mm-h2"><span class="mm-dim">Any AI,</span> still on brand.</h2>
+        <p class="mm-lead">This guideline ships with an AI brand pack: the same rules as plain text, generated from the same tokens. Give it to ChatGPT, Claude, DeepSeek, Gemini or a coding tool, and what comes back uses our colours, type, components and voice.</p>
+      </header>
+      <div class="g-table-wrap"><table class="g-table"><thead><tr><th>File (in <code>docs/brand/ai/</code>)</th><th>What it does</th></tr></thead><tbody>
+        <tr><td><code>BRAND.md</code></td><td>Every rule in this guideline as text: palette, theme roles, checked contrast pairs, type scale, layout, components, voice, logo, imagery, recipes for pages, posts, decks and documents, the CSS variables and a final checklist. <b>The one file to give any AI.</b></td></tr>
+        <tr><td><code>system-prompt.txt</code></td><td>The short version, under 1,500 characters, for custom instructions or a first message.</td></tr>
+        <tr><td><code>starter.html</code></td><td>A working on-brand page with nav, hero, section, cards, launch pass and footer, for the AI to copy patterns from.</td></tr>
+        <tr><td><code>tokens.css</code>, <code>brand.css</code>, SVGs</td><td>The real CSS and logo files, so generated pages use the same code as the site.</td></tr>
+        <tr><td><code>check-brand.mjs</code></td><td>Checks any HTML, CSS or SVG for off-brand colours, fonts, white text on orange, emoji and banned words.</td></tr>
+        <tr><td><code>AGENTS.md</code>, <code>.cursor/rules</code>, <code>.github/copilot-instructions.md</code></td><td>Repo-level pointers so Cursor, Copilot, Codex, Windsurf, Gemini CLI and Claude Code read <code>BRAND.md</code> on their own.</td></tr>
+      </tbody></table></div>
+
+      <h3>Set it up once</h3>
+      <div class="g-ai-tools">
+        <div class="g-card"><span class="mm-label is-quiet">ChatGPT</span><b>A Project or custom GPT</b><ol><li>Upload BRAND.md, starter.html, the CSS and the SVGs.</li><li>Paste the prompt below into the instructions.</li><li>Ask for pages, posts or copy as usual.</li></ol></div>
+        <div class="g-card"><span class="mm-label is-quiet">Claude</span><b>A Project</b><ol><li>Add the same files to project knowledge.</li><li>Paste the prompt into project instructions.</li><li>In Claude Code, CLAUDE.md already points to it.</li></ol></div>
+        <div class="g-card"><span class="mm-label is-quiet">DeepSeek, Gemini, others</span><b>Attach and paste</b><ol><li>Attach BRAND.md (and starter.html for web work).</li><li>Paste the prompt as the first message.</li><li>In Gemini, save it as a Gem.</li></ol></div>
+        <div class="g-card"><span class="mm-label is-quiet">Cursor, Copilot, Codex</span><b>Keep it in the repo</b><ol><li>Nothing to do: AGENTS.md and the rules files load it.</li><li>Ask the agent to run check-brand before it finishes.</li></ol></div>
+      </div>
+
+      <h3>The prompt</h3>
+      <div class="g-prompt">
+        <div class="bar"><span class="mm-label">system-prompt.txt</span><div><button class="mm-btn is-ghost is-sm" type="button" data-copy="g-ai-prompt">Copy prompt</button><button class="mm-btn is-solid is-sm" type="button" data-copy="g-ai-md">Copy full BRAND.md</button></div></div>
+        <pre id="g-ai-prompt">You design and write for MuzMesh. Follow the attached BRAND.md exactly; it wins over any other style.
+Essentials: black page #000000; text bone #F4F4F1 (never pure white); one accent, orange #F2580F, only for the single primary button per view, the 5px square before labels, live dots and focus rings, always with dark text #0E0E10 on it. Paper theme for documents: #F3F0E8 page, ink #1D1D1F text, orange text #B33A06.
+Inter Tight for all text (400-700); JetBrains Mono only for UPPERCASE labels and data. Two-tone headlines: dim setup, bright payoff. Every section opens with a mono label.
+Show real work in browser frames. No emoji, sparkles, robots, glowing brains, gradients on text or AI-generated people.
+Copy: short, plain, founder to founder. Exact true numbers. Never: unlock, seamless, revolutionary, AI-powered, game-changer.
+Use only colours and fonts in BRAND.md. Before answering, run its section 13 checklist.</pre>
+      </div>
+      <script type="text/markdown" id="g-ai-md"># MuzMesh brand rules for AI
+
+<!-- Generated by docs/brand/build-tokens.mjs from ai/brand.src.md. Do not edit by hand. -->
+
+You are making something for **MuzMesh**: a web page, a section, a social post, a deck, a document, an email or copy. Follow every rule in this file. When a request conflicts with these rules, follow the rules and say which rule you followed. When something is not covered, choose the plainest option that uses only the values listed here.
+
+Brand version v2 · Nov 2026. Every colour, size and font below is generated from the same token file the live website uses, so these values are exact.
+
+## 1. The idea in one paragraph
+
+MuzMesh is the design partner for AI startups: brand, landing page and launch kit, designed by people, ready in five days. The brand has to look **launched, not generated**. That means a black page, warm off-white text, one orange used sparingly, one typeface, mono labels, and real work shown in browser windows. No glowing orbs, no gradients on text, no sparkle icons, no robots.
+
+Personality: considered, plain-spoken, quietly confident, founder-to-founder.
+
+## 2. The ten rules that matter most
+
+1. Background is pure black `#000000` (Launch theme). Documents, proposals and invoices use the light Paper theme `#F3F0E8`.
+2. Text on black is bone `#F4F4F1`, never pure white. Text on paper is ink `#1D1D1F`.
+3. There is exactly one accent colour: signal orange `#F2580F`. Use it for the one primary button per view, the small square before a label, a live dot, a focus ring or a single full stop. Never as a large background, never on body text, never as a gradient on text.
+4. Text and icons on an orange fill are always `#0E0E10` (dark), never white.
+5. One typeface for all text: **Inter Tight** (400, 500, 600, 700). **JetBrains Mono** (400, 500) only for UPPERCASE labels, data, numbers in tables and timestamps. No other fonts.
+6. Headlines are two-tone: the setup in a dim grey, the payoff in full bone. Example: Every AI startup looks the same. Yours won’t.
+7. Every section starts with a mono UPPERCASE label with a 5px orange square before it.
+8. Square = label or list item. Circle = something live (a status dot).
+9. No emoji, no sparkle or “AI” symbols, no stock 3D, no AI-generated images of people, robots or brains.
+10. Copy is short, exact and true. No invented numbers, testimonials or client logos.
+
+## 3. Colour
+
+### Core palette
+
+| Name | Hex | Use |
+|---|---|---|
+| black | `#000000` | Page background in the Launch theme. Pure black, not near-black. |
+| raise-1 | `#0E0E10` | Raised panel on black: FAQ answer, referral bench, done states. |
+| raise-2 | `#141418` | Inset surface on black: browser windows, inputs, menus. |
+| graphite | `#2C2C35` | Solid border on black, when a hairline needs to be opaque. |
+| bone | `#F4F4F1` | Text and white buttons on black. Warm off-white, never pure #fff for text. |
+| stone | `#BDBDB8` | Display-only grey for the giant footer wordmark and similar art. Not for text under 32px. |
+| ash | `#77777C` | Dimmed first line of a two-tone headline ("Every AI startup looks the same."). |
+| paper | `#F3F0E8` | Page background in the Paper theme; the launch pass ticket. |
+| paper-2 | `#E8E4D9` | Header strip on paper, pressed paper. |
+| paper-card | `#FBFAF6` | Card on paper. |
+| paper-line | `#D9D4C7` | Border on paper. |
+| ink | `#1D1D1F` | Text on paper. |
+| on-accent | `#0E0E10` | Text and icons on an orange fill. Always this, never white. |
+| signal | `#F2580F` | The MuzMesh orange. Fills, bullets, focus rings, one CTA per view. |
+| signal-hot | `#FF6A20` | Hover on orange fills (lighter, keeps contrast with the dark label). |
+| signal-deep | `#CC3D08` | Pressed orange, and decorative orange in gradients. Not behind text. |
+| signal-ink | `#B33A06` | Orange used as text or thin lines on paper or white (5.2:1 on paper). |
+| danger-dark | `#FF7A59` | Error text on black. |
+| danger-light | `#B42318` | Error text on paper. |
+| success-dark | `#6FDC8C` | Confirmation text on black. |
+| success-light | `#1F7A35` | Confirmation text on paper. |
+
+### Theme roles
+
+Use the role, not the raw colour. In CSS, every role is a variable named `--mm-<role>`.
+
+| Role | Launch (default, dark) | Paper (light) |
+|---|---|---|
+| `--mm-bg` | #000000 (black) | #F3F0E8 (paper) |
+| `--mm-surface` | #0E0E10 (raise-1) | #FBFAF6 (paper-card) |
+| `--mm-surface-2` | #141418 (raise-2) | #E8E4D9 (paper-2) |
+| `--mm-text` | #F4F4F1 (bone) | #1D1D1F (ink) |
+| `--mm-text-muted` | rgba(244,244,241,.74) | #595857 |
+| `--mm-text-faint` | rgba(244,244,241,.56) | #686764 |
+| `--mm-text-dim` | #77777C (ash) | #8A8884 |
+| `--mm-hair` | rgba(244,244,241,.16) | rgba(29,29,31,.12) |
+| `--mm-border` | rgba(244,244,241,.30) | #D9D4C7 (paper-line) |
+| `--mm-border-solid` | #2C2C35 (graphite) | #D9D4C7 (paper-line) |
+| `--mm-accent` | #F2580F (signal) | #F2580F (signal) |
+| `--mm-accent-hover` | #FF6A20 (signal-hot) | #FF6A20 (signal-hot) |
+| `--mm-accent-press` | #CC3D08 (signal-deep) | #CC3D08 (signal-deep) |
+| `--mm-on-accent` | #0E0E10 (on-accent) | #0E0E10 (on-accent) |
+| `--mm-accent-text` | #F2580F (signal) | #B33A06 (signal-ink) |
+| `--mm-focus` | #F2580F (signal) | #B33A06 (signal-ink) |
+| `--mm-danger` | #FF7A59 (danger-dark) | #B42318 (danger-light) |
+| `--mm-success` | #6FDC8C (success-dark) | #1F7A35 (success-light) |
+| `--mm-btn-primary` | #F4F4F1 (bone) | #1D1D1F (ink) |
+| `--mm-on-btn-primary` | #000000 | #F3F0E8 (paper) |
+
+### Checked contrast pairs (WCAG)
+
+| Pair | Ratio | Result |
+|---|---|---|
+| Bone on black | 19.06:1 | pass (AA) |
+| Muted on black | 10.22:1 | pass (AA) |
+| Faint on black | 5.99:1 | pass (AA) |
+| Faint on raised panel | 5.96:1 | pass (AA) |
+| Orange on black | 6.18:1 | pass (AA) |
+| Dark on orange | 5.67:1 | pass (AA) |
+| Dark on orange hover | 6.74:1 | pass (AA) |
+| White on orange | 3.40:1 | FAIL: never use |
+| Error on black | 8.18:1 | pass (AA) |
+| Ink on paper | 14.78:1 | pass (AA) |
+| Muted on paper | 6.23:1 | pass (AA) |
+| Faint on paper | 4.97:1 | pass (AA) |
+| Signal-ink on paper | 5.23:1 | pass (AA) |
+| Orange on paper | 2.98:1 | FAIL: never use |
+
+Never use these: purple, blue, teal, green or pink as brand colours; yellow `#FFD60A` (retired v1); any gradient on text; pure white `#FFFFFF` for text on black; orange text on paper (use `#B33A06` instead).
+
+## 4. Type
+
+Load: `https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;1,500&family=JetBrains+Mono:wght@400;500&display=swap`
+
+| Style | Size | Weight | Line height | Letter spacing | Font | Use |
+|---|---|---|---|---|---|---|
+| display | clamp(40px, 4.5vw, 70px) | 500 | 1.06 | -0.025em | Inter Tight | One per page. Hero headline. |
+| h2 | clamp(34px, 3.7vw, 56px) | 500 | 1.04 | -0.03em | Inter Tight | Section headline. Two-tone allowed: dim the first part with --mm-text-faint. |
+| h3 | clamp(28px, 2.75vw, 42px) | 500 | 1.08 | -0.028em | Inter Tight | Sub-section headline. |
+| h4 | 22px | 600 | 1.2 | -0.015em | Inter Tight | Card title. |
+| stat | clamp(44px, 4.6vw, 64px) | 500 | 1 | -0.04em | Inter Tight | Big numbers: $500, 5 days, 40%. |
+| lead | clamp(16px, 1.25vw, 18px) | 400 | 1.55 | 0 | Inter Tight | Paragraph under a headline. Max 40ch. Colour --mm-text-muted. |
+| body-lg | 17px | 400 | 1.5 | -0.01em | Inter Tight | Long reading, FAQ questions, articles. |
+| body | 15px | 400 | 1.5 | 0 | Inter Tight | Default UI text. |
+| small | 13px | 400 | 1.45 | 0 | Inter Tight | Captions, chips, helper text. |
+| label | 11.5px | 400 | 1.2 | 0.06em | JetBrains Mono | UPPERCASE eyebrow with the orange square bullet. |
+| micro | 10.5px | 500 | 1.2 | 0.12em | JetBrains Mono | UPPERCASE ticket and table headers. |
+| wordmark | 22px | 700 | 1 | -0.015em | Inter Tight | Text wordmark in the nav. Lowercase. |
+
+Sentence case everywhere except mono labels (UPPERCASE). Curly quotes and apostrophes (’ “ ”). Headlines `text-wrap: balance`. Max line length: about 40 characters for leads, 70 for body.
+
+## 5. Layout and space
+
+| Token | Value | Use |
+|---|---|---|
+| `--mm-gutter` | 28px | Side padding on every screen size (respect safe areas). |
+| `--mm-content` | 1120px | Max width of section content. |
+| `--mm-frame` | 1640px | Max width of the nav and full-bleed frames. |
+| `--mm-nav-h` | 64px | Nav bar height. |
+| `--mm-section-pt` | clamp(96px, 11vw, 160px) | Section padding top. |
+| `--mm-section-pb` | clamp(96px, 10vw, 140px) | Section padding bottom. |
+| `--mm-col-gap` | 64px | Gap between a section's two columns. |
+
+Spacing scale (4px base): 4px, 8px, 12px, 16px, 20px, 24px, 32px, 44px, 56px, 64px, 96px, 128px.
+
+Radius: xs 2px (editorial buttons inside client work only); sm 9px (small tiles, day cells); md 12px (browser windows, image frames); lg 16px (panels and benches); xl 18px (ticket / launch pass); 2xl 28px (large input boxes); pill 999px (buttons, chips, the prompt bar).
+
+Section pattern: quiet mono label, two-tone H2, then a short lead paragraph to the right on desktop (stacks under 900px). Hairlines (`--mm-hair`) between rows instead of boxes. Wide frame (1640px) for the nav, narrow content (1120px) for sections.
+
+## 6. Components (use these classes on websites)
+
+Wrap the page in `<body class="mm">` and load `tokens.css` then `brand.css`. Then:
+
+| Class | What it is |
+|---|---|
+| `.mm-label` | Mono UPPERCASE eyebrow with the orange square. `.is-quiet` drops the square and dims it. |
+| `.mm-display`, `.mm-h2`, `.mm-h3`, `.mm-h4`, `.mm-stat` | Headline sizes. Wrap the first half in `<span class="mm-dim">` for two-tone. |
+| `.mm-lead`, `.mm-body-lg`, `.mm-small`, `.mm-micro` | Text sizes. |
+| `.mm-btn.is-primary` | Orange pill button, 52px tall, dark text. **One per view.** |
+| `.mm-btn.is-solid` | Bone button on black (ink on paper). Nav button, important secondary action. |
+| `.mm-btn.is-ghost` | Hairline outline button. |
+| `.mm-btn.is-sm` | 34px small button. |
+| `.mm-link` | Inline link with an orange underline. |
+| `.mm-chip`, `.mm-input`, `.mm-error` | Filter chips, pill inputs, error text. |
+| `.mm-panel` | Raised panel with a hairline ring, 16px radius. |
+| `.mm-window` + `.mm-window-bar` | Browser window frame for showing real work. Client brands stay inside it. |
+| `.mm-dots` | 24px dotted workbench background. |
+| `.mm-live` | Pulsing round status dot. |
+| `.mm-section`, `.mm-container`, `.mm-split`, `.mm-frame` | Layout. |
+| `[data-theme="paper"]` | Switches any element (or the whole page) to the Paper theme. |
+
+Buttons say what happens, in the first person for the main action: “Plan my launch”, “See what’s included”, “Build my idea”. Never “Get started”, “Learn more” or “Click here”.
+
+Icons: 16px grid, 1.6px stroke, round caps and joins, no fills, `currentColor`. Use only the set in `docs/brand/icons/` (28 icons: arrow-right, arrow-up-right, arrow-down, chevron-down, check, plus, minus, close, menu, search, mail, chat, calendar, clock, ticket, window, layers, pen, video, play, chart, users, globe, lock, link, download, pin, info). Never a sparkle, magic wand, robot or brain.
+
+## 7. Signature elements
+
+- **The label square:** 5px orange square before every mono label.
+- **Two-tone headline:** dim setup, bone payoff.
+- **The launch pass:** a paper ticket (`#F3F0E8`, 18px radius) with an orange header strip, mono labels “FROM · TO”, IDEA → LIVE, and a price. Used for pricing, offers and receipts.
+- **Dotted workbench:** `.mm-dots` behind build logs and panels.
+- **Copper light curtain:** soft vertical copper streaks rising from the bottom. Hero sections and campaign covers only, never on every section.
+- **Grain:** 5% white noise on full-bleed dark areas only.
+- **Browser window:** real client work, at real size, in `.mm-window` with a real URL in the bar.
+
+## 8. Imagery
+
+- Show real work (in a browser window), real people and hands at work, and the textures above.
+- Two photo grades only: **natural** (saturation about 72%, warm light) or **duotone** (black `#0A0A0C` to bone `#F4F4F1`). One grade per layout.
+- Text over a photo always sits on a dark gradient.
+- Never: AI-generated people, robots, glowing brains, circuit boards, handshake stock, 3D blobs, neon gradients, device mockups with fake UI, invented client logos, orange-tinted photos, mascots.
+- If you generate a photo with an image model, prompt for: “documentary photo, natural window light, real designer workspace, hands sketching or working on a laptop, muted colour, shallow depth of field, no text, no logos, no screens with readable UI”. Then convert it to duotone for black layouts.
+
+## 9. Voice and copy
+
+We write like a founder talking to a founder: short sentences, real numbers, no hype.
+
+- **Headlines:** setup, then payoff. “One price. No surprises.”
+- **Numbers:** exact and true. “$500 to set up, $200 a month.” “Live in five business days.” Never invent stats, testimonials, client names or “10x”.
+- **Words we use:** launch, kit, pass, founder, live, yours.
+- **Words we never use:** revolutionary, unlock, seamless, supercharge, cutting-edge, AI-powered, game-changer, elevate, leverage, world-class, pixel-perfect, and emoji.
+- **Names:** MuzMesh in text, muzmesh (lowercase) in the logo, MuzMesh Creative for the legal name. “Five days” in copy, “5 days” in labels.
+
+Write: “A designer draws your logo, sets your brand and designs your page in Figma.”
+Not: “Unlock your startup’s full potential with our AI-powered branding ✨”
+
+## 10. Logo
+
+- Files: `muzmesh-wordmark-light.svg` (bone, for black), `muzmesh-wordmark.svg` (ink, for paper or orange), `muzmesh-avatar.svg` (square “m.” for profiles), `muzmesh-favicon.svg`.
+- Always use the files. If you cannot, set “muzmesh” lowercase in Inter Tight 700 at −0.015em, bone on black or ink on paper.
+- Minimum width 72px. Clear space equal to the height of the “m”.
+- Never orange, never a gradient, glow or outline, never next to a sparkle, never capitalised, stretched or re-tracked.
+
+## 11. Recipes
+
+### A web page or section
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;1,500&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="tokens.css"><link rel="stylesheet" href="brand.css">
+</head>
+<body class="mm">
+  <section class="mm-section">
+    <div class="mm-container mm-split">
+      <div>
+        <span class="mm-label">Pricing</span>
+        <h2 class="mm-h2"><span class="mm-dim">One price.</span> No surprises.</h2>
+      </div>
+      <p class="mm-lead">$500 to set up, then $200 a month from the month after launch.</p>
+    </div>
+    <div class="mm-container" style="margin-top:56px">
+      <a class="mm-btn is-primary" href="#plan">Plan my launch</a>
+      <a class="mm-btn is-ghost" href="#included">See what’s included</a>
+    </div>
+  </section>
+</body>
+</html>
+```
+
+With Tailwind v4, import `tailwind-theme.css` and use `bg-mm-bg text-mm-text font-sans`, `text-mm-muted`, `bg-mm-accent text-mm-on-accent`.
+
+If you cannot load the files, paste the CSS variables from section 12 into a `<style>` block and use them directly.
+
+### A social post (1080×1350, 4:5)
+
+- Black background (or Paper for contrast, or a duotone photo with a dark gradient).
+- 86px margin. Mono label top left with the orange square. Two-tone headline, Inter Tight 500, about 100px, tracking −0.03em, max three lines. Wordmark bottom left, slide number or “Swipe →” bottom right in mono.
+- One idea per post. Carousels: cover, point, list, proof, call to action; 6 to 8 slides.
+- Feed mix: about half black, a quarter duotone photos, a quarter Paper. Never an orange background post.
+- Captions: the first line is the headline, short sentences, one link, at most three hashtags at the end, alt text on every image.
+
+### Sizes
+
+| Asset | Size |
+|---|---|
+| Feed post, carousel slide | 1080×1350 |
+| Square post (X, Facebook) | 1080×1080 |
+| Story, reel cover | 1080×1920 (keep the top 250px and bottom 340px clear) |
+| Link preview (OG) | 1200×630 |
+| LinkedIn banner | 1584×396 (text starts 30% from the left) |
+| X header | 1500×500 |
+| Avatar | 800×800 |
+| YouTube thumbnail | 1280×720 |
+| Fiverr gig image | 1280×769 |
+
+### A deck
+
+Black slides, one headline per slide (two-tone), a mono label and slide number, lots of space. Paper slides for tables and pricing. 16:9.
+
+### A document, proposal or invoice
+
+Paper theme: `#F3F0E8` page, ink `#1D1D1F` text, muted `#595857`. Mono UPPERCASE labels, Inter Tight headings. Orange text or thin lines on paper use `#B33A06`. Use the launch pass for the price block. A4 or Letter.
+
+### An email
+
+Plain and short. Name, MuzMesh, one link in the signature. No image banners.
+
+## 12. CSS variables (paste-ready)
+
+```css
+/* MuzMesh brand tokens v2. Generated by docs/brand/build-tokens.mjs: edit that file, not this one.
+   Two themes: Launch (default, dark) and Paper (light). Set data-theme="paper" on <html> or any element to switch a subtree.
+   Components use the --mm-* role tokens; the --mm-c-* core values are for art and one-off illustrations only. */
+:root {
+  --mm-c-black: #000000;
+  --mm-c-raise-1: #0E0E10;
+  --mm-c-raise-2: #141418;
+  --mm-c-graphite: #2C2C35;
+  --mm-c-bone: #F4F4F1;
+  --mm-c-stone: #BDBDB8;
+  --mm-c-ash: #77777C;
+  --mm-c-paper: #F3F0E8;
+  --mm-c-paper-2: #E8E4D9;
+  --mm-c-paper-card: #FBFAF6;
+  --mm-c-paper-line: #D9D4C7;
+  --mm-c-ink: #1D1D1F;
+  --mm-c-on-accent: #0E0E10;
+  --mm-c-signal: #F2580F;
+  --mm-c-signal-hot: #FF6A20;
+  --mm-c-signal-deep: #CC3D08;
+  --mm-c-signal-ink: #B33A06;
+  --mm-c-danger-dark: #FF7A59;
+  --mm-c-danger-light: #B42318;
+  --mm-c-success-dark: #6FDC8C;
+  --mm-c-success-light: #1F7A35;
+
+  /* fonts */
+  --mm-font-sans: "Inter Tight", "Inter", system-ui, sans-serif;
+  --mm-font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* type scale: size / weight / line-height / tracking */
+  --mm-type-display: clamp(40px, 4.5vw, 70px); --mm-type-display-w: 500; --mm-type-display-lh: 1.06; --mm-type-display-ls: -0.025em;
+  --mm-type-h2: clamp(34px, 3.7vw, 56px); --mm-type-h2-w: 500; --mm-type-h2-lh: 1.04; --mm-type-h2-ls: -0.03em;
+  --mm-type-h3: clamp(28px, 2.75vw, 42px); --mm-type-h3-w: 500; --mm-type-h3-lh: 1.08; --mm-type-h3-ls: -0.028em;
+  --mm-type-h4: 22px; --mm-type-h4-w: 600; --mm-type-h4-lh: 1.2; --mm-type-h4-ls: -0.015em;
+  --mm-type-stat: clamp(44px, 4.6vw, 64px); --mm-type-stat-w: 500; --mm-type-stat-lh: 1; --mm-type-stat-ls: -0.04em;
+  --mm-type-lead: clamp(16px, 1.25vw, 18px); --mm-type-lead-w: 400; --mm-type-lead-lh: 1.55; --mm-type-lead-ls: 0;
+  --mm-type-body-lg: 17px; --mm-type-body-lg-w: 400; --mm-type-body-lg-lh: 1.5; --mm-type-body-lg-ls: -0.01em;
+  --mm-type-body: 15px; --mm-type-body-w: 400; --mm-type-body-lh: 1.5; --mm-type-body-ls: 0;
+  --mm-type-small: 13px; --mm-type-small-w: 400; --mm-type-small-lh: 1.45; --mm-type-small-ls: 0;
+  --mm-type-label: 11.5px; --mm-type-label-w: 400; --mm-type-label-lh: 1.2; --mm-type-label-ls: 0.06em;
+  --mm-type-micro: 10.5px; --mm-type-micro-w: 500; --mm-type-micro-lh: 1.2; --mm-type-micro-ls: 0.12em;
+  --mm-type-wordmark: 22px; --mm-type-wordmark-w: 700; --mm-type-wordmark-lh: 1; --mm-type-wordmark-ls: -0.015em;
+
+  /* space (4px base) */
+  --mm-space-1: 4px;
+  --mm-space-2: 8px;
+  --mm-space-3: 12px;
+  --mm-space-4: 16px;
+  --mm-space-5: 20px;
+  --mm-space-6: 24px;
+  --mm-space-7: 32px;
+  --mm-space-8: 44px;
+  --mm-space-9: 56px;
+  --mm-space-10: 64px;
+  --mm-space-11: 96px;
+  --mm-space-12: 128px;
+
+  /* layout */
+  --mm-gutter: 28px;
+  --mm-content: 1120px;
+  --mm-frame: 1640px;
+  --mm-nav-h: 64px;
+  --mm-section-pt: clamp(96px, 11vw, 160px);
+  --mm-section-pb: clamp(96px, 10vw, 140px);
+  --mm-col-gap: 64px;
+
+  /* radius */
+  --mm-radius-xs: 2px;
+  --mm-radius-sm: 9px;
+  --mm-radius-md: 12px;
+  --mm-radius-lg: 16px;
+  --mm-radius-xl: 18px;
+  --mm-radius-2xl: 28px;
+  --mm-radius-pill: 999px;
+
+  /* shadow */
+  --mm-shadow-ring: inset 0 0 0 1px rgba(244,244,241,.14);
+  --mm-shadow-window: 0 0 0 1px rgba(244,244,241,.14), 0 40px 100px -30px rgba(0,0,0,.95);
+  --mm-shadow-glow: 0 18px 50px -14px rgba(242,88,15,.6);
+  --mm-shadow-focus: 0 0 0 4px rgba(242,88,15,.14);
+
+  /* motion */
+  --mm-dur-fast: 150ms;
+  --mm-dur-base: 200ms;
+  --mm-dur-slow: 700ms;
+  --mm-ease-out: cubic-bezier(.2,.7,.2,1);
+  --mm-ease-in-out: cubic-bezier(.45,0,.55,1);
+}
+
+/* Launch theme (default) */
+:root, [data-theme="launch"] {
+  color-scheme: dark;
+  --mm-bg: #000000;
+  --mm-surface: #0E0E10;
+  --mm-surface-2: #141418;
+  --mm-text: #F4F4F1;
+  --mm-text-muted: rgba(244,244,241,.74);
+  --mm-text-faint: rgba(244,244,241,.56);
+  --mm-text-dim: #77777C;
+  --mm-hair: rgba(244,244,241,.16);
+  --mm-border: rgba(244,244,241,.30);
+  --mm-border-solid: #2C2C35;
+  --mm-accent: #F2580F;
+  --mm-accent-hover: #FF6A20;
+  --mm-accent-press: #CC3D08;
+  --mm-on-accent: #0E0E10;
+  --mm-accent-text: #F2580F;
+  --mm-focus: #F2580F;
+  --mm-danger: #FF7A59;
+  --mm-success: #6FDC8C;
+  --mm-btn-primary: #F4F4F1;
+  --mm-on-btn-primary: #000000;
+}
+
+/* Paper theme */
+[data-theme="paper"] {
+  color-scheme: light;
+  --mm-bg: #F3F0E8;
+  --mm-surface: #FBFAF6;
+  --mm-surface-2: #E8E4D9;
+  --mm-text: #1D1D1F;
+  --mm-text-muted: #595857;
+  --mm-text-faint: #686764;
+  --mm-text-dim: #8A8884;
+  --mm-hair: rgba(29,29,31,.12);
+  --mm-border: #D9D4C7;
+  --mm-border-solid: #D9D4C7;
+  --mm-accent: #F2580F;
+  --mm-accent-hover: #FF6A20;
+  --mm-accent-press: #CC3D08;
+  --mm-on-accent: #0E0E10;
+  --mm-accent-text: #B33A06;
+  --mm-focus: #B33A06;
+  --mm-danger: #B42318;
+  --mm-success: #1F7A35;
+  --mm-btn-primary: #1D1D1F;
+  --mm-on-btn-primary: #F3F0E8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --mm-dur-fast: 0ms; --mm-dur-base: 0ms; --mm-dur-slow: 0ms; }
+}
+```
+
+## 13. Check before you hand it over
+
+- [ ] Only colours from section 3. No new hex values.
+- [ ] Only Inter Tight and JetBrains Mono.
+- [ ] One orange primary button per view, with dark text on it.
+- [ ] Every section starts with a mono label; headlines are two-tone.
+- [ ] Text contrast at least 4.5:1 (use the pairs in section 3).
+- [ ] No emoji, sparkles, robots, gradients on text or AI-generated people.
+- [ ] Copy is short and every number is true.
+- [ ] Works at 360px wide with no sideways scroll; respects reduced motion.
+
+Run `node docs/brand/ai/check-brand.mjs <file>` on any HTML or CSS file to catch off-brand colours, fonts, emoji and banned words.
+</script>
+
+      <h3>Check what comes back</h3>
+      <pre class="g-term"><b>$ node docs/brand/ai/check-brand.mjs landing.html</b>
+
+landing.html
+  line 12: <i>font "Poppins" is not a brand font</i>
+  line 40: <i>colour #7c3aed is not in the palette</i>
+  line 41: <i>white text on orange: use #0E0E10</i>
+  line 58: <i>banned phrase "unlock"</i>
+  line 58: <i>emoji "🚀"</i>
+
+<b>$ node docs/brand/ai/check-brand.mjs starter.html</b>
+<u>starter.html: on brand</u></pre>
+      <div class="g-dd">
+        <div class="g-do"><h4>Ask like this</h4><ul>
+          <li><q>Using BRAND.md and starter.html, build a pricing page with three tiers. One primary button.</q></li>
+          <li><q>Write a 6-slide LinkedIn carousel on why AI startups look the same. Follow the carousel recipe.</q></li>
+          <li><q>Check this page against BRAND.md and list every rule it breaks.</q></li>
+        </ul></div>
+        <div class="g-dont"><h4>Watch for</h4><ul>
+          <li>New colours “to add variety”. There is one accent; say no.</li>
+          <li>Invented stats, testimonials or client logos. Every number must be true.</li>
+          <li>AI-generated photos of people. Use real photos in one of the two grades.</li>
+        </ul></div>
+      </div>
+      <p class="g-p"><b>Keeping it in sync:</b> <code>BRAND.md</code> is generated from <code>ai/brand.src.md</code> and <code>build-tokens.mjs</code>. Change a colour there and the guideline, the website, the AI pack and the checker all update together.</p>
+    </section>
+
     <!-- 11 -->
     <section class="g-ch" id="tokens">
       <header>
-        <span class="mm-label">14 · Tokens and files</span>
+        <span class="mm-label">15 · Tokens and files</span>
         <h2 class="mm-h2"><span class="mm-dim">One source,</span> four outputs.</h2>
         <p class="mm-lead">Every value on this page is generated from <code>docs/brand/build-tokens.mjs</code>. Change it there, run the script, and the JSON, the CSS, the Tailwind theme and this guideline update together.</p>
       </header>
@@ -1187,7 +1695,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     <!-- 12 -->
     <section class="g-ch" id="audit">
       <header>
-        <span class="mm-label">15 · Audit and open items</span>
+        <span class="mm-label">16 · Audit and open items</span>
         <h2 class="mm-h2"><span class="mm-dim">What we checked,</span> what we changed.</h2>
         <p class="mm-lead">The guideline was audited against the homepage stylesheet (<code>web/src/styles/home.css</code>) and the rest of the site. These are the gaps found, how they were settled, and what still needs a decision.</p>
       </header>
@@ -1202,6 +1710,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
         <div><span class="g-tag fix">Fixed</span><span><b>Retired v1.</b> Yellow #FFD60A, Archivo and the paper-first layout are archived. The four hero test palettes (Oxblood, Teal, Magenta, Green) were explorations for an earlier hero and are not part of the brand.</span></div>
         <div><span class="g-tag fix">Added</span><span><b>Iconography and imagery.</b> v2 first shipped without them. There is now a 28-icon set on one grid, a photo grade (natural and duotone), texture rules and visual do/don’t examples.</span></div>
         <div><span class="g-tag fix">Added</span><span><b>Social kit.</b> Profiles, banner safe zones, feed rhythm, a carousel structure, story safe zones, a caption template and a size table for every platform we use.</span></div>
+        <div><span class="g-tag fix">Added</span><span><b>AI ready.</b> The rules now ship as <code>BRAND.md</code>, a short system prompt, a starter page and a checker, generated from the same tokens, so any AI tool produces on-brand work.</span></div>
         <div><span class="g-tag">Follow-up</span><span><b>Point home.css at the tokens.</b> Once the homepage PR is merged, its local <code>--y</code>, <code>--fg</code> and <code>--raise</code> variables can read from tokens.css. Values already match, apart from the hover and faint fixes above.</span></div>
         <div><span class="g-tag open">Open</span><span><b>Our own photos.</b> The example photos are stock (credited). Shoot a few real work sessions to replace them.</span></div>
         <div><span class="g-tag open">Open</span><span><b>Custom logo.</b> The outlined wordmark and “m.” avatar are the working logo. Commission a drawn mark later, or keep this one.</span></div>
@@ -1280,6 +1789,18 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(cv);
   }
 })();
+</script>
+
+<script>
+/* copy buttons in "Use with AI" */
+document.querySelectorAll('[data-copy]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var el = document.getElementById(b.getAttribute('data-copy')); var txt = el.textContent.trim(); var label = b.textContent;
+    function done(ok) { b.textContent = ok ? 'Copied' : 'Select and copy'; setTimeout(function () { b.textContent = label; }, 1600); }
+    function fallback() { var t = document.createElement('textarea'); t.value = txt; t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select(); var ok = false; try { ok = document.execCommand('copy'); } catch (e) {} t.remove(); done(ok); }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(function () { done(true); }, fallback); else fallback();
+  });
+});
 </script>
 </body>
 </html>

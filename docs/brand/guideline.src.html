@@ -267,6 +267,16 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
 .g-caption p b { color: var(--mm-text); font-weight: 500; }
 .g-caption .tags { font-family: var(--mm-font-mono); font-size: 12px; color: var(--mm-text-faint); }
 
+/* use with AI */
+.g-ai-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 16px; }
+.g-ai-tools .g-card ol { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; line-height: 1.5; color: var(--mm-text-muted); }
+.g-prompt { border-radius: var(--mm-radius-lg); box-shadow: var(--mm-shadow-ring); background: var(--mm-surface); overflow: hidden; }
+.g-prompt .bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px 10px 18px; border-bottom: 1px solid var(--mm-hair); flex-wrap: wrap; }
+.g-prompt .bar div { display: flex; gap: 8px; flex-wrap: wrap; }
+.g-prompt pre { margin: 0; padding: 18px; white-space: pre-wrap; font-family: var(--mm-font-mono); font-size: 12.5px; line-height: 1.7; color: var(--mm-text-muted); }
+.g-term { margin: 0; padding: 18px 20px; border-radius: var(--mm-radius-md); background: var(--mm-c-raise-2); box-shadow: var(--mm-shadow-ring); font-family: var(--mm-font-mono); font-size: 12.5px; line-height: 1.75; color: var(--mm-text-muted); white-space: pre-wrap; overflow-x: auto; }
+.g-term b { color: var(--mm-text); font-weight: 400; } .g-term i { color: var(--mm-c-danger-dark); font-style: normal; } .g-term u { color: var(--mm-c-success-dark); text-decoration: none; }
+
 /* hero mosaic */
 .g-mosaic { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: 118px; gap: 12px; grid-auto-flow: dense; margin-top: 18px; }
 .g-mosaic > * { border-radius: var(--mm-radius-lg); overflow: hidden; position: relative; min-width: 0; box-shadow: var(--mm-shadow-ring); }
@@ -409,7 +419,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
         <div class="g-ticket">
           <div class="h"><b>muzmesh</b><span>Brand pass</span></div>
           <div class="b"><span class="lbl">From · To</span><div class="route"><span>V1</span><i></i><span>V2</span></div>
-          <div class="row"><div><span class="lbl">Passenger</span>MuzMesh</div><div><span class="lbl">Chapters</span>15</div><div><span class="lbl">Class</span>Launch</div></div></div>
+          <div class="row"><div><span class="lbl">Passenger</span>MuzMesh</div><div><span class="lbl">Chapters</span>16</div><div><span class="lbl">Class</span>Launch</div></div></div>
           <div class="tear"></div>
           <div class="f"><div><span class="lbl">Accent</span></div><b>#F2580F</b></div>
         </div>
@@ -439,8 +449,9 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     <a href="#voice"><span>11</span>Voice and copy</a>
     <a href="#apply"><span>12</span>Applying it</a>
     <a href="#social"><span>13</span>Social kit</a>
-    <a href="#tokens"><span>14</span>Tokens and files</a>
-    <a href="#audit"><span>15</span>Audit and open items</a>
+    <a href="#ai"><span>14</span>Use with AI</a>
+    <a href="#tokens"><span>15</span>Tokens and files</a>
+    <a href="#audit"><span>16</span>Audit and open items</a>
   </aside>
 
   <main class="g-main">
@@ -893,10 +904,68 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
       </tbody></table></div>
     </section>
 
+    <!-- ai -->
+    <section class="g-ch" id="ai">
+      <header>
+        <span class="mm-label">14 · Use with AI</span>
+        <h2 class="mm-h2"><span class="mm-dim">Any AI,</span> still on brand.</h2>
+        <p class="mm-lead">This guideline ships with an AI brand pack: the same rules as plain text, generated from the same tokens. Give it to ChatGPT, Claude, DeepSeek, Gemini or a coding tool, and what comes back uses our colours, type, components and voice.</p>
+      </header>
+      <div class="g-table-wrap"><table class="g-table"><thead><tr><th>File (in <code>docs/brand/ai/</code>)</th><th>What it does</th></tr></thead><tbody>
+        <tr><td><code>BRAND.md</code></td><td>Every rule in this guideline as text: palette, theme roles, checked contrast pairs, type scale, layout, components, voice, logo, imagery, recipes for pages, posts, decks and documents, the CSS variables and a final checklist. <b>The one file to give any AI.</b></td></tr>
+        <tr><td><code>system-prompt.txt</code></td><td>The short version, under 1,500 characters, for custom instructions or a first message.</td></tr>
+        <tr><td><code>starter.html</code></td><td>A working on-brand page with nav, hero, section, cards, launch pass and footer, for the AI to copy patterns from.</td></tr>
+        <tr><td><code>tokens.css</code>, <code>brand.css</code>, SVGs</td><td>The real CSS and logo files, so generated pages use the same code as the site.</td></tr>
+        <tr><td><code>check-brand.mjs</code></td><td>Checks any HTML, CSS or SVG for off-brand colours, fonts, white text on orange, emoji and banned words.</td></tr>
+        <tr><td><code>AGENTS.md</code>, <code>.cursor/rules</code>, <code>.github/copilot-instructions.md</code></td><td>Repo-level pointers so Cursor, Copilot, Codex, Windsurf, Gemini CLI and Claude Code read <code>BRAND.md</code> on their own.</td></tr>
+      </tbody></table></div>
+
+      <h3>Set it up once</h3>
+      <div class="g-ai-tools">
+        <div class="g-card"><span class="mm-label is-quiet">ChatGPT</span><b>A Project or custom GPT</b><ol><li>Upload BRAND.md, starter.html, the CSS and the SVGs.</li><li>Paste the prompt below into the instructions.</li><li>Ask for pages, posts or copy as usual.</li></ol></div>
+        <div class="g-card"><span class="mm-label is-quiet">Claude</span><b>A Project</b><ol><li>Add the same files to project knowledge.</li><li>Paste the prompt into project instructions.</li><li>In Claude Code, CLAUDE.md already points to it.</li></ol></div>
+        <div class="g-card"><span class="mm-label is-quiet">DeepSeek, Gemini, others</span><b>Attach and paste</b><ol><li>Attach BRAND.md (and starter.html for web work).</li><li>Paste the prompt as the first message.</li><li>In Gemini, save it as a Gem.</li></ol></div>
+        <div class="g-card"><span class="mm-label is-quiet">Cursor, Copilot, Codex</span><b>Keep it in the repo</b><ol><li>Nothing to do: AGENTS.md and the rules files load it.</li><li>Ask the agent to run check-brand before it finishes.</li></ol></div>
+      </div>
+
+      <h3>The prompt</h3>
+      <div class="g-prompt">
+        <div class="bar"><span class="mm-label">system-prompt.txt</span><div><button class="mm-btn is-ghost is-sm" type="button" data-copy="g-ai-prompt">Copy prompt</button><button class="mm-btn is-solid is-sm" type="button" data-copy="g-ai-md">Copy full BRAND.md</button></div></div>
+        <pre id="g-ai-prompt">{{AI_PROMPT}}</pre>
+      </div>
+      <script type="text/markdown" id="g-ai-md">{{AI_BRAND_MD}}</script>
+
+      <h3>Check what comes back</h3>
+      <pre class="g-term"><b>$ node docs/brand/ai/check-brand.mjs landing.html</b>
+
+landing.html
+  line 12: <i>font "Poppins" is not a brand font</i>
+  line 40: <i>colour #7c3aed is not in the palette</i>
+  line 41: <i>white text on orange: use #0E0E10</i>
+  line 58: <i>banned phrase "unlock"</i>
+  line 58: <i>emoji "🚀"</i>
+
+<b>$ node docs/brand/ai/check-brand.mjs starter.html</b>
+<u>starter.html: on brand</u></pre>
+      <div class="g-dd">
+        <div class="g-do"><h4>Ask like this</h4><ul>
+          <li><q>Using BRAND.md and starter.html, build a pricing page with three tiers. One primary button.</q></li>
+          <li><q>Write a 6-slide LinkedIn carousel on why AI startups look the same. Follow the carousel recipe.</q></li>
+          <li><q>Check this page against BRAND.md and list every rule it breaks.</q></li>
+        </ul></div>
+        <div class="g-dont"><h4>Watch for</h4><ul>
+          <li>New colours “to add variety”. There is one accent; say no.</li>
+          <li>Invented stats, testimonials or client logos. Every number must be true.</li>
+          <li>AI-generated photos of people. Use real photos in one of the two grades.</li>
+        </ul></div>
+      </div>
+      <p class="g-p"><b>Keeping it in sync:</b> <code>BRAND.md</code> is generated from <code>ai/brand.src.md</code> and <code>build-tokens.mjs</code>. Change a colour there and the guideline, the website, the AI pack and the checker all update together.</p>
+    </section>
+
     <!-- 11 -->
     <section class="g-ch" id="tokens">
       <header>
-        <span class="mm-label">14 · Tokens and files</span>
+        <span class="mm-label">15 · Tokens and files</span>
         <h2 class="mm-h2"><span class="mm-dim">One source,</span> four outputs.</h2>
         <p class="mm-lead">Every value on this page is generated from <code>docs/brand/build-tokens.mjs</code>. Change it there, run the script, and the JSON, the CSS, the Tailwind theme and this guideline update together.</p>
       </header>
@@ -924,7 +993,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     <!-- 12 -->
     <section class="g-ch" id="audit">
       <header>
-        <span class="mm-label">15 · Audit and open items</span>
+        <span class="mm-label">16 · Audit and open items</span>
         <h2 class="mm-h2"><span class="mm-dim">What we checked,</span> what we changed.</h2>
         <p class="mm-lead">The guideline was audited against the homepage stylesheet (<code>web/src/styles/home.css</code>) and the rest of the site. These are the gaps found, how they were settled, and what still needs a decision.</p>
       </header>
@@ -939,6 +1008,7 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
         <div><span class="g-tag fix">Fixed</span><span><b>Retired v1.</b> Yellow #FFD60A, Archivo and the paper-first layout are archived. The four hero test palettes (Oxblood, Teal, Magenta, Green) were explorations for an earlier hero and are not part of the brand.</span></div>
         <div><span class="g-tag fix">Added</span><span><b>Iconography and imagery.</b> v2 first shipped without them. There is now a 28-icon set on one grid, a photo grade (natural and duotone), texture rules and visual do/don’t examples.</span></div>
         <div><span class="g-tag fix">Added</span><span><b>Social kit.</b> Profiles, banner safe zones, feed rhythm, a carousel structure, story safe zones, a caption template and a size table for every platform we use.</span></div>
+        <div><span class="g-tag fix">Added</span><span><b>AI ready.</b> The rules now ship as <code>BRAND.md</code>, a short system prompt, a starter page and a checker, generated from the same tokens, so any AI tool produces on-brand work.</span></div>
         <div><span class="g-tag">Follow-up</span><span><b>Point home.css at the tokens.</b> Once the homepage PR is merged, its local <code>--y</code>, <code>--fg</code> and <code>--raise</code> variables can read from tokens.css. Values already match, apart from the hover and faint fixes above.</span></div>
         <div><span class="g-tag open">Open</span><span><b>Our own photos.</b> The example photos are stock (credited). Shoot a few real work sessions to replace them.</span></div>
         <div><span class="g-tag open">Open</span><span><b>Custom logo.</b> The outlined wordmark and “m.” avatar are the working logo. Commission a drawn mark later, or keep this one.</span></div>
@@ -1017,4 +1087,16 @@ code { font-family: var(--mm-font-mono); font-size: .86em; padding: .1em .35em; 
     if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(cv);
   }
 })();
+</script>
+
+<script>
+/* copy buttons in "Use with AI" */
+document.querySelectorAll('[data-copy]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var el = document.getElementById(b.getAttribute('data-copy')); var txt = el.textContent.trim(); var label = b.textContent;
+    function done(ok) { b.textContent = ok ? 'Copied' : 'Select and copy'; setTimeout(function () { b.textContent = label; }, 1600); }
+    function fallback() { var t = document.createElement('textarea'); t.value = txt; t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select(); var ok = false; try { ok = document.execCommand('copy'); } catch (e) {} t.remove(); done(ok); }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(function () { done(true); }, fallback); else fallback();
+  });
+});
 </script>
