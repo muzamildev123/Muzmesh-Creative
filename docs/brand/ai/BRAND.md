@@ -107,20 +107,57 @@ Load: `https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,50
 
 | Style | Size | Weight | Line height | Letter spacing | Font | Use |
 |---|---|---|---|---|---|---|
-| display | clamp(40px, 4.5vw, 70px) | 500 | 1.06 | -0.025em | Inter Tight | One per page. Hero headline. |
-| h2 | clamp(34px, 3.7vw, 56px) | 500 | 1.04 | -0.03em | Inter Tight | Section headline. Two-tone allowed: dim the first part with --mm-text-faint. |
-| h3 | clamp(28px, 2.75vw, 42px) | 500 | 1.08 | -0.028em | Inter Tight | Sub-section headline. |
-| h4 | 22px | 600 | 1.2 | -0.015em | Inter Tight | Card title. |
-| stat | clamp(44px, 4.6vw, 64px) | 500 | 1 | -0.04em | Inter Tight | Big numbers: $500, 5 days, 40%. |
-| lead | clamp(16px, 1.25vw, 18px) | 400 | 1.55 | 0 | Inter Tight | Paragraph under a headline. Max 40ch. Colour --mm-text-muted. |
-| body-lg | 17px | 400 | 1.5 | -0.01em | Inter Tight | Long reading, FAQ questions, articles. |
-| body | 15px | 400 | 1.5 | 0 | Inter Tight | Default UI text. |
-| small | 13px | 400 | 1.45 | 0 | Inter Tight | Captions, chips, helper text. |
+| display | clamp(40px, 4.6vw, 72px) | 500 | 1.02 | -0.035em | Inter Tight | One per page. Hero headline. |
+| h2 | clamp(34px, 3.7vw, 56px) | 500 | 1.04 | -0.03em | Inter Tight | Section headline. Two-tone allowed: dim the first part with .mm-dim. |
+| h3 | clamp(26px, 2.6vw, 40px) | 500 | 1.08 | -0.025em | Inter Tight | Sub-section headline, closing lines, big quotes. |
+| h4 | 22px | 600 | 1.2 | -0.015em | Inter Tight | Card and panel titles. |
+| stat | clamp(44px, 4.6vw, 64px) | 500 | 1 | -0.04em | Inter Tight | Big numbers: $500, 5 days, 40%. Always tabular figures. |
+| lead | clamp(17px, 1.35vw, 20px) | 400 | 1.5 | -0.01em | Inter Tight | Paragraph under a headline. Max 40ch. Colour --mm-text-muted. |
+| body-lg | 17px | 400 | 1.5 | -0.01em | Inter Tight | Long reading, FAQ questions and answers, form fields. |
+| body | 15px | 400 | 1.55 | 0 | Inter Tight | Default text. |
+| button | 16px | 600 | 1 | -0.01em | Inter Tight | Button labels. Small buttons are 14px, same weight. |
+| ui | 14px | 400 | 1.45 | 0 | Inter Tight | Nav links, chips, table cells, list items in panels. |
+| small | 13px | 400 | 1.45 | 0 | Inter Tight | Captions, helper text, footnotes. Never smaller for sans text. |
 | label | 11.5px | 400 | 1.2 | 0.06em | JetBrains Mono | UPPERCASE eyebrow with the orange square bullet. |
-| micro | 10.5px | 500 | 1.2 | 0.12em | JetBrains Mono | UPPERCASE ticket and table headers. |
-| wordmark | 22px | 700 | 1 | -0.015em | Inter Tight | Text wordmark in the nav. Lowercase. |
+| micro | 10.5px | 500 | 1.2 | 0.12em | JetBrains Mono | UPPERCASE ticket fields, table heads, tags. |
+| data | 12px | 400 | 1.5 | 0 | JetBrains Mono | Timestamps, URLs, build logs, code. Mixed case, never tracked. |
+| wordmark | 22px | 700 | 1 | -0.015em | Inter Tight | Text wordmark in the nav. Lowercase. The only 700 in the system. |
 
-Sentence case everywhere except mono labels (UPPERCASE). Curly quotes and apostrophes (’ “ ”). Headlines `text-wrap: balance`. Max line length: about 40 characters for leads, 70 for body.
+Take size, weight, line height and letter spacing together from one style. Never mix them.
+
+**Tracking follows size.** One letter-spacing value per size, tighter as type gets bigger. Mono is never tracked negative; lowercase is never tracked positive.
+
+| Size | Letter spacing | Used by |
+|---|---|---|
+| 96px and up | -0.045em | posters, the giant footer wordmark |
+| 64–95px | -0.035em | display |
+| 48–63px | -0.03em | h2 |
+| 32–47px | -0.025em | h3, closing lines |
+| 24–31px | -0.02em | headlines on phones |
+| 18–23px | -0.015em | h4, wordmark, quotes in cards |
+| 16–17px | -0.01em | body-lg, lead, buttons |
+| 15px and below | 0 | body, ui, small |
+| Mono UPPERCASE 11.5px | +0.06em | label |
+| Mono UPPERCASE 10.5px | +0.12em | micro |
+| Mono mixed case | 0 | data |
+
+**Weights, one job each.** 400: all running text. 500: headlines, big numbers and prices, bold words inside a headline or lead. 600: every button (primary, solid and ghost), H4, bold words inside body text. 700: the wordmark only. Never 300, never 800+.
+
+**Allowed sizes.** Sans: 13, 14, 15, 16 (buttons and inputs), 17, 22px, plus the clamp() tokens above. Mono: 10.5, 11.5, 12px. No half-pixel sans sizes, no 18 or 19px. Nothing smaller than 13px for sans text.
+
+**Eyebrows are mono.** Never spaced-out Inter Tight caps. Use `.mm-label` (11.5px, +0.06em) or `.mm-micro` (10.5px, +0.12em).
+
+**OpenType.** Kerning, ligatures and contextual alternates on everywhere (`.mm` sets them). Tabular lining figures on every price, countdown, stat, table and timestamp (`.mm-num`, `.mm-stat`, `.mm-data`).
+
+| Token | Features | Where |
+|---|---|---|
+| `--mm-features-text` | `"kern" 1, "liga" 1, "calt" 1` | Every text: kerning, ligatures and contextual alternates on. Set once on .mm. |
+| `--mm-features-num` | `"tnum" 1, "lnum" 1` | Prices, stats, countdowns, tables, timestamps: tabular lining figures so digits line up and do not jump. |
+| `--mm-features-caps` | `"case" 1, "cpsp" 1` | Rare all-caps sans (avoid): case-sensitive punctuation and capital spacing. |
+
+**Line height and measure.** Display and H2 1.02–1.04, max about 16 characters per line. H3/H4 1.08–1.2. Lead 1.5, max 40ch. Body 1.5–1.55, max 65ch. Headlines `text-wrap: balance`, paragraphs `text-wrap: pretty`. Mono labels never wrap.
+
+**Punctuation.** Sentence case everywhere except mono labels (UPPERCASE). Curly quotes and apostrophes (’ “ ”). En dash for ranges (3–5 days). Non-breaking space between a number and its unit (5&nbsp;days). × for multiplication. One ellipsis character (…), rarely.
 
 ## 5. Layout and space
 
@@ -392,18 +429,24 @@ Plain and short. Name, MuzMesh, one link in the signature. No image banners.
   --mm-font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
   /* type scale: size / weight / line-height / tracking */
-  --mm-type-display: clamp(40px, 4.5vw, 70px); --mm-type-display-w: 500; --mm-type-display-lh: 1.06; --mm-type-display-ls: -0.025em;
+  --mm-type-display: clamp(40px, 4.6vw, 72px); --mm-type-display-w: 500; --mm-type-display-lh: 1.02; --mm-type-display-ls: -0.035em;
   --mm-type-h2: clamp(34px, 3.7vw, 56px); --mm-type-h2-w: 500; --mm-type-h2-lh: 1.04; --mm-type-h2-ls: -0.03em;
-  --mm-type-h3: clamp(28px, 2.75vw, 42px); --mm-type-h3-w: 500; --mm-type-h3-lh: 1.08; --mm-type-h3-ls: -0.028em;
+  --mm-type-h3: clamp(26px, 2.6vw, 40px); --mm-type-h3-w: 500; --mm-type-h3-lh: 1.08; --mm-type-h3-ls: -0.025em;
   --mm-type-h4: 22px; --mm-type-h4-w: 600; --mm-type-h4-lh: 1.2; --mm-type-h4-ls: -0.015em;
   --mm-type-stat: clamp(44px, 4.6vw, 64px); --mm-type-stat-w: 500; --mm-type-stat-lh: 1; --mm-type-stat-ls: -0.04em;
-  --mm-type-lead: clamp(16px, 1.25vw, 18px); --mm-type-lead-w: 400; --mm-type-lead-lh: 1.55; --mm-type-lead-ls: 0;
+  --mm-type-lead: clamp(17px, 1.35vw, 20px); --mm-type-lead-w: 400; --mm-type-lead-lh: 1.5; --mm-type-lead-ls: -0.01em;
   --mm-type-body-lg: 17px; --mm-type-body-lg-w: 400; --mm-type-body-lg-lh: 1.5; --mm-type-body-lg-ls: -0.01em;
-  --mm-type-body: 15px; --mm-type-body-w: 400; --mm-type-body-lh: 1.5; --mm-type-body-ls: 0;
+  --mm-type-body: 15px; --mm-type-body-w: 400; --mm-type-body-lh: 1.55; --mm-type-body-ls: 0;
+  --mm-type-button: 16px; --mm-type-button-w: 600; --mm-type-button-lh: 1; --mm-type-button-ls: -0.01em;
+  --mm-type-ui: 14px; --mm-type-ui-w: 400; --mm-type-ui-lh: 1.45; --mm-type-ui-ls: 0;
   --mm-type-small: 13px; --mm-type-small-w: 400; --mm-type-small-lh: 1.45; --mm-type-small-ls: 0;
   --mm-type-label: 11.5px; --mm-type-label-w: 400; --mm-type-label-lh: 1.2; --mm-type-label-ls: 0.06em;
   --mm-type-micro: 10.5px; --mm-type-micro-w: 500; --mm-type-micro-lh: 1.2; --mm-type-micro-ls: 0.12em;
+  --mm-type-data: 12px; --mm-type-data-w: 400; --mm-type-data-lh: 1.5; --mm-type-data-ls: 0;
   --mm-type-wordmark: 22px; --mm-type-wordmark-w: 700; --mm-type-wordmark-lh: 1; --mm-type-wordmark-ls: -0.015em;
+  --mm-features-text: "kern" 1, "liga" 1, "calt" 1;
+  --mm-features-num: "tnum" 1, "lnum" 1;
+  --mm-features-caps: "case" 1, "cpsp" 1;
 
   /* space (4px base) */
   --mm-space-1: 4px;
@@ -510,6 +553,7 @@ Plain and short. Name, MuzMesh, one link in the signature. No image banners.
 
 - [ ] Only colours from section 3. No new hex values.
 - [ ] Only Inter Tight and JetBrains Mono.
+- [ ] Type comes from the scale in section 4: allowed sizes, the tracking for that size, weights 400/500/600 (700 only for the wordmark), tabular figures on numbers.
 - [ ] One orange primary button per view, with dark text on it.
 - [ ] Every section starts with a mono label; headlines are two-tone.
 - [ ] Text contrast at least 4.5:1 (use the pairs in section 3).
@@ -517,4 +561,4 @@ Plain and short. Name, MuzMesh, one link in the signature. No image banners.
 - [ ] Copy is short and every number is true.
 - [ ] Works at 360px wide with no sideways scroll; respects reduced motion.
 
-Run `node docs/brand/ai/check-brand.mjs <file>` on any HTML or CSS file to catch off-brand colours, fonts, emoji and banned words.
+Run `node docs/brand/ai/check-brand.mjs <file>` on any HTML or CSS file to catch off-brand colours, fonts, off-scale type sizes, letter spacing and weights, emoji and banned words.

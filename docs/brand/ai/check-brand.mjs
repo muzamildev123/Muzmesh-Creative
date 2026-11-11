@@ -2,7 +2,7 @@
 // MuzMesh brand check. Run on anything an AI (or a person) made:
 //   node docs/brand/ai/check-brand.mjs page.html styles.css post.svg
 // Flags colours outside the palette, fonts other than Inter Tight / JetBrains Mono,
-// white text on orange, emoji, and banned words. Exit code 1 if anything is off-brand.
+// white text on orange, off-scale type (sizes, letter spacing, weights), emoji, and banned words. Exit code 1 if anything is off-brand.
 import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -42,6 +42,24 @@ for (const f of files) {
   for (const m of src.matchAll(/family=([A-Za-z+]+)/g)) {
     const fam = m[1].replace(/\+/g, ' ');
     if (!okFont.has(fam.toLowerCase())) out.push([lineOf(src, m.index), `loads font "${fam}"`]);
+  }
+  // type: off-scale sizes, tracking and weights
+  const okSize = new Set(allow.fontSizesPx || []), okLs = new Set((allow.letterSpacingEm || []).map(Number)), okW = new Set(allow.fontWeights || []);
+  for (const m of src.matchAll(/font-size\s*:\s*([\d.]+)px/g)) {
+    const v = +m[1];
+    if (v < 24 && okSize.size && !okSize.has(v)) out.push([lineOf(src, m.index), `font-size ${v}px is off the type scale (use ${[...okSize].join(', ')}px)`]);
+  }
+  for (const m of src.matchAll(/letter-spacing\s*:\s*(-?[\d.]+)(em|px)?/g)) {
+    const v = +m[1];
+    if (v === 0) continue;
+    if (m[2] !== 'em') { out.push([lineOf(src, m.index), `letter-spacing ${m[1]}${m[2] || ''}: use em from the tracking table`]); continue; }
+    if (okLs.size && !okLs.has(v)) out.push([lineOf(src, m.index), `letter-spacing ${v}em is not in the tracking table`]);
+  }
+  for (const m of src.matchAll(/font-weight\s*:\s*(\d{3})/g)) {
+    if (okW.size && !okW.has(+m[1])) out.push([lineOf(src, m.index), `font-weight ${m[1]} is not a brand weight (400, 500, 600, 700)`]);
+  }
+  for (const m of src.matchAll(/(?:\{|style=")([^{}"]*)/g)) {
+    if (/font-family\s*:\s*(?:var\(--mm-font-mono\)|"?JetBrains Mono)/i.test(m[1]) && /letter-spacing\s*:\s*-/.test(m[1])) out.push([lineOf(src, m.index), 'mono text tracked negative: mono is 0 or positive']);
   }
   for (const m of src.matchAll(/background(?:-color)?\s*:\s*(#F2580F|#FF6A20|var\(--mm-(?:c-signal|accent)\))[^}]*?color\s*:\s*(#fff\b|#ffffff|white)/gi)) out.push([lineOf(src, m.index), 'white text on orange: use #0E0E10']);
   const text = src.replace(/<style[\s\S]*?<\/style>|<script[\s\S]*?<\/script>|<[^>]+>/g, ' ');

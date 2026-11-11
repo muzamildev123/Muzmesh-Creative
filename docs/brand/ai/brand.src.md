@@ -57,7 +57,29 @@ Load: `https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,50
 |---|---|---|---|---|---|---|
 {{TYPE_TABLE}}
 
-Sentence case everywhere except mono labels (UPPERCASE). Curly quotes and apostrophes (’ “ ”). Headlines `text-wrap: balance`. Max line length: about 40 characters for leads, 70 for body.
+Take size, weight, line height and letter spacing together from one style. Never mix them.
+
+**Tracking follows size.** One letter-spacing value per size, tighter as type gets bigger. Mono is never tracked negative; lowercase is never tracked positive.
+
+| Size | Letter spacing | Used by |
+|---|---|---|
+{{TRACK_TABLE}}
+
+**Weights, one job each.** 400: all running text. 500: headlines, big numbers and prices, bold words inside a headline or lead. 600: every button (primary, solid and ghost), H4, bold words inside body text. 700: the wordmark only. Never 300, never 800+.
+
+**Allowed sizes.** Sans: 13, 14, 15, 16 (buttons and inputs), 17, 22px, plus the clamp() tokens above. Mono: 10.5, 11.5, 12px. No half-pixel sans sizes, no 18 or 19px. Nothing smaller than 13px for sans text.
+
+**Eyebrows are mono.** Never spaced-out Inter Tight caps. Use `.mm-label` (11.5px, +0.06em) or `.mm-micro` (10.5px, +0.12em).
+
+**OpenType.** Kerning, ligatures and contextual alternates on everywhere (`.mm` sets them). Tabular lining figures on every price, countdown, stat, table and timestamp (`.mm-num`, `.mm-stat`, `.mm-data`).
+
+| Token | Features | Where |
+|---|---|---|
+{{FEATURE_TABLE}}
+
+**Line height and measure.** Display and H2 1.02–1.04, max about 16 characters per line. H3/H4 1.08–1.2. Lead 1.5, max 40ch. Body 1.5–1.55, max 65ch. Headlines `text-wrap: balance`, paragraphs `text-wrap: pretty`. Mono labels never wrap.
+
+**Punctuation.** Sentence case everywhere except mono labels (UPPERCASE). Curly quotes and apostrophes (’ “ ”). En dash for ranges (3–5 days). Non-breaking space between a number and its unit (5&nbsp;days). × for multiplication. One ellipsis character (…), rarely.
 
 ## 5. Layout and space
 
@@ -242,6 +264,7 @@ Plain and short. Name, MuzMesh, one link in the signature. No image banners.
 
 - [ ] Only colours from section 3. No new hex values.
 - [ ] Only Inter Tight and JetBrains Mono.
+- [ ] Type comes from the scale in section 4: allowed sizes, the tracking for that size, weights 400/500/600 (700 only for the wordmark), tabular figures on numbers.
 - [ ] One orange primary button per view, with dark text on it.
 - [ ] Every section starts with a mono label; headlines are two-tone.
 - [ ] Text contrast at least 4.5:1 (use the pairs in section 3).
@@ -249,4 +272,4 @@ Plain and short. Name, MuzMesh, one link in the signature. No image banners.
 - [ ] Copy is short and every number is true.
 - [ ] Works at 360px wide with no sideways scroll; respects reduced motion.
 
-Run `node docs/brand/ai/check-brand.mjs <file>` on any HTML or CSS file to catch off-brand colours, fonts, emoji and banned words.
+Run `node docs/brand/ai/check-brand.mjs <file>` on any HTML or CSS file to catch off-brand colours, fonts, off-scale type sizes, letter spacing and weights, emoji and banned words.

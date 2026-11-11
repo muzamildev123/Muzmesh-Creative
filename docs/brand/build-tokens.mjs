@@ -67,18 +67,41 @@ const font = {
 };
 // [size, weight, line-height, letter-spacing, family, note]
 const type = {
-  display: ['clamp(40px, 4.5vw, 70px)', 500, 1.06, '-0.025em', 'sans', 'One per page. Hero headline.'],
-  h2:      ['clamp(34px, 3.7vw, 56px)', 500, 1.04, '-0.03em',  'sans', 'Section headline. Two-tone allowed: dim the first part with --mm-text-faint.'],
-  h3:      ['clamp(28px, 2.75vw, 42px)', 500, 1.08, '-0.028em', 'sans', 'Sub-section headline.'],
-  h4:      ['22px', 600, 1.2, '-0.015em', 'sans', 'Card title.'],
-  stat:    ['clamp(44px, 4.6vw, 64px)', 500, 1, '-0.04em', 'sans', 'Big numbers: $500, 5 days, 40%.'],
-  lead:    ['clamp(16px, 1.25vw, 18px)', 400, 1.55, '0', 'sans', 'Paragraph under a headline. Max 40ch. Colour --mm-text-muted.'],
-  'body-lg': ['17px', 400, 1.5, '-0.01em', 'sans', 'Long reading, FAQ questions, articles.'],
-  body:    ['15px', 400, 1.5, '0', 'sans', 'Default UI text.'],
-  small:   ['13px', 400, 1.45, '0', 'sans', 'Captions, chips, helper text.'],
+  display: ['clamp(40px, 4.6vw, 72px)', 500, 1.02, '-0.035em', 'sans', 'One per page. Hero headline.'],
+  h2:      ['clamp(34px, 3.7vw, 56px)', 500, 1.04, '-0.03em',  'sans', 'Section headline. Two-tone allowed: dim the first part with .mm-dim.'],
+  h3:      ['clamp(26px, 2.6vw, 40px)', 500, 1.08, '-0.025em', 'sans', 'Sub-section headline, closing lines, big quotes.'],
+  h4:      ['22px', 600, 1.2, '-0.015em', 'sans', 'Card and panel titles.'],
+  stat:    ['clamp(44px, 4.6vw, 64px)', 500, 1, '-0.04em', 'sans', 'Big numbers: $500, 5 days, 40%. Always tabular figures.'],
+  lead:    ['clamp(17px, 1.35vw, 20px)', 400, 1.5, '-0.01em', 'sans', 'Paragraph under a headline. Max 40ch. Colour --mm-text-muted.'],
+  'body-lg': ['17px', 400, 1.5, '-0.01em', 'sans', 'Long reading, FAQ questions and answers, form fields.'],
+  body:    ['15px', 400, 1.55, '0', 'sans', 'Default text.'],
+  button:  ['16px', 600, 1, '-0.01em', 'sans', 'Button labels. Small buttons are 14px, same weight.'],
+  ui:      ['14px', 400, 1.45, '0', 'sans', 'Nav links, chips, table cells, list items in panels.'],
+  small:   ['13px', 400, 1.45, '0', 'sans', 'Captions, helper text, footnotes. Never smaller for sans text.'],
   label:   ['11.5px', 400, 1.2, '0.06em', 'mono', 'UPPERCASE eyebrow with the orange square bullet.'],
-  micro:   ['10.5px', 500, 1.2, '0.12em', 'mono', 'UPPERCASE ticket and table headers.'],
-  wordmark:['22px', 700, 1, '-0.015em', 'sans', 'Text wordmark in the nav. Lowercase.'],
+  micro:   ['10.5px', 500, 1.2, '0.12em', 'mono', 'UPPERCASE ticket fields, table heads, tags.'],
+  data:    ['12px', 400, 1.5, '0', 'mono', 'Timestamps, URLs, build logs, code. Mixed case, never tracked.'],
+  wordmark:['22px', 700, 1, '-0.015em', 'sans', 'Text wordmark in the nav. Lowercase. The only 700 in the system.'],
+};
+// tracking follows size: the bigger the type, the tighter. Mono is never tracked negative; lowercase is never tracked positive.
+const tracking = [
+  // [size range, tracking, used by, sample size, sample text]
+  ['96px and up', '-0.045em', 'posters, the giant footer wordmark', '96px', 'Launch'],
+  ['64–95px', '-0.035em', 'display', '64px', 'Launch in 5 days'],
+  ['48–63px', '-0.03em', 'h2', '48px', 'Launch in 5 days'],
+  ['32–47px', '-0.025em', 'h3, closing lines', '32px', 'Launch in 5 days, not 5 weeks'],
+  ['24–31px', '-0.02em', 'headlines on phones', '24px', 'Launch in 5 days, not 5 weeks'],
+  ['18–23px', '-0.015em', 'h4, wordmark, quotes in cards', '22px', 'Launch in 5 days, not 5 weeks'],
+  ['16–17px', '-0.01em', 'body-lg, lead, buttons', '17px', 'Launch in 5 days, not 5 weeks. One price, no surprises.'],
+  ['15px and below', '0', 'body, ui, small', '15px', 'Launch in 5 days, not 5 weeks. One price, no surprises.'],
+  ['Mono UPPERCASE 11.5px', '+0.06em', 'label', '11.5px', 'Ready in 15 seconds', 'mono-up'],
+  ['Mono UPPERCASE 10.5px', '+0.12em', 'micro', '10.5px', 'Launch pass · Gate 04', 'mono-up'],
+  ['Mono mixed case', '0', 'data', '12px', '2026-11-11 09:41 · muzmesh.com/launch', 'mono'],
+];
+const features = {
+  text: ['"kern" 1, "liga" 1, "calt" 1', 'Every text: kerning, ligatures and contextual alternates on. Set once on .mm.'],
+  num: ['"tnum" 1, "lnum" 1', 'Prices, stats, countdowns, tables, timestamps: tabular lining figures so digits line up and do not jump.'],
+  caps: ['"case" 1, "cpsp" 1', 'Rare all-caps sans (avoid): case-sensitive punctuation and capital spacing.'],
 };
 const space = { 1: '4px', 2: '8px', 3: '12px', 4: '16px', 5: '20px', 6: '24px', 7: '32px', 8: '44px', 9: '56px', 10: '64px', 11: '96px', 12: '128px' };
 const layout = {
@@ -171,6 +194,7 @@ ${Object.entries(font).map(([k, [v]]) => `  --mm-font-${k}: ${v};`).join('\n')}
 
   /* type scale: size / weight / line-height / tracking */
 ${Object.entries(type).map(([k, [s, w, lh, ls]]) => `  --mm-type-${k}: ${s}; --mm-type-${k}-w: ${w}; --mm-type-${k}-lh: ${lh}; --mm-type-${k}-ls: ${ls};`).join('\n')}
+${Object.entries(features).map(([k, [v]]) => `  --mm-features-${k}: ${v};`).join('\n')}
 
   /* space (4px base) */
 ${Object.entries(space).map(([k, v]) => `  --mm-space-${k}: ${v};`).join('\n')}
@@ -309,13 +333,21 @@ const samples = {
   lead: 'No tiers to compare and no “contact us”. Everything in the kit comes with the setup.',
   'body-lg': 'Is it really designed by people?',
   body: 'A designer draws your logo, sets your brand and designs your page in Figma.',
+  button: 'Plan my launch',
+  ui: 'How it works · Pricing · FAQ',
   small: 'Starts the month after launch.',
+  data: 'muzmesh.com/launch · 09:42:07 · build 1.4.2',
   label: 'Every AI founder starts here.',
   micro: 'Flight time · 5 business days',
   wordmark: 'muzmesh',
 };
+const trackDemo = tracking.map(([range, ls, use, px, txt, fam]) => {
+  const st = `font-size:${px};letter-spacing:${ls.replace('+', '')};${fam ? 'font-family:var(--mm-font-mono);' : 'font-weight:' + (parseFloat(px) >= 24 ? 500 : 400) + ';'}${fam === 'mono-up' ? 'text-transform:uppercase;font-weight:' + (px === '10.5px' ? 500 : 400) + ';' : ''}${fam === 'mono' ? 'color:var(--mm-text-muted);' : ''}`;
+  return `<div><span class="k"><b>${ls}</b>${range}<em>${use}</em></span><span class="v" style="${st}">${txt}</span></div>`;
+}).join('\n        ');
+const featureRows = Object.entries(features).map(([k, [v, d]]) => `<tr><td><code>--mm-features-${k}</code></td><td class="num">${v.replace(/"/g, '&quot;')}</td><td>${d}</td></tr>`).join('\n            ');
 const typeRows = Object.entries(type).map(([k, [s, w, lh, ls, fam, d]]) => {
-  const style = `font-family:var(--mm-font-${fam});font-size:${s};font-weight:${w};line-height:${lh};letter-spacing:${ls};${['label', 'micro'].includes(k) ? 'text-transform:uppercase;' : ''}${['lead', 'small'].includes(k) ? 'color:var(--mm-text-muted);' : ''}`;
+  const style = `font-family:var(--mm-font-${fam});font-size:${s};font-weight:${w};line-height:${lh};letter-spacing:${ls};${['label', 'micro'].includes(k) ? 'text-transform:uppercase;' : ''}${['lead', 'small', 'ui', 'data'].includes(k) ? 'color:var(--mm-text-muted);' : ''}${['stat'].includes(k) ? 'font-feature-settings:var(--mm-features-num);' : ''}`;
   return `<div><div class="k"><b>${k}</b><span>${esc(s)}</span><span>${w} · ${lh} · ${ls}</span></div><div class="v" style="${style}">${k === 'label' ? `<span class="mm-label" style="font-size:inherit">${samples[k]}</span>` : samples[k]}</div></div>`;
 }).join('');
 const spaceRows = Object.entries(space).map(([k, v]) => `<div><span>space-${k}</span><span>${v}</span><i style="width:${v}"></i></div>`).join('');
@@ -373,6 +405,8 @@ const aiFills = {
   CORE_TABLE: Object.entries(core).map(([k, [v, d]]) => mdRow(k, `\`${v}\``, d)).join('\n'),
   ROLE_TABLE: roleKeys.map((k) => mdRow(`\`--mm-${k}\``, roleDesc(themes.launch[k]), roleDesc(themes.paper[k]))).join('\n'),
   CONTRAST_TABLE: pairs.map(([name, fg, bg, t]) => { const r = ratio(themes[t][fg] ?? fg, themes[t][bg] ?? bg); return mdRow(name, r.toFixed(2) + ':1', r >= 4.5 ? 'pass (AA)' : 'FAIL: never use'); }).join('\n'),
+  TRACK_TABLE: tracking.map(([r, ls, u]) => mdRow(r, ls, u)).join('\n'),
+  FEATURE_TABLE: Object.entries(features).map(([k, [v, d]]) => mdRow('`--mm-features-' + k + '`', '`' + v + '`', d)).join('\n'),
   TYPE_TABLE: Object.entries(type).map(([k, [sz, w, lh, ls, fam, d]]) => mdRow(k, sz, w, lh, ls, fam === 'mono' ? 'JetBrains Mono' : 'Inter Tight', d)).join('\n'),
   LAYOUT_TABLE: Object.entries(layout).map(([k, [v, d]]) => mdRow(`\`--mm-${k}\``, v, d)).join('\n'),
   SPACE_LIST: Object.values(space).join(', '),
@@ -398,6 +432,10 @@ if (systemPrompt.length > 1500) throw new Error('system prompt too long for Chat
 const allow = {
   hex: [...new Set([...Object.values(core).map(([v]) => v.toUpperCase()), '#FFFFFF', '#0A0A0C', '#1B1B20', '#7F7F7F', '#595857', '#686764', '#8A8884'])],
   fonts: ['Inter Tight', 'Inter', 'JetBrains Mono', 'system-ui', 'sans-serif', 'monospace', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'inherit'],
+  // type scale: fixed sizes under 24px must be one of these; bigger sizes are headlines and come from the clamp() tokens
+  fontSizesPx: [10.5, 11.5, 12, 13, 14, 15, 16, 17, 22],
+  letterSpacingEm: [-0.045, -0.04, -0.035, -0.03, -0.025, -0.02, -0.015, -0.01, 0, 0.06, 0.12],
+  fontWeights: [400, 500, 600, 700],
   bannedWords: ['revolutionary', 'unlock', 'seamless', 'supercharge', 'cutting-edge', 'ai-powered', 'game-changer', 'elevate', 'leverage', 'world-class', 'pixel-perfect', 'get started', 'learn more', 'click here'],
 };
 out('docs/brand/ai/BRAND.md', brandMd);
@@ -435,7 +473,7 @@ const fills = {
   TOKENS: css, BRAND: readFileSync(resolve(root, 'web/src/styles/brand.css'), 'utf8'),
   WORDMARK: dataUri('muzmesh-wordmark.svg'), WORDMARK_LIGHT: dataUri('muzmesh-wordmark-light.svg'),
   AVATAR: dataUri('muzmesh-avatar.svg'), FAVICON: dataUri('muzmesh-favicon.svg'),
-  SWATCHES_LAUNCH: launchSw, SWATCHES_PAPER: paperSw, CONTRAST_ROWS: contrastRows, TYPE_ROWS: typeRows,
+  SWATCHES_LAUNCH: launchSw, SWATCHES_PAPER: paperSw, CONTRAST_ROWS: contrastRows, TYPE_ROWS: typeRows, TRACK_DEMO: trackDemo, FEATURE_ROWS: featureRows,
   SPACE_ROWS: spaceRows, ICON_GRID: iconGrid,
   ICON: Object.fromEntries(Object.keys(icons).map((k) => [k, iconSvg(k)])),
   IMG_PEOPLE: imgUri('imagery/people-desk.jpg'), IMG_PEOPLE_MONO: imgUri('imagery/people-desk-mono.jpg'),

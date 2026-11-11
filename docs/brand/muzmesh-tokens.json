@@ -294,10 +294,10 @@
       "$type": "typography",
       "$value": {
         "fontFamily": "{font.family.sans}",
-        "fontSize": "clamp(40px, 4.5vw, 70px)",
+        "fontSize": "clamp(40px, 4.6vw, 72px)",
         "fontWeight": 500,
-        "lineHeight": 1.06,
-        "letterSpacing": "-0.025em"
+        "lineHeight": 1.02,
+        "letterSpacing": "-0.035em"
       },
       "$description": "One per page. Hero headline."
     },
@@ -310,18 +310,18 @@
         "lineHeight": 1.04,
         "letterSpacing": "-0.03em"
       },
-      "$description": "Section headline. Two-tone allowed: dim the first part with --mm-text-faint."
+      "$description": "Section headline. Two-tone allowed: dim the first part with .mm-dim."
     },
     "h3": {
       "$type": "typography",
       "$value": {
         "fontFamily": "{font.family.sans}",
-        "fontSize": "clamp(28px, 2.75vw, 42px)",
+        "fontSize": "clamp(26px, 2.6vw, 40px)",
         "fontWeight": 500,
         "lineHeight": 1.08,
-        "letterSpacing": "-0.028em"
+        "letterSpacing": "-0.025em"
       },
-      "$description": "Sub-section headline."
+      "$description": "Sub-section headline, closing lines, big quotes."
     },
     "h4": {
       "$type": "typography",
@@ -332,7 +332,7 @@
         "lineHeight": 1.2,
         "letterSpacing": "-0.015em"
       },
-      "$description": "Card title."
+      "$description": "Card and panel titles."
     },
     "stat": {
       "$type": "typography",
@@ -343,16 +343,16 @@
         "lineHeight": 1,
         "letterSpacing": "-0.04em"
       },
-      "$description": "Big numbers: $500, 5 days, 40%."
+      "$description": "Big numbers: $500, 5 days, 40%. Always tabular figures."
     },
     "lead": {
       "$type": "typography",
       "$value": {
         "fontFamily": "{font.family.sans}",
-        "fontSize": "clamp(16px, 1.25vw, 18px)",
+        "fontSize": "clamp(17px, 1.35vw, 20px)",
         "fontWeight": 400,
-        "lineHeight": 1.55,
-        "letterSpacing": "0"
+        "lineHeight": 1.5,
+        "letterSpacing": "-0.01em"
       },
       "$description": "Paragraph under a headline. Max 40ch. Colour --mm-text-muted."
     },
@@ -365,7 +365,7 @@
         "lineHeight": 1.5,
         "letterSpacing": "-0.01em"
       },
-      "$description": "Long reading, FAQ questions, articles."
+      "$description": "Long reading, FAQ questions and answers, form fields."
     },
     "body": {
       "$type": "typography",
@@ -373,10 +373,32 @@
         "fontFamily": "{font.family.sans}",
         "fontSize": "15px",
         "fontWeight": 400,
-        "lineHeight": 1.5,
+        "lineHeight": 1.55,
         "letterSpacing": "0"
       },
-      "$description": "Default UI text."
+      "$description": "Default text."
+    },
+    "button": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "16px",
+        "fontWeight": 600,
+        "lineHeight": 1,
+        "letterSpacing": "-0.01em"
+      },
+      "$description": "Button labels. Small buttons are 14px, same weight."
+    },
+    "ui": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.45,
+        "letterSpacing": "0"
+      },
+      "$description": "Nav links, chips, table cells, list items in panels."
     },
     "small": {
       "$type": "typography",
@@ -387,7 +409,7 @@
         "lineHeight": 1.45,
         "letterSpacing": "0"
       },
-      "$description": "Captions, chips, helper text."
+      "$description": "Captions, helper text, footnotes. Never smaller for sans text."
     },
     "label": {
       "$type": "typography",
@@ -409,7 +431,18 @@
         "lineHeight": 1.2,
         "letterSpacing": "0.12em"
       },
-      "$description": "UPPERCASE ticket and table headers."
+      "$description": "UPPERCASE ticket fields, table heads, tags."
+    },
+    "data": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.mono}",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0"
+      },
+      "$description": "Timestamps, URLs, build logs, code. Mixed case, never tracked."
     },
     "wordmark": {
       "$type": "typography",
@@ -420,7 +453,7 @@
         "lineHeight": 1,
         "letterSpacing": "-0.015em"
       },
-      "$description": "Text wordmark in the nav. Lowercase."
+      "$description": "Text wordmark in the nav. Lowercase. The only 700 in the system."
     }
   },
   "space": {

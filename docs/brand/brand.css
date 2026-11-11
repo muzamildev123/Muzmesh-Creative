@@ -10,6 +10,9 @@
   font-size: var(--mm-type-body);
   line-height: var(--mm-type-body-lh);
   -webkit-font-smoothing: antialiased;
+  font-kerning: normal;
+  font-feature-settings: var(--mm-features-text);
+  text-rendering: optimizeLegibility;
 }
 /* a subtree switched to the other theme takes that theme's text colour too */
 .mm[data-theme], .mm [data-theme] { color: var(--mm-text); }
@@ -30,10 +33,18 @@
 .mm-h3 { font-size: var(--mm-type-h3); font-weight: var(--mm-type-h3-w); line-height: var(--mm-type-h3-lh); letter-spacing: var(--mm-type-h3-ls); }
 .mm-h4 { font-size: var(--mm-type-h4); font-weight: var(--mm-type-h4-w); line-height: var(--mm-type-h4-lh); letter-spacing: var(--mm-type-h4-ls); }
 .mm-stat { font-size: var(--mm-type-stat); font-weight: var(--mm-type-stat-w); line-height: var(--mm-type-stat-lh); letter-spacing: var(--mm-type-stat-ls); font-variant-numeric: tabular-nums; }
+/* emphasis inside headlines and leads is 500, never bold; inside body text it is 600 */
+.mm-display b, .mm-h2 b, .mm-h3 b, .mm-lead b, .mm-body-lg b, .mm-display strong, .mm-h2 strong, .mm-h3 strong, .mm-lead strong, .mm-body-lg strong { font-weight: 500; color: var(--mm-text); }
+.mm p b, .mm p strong, .mm li b, .mm li strong { font-weight: 600; }
+.mm-stat { font-feature-settings: var(--mm-features-text), var(--mm-features-num); }
+/* numbers that change or line up: prices, countdowns, tables */
+.mm-num { font-feature-settings: var(--mm-features-text), var(--mm-features-num); }
 /* two-tone headline: wrap the setup in .mm-dim, the payoff stays full colour */
 .mm-dim { color: var(--mm-text-faint); }
 .mm-lead { margin: 0; max-width: 40ch; font-size: var(--mm-type-lead); line-height: var(--mm-type-lead-lh); color: var(--mm-text-muted); text-wrap: pretty; }
 .mm-body-lg { font-size: var(--mm-type-body-lg); line-height: var(--mm-type-body-lg-lh); letter-spacing: var(--mm-type-body-lg-ls); }
+.mm-lead { letter-spacing: var(--mm-type-lead-ls); }
+.mm-ui { font-size: var(--mm-type-ui); line-height: var(--mm-type-ui-lh); }
 .mm-small { font-size: var(--mm-type-small); line-height: var(--mm-type-small-lh); color: var(--mm-text-muted); }
 
 /* the label: mono, uppercase, orange square bullet. The brand's signature. */
@@ -45,7 +56,9 @@
 .mm-label::before { content: ""; flex: none; width: 5px; height: 5px; background: var(--mm-accent); }
 .mm-label.is-quiet { color: var(--mm-text-faint); }
 .mm-label.is-quiet::before { display: none; }
-.mm-micro { font-family: var(--mm-font-mono); font-size: var(--mm-type-micro); font-weight: var(--mm-type-micro-w); letter-spacing: var(--mm-type-micro-ls); text-transform: uppercase; color: var(--mm-text-faint); }
+.mm-micro { font-family: var(--mm-font-mono); font-size: var(--mm-type-micro); font-weight: var(--mm-type-micro-w); letter-spacing: var(--mm-type-micro-ls); line-height: var(--mm-type-micro-lh); text-transform: uppercase; color: var(--mm-text-faint); }
+/* mono data: timestamps, URLs, logs, code. Mixed case, never tracked. */
+.mm-data { font-family: var(--mm-font-mono); font-size: var(--mm-type-data); line-height: var(--mm-type-data-lh); letter-spacing: 0; font-feature-settings: var(--mm-features-num); color: var(--mm-text-muted); }
 
 /* status dot (round = live; square = label). Pulses unless reduced motion. */
 .mm-live { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--mm-accent); animation: mm-pulse 2.4s ease-out infinite; }
@@ -56,7 +69,7 @@
   all: unset; box-sizing: border-box; cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center; gap: 9px;
   height: 52px; padding: 0 26px; border-radius: var(--mm-radius-pill);
-  font-family: var(--mm-font-sans); font-size: 16px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap;
+  font-family: var(--mm-font-sans); font-size: var(--mm-type-button); font-weight: var(--mm-type-button-w); letter-spacing: var(--mm-type-button-ls); line-height: 1; white-space: nowrap;
   transition: background var(--mm-dur-base), box-shadow var(--mm-dur-base), transform var(--mm-dur-fast);
 }
 .mm-btn:focus-visible { outline: 2px solid var(--mm-focus); outline-offset: 3px; }
@@ -66,12 +79,12 @@
 .mm-btn.is-primary:hover { background: var(--mm-accent-hover); transform: translateY(-1px); }
 .mm-btn.is-primary:active { background: var(--mm-accent-press); transform: none; }
 /* solid: bone on black, ink on paper. Nav button, secondary actions that still matter. */
-.mm-btn.is-solid { background: var(--mm-btn-primary); color: var(--mm-on-btn-primary); font-weight: 500; }
+.mm-btn.is-solid { background: var(--mm-btn-primary); color: var(--mm-on-btn-primary); }
 .mm-btn.is-solid:hover { transform: translateY(-1px); }
 /* ghost: hairline outline */
-.mm-btn.is-ghost { font-weight: 400; color: var(--mm-text); box-shadow: inset 0 0 0 1px var(--mm-border); }
+.mm-btn.is-ghost { color: var(--mm-text); box-shadow: inset 0 0 0 1px var(--mm-border); }
 .mm-btn.is-ghost:hover { box-shadow: inset 0 0 0 1px var(--mm-text); }
-.mm-btn.is-sm { height: 34px; padding: 0 15px; font-size: 14px; }
+.mm-btn.is-sm { height: 34px; padding: 0 15px; font-size: var(--mm-type-ui); letter-spacing: 0; }
 .mm-btn[disabled], .mm-btn[aria-disabled="true"] { background: rgba(127, 127, 127, .14); color: var(--mm-text-faint); box-shadow: none; cursor: not-allowed; transform: none; }
 .mm-link { color: inherit; text-decoration: underline; text-decoration-color: var(--mm-accent); text-decoration-thickness: 1.5px; text-underline-offset: 5px; }
 .mm-link:hover { color: var(--mm-accent-text); }
@@ -80,7 +93,7 @@
 .mm-chip {
   all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
   height: 30px; padding: 0 13px; border-radius: var(--mm-radius-pill);
-  font-family: var(--mm-font-sans); font-size: 13.5px; color: var(--mm-text-muted);
+  font-family: var(--mm-font-sans); font-size: var(--mm-type-ui); color: var(--mm-text-muted);
   box-shadow: inset 0 0 0 1px var(--mm-hair); transition: color var(--mm-dur-base), box-shadow var(--mm-dur-base);
 }
 .mm-chip:hover { color: var(--mm-text); box-shadow: inset 0 0 0 1px var(--mm-border); }
