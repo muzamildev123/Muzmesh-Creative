@@ -1,0 +1,48 @@
+---
+// Page chrome shared by every screen: fonts, styles, the top bar and the one-time flash message.
+import '../styles/app.css';
+import { takeFlash } from '../lib/web';
+
+interface Props { title: string; fontsUrl?: string }
+const { title, fontsUrl } = Astro.props;
+const user = Astro.locals.user;
+const flash = takeFlash(Astro);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title} · Launch Room</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+    {fontsUrl && <link rel="stylesheet" href={fontsUrl} />}
+  </head>
+  <body class="mm">
+    <a class="lr-skip" href="#main">Skip to content</a>
+    <header class="lr-top">
+      <a class="lr-brand" href="/" aria-label="Launch Room home">
+        <img src="/wordmark.svg" alt="muzmesh" width="107" height="18" />
+        <span class="mm-label is-quiet">Launch Room</span>
+      </a>
+      {user && (
+        <div class="lr-top-right">
+          <span class="lr-who">{user.email}</span>
+          <form method="post" action="/logout" class="lr-inline">
+            <button class="mm-btn is-ghost is-sm" type="submit">Sign out</button>
+          </form>
+        </div>
+      )}
+    </header>
+    <slot name="subnav" />
+    <main id="main" class={Astro.slots.has('narrow') ? 'lr-narrow' : 'lr-main'}>
+      {flash && <p class={`lr-flash is-${flash.kind}`} role={flash.kind === 'err' ? 'alert' : 'status'}>{flash.text}</p>}
+      <slot name="narrow" />
+      <slot />
+    </main>
+    <script src="../scripts/ui.ts"></script>
+  </body>
+</html>

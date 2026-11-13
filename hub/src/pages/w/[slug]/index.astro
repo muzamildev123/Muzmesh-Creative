@@ -1,0 +1,147 @@
+---
+import Meter from '../../../components/Meter.astro';
+import Spark from '../../../components/Spark.astro';
+import Status from '../../../components/Status.astro';
+import Workspace from '../../../layouts/Workspace.astro';
+import { can } from '../../../lib/authz';
+import { CHANNEL_NAMES } from '../../../lib/brand-check';
+import { contextIsEmpty, readContext } from '../../../lib/context';
+import { clicksByPost, totalClicks } from '../../../lib/links';
+import { MAX_ATTEMPTS } from '../../../lib/publisher';
+import * as repo from '../../../lib/repo';
+import { listAccounts, NETWORK_NAMES } from '../../../lib/social';
+import { readStats } from '../../../lib/stats';
+import type { Post } from '../../../lib/types';
+import { formatDay, formatMonth, safeUrl, thisMonth } from '../../../lib/util';
+import { db, loadWorkspace } from '../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, actor } = access;
+
+const month = thisMonth();
+const since = new Date(Date.now() - 28 * 86_400_000).toISOString().slice(0, 10);
+const [counts, waiting, approved, published, checklist, ctx, stats, accounts, clicks, postClicks] = await Promise.all([
+  repo.workspaceStats(db(), ws.id, month),
+  repo.listPosts(db(), ws.id, { status: 'in_review' }),
+  repo.listPosts(db(), ws.id, { status: 'approved' }),
+  repo.listPosts(db(), ws.id, { status: 'published' }),
+  repo.listChecklist(db(), ws.id),
+  repo.latestContext(db(), ws.id),
+  readStats(db(), ws.id),
+  listAccounts(db(), ws.id),
+  totalClicks(db(), ws.id, since),
+  clicksByPost(db(), ws.id, since),
+]);
+const canApprove = can(actor, 'post.approve');
+const left = checklist.filter((c) => !c.done_at).length;
+const editUrl = safeUrl(ws.cms_edit_url);
+const cmsName = ws.cms === 'sanity' ? 'Sanity' : ws.cms === 'webflow' ? 'Webflow' : 'the editor';
+const needsContext = contextIsEmpty(readContext(ctx?.body));
+const ga4 = stats.ga4?.body ?? null;
+const gsc = stats.gsc?.body ?? null;
+const statsOn = !!(ws.ga4_property_id || ws.search_console_site);
+
+const failed = approved.filter((p) => p.publish_error && p.publish_attempts >= MAX_ATTEMPTS);
+const reconnect = accounts.filter((a) => a.status === 'reconnect');
+const upcoming = approved.filter((p) => !failed.includes(p))
+  .sort((a, b) => (a.publish_at ?? a.scheduled_for ?? '9').localeCompare(b.publish_at ?? b.scheduled_for ?? '9')).slice(0, 5);
+const recent = published.filter((p) => postClicks.has(p.id)).sort((a, b) => (postClicks.get(b.id) ?? 0) - (postClicks.get(a.id) ?? 0)).slice(0, 5);
+const accountName = (p: Post) => { const a = accounts.find((x) => x.id === p.social_account_id); return a ? `${NETWORK_NAMES[a.network]}, ${a.name || a.handle}` : ''; };
+const n = (v: number) => v.toLocaleString('en-US');
+const attention = failed.length + reconnect.length + (canApprove ? waiting.length : 0);
+---
+<Workspace access={access} title="Overview" tab="overview">
+  <div class="lr-stack is-lg">
+    <section class="lr-card lr-stack" aria-labelledby="ov-stats">
+      <div class="lr-row lr-between"><span class="mm-label" id="ov-stats">Last 28 days</span>
+        {(stats.ga4 || stats.gsc) && <span class="lr-small lr-faint">Updated {formatDay((stats.ga4 ?? stats.gsc)!.fetched_at)}</span>}</div>
+      <div class="lr-stats">
+        <div class="lr-stat"><span class="lr-small lr-faint">Website visitors</span><strong>{ga4 ? n(ga4.totals.users) : '–'}</strong>{ga4 && <span class="lr-small lr-faint">{n(ga4.totals.views)} page views</span>}</div>
+        <div class="lr-stat"><span class="lr-small lr-faint">Clicks from Google</span><strong>{gsc ? n(gsc.totals.clicks) : '–'}</strong>{gsc && <span class="lr-small lr-faint">{n(gsc.totals.impressions)} times shown</span>}</div>
+        <div class="lr-stat"><span class="lr-small lr-faint">Clicks on post links</span><strong>{n(clicks)}</strong><span class="lr-small lr-faint">Counted by our short links</span></div>
+        <div class="lr-stat"><span class="lr-small lr-faint">Posts in {formatMonth(month)}</span><strong>{counts.posts_published}</strong><span class="lr-small lr-faint">published of {ws.monthly_posts} in the plan</span></div>
+      </div>
+      {ga4 && <Spark points={ga4.daily.map((d) => ({ day: d.day, value: d.users }))} label="Visitors per day" />}
+      {!statsOn && <p class="lr-small lr-faint">Website numbers appear here once MuzMesh connects {ws.name}'s Google Analytics and Search Console.</p>}
+      {(stats.ga4?.error || stats.gsc?.error) && <p class="lr-small lr-faint">The last refresh had a problem, so these may be older: {stats.ga4?.error || stats.gsc?.error}</p>}
+    </section>
+
+    <div class="lr-two">
+      <div class="lr-stack is-lg">
+        <section class="lr-card lr-stack" aria-labelledby="ov-attn">
+          <span class="mm-label" id="ov-attn">Needs you</span>
+          {attention === 0 && !needsContext ? <p class="lr-muted">Nothing right now.</p> : (
+            <ul class="lr-attn lr-plain">
+              {failed.map((p) => <li><a class="mm-link" href={`${base}/posts/${p.id}`}>A {CHANNEL_NAMES[p.channel]} post did not go out</a><br /><span class="lr-small lr-faint">{p.publish_error}</span></li>)}
+              {reconnect.map((a) => <li><a class="mm-link" href={`${base}/accounts`}>Reconnect {a.name || a.handle} on {NETWORK_NAMES[a.network]}</a><br /><span class="lr-small lr-faint">Scheduled posts for it wait until then.</span></li>)}
+              {canApprove && waiting.map((p) => (
+                <li><a class="lr-rowlink" href={`${base}/posts/${p.id}`}>
+                  <span class="lr-row"><Status kind="in_review" label={`Approve: ${CHANNEL_NAMES[p.channel]}`} /><span class="lr-small lr-faint">{p.scheduled_for ? formatDay(p.scheduled_for) : 'No date yet'}{p.scheduled_time ? ` at ${p.scheduled_time}` : ''}</span></span>
+                  <span class="lr-clip">{p.copy}</span></a></li>
+              ))}
+              {needsContext && <li>The context pack is empty. <a class="mm-link" href={`${base}/context`}>Add your company facts</a> so every AI writes from the same source.</li>}
+            </ul>
+          )}
+          {!canApprove && waiting.length > 0 && <p class="lr-small lr-faint">{waiting.length} post{waiting.length === 1 ? ' is' : 's are'} waiting for an owner to approve.</p>}
+        </section>
+
+        <section class="lr-card lr-stack" aria-labelledby="ov-next">
+          <div class="lr-row lr-between"><span class="mm-label" id="ov-next">Coming up</span><a class="mm-link lr-small" href={`${base}/calendar`}>Calendar</a></div>
+          {upcoming.length === 0 ? <p class="lr-muted">No approved posts are waiting to go out.</p> : (
+            <ul class="lr-list">
+              {upcoming.map((p) => (
+                <li><a class="lr-rowlink" href={`${base}/posts/${p.id}`}>
+                  <span class="lr-small lr-faint">{p.scheduled_for ? formatDay(p.scheduled_for) : 'No date'}{p.scheduled_time ? ` at ${p.scheduled_time}` : ''} · {p.social_account_id ? `Posts itself on ${accountName(p) || CHANNEL_NAMES[p.channel]}` : `${CHANNEL_NAMES[p.channel]}, by hand`}</span>
+                  <span class="lr-clip">{p.copy}</span></a></li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        {recent.length > 0 && (
+          <section class="lr-card lr-stack" aria-labelledby="ov-clicks">
+            <span class="mm-label" id="ov-clicks">Posts people clicked</span>
+            <ul class="lr-list">
+              {recent.map((p) => <li class="lr-row lr-between"><a class="lr-clip mm-link" href={`${base}/posts/${p.id}`}>{p.copy}</a><span class="lr-small">{n(postClicks.get(p.id) ?? 0)} click{postClicks.get(p.id) === 1 ? "" : "s"}</span></li>)}
+            </ul>
+          </section>
+        )}
+      </div>
+
+      <div class="lr-stack is-lg">
+        <section class="lr-card lr-stack" aria-labelledby="ov-site">
+          <span class="mm-label" id="ov-site">Website</span>
+          <div class="lr-row">
+            {editUrl && <a class="mm-btn is-solid is-sm" href={editUrl} target="_blank" rel="noopener noreferrer">Open {cmsName}</a>}
+            <a class="mm-btn is-ghost is-sm" href={`${base}/requests#new`}>Ask for a change</a>
+          </div>
+          <Meter used={counts.minutes} limit={ws.monthly_minutes} />
+          <p class="lr-small lr-faint">{counts.requests_open} open request{counts.requests_open === 1 ? '' : 's'}. {left > 0 ? `${left} launch checklist item${left === 1 ? '' : 's'} to go.` : ''} <a class="mm-link" href={`${base}/site`}>More</a></p>
+        </section>
+
+        {ga4 && ga4.pages.length > 0 && (
+          <section class="lr-card lr-stack" aria-labelledby="ov-pages">
+            <span class="mm-label" id="ov-pages">Most viewed pages</span>
+            <table class="lr-table"><thead><tr><th scope="col">Page</th><th scope="col" class="is-num">Views</th></tr></thead>
+              <tbody>{ga4.pages.slice(0, 6).map((p) => <tr><td><span class="lr-clip">{p.path}</span></td><td class="is-num">{n(p.views)}</td></tr>)}</tbody></table>
+          </section>
+        )}
+        {ga4 && ga4.channels.length > 0 && (
+          <section class="lr-card lr-stack" aria-labelledby="ov-ch">
+            <span class="mm-label" id="ov-ch">Where visits came from</span>
+            <table class="lr-table"><thead><tr><th scope="col">Source</th><th scope="col" class="is-num">Visits</th></tr></thead>
+              <tbody>{ga4.channels.slice(0, 6).map((c) => <tr><td>{c.name}</td><td class="is-num">{n(c.sessions)}</td></tr>)}</tbody></table>
+          </section>
+        )}
+        {gsc && gsc.queries.length > 0 && (
+          <section class="lr-card lr-stack" aria-labelledby="ov-q">
+            <span class="mm-label" id="ov-q">What people searched</span>
+            <table class="lr-table"><thead><tr><th scope="col">Search</th><th scope="col" class="is-num">Clicks</th><th scope="col" class="is-num">Position</th></tr></thead>
+              <tbody>{gsc.queries.slice(0, 8).map((q) => <tr><td>{q.query}</td><td class="is-num">{n(q.clicks)}</td><td class="is-num">{q.position.toFixed(1)}</td></tr>)}</tbody></table>
+          </section>
+        )}
+      </div>
+    </div>
+  </div>
+</Workspace>

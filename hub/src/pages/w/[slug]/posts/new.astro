@@ -1,0 +1,43 @@
+---
+import Composer from '../../../../components/Composer.astro';
+import Workspace from '../../../../layouts/Workspace.astro';
+import { can } from '../../../../lib/authz';
+import { brandFontsUrl, readBrand } from '../../../../lib/brand';
+import * as service from '../../../../lib/service';
+import { listAssets } from '../../../../lib/assets';
+import { listAccounts } from '../../../../lib/social';
+import { isDay } from '../../../../lib/util';
+import { db, flash, formOf, loadWorkspace, notFound } from '../../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, actor } = access;
+if (!can(actor, 'post.write')) return notFound(Astro);
+
+if (Astro.request.method === 'POST') {
+  const f = await formOf(Astro);
+  const r = await service.createPost(db(), ws, actor, {
+    channel: f.channel, copy: f.copy, scheduled_for: f.scheduled_for || null, scheduled_time: f.scheduled_time ?? '',
+    social_account_id: f.social_account_id ?? '', asset_id: f.asset_id ?? '',
+    image: { template: f.image_template, theme: f.image_theme, kicker: f.image_kicker, headline: f.image_headline, sub: f.image_sub },
+  });
+  if (!r.ok) { flash(Astro, 'err', r.error); return Astro.redirect(`${base}/posts/new`, 303); }
+  flash(Astro, 'ok', 'Draft saved.');
+  return Astro.redirect(`${base}/posts/${r.value.post.id}`, 303);
+}
+
+const brand = readBrand(ws.brand_config);
+const [rules, accounts, library] = await Promise.all([service.checkRulesFor(db(), ws), listAccounts(db(), ws.id), listAssets(db(), ws.id, { postable: true })]);
+const date = Astro.url.searchParams.get('date');
+---
+<Workspace access={access} title="New post" tab="posts" fontsUrl={brand ? brandFontsUrl(brand) : undefined}>
+  <div class="lr-head"><h2>New post</h2></div>
+  <form method="post">
+    <Composer post={null} issues={[]} rules={rules} brand={brand} wsName={ws.name} slug={ws.slug} editable={true} defaultDate={isDay(date) ? date : undefined} base={base} timezone={ws.timezone || 'UTC'} accounts={accounts} library={library}>
+      <div class="lr-row">
+        <button class="mm-btn is-primary is-md" type="submit">Save draft</button>
+        <a class="mm-btn is-ghost is-md" href={`${base}/posts`}>Cancel</a>
+      </div>
+    </Composer>
+  </form>
+</Workspace>

@@ -1,0 +1,83 @@
+---
+import SubNav from '../../../components/SubNav.astro';
+import Workspace from '../../../layouts/Workspace.astro';
+import { can } from '../../../lib/authz';
+import { TOOLS } from '../../../lib/mcp';
+import { listGrantsForUser, revokeGrantForUser } from '../../../lib/oauth';
+import { formatDay } from '../../../lib/util';
+import { db, flash, formOf, loadWorkspace } from '../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, actor, user } = access;
+
+if (Astro.request.method === 'POST') {
+  const f = await formOf(Astro);
+  const okRevoke = await revokeGrantForUser(db(), user.id, f.grant ?? '');
+  flash(Astro, okRevoke ? 'ok' : 'err', okRevoke ? 'Disconnected. That app can no longer reach Launch Room.' : 'That connection was not found.');
+  return Astro.redirect(`${base}/connect`, 303);
+}
+
+const grants = await listGrantsForUser(db(), user.id);
+const url = `${Astro.url.origin}/mcp`;
+const canWrite = can(actor, 'post.write');
+---
+<Workspace access={access} title="Connect AI" tab="accounts">
+  <SubNav base={base} current="connect" group="accounts" />
+  <div class="lr-head"><h2>Connect your AI</h2></div>
+  <div class="lr-stack is-lg">
+    <p class="lr-muted lr-lede">Add Launch Room to the AI app you already pay for. It can then read {ws.name}'s context pack and brand rules, check copy{canWrite ? ', and save drafts for review' : ''}. It can never approve or publish: a person does that here.</p>
+    <section class="lr-card lr-stack" aria-labelledby="url-h">
+      <span class="mm-label" id="url-h">Connector address</span>
+      <div class="lr-row"><code class="lr-code" id="mcp-url">{url}</code><button class="mm-btn is-solid is-sm" type="button" data-copy="#mcp-url">Copy</button></div>
+    </section>
+    <div class="lr-two is-even">
+      <section class="lr-card lr-stack" aria-labelledby="cl-h">
+        <span class="mm-label" id="cl-h">Claude</span>
+        <ol class="lr-steps">
+          <li>Open Settings, then Connectors.</li>
+          <li>Choose "Add custom connector".</li>
+          <li>Name it Launch Room and paste the address above.</li>
+          <li>Choose Connect, sign in here, pick {ws.name} and allow.</li>
+        </ol>
+        <p class="lr-small lr-faint">Works in Claude on the web, desktop and mobile, and in Claude Code.</p>
+      </section>
+      <section class="lr-card lr-stack" aria-labelledby="gpt-h">
+        <span class="mm-label" id="gpt-h">ChatGPT</span>
+        <ol class="lr-steps">
+          <li>Open Settings, then Apps and connectors.</li>
+          <li>Turn on developer mode under Advanced, then choose Create.</li>
+          <li>Paste the address above and choose OAuth.</li>
+          <li>Sign in here, pick {ws.name} and allow.</li>
+        </ol>
+        <p class="lr-small lr-faint">ChatGPT asks you to confirm each time before it saves a draft. Menu names change now and then; look for "connectors" or "apps".</p>
+      </section>
+    </div>
+    <section class="lr-card lr-stack" aria-labelledby="try-h">
+      <span class="mm-label" id="try-h">Then try</span>
+      <ul class="lr-list">
+        <li>"Read the Launch Room context, then draft three LinkedIn posts about our current focus and save them for review."</li>
+        <li>"Check this copy against our brand rules: ..."</li>
+        <li>"What is waiting for approval in Launch Room?"</li>
+      </ul>
+    </section>
+    <section class="lr-card lr-stack" aria-labelledby="can-h">
+      <span class="mm-label" id="can-h">What a connected app can do</span>
+      <ul class="lr-list">{TOOLS.map((t) => <li><code class="lr-code">{t.name}</code> <span class="lr-small lr-faint">{(t.description.split('. ')[0] ?? '').replace(/\.$/, '')}.</span></li>)}</ul>
+      <p class="lr-small lr-faint">It acts with your role in this workspace and only this workspace.</p>
+    </section>
+    <section class="lr-card lr-stack" aria-labelledby="apps-h">
+      <span class="mm-label" id="apps-h">Your connected apps</span>
+      {grants.length === 0 ? <p class="lr-muted">None yet.</p> : (
+        <ul class="lr-list">
+          {grants.map((g) => (
+            <li class="lr-row">
+              <span><strong>{g.client_name}</strong> for {g.workspace_name}<br /><span class="lr-small lr-faint">Connected {formatDay(g.created_at)}{g.last_used_at ? `, last used ${formatDay(g.last_used_at)}` : ', not used yet'}</span></span>
+              <form method="post" class="lr-inline"><input type="hidden" name="grant" value={g.id} /><button class="mm-btn is-ghost is-sm" type="submit" data-confirm={`Disconnect ${g.client_name}?`}>Disconnect</button></form>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  </div>
+</Workspace>

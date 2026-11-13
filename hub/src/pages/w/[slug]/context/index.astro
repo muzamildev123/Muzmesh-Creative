@@ -1,0 +1,89 @@
+---
+import SubNav from '../../../../components/SubNav.astro';
+import Workspace from '../../../../layouts/Workspace.astro';
+import { can } from '../../../../lib/authz';
+import { readBrand } from '../../../../lib/brand';
+import { compileContext, compileLlmsTxt, CONTEXT_FIELDS, CONTEXT_FIELD_MAX, EXPORT_TARGETS, exportInstructions, knowledgeFileName, readContext } from '../../../../lib/context';
+import * as repo from '../../../../lib/repo';
+import * as service from '../../../../lib/service';
+import { formatDay } from '../../../../lib/util';
+import { db, flash, formOf, loadWorkspace } from '../../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, actor, user } = access;
+
+if (Astro.request.method === 'POST') {
+  const r = await service.saveContext(db(), ws, actor, await formOf(Astro));
+  flash(Astro, r.ok ? 'ok' : 'err', !r.ok ? r.error : r.value.changed ? `Saved as version ${r.value.version}. Connected AI apps read it at once. Re-export for apps that use a pasted copy.` : 'Nothing changed.');
+  return Astro.redirect(`${base}/context`, 303);
+}
+
+const [row, exportsDone] = await Promise.all([repo.latestContext(db(), ws.id), repo.listExports(db(), ws.id, user.id)]);
+const pack = readContext(row?.body);
+const version = row?.version ?? 0;
+const canEdit = can(actor, 'context.edit');
+const compiled = compileContext({ workspaceName: ws.name, siteUrl: ws.site_url, brand: readBrand(ws.brand_config), pack, version, updatedAt: row?.created_at ?? null });
+const instructions = exportInstructions(ws.name, ws.slug, version);
+const llms = compileLlmsTxt({ workspaceName: ws.name, siteUrl: ws.site_url, pack });
+const lastExport = (t: string) => exportsDone.find((e) => e.target === t);
+---
+<Workspace access={access} title="Context pack" tab="accounts">
+  <SubNav base={base} current="context" group="accounts" />
+  <div class="lr-head">
+    <h2>Context pack</h2>
+    <span class="lr-badge is-plain">{version ? `Version ${version} · ${formatDay(row!.created_at)}` : 'Not written yet'}</span>
+  </div>
+  <div class="lr-stack is-lg">
+    <p class="lr-muted lr-lede">One set of facts and rules for {ws.name}. Every AI your team uses reads this same pack, so Claude, ChatGPT and Gemini all write from the same source and none of them has to guess.</p>
+    <div class="lr-two">
+      <form method="post" class="lr-stack is-lg">
+        {CONTEXT_FIELDS.map((f) => (
+          <div class="lr-field">
+            <label for={f.key}>{f.label}</label>
+            <textarea class="lr-textarea" id={f.key} name={f.key} rows={f.rows} maxlength={CONTEXT_FIELD_MAX} readonly={!canEdit} aria-describedby={`${f.key}-hint`}>{pack[f.key]}</textarea>
+            <p class="lr-hint" id={`${f.key}-hint`}>{f.hint}</p>
+          </div>
+        ))}
+        {canEdit ? <div><button class="mm-btn is-primary is-md" type="submit">Save a new version</button></div> : <p class="lr-note">Only a workspace owner or MuzMesh can edit the pack.</p>}
+      </form>
+
+      <div class="lr-stack is-lg">
+        <section class="lr-card lr-stack" aria-labelledby="use-h">
+          <span class="mm-label" id="use-h">Use it in your AI</span>
+          <p class="lr-muted"><strong>Best:</strong> <a class="mm-link" href={`${base}/connect`}>connect your AI app</a>. It then reads the live pack every time and never goes stale.</p>
+          <p class="lr-muted"><strong>Or export a copy</strong> for apps or teammates without the connector:</p>
+          {version === 0 ? <p class="lr-note">Save the pack once to turn on exports.</p> : (
+            <div class="lr-stack">
+              {EXPORT_TARGETS.map((t) => {
+                const last = lastExport(t.key);
+                return (
+                  <details class="lr-details">
+                    <summary>{t.name} {last && (last.version < version ? <span class="lr-badge is-in_review">Your copy is v{last.version}, now v{version}</span> : <span class="lr-badge is-done">Up to date</span>)}</summary>
+                    <div class="lr-stack is-sm">
+                      <ol class="lr-steps">{t.steps.map((s) => <li>{s}</li>)}</ol>
+                      <div class="lr-row">
+                        <button class="mm-btn is-solid is-sm" type="button" data-copy="#instructions">Copy instructions</button>
+                        <a class="mm-btn is-solid is-sm" href={`${base}/context/download?target=${t.key}`}>Download {knowledgeFileName(ws.slug, version)}</a>
+                      </div>
+                    </div>
+                  </details>
+                );
+              })}
+              <pre class="lr-pre" id="instructions" tabindex="0" aria-label="Instructions to paste">{instructions}</pre>
+            </div>
+          )}
+        </section>
+        <section class="lr-card lr-stack" aria-labelledby="prev-h">
+          <div class="lr-row"><span class="mm-label" id="prev-h">What the AI reads</span><button class="mm-btn is-ghost is-sm" type="button" data-copy="#compiled">Copy</button></div>
+          <pre class="lr-pre" id="compiled" tabindex="0">{compiled}</pre>
+        </section>
+        <section class="lr-card lr-stack" aria-labelledby="llms-h">
+          <div class="lr-row"><span class="mm-label" id="llms-h">llms.txt for your website</span><button class="mm-btn is-ghost is-sm" type="button" data-copy="#llms">Copy</button></div>
+          <p class="lr-small lr-faint">A plain summary for AI assistants that visit the site, built from the same facts. Ask MuzMesh to publish it at /llms.txt.</p>
+          <pre class="lr-pre" id="llms" tabindex="0">{llms}</pre>
+        </section>
+      </div>
+    </div>
+  </div>
+</Workspace>
