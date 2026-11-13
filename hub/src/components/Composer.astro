@@ -1,0 +1,113 @@
+---
+// The post editor (left) and its live preview (right). Works without JavaScript: the server
+// runs the same brand check on save. With JavaScript the check, count and image update as you type.
+import { brandRenderData, type BrandConfig } from '../lib/brand';
+import { CHANNEL_LIMITS, CHANNEL_NAMES, countChars, type CheckRules, type Issue } from '../lib/brand-check';
+import { IMAGE_TEMPLATES, readImage } from '../lib/service';
+import type { Post } from '../lib/types';
+import { jsonForScript } from '../lib/web';
+
+interface Props {
+  post: Post | null; issues: Issue[]; rules: CheckRules; brand: BrandConfig | null;
+  wsName: string; slug: string; editable: boolean; defaultDate?: string;
+}
+const { post, issues, rules, brand, wsName, slug, editable, defaultDate } = Astro.props;
+const channel = post?.channel ?? 'linkedin';
+const copy = post?.copy ?? '';
+const image = post ? readImage(post.image) : null;
+const render = brand ? brandRenderData(brand) : null;
+const TEMPLATE_NAMES: Record<string, string> = { announcement: 'Announcement', quote: 'Quote', stat: 'Big number', changelog: 'What shipped' };
+const n = countChars(copy.trim(), channel);
+---
+<div class="lr-two" data-composer data-channel={channel} data-copy={editable ? undefined : copy}>
+  <div class="lr-stack is-lg">
+    {editable ? (
+      <div class="lr-stack">
+        <div class="lr-formrow">
+          <div class="lr-field">
+            <label for="channel">Channel</label>
+            <select class="lr-select" id="channel" name="channel">
+              <option value="linkedin" selected={channel === 'linkedin'}>LinkedIn</option>
+              <option value="x" selected={channel === 'x'}>X</option>
+            </select>
+          </div>
+          <div class="lr-field">
+            <label for="scheduled_for">Planned date</label>
+            <input class="lr-input" id="scheduled_for" name="scheduled_for" type="date" value={post?.scheduled_for ?? defaultDate ?? ''} />
+          </div>
+        </div>
+        <div class="lr-field">
+          <div class="lr-row"><label for="copy">Post text</label><span class={`lr-count ${n > CHANNEL_LIMITS[channel] ? 'is-over' : ''}`} data-count aria-live="polite">{n} / {CHANNEL_LIMITS[channel]}</span></div>
+          <textarea class="lr-textarea" id="copy" name="copy" rows="9" maxlength="5000" aria-describedby="brand-check">{copy}</textarea>
+        </div>
+        <fieldset class="lr-stack lr-fieldset">
+          <legend class="lr-legend">Image (optional)</legend>
+          {render ? (
+            <>
+              <p class="lr-hint">Drawn from {brand!.name}'s own templates, colours and fonts. Leave the headline empty for a text-only post.</p>
+              <div class="lr-formrow">
+                <div class="lr-field">
+                  <label for="image_template">Layout</label>
+                  <select class="lr-select" id="image_template" name="image_template">
+                    {IMAGE_TEMPLATES.map((t) => <option value={t} selected={(image?.template ?? 'announcement') === t}>{TEMPLATE_NAMES[t]}</option>)}
+                  </select>
+                </div>
+                <div class="lr-field">
+                  <label for="image_theme">Background</label>
+                  <select class="lr-select" id="image_theme" name="image_theme">
+                    <option value="light" selected={(image?.theme ?? render.defaultTheme) === 'light'}>Light</option>
+                    <option value="dark" selected={(image?.theme ?? render.defaultTheme) === 'dark'}>Dark</option>
+                  </select>
+                </div>
+              </div>
+              <div class="lr-field"><label for="image_kicker">Label</label><input class="lr-input" id="image_kicker" name="image_kicker" maxlength="40" value={image?.kicker ?? ''} placeholder="New feature" /></div>
+              <div class="lr-field"><label for="image_headline">Headline</label><input class="lr-input" id="image_headline" name="image_headline" maxlength="160" value={image?.headline ?? ''} /></div>
+              <div class="lr-field"><label for="image_sub">Supporting line</label><input class="lr-input" id="image_sub" name="image_sub" maxlength="220" value={image?.sub ?? ''} /></div>
+            </>
+          ) : (
+            <p class="lr-hint">Image templates turn on once MuzMesh adds this workspace's brand kit.</p>
+          )}
+        </fieldset>
+      </div>
+    ) : (
+      <div class="lr-stack">
+        <div class="lr-row"><span class="lr-badge is-plain">{CHANNEL_NAMES[channel]}</span><span class="lr-count">{n} / {CHANNEL_LIMITS[channel]}</span></div>
+        <p class="lr-preview-copy" id="post-copy">{copy}</p>
+      </div>
+    )}
+
+    <section class="lr-stack is-sm" aria-labelledby="brand-check-h">
+      <span class="mm-label is-quiet" id="brand-check-h">Brand check</span>
+      <ul class="lr-issues" id="brand-check" data-issues aria-live="polite">
+        {issues.length === 0 ? <li class="is-pass">Passes the brand check.</li> : issues.map((i) => <li class={`is-${i.level}`}>{i.message}</li>)}
+      </ul>
+    </section>
+    <slot />
+  </div>
+
+  <aside class="lr-stack" aria-label="Preview">
+    <span class="mm-label is-quiet">Preview</span>
+    <div class="lr-preview">
+      <div class="lr-preview-head">
+        <span class="lr-avatar" aria-hidden="true">{wsName.slice(0, 1).toUpperCase()}</span>
+        <div><div class="lr-h3">{wsName}</div><div class="lr-small lr-faint" data-preview-channel>{CHANNEL_NAMES[channel]}</div></div>
+      </div>
+      <p class="lr-preview-copy" data-preview-copy>{copy || 'Your post appears here as you write.'}</p>
+      <div class="lr-stack is-sm" data-image-wrap hidden>
+        <canvas class="lr-canvas" data-image width="1080" height="1080" role="img" aria-label="Post image preview"></canvas>
+        <div class="lr-row">
+          <label class="sr-only" for="image-size">Image size</label>
+          <select class="lr-select lr-select-sm" id="image-size" data-size>
+            <option value="square">Square 1080 x 1080</option>
+            <option value="portrait">Portrait 1080 x 1350</option>
+            <option value="wide">Wide 1200 x 627</option>
+          </select>
+          <button class="mm-btn is-ghost is-sm" type="button" data-download>Download PNG</button>
+        </div>
+      </div>
+    </div>
+    <noscript><p class="lr-hint">Turn on JavaScript to see the image preview and live brand check.</p></noscript>
+  </aside>
+</div>
+<script type="application/json" id="composer-data" set:html={jsonForScript({ rules, brand: render, slug, saved: image })}></script>
+<script src="../scripts/composer.ts"></script>

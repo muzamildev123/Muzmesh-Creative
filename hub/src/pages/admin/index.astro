@@ -1,0 +1,71 @@
+---
+import Base from '../../layouts/Base.astro';
+import * as admin from '../../lib/admin';
+import * as repo from '../../lib/repo';
+import { formatMinutes, formatMonth, thisMonth } from '../../lib/util';
+import { db, done, formOf, notFound, requireStaff } from '../../lib/web';
+
+const user = requireStaff(Astro);
+if (user instanceof Response) return user;
+
+if (Astro.request.method === 'POST') {
+  const f = await formOf(Astro);
+  if (f.action === 'staff_add') return done(Astro, '/admin#team', await admin.addStaff(db(), user, f), 'Added to the MuzMesh team.');
+  if (f.action === 'staff_remove') return done(Astro, '/admin#team', await admin.removeStaff(db(), user, f.user), 'Removed from the MuzMesh team.');
+  return notFound();
+}
+
+const month = thisMonth();
+const workspaces = await repo.listWorkspacesForUser(db(), user);
+const stats = await Promise.all(workspaces.map((w) => repo.workspaceStats(db(), w.id, month)));
+const staff = await repo.listStaff(db());
+---
+<Base title="All clients">
+  <div class="lr-head">
+    <h2>All clients</h2>
+    <span class="lr-small lr-faint">{formatMonth(month)}</span>
+    <div class="lr-actions"><a class="mm-btn is-ghost is-md" href="/admin/calendar">Calendar</a><a class="mm-btn is-primary is-md" href="/admin/new">New client</a></div>
+  </div>
+  <div class="lr-stack is-lg">
+    {workspaces.length === 0 ? (
+      <div class="lr-card lr-empty"><p>No client workspaces yet.</p><p><a class="mm-btn is-solid is-md" href="/admin/new">Create the first one</a></p></div>
+    ) : (
+      <div class="lr-card is-flush lr-tablewrap">
+        <table class="lr-table">
+          <thead><tr><th scope="col">Client</th><th scope="col">Waiting for approval</th><th scope="col">Posts planned</th><th scope="col">Open requests</th><th scope="col">Edit time</th></tr></thead>
+          <tbody>
+            {workspaces.map((w, i) => {
+              const s = stats[i]!;
+              return (
+                <tr>
+                  <td><a class="lr-rowlink" href={`/w/${w.slug}`}><strong>{w.name}</strong></a></td>
+                  <td>{s.posts_in_review ? <span class="lr-badge is-in_review">{s.posts_in_review}</span> : <span class="lr-faint">0</span>}</td>
+                  <td>{s.posts_planned} of {w.monthly_posts}</td>
+                  <td>{s.requests_open ? <a class="mm-link" href={`/w/${w.slug}/requests`}>{s.requests_open}</a> : <span class="lr-faint">0</span>}</td>
+                  <td class="lr-nowrap">{s.minutes > w.monthly_minutes ? <span class="lr-badge is-declined">{formatMinutes(s.minutes)} of {formatMinutes(w.monthly_minutes)}</span> : `${formatMinutes(s.minutes)} of ${formatMinutes(w.monthly_minutes)}`}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    )}
+    <section class="lr-card lr-stack" id="team" aria-labelledby="team-h">
+      <span class="mm-label" id="team-h">MuzMesh team</span>
+      <p class="lr-small lr-faint">Teammates see and manage every client workspace.</p>
+      <ul class="lr-list">
+        {staff.map((s) => (
+          <li class="lr-row">
+            <span>{s.name || s.email}{s.name ? <span class="lr-small lr-faint"> · {s.email}</span> : null}{s.id === user.id ? <span class="lr-small lr-faint"> (you)</span> : null}</span>
+            {s.id !== user.id && <form method="post" class="lr-inline"><input type="hidden" name="user" value={s.id} /><button class="lr-linkbtn" type="submit" name="action" value="staff_remove" data-confirm={`Remove ${s.email} from the MuzMesh team?`}>Remove</button></form>}
+          </li>
+        ))}
+      </ul>
+      <form method="post" class="lr-formrow is-end">
+        <div class="lr-field"><label for="email">Teammate's email</label><input class="lr-input" id="email" name="email" type="email" required maxlength="200" /></div>
+        <div class="lr-field"><label for="name">Name (optional)</label><input class="lr-input" id="name" name="name" maxlength="80" /></div>
+        <div><button class="mm-btn is-solid is-md" type="submit" name="action" value="staff_add">Add teammate</button></div>
+      </form>
+    </section>
+  </div>
+</Base>

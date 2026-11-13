@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import { createLoginToken, isEmail, safeNext, userForLogin } from '../lib/auth';
+import { sendLoginEmail } from '../lib/email';
+import { allow, sweep } from '../lib/ratelimit';
+import { appEnv, clientIp, db, formOf, isLocalhost } from '../lib/web';
+
+const next = safeNext(Astro.url.searchParams.get('next'));
+if (Astro.locals.user) return Astro.redirect(next, 303);
+
+let sent = false;
+let devLink = '';
+let error = '';
+if (Astro.request.method === 'POST') {
+  const form = await formOf(Astro);
+  const email = (form.email ?? '').trim().toLowerCase();
+  const env = appEnv();
+  if (!isEmail(email)) error = 'Enter a valid email address.';
+  else if (!(await allow(db(), `login-ip:${clientIp(Astro)}`, 20, 900)) || !(await allow(db(), `login-email:${email}`, 5, 900))) {
+    error = 'Too many sign-in attempts. Wait 15 minutes and try again.';
+  } else {
+    // The same answer whether or not the address has an account, so accounts cannot be discovered here.
+    sent = true;
+    const user = await userForLogin(db(), email, env.BOOTSTRAP_ADMIN_EMAIL);
+    if (user) {
+      const token = await createLoginToken(db(), user.id);
+      const link = `${Astro.url.origin}/auth/verify?token=${token}&next=${encodeURIComponent(safeNext(form.next))}`;
+      if (env.DEV_SHOW_LOGIN_LINK === '1' && isLocalhost(Astro.url)) devLink = link;
+      else await sendLoginEmail(env, user.email, link);
+    }
+    Astro.locals.cfContext?.waitUntil(sweep(db()).catch(() => {}));
+  }
+}
+---
+<Base title="Sign in">
+  <div slot="narrow" class="lr-stack is-lg">
+    {sent ? (
+      <div class="lr-stack">
+        <span class="mm-label">Check your email</span>
+        <h1 class="mm-h3">Your sign-in link is on its way.</h1>
+        <p class="lr-muted">If that address has a Launch Room account, a link arrives in a minute. It works once and expires in 15 minutes.</p>
+        {devLink && <p class="lr-note">Local development: <a class="mm-link" href={devLink} data-testid="dev-link">open the sign-in link</a></p>}
+        <p><a class="lr-linkbtn" href="/login">Use a different address</a></p>
+      </div>
+    ) : (
+      <form method="post" class="lr-stack" novalidate>
+        <span class="mm-label">Launch Room</span>
+        <h1 class="mm-h3">Sign in</h1>
+        <p class="lr-muted">Enter your work email and we will send you a link. No password needed.</p>
+        <input type="hidden" name="next" value={next} />
+        <div class="lr-field">
+          <label for="email">Email</label>
+          <input class="lr-input" id="email" name="email" type="email" autocomplete="email" required autofocus aria-invalid={error ? 'true' : undefined} aria-describedby={error ? 'email-error' : undefined} />
+          {error && <p class="mm-error" id="email-error" role="alert">{error}</p>}
+        </div>
+        <button class="mm-btn is-primary is-md" type="submit">Email me a link</button>
+        <p class="lr-small lr-faint">Accounts are by invitation. Ask MuzMesh if you need access.</p>
+      </form>
+    )}
+  </div>
+</Base>

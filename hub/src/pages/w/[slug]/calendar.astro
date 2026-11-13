@@ -1,0 +1,36 @@
+---
+import Calendar from '../../../components/Calendar.astro';
+import Workspace from '../../../layouts/Workspace.astro';
+import { can } from '../../../lib/authz';
+import * as repo from '../../../lib/repo';
+import { isMonth, thisMonth } from '../../../lib/util';
+import { db, loadWorkspace } from '../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, actor } = access;
+const q = Astro.url.searchParams.get('month');
+const month = isMonth(q) ? q : thisMonth();
+const [posts, undated] = await Promise.all([repo.listPosts(db(), ws.id, { month }), repo.listPosts(db(), ws.id)]);
+const noDate = undated.filter((p) => !p.scheduled_for && p.status !== 'published');
+const canWrite = can(actor, 'post.write');
+---
+<Workspace access={access} title="Calendar" tab="calendar">
+  <div class="lr-head">
+    <h2>Calendar</h2>
+    <span class="lr-small lr-faint">{posts.length} of {ws.monthly_posts} posts planned this month</span>
+    {canWrite && <div class="lr-actions"><a class="mm-btn is-primary is-md" href={`${base}/posts/new`}>New post</a></div>}
+  </div>
+  <div class="lr-stack is-lg">
+    <Calendar month={month} posts={posts.map((p) => ({ ...p, workspace_slug: ws.slug }))} path={`${base}/calendar`} newHref={canWrite ? `${base}/posts/new` : undefined} />
+    {posts.length === 0 && <p class="lr-muted">Nothing is planned for this month yet.</p>}
+    {noDate.length > 0 && (
+      <section class="lr-card lr-stack" aria-labelledby="nodate-h">
+        <span class="mm-label" id="nodate-h">Without a date</span>
+        <ul class="lr-list">
+          {noDate.map((p) => <li><a class="lr-rowlink" href={`${base}/posts/${p.id}`}><span class="lr-clip">{p.copy || '(empty draft)'}</span></a></li>)}
+        </ul>
+      </section>
+    )}
+  </div>
+</Workspace>

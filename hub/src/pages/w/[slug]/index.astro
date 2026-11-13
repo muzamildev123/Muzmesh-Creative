@@ -1,0 +1,112 @@
+---
+import Meter from '../../../components/Meter.astro';
+import Status from '../../../components/Status.astro';
+import Workspace from '../../../layouts/Workspace.astro';
+import { can } from '../../../lib/authz';
+import { CHANNEL_NAMES } from '../../../lib/brand-check';
+import { contextIsEmpty, readContext } from '../../../lib/context';
+import * as repo from '../../../lib/repo';
+import * as service from '../../../lib/service';
+import { formatDay, formatMonth, safeUrl, thisMonth } from '../../../lib/util';
+import { db, done, formOf, loadWorkspace } from '../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, actor } = access;
+
+if (Astro.request.method === 'POST') {
+  const form = await formOf(Astro);
+  return done(Astro, base, await service.toggleChecklist(db(), ws, actor, form.item ?? '', form.done === '1'), 'Checklist updated.');
+}
+
+const month = thisMonth();
+const [stats, waiting, checklist, ctx] = await Promise.all([
+  repo.workspaceStats(db(), ws.id, month),
+  repo.listPosts(db(), ws.id, { status: 'in_review' }),
+  repo.listChecklist(db(), ws.id),
+  repo.latestContext(db(), ws.id),
+]);
+const canToggle = can(actor, 'checklist.toggle');
+const canApprove = can(actor, 'post.approve');
+const left = checklist.filter((c) => !c.done_at).length;
+const siteUrl = safeUrl(ws.site_url);
+const editUrl = safeUrl(ws.cms_edit_url);
+const cmsName = ws.cms === 'sanity' ? 'Sanity Studio' : ws.cms === 'webflow' ? 'the Webflow Editor' : 'the site editor';
+const needsContext = contextIsEmpty(readContext(ctx?.body));
+---
+<Workspace access={access} title="Overview" tab="overview">
+  <div class="lr-stack is-lg">
+    <div class="lr-grid">
+      <section class="lr-card lr-stack" aria-labelledby="ov-posts">
+        <span class="mm-label" id="ov-posts">Posts in {formatMonth(month)}</span>
+        <p class="lr-num">{stats.posts_planned} <small>of {ws.monthly_posts} planned</small></p>
+        <p class="lr-small lr-faint">{stats.posts_published} published so far.</p>
+        <p><a class="mm-link" href={`${base}/calendar`}>Open the calendar</a></p>
+      </section>
+      <section class="lr-card lr-stack" aria-labelledby="ov-hours">
+        <span class="mm-label" id="ov-hours">Site edits</span>
+        <Meter used={stats.minutes} limit={ws.monthly_minutes} />
+      </section>
+      <section class="lr-card lr-stack" aria-labelledby="ov-req">
+        <span class="mm-label" id="ov-req">Requests</span>
+        <p class="lr-num">{stats.requests_open} <small>open</small></p>
+        <p class="lr-small lr-faint">Changes you have asked MuzMesh to make.</p>
+        <p><a class="mm-link" href={`${base}/requests`}>See requests</a></p>
+      </section>
+    </div>
+
+    <div class="lr-two">
+      <section class="lr-card lr-stack" aria-labelledby="ov-wait">
+        <span class="mm-label" id="ov-wait">{canApprove ? 'Waiting for your approval' : 'In review'}</span>
+        {waiting.length === 0 ? (
+          <p class="lr-muted">Nothing is waiting. New drafts show up here when they are sent for review.</p>
+        ) : (
+          <ul class="lr-list">
+            {waiting.map((p) => (
+              <li>
+                <a class="lr-rowlink" href={`${base}/posts/${p.id}`}>
+                  <span class="lr-row"><Status kind="in_review" label={CHANNEL_NAMES[p.channel]} /><span class="lr-small lr-faint">{p.scheduled_for ? formatDay(p.scheduled_for) : 'No date yet'}</span></span>
+                  <span class="lr-clip">{p.copy}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+        {needsContext && (
+          <p class="lr-note">The context pack is empty. <a class="mm-link" href={`${base}/context`}>Add your company facts</a> so every AI writes from the same source.</p>
+        )}
+      </section>
+
+      <div class="lr-stack is-lg">
+        <section class="lr-card lr-stack" aria-labelledby="ov-site">
+          <span class="mm-label" id="ov-site">Your site</span>
+          <div class="lr-row">
+            {editUrl && <a class="mm-btn is-solid is-sm" href={editUrl} target="_blank" rel="noopener noreferrer">Edit in {cmsName}</a>}
+            {siteUrl && <a class="mm-btn is-ghost is-sm" href={siteUrl} target="_blank" rel="noopener noreferrer">Open the site</a>}
+            <a class="mm-btn is-ghost is-sm" href={`${base}/requests#new`}>Ask MuzMesh to change it</a>
+          </div>
+          {!editUrl && !siteUrl && <p class="lr-small lr-faint">Site links appear here once MuzMesh adds them.</p>}
+        </section>
+
+        <section class="lr-card lr-stack" aria-labelledby="ov-check">
+          <span class="mm-label" id="ov-check">Launch checklist</span>
+          <p class="lr-small lr-faint">{left === 0 ? 'Everything is in. The launch clock is running.' : `${left} to go. The 5-day launch starts when all of these are done.`}</p>
+          <ul class="lr-list">
+            {checklist.map((c) => (
+              <li>
+                <form method="post" class="lr-check">
+                  <input type="hidden" name="item" value={c.id} />
+                  <input type="hidden" name="done" value={c.done_at ? '0' : '1'} />
+                  <button type="submit" aria-pressed={c.done_at ? 'true' : 'false'} aria-label={`${c.label}: ${c.done_at ? 'done' : 'not done'}`} disabled={!canToggle}>
+                    {c.done_at && <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6.5 4.8 9 10 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>}
+                  </button>
+                  <span class={c.done_at ? 'is-done' : ''}>{c.label}</span>
+                </form>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+    </div>
+  </div>
+</Workspace>

@@ -1,0 +1,72 @@
+---
+import Meter from '../../../../components/Meter.astro';
+import Status from '../../../../components/Status.astro';
+import Workspace from '../../../../layouts/Workspace.astro';
+import { can } from '../../../../lib/authz';
+import * as repo from '../../../../lib/repo';
+import * as service from '../../../../lib/service';
+import { REQUEST_STATUS_LABEL } from '../../../../lib/types';
+import { formatDay, formatMinutes, thisMonth } from '../../../../lib/util';
+import { db, flash, formOf, loadWorkspace } from '../../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, actor } = access;
+
+if (Astro.request.method === 'POST') {
+  const f = await formOf(Astro);
+  const r = await service.createRequest(db(), ws, actor, { title: f.title, detail: f.detail, page_url: f.page_url });
+  flash(Astro, r.ok ? 'ok' : 'err', r.ok ? 'Request sent. MuzMesh will pick it up.' : r.error);
+  return Astro.redirect(r.ok ? `${base}/requests/${r.value.id}` : `${base}/requests#new`, 303);
+}
+
+const [requests, meter] = await Promise.all([repo.listRequests(db(), ws.id), service.hoursMeter(db(), ws, thisMonth())]);
+const canCreate = can(actor, 'request.create');
+const open = requests.filter((r) => r.status === 'open' || r.status === 'in_progress');
+const closed = requests.filter((r) => r.status === 'done' || r.status === 'declined');
+---
+<Workspace access={access} title="Requests" tab="requests">
+  <div class="lr-head"><h2>Requests</h2></div>
+  <div class="lr-two">
+    <div class="lr-stack is-lg">
+      {requests.length === 0 && <div class="lr-card lr-empty"><p>No requests yet. Ask for a site change here and MuzMesh picks it up.</p></div>}
+      {[{ title: 'Open', rows: open }, { title: 'Closed', rows: closed }].filter((g) => g.rows.length).map((g) => (
+        <section class="lr-stack" aria-label={g.title}>
+          <span class="mm-label is-quiet">{g.title}</span>
+          <div class="lr-card is-flush lr-tablewrap">
+            <table class="lr-table">
+              <thead><tr><th scope="col">Request</th><th scope="col">Sent</th><th scope="col">Time</th><th scope="col">Status</th></tr></thead>
+              <tbody>
+                {g.rows.map((r) => (
+                  <tr>
+                    <td><a class="lr-rowlink" href={`${base}/requests/${r.id}`}><span class="lr-clip">{r.title}</span></a>{r.source === 'mcp' && <span class="lr-small lr-faint">Sent through the AI connector</span>}</td>
+                    <td class="lr-nowrap">{formatDay(r.created_at)}</td>
+                    <td class="lr-nowrap">{r.minutes ? formatMinutes(r.minutes) : <span class="lr-faint">None yet</span>}</td>
+                    <td><Status kind={r.status} label={REQUEST_STATUS_LABEL[r.status]} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ))}
+    </div>
+    <div class="lr-stack is-lg">
+      <section class="lr-card lr-stack" aria-labelledby="hours-h">
+        <span class="mm-label" id="hours-h">Site edits this month</span>
+        <Meter used={meter.used} limit={meter.limit} />
+      </section>
+      {canCreate ? (
+        <section class="lr-card lr-stack" id="new" aria-labelledby="new-h">
+          <span class="mm-label" id="new-h">Ask for a change</span>
+          <form method="post" class="lr-stack">
+            <div class="lr-field"><label for="title">What should change?</label><input class="lr-input" id="title" name="title" required minlength="3" maxlength="140" /></div>
+            <div class="lr-field"><label for="page_url">Page link (optional)</label><input class="lr-input" id="page_url" name="page_url" type="url" placeholder="https://" /></div>
+            <div class="lr-field"><label for="detail">Details (optional)</label><textarea class="lr-textarea" id="detail" name="detail" rows="5" maxlength="4000"></textarea><p class="lr-hint">The exact new wording helps most.</p></div>
+            <div><button class="mm-btn is-primary is-md" type="submit">Send request</button></div>
+          </form>
+        </section>
+      ) : <p class="lr-note">Your role can read requests. Ask a workspace owner if you need to send one.</p>}
+    </div>
+  </div>
+</Workspace>

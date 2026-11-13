@@ -50,7 +50,7 @@ describe('authorize', () => {
   });
   it('requires PKCE S256, response_type=code and the right resource', async () => {
     const c = await register();
-    for (const over of [{ code_challenge_method: 'plain' }, { code_challenge: 'short' }, { response_type: 'token' }, { resource: 'https://other.test/mcp' }]) {
+    for (const over of <Record<string, string>[]>[{ code_challenge_method: 'plain' }, { code_challenge: 'short' }, { response_type: 'token' }, { resource: 'https://other.test/mcp' }]) {
       expect(await oauth.checkAuthorizeRequest(w.db, await authorizeQuery(c.client_id, over), RESOURCE)).toMatchObject({ ok: false, kind: 'redirect', redirectUri: REDIRECT });
     }
   });
@@ -68,7 +68,7 @@ describe('token endpoint', () => {
     expect(await oauth.identityForToken(w.db, first.body.access_token)).toBeNull();
   });
   it('rejects a wrong verifier, client, redirect or an expired code', async () => {
-    for (const over of [{ code_verifier: 'w'.repeat(64) }, { redirect_uri: 'https://claude.ai/other' }]) {
+    for (const over of <Record<string, string>[]>[{ code_verifier: 'w'.repeat(64) }, { redirect_uri: 'https://claude.ai/other' }]) {
       const { client, code } = await getCode();
       expect((await oauth.exchangeToken(w.db, tokenForm(client.client_id, code, over))).ok).toBe(false);
     }

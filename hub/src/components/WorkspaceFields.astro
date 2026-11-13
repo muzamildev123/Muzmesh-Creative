@@ -1,0 +1,24 @@
+---
+import type { Workspace } from '../lib/types';
+interface Props { ws?: Workspace; withSlug?: boolean }
+const { ws, withSlug } = Astro.props;
+const hours = ws ? Math.round((ws.monthly_minutes / 60) * 100) / 100 : 2;
+---
+<div class="lr-field"><label for="name">Client name</label><input class="lr-input" id="name" name="name" required minlength="2" maxlength="80" value={ws?.name ?? ''} /></div>
+{withSlug && <div class="lr-field"><label for="slug">Short name for the address (optional)</label><input class="lr-input" id="slug" name="slug" maxlength="40" pattern="[a-z0-9-]*" aria-describedby="slug-hint" /><p class="lr-hint" id="slug-hint">Lowercase letters, numbers and dashes. Made from the name if left empty. It cannot be changed later.</p></div>}
+<div class="lr-field"><label for="site_url">Website</label><input class="lr-input" id="site_url" name="site_url" type="url" placeholder="https://" value={ws?.site_url ?? ''} /></div>
+<div class="lr-formrow">
+  <div class="lr-field">
+    <label for="cms">Site editor</label>
+    <select class="lr-select" id="cms" name="cms">
+      <option value="sanity" selected={(ws?.cms ?? 'sanity') === 'sanity'}>Sanity</option>
+      <option value="webflow" selected={ws?.cms === 'webflow'}>Webflow</option>
+      <option value="other" selected={ws?.cms === 'other'}>Other</option>
+    </select>
+  </div>
+  <div class="lr-field"><label for="cms_edit_url">Editor link</label><input class="lr-input" id="cms_edit_url" name="cms_edit_url" type="url" placeholder="https://" value={ws?.cms_edit_url ?? ''} /></div>
+</div>
+<div class="lr-formrow">
+  <div class="lr-field"><label for="monthly_hours">Edit hours per month</label><input class="lr-input" id="monthly_hours" name="monthly_hours" type="number" min="0" max="200" step="0.25" required value={hours} /></div>
+  <div class="lr-field"><label for="monthly_posts">Posts per month</label><input class="lr-input" id="monthly_posts" name="monthly_posts" type="number" min="0" max="200" step="1" required value={ws?.monthly_posts ?? 8} /></div>
+</div>

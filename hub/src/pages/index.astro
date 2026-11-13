@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import * as repo from '../lib/repo';
+import { ROLE_LABEL } from '../lib/types';
+import { db, loginRedirect } from '../lib/web';
+
+const user = Astro.locals.user;
+if (!user) return loginRedirect(Astro);
+if (user.is_staff) return Astro.redirect('/admin', 303);
+const workspaces = await repo.listWorkspacesForUser(db(), user);
+if (workspaces.length === 1) return Astro.redirect(`/w/${workspaces[0]!.slug}`, 303);
+---
+<Base title="Your workspaces">
+  <div class="lr-head"><h2>Your workspaces</h2></div>
+  {workspaces.length === 0 ? (
+    <div class="lr-card lr-empty"><p>Your account is not part of a workspace yet. Ask MuzMesh to add you.</p></div>
+  ) : (
+    <div class="lr-grid">
+      {workspaces.map((w) => (
+        <a class="lr-card lr-stack is-sm" href={`/w/${w.slug}`}>
+          <span class="lr-h3">{w.name}</span>
+          <span class="lr-small lr-faint">{ROLE_LABEL[w.role]}</span>
+        </a>
+      ))}
+    </div>
+  )}
+</Base>

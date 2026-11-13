@@ -1,0 +1,23 @@
+---
+import WorkspaceFields from '../../components/WorkspaceFields.astro';
+import Base from '../../layouts/Base.astro';
+import * as admin from '../../lib/admin';
+import { db, flash, formOf, requireStaff } from '../../lib/web';
+
+const user = requireStaff(Astro);
+if (user instanceof Response) return user;
+if (Astro.request.method === 'POST') {
+  const r = await admin.createWorkspace(db(), user, await formOf(Astro));
+  flash(Astro, r.ok ? 'ok' : 'err', r.ok ? 'Workspace created. Add the brand kit and the client\'s people next.' : r.error);
+  return Astro.redirect(r.ok ? `/w/${r.value.slug}/settings` : '/admin/new', 303);
+}
+---
+<Base title="New client">
+  <div slot="narrow" class="lr-stack is-lg">
+    <div class="lr-stack"><span class="mm-label">New client</span><h1 class="mm-h3">Create a workspace</h1></div>
+    <form method="post" class="lr-stack">
+      <WorkspaceFields withSlug />
+      <div class="lr-row"><button class="mm-btn is-primary is-md" type="submit">Create workspace</button><a class="mm-btn is-ghost is-md" href="/admin">Cancel</a></div>
+    </form>
+  </div>
+</Base>

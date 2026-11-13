@@ -1,6 +1,7 @@
 /// <reference types="astro/client" />
 
-interface Env {
+declare namespace Cloudflare {
+  interface Env {
   DB: D1Database;
   APP_NAME?: string;
   /** Dev only: show the sign-in link on screen. Ignored unless the request is to localhost. */
@@ -9,16 +10,11 @@ interface Env {
   BOOTSTRAP_ADMIN_EMAIL?: string;
   RESEND_API_KEY?: string;
   EMAIL_FROM?: string;
-}
-
-declare module 'cloudflare:workers' {
-  export const env: Env;
+  }
 }
 
 declare namespace App {
   interface Locals {
     user: import('./lib/types').User | null;
-    /** Random per-response value for the Content-Security-Policy. */
-    nonce: string;
   }
 }

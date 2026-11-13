@@ -1,0 +1,50 @@
+---
+// A month grid of posts. Used for one workspace and for the MuzMesh all-clients view.
+import { CHANNEL_NAMES } from '../lib/brand-check';
+import type { Post } from '../lib/types';
+import { POST_STATUS_LABEL } from '../lib/types';
+import { formatMonth, shiftMonth, today } from '../lib/util';
+
+interface Item extends Post { workspace_slug: string; workspace_name?: string }
+interface Props { month: string; posts: Item[]; path: string; newHref?: string }
+const { month, posts, path, newHref } = Astro.props;
+
+const [y, m] = month.split('-').map(Number) as [number, number];
+const first = new Date(Date.UTC(y, m - 1, 1));
+const daysIn = new Date(Date.UTC(y, m, 0)).getUTCDate();
+const lead = (first.getUTCDay() + 6) % 7; // Monday first
+const cells: (string | null)[] = [
+  ...Array.from({ length: lead }, () => null),
+  ...Array.from({ length: daysIn }, (_, i) => `${month}-${String(i + 1).padStart(2, '0')}`),
+];
+while (cells.length % 7) cells.push(null);
+const byDay = new Map<string, Item[]>();
+for (const p of posts) if (p.scheduled_for) byDay.set(p.scheduled_for, [...(byDay.get(p.scheduled_for) ?? []), p]);
+const now = today();
+---
+<div class="lr-stack">
+  <nav class="lr-row" aria-label="Month">
+    <a class="mm-btn is-ghost is-sm" href={`${path}?month=${shiftMonth(month, -1)}`} rel="nofollow">Previous</a>
+    <h3 class="lr-h3" aria-live="polite">{formatMonth(month)}</h3>
+    <a class="mm-btn is-ghost is-sm" href={`${path}?month=${shiftMonth(month, 1)}`} rel="nofollow">Next</a>
+  </nav>
+  <div class="lr-cal">
+    {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => <div class="lr-cal-dow mm-label is-quiet" aria-hidden="true">{d}</div>)}
+    {cells.map((day) => {
+      if (!day) return <div class="lr-cal-day is-out"></div>;
+      const items = byDay.get(day) ?? [];
+      return (
+        <div class={`lr-cal-day ${day === now ? 'is-today' : ''} ${items.length ? '' : 'is-empty'}`}>
+          <span class="lr-cal-n">{Number(day.slice(8))}</span>
+          {items.map((p) => (
+            <a class={`lr-cal-post is-${p.status}`} href={`/w/${p.workspace_slug}/posts/${p.id}`}>
+              <b>{p.workspace_name ? `${p.workspace_name} · ` : ''}{CHANNEL_NAMES[p.channel]} · {POST_STATUS_LABEL[p.status]}</b>
+              <span>{p.copy || '(empty draft)'}</span>
+            </a>
+          ))}
+          {newHref && day >= now && items.length === 0 && <a class="lr-cal-add" href={`${newHref}?date=${day}`} aria-label={`New post on ${day}`}>+</a>}
+        </div>
+      );
+    })}
+  </div>
+</div>

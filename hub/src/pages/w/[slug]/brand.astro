@@ -1,0 +1,82 @@
+---
+import Workspace from '../../../layouts/Workspace.astro';
+import { bannedPhrases, brandFontsUrl, readBrand } from '../../../lib/brand';
+import { loadWorkspace } from '../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base } = access;
+const brand = readBrand(ws.brand_config);
+const c = brand?.colors;
+const swatches = c ? [
+  { role: 'Background', ...c.light }, { role: 'Dark', ...c.dark }, { role: 'Text on light', ...c.textOnLight },
+  { role: 'Text on dark', ...c.textOnDark }, { role: 'Accent', ...c.accent }, ...c.support.map((s) => ({ role: 'Support', ...s })),
+] : [];
+const img = brand?.imagery;
+const promptText = (subject: string, ar: string) =>
+  [subject, img?.style, img?.avoid ? `Avoid: ${img.avoid}` : '', `Aspect ratio ${ar}.`].filter(Boolean).join('\n\n');
+---
+<Workspace access={access} title="Brand" tab="brand" fontsUrl={brand ? brandFontsUrl(brand) : undefined}>
+  <div class="lr-head">
+    <h2>Brand</h2>
+    {brand && <div class="lr-actions"><a class="mm-btn is-ghost is-sm" href={`${base}/brand.json`} download={`${ws.slug}.brand.config.json`}>Download brand config</a></div>}
+  </div>
+  {!brand ? (
+    <div class="lr-card lr-empty"><p>The brand kit for {ws.name} has not been added yet. MuzMesh adds it during launch week.</p></div>
+  ) : (
+    <div class="lr-stack is-lg">
+      {brand.idea?.promise && <p class="lr-muted lr-lede">{brand.idea.promise}</p>}
+      <section class="lr-card lr-stack" aria-labelledby="col-h">
+        <span class="mm-label" id="col-h">Colours</span>
+        <ul class="lr-swatches lr-plain">
+          {swatches.map((s) => (
+            <li class="lr-swatch lr-stack is-sm">
+              <svg viewBox="0 0 10 4" preserveAspectRatio="none" role="img" aria-label={`${s.name || s.role} ${s.hex}`}><rect width="10" height="4" fill={s.hex} /></svg>
+              <div><strong>{s.name || s.role}</strong> <button class="lr-linkbtn" type="button" data-copy="" data-copy-text={s.hex}><code>{s.hex}</code></button></div>
+              <span class="lr-small lr-faint">{s.use || s.role}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <section class="lr-card lr-stack" aria-labelledby="font-h">
+        <span class="mm-label" id="font-h">Fonts</span>
+        <div class="lr-grid">
+          {[{ role: 'Headlines', f: brand.fonts.display.family }, { role: 'Everything else', f: brand.fonts.body.family }, ...(brand.fonts.label ? [{ role: 'Labels', f: brand.fonts.label.family }] : [])].map((x) => (
+            <div class="lr-stack is-sm"><span class="lr-small lr-faint">{x.role}</span><strong>{x.f}</strong><a class="mm-link lr-small" href={`https://fonts.google.com/specimen/${x.f.replace(/ /g, '+')}`} target="_blank" rel="noopener noreferrer">Get it on Google Fonts</a></div>
+          ))}
+        </div>
+      </section>
+      <section class="lr-card lr-stack" aria-labelledby="voice-h">
+        <span class="mm-label" id="voice-h">Voice</span>
+        {brand.voice.summary && <p>{brand.voice.summary}</p>}
+        <div class="lr-two is-even">
+          <div class="lr-stack is-sm">
+            <span class="lr-small lr-faint">Sounds like us</span>
+            <ul class="lr-list">{brand.voice.write.map((w) => <li>{w}</li>)}</ul>
+            {brand.voice.use.length > 0 && <div class="lr-tags">{brand.voice.use.map((w) => <span class="lr-badge is-plain">{w}</span>)}</div>}
+          </div>
+          <div class="lr-stack is-sm">
+            <span class="lr-small lr-faint">Never write</span>
+            <ul class="lr-list">{brand.voice.not.map((w) => <li>{w}</li>)}</ul>
+            <div class="lr-tags">{bannedPhrases(brand).map((w) => <span class="lr-badge is-declined">{w}</span>)}</div>
+          </div>
+        </div>
+        <p class="lr-small lr-faint">The brand check on every post uses the "never write" list.</p>
+      </section>
+      {img?.prompts && img.prompts.length > 0 && (
+        <section class="lr-card lr-stack" aria-labelledby="img-h">
+          <span class="mm-label" id="img-h">Image prompts</span>
+          <p class="lr-muted">Paste one into your image tool. Each already carries the brand's style rules.</p>
+          <ul class="lr-list">
+            {img.prompts.map((p, i) => (
+              <li class="lr-stack is-sm">
+                <div class="lr-row"><strong>{p.title}</strong><span class="lr-small lr-faint">{p.ar}{p.use ? ` · ${p.use}` : ''}</span><button class="mm-btn is-ghost is-sm" type="button" data-copy={`#prompt-${i}`}>Copy prompt</button></div>
+                <pre class="lr-pre" id={`prompt-${i}`}>{promptText(p.subject, p.ar)}</pre>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+  )}
+</Workspace>

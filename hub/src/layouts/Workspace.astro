@@ -1,0 +1,34 @@
+---
+// A workspace screen: the client name, the role badge and the section tabs.
+import Base from './Base.astro';
+import { can } from '../lib/authz';
+import { ROLE_LABEL } from '../lib/types';
+import type { WorkspaceAccess } from '../lib/web';
+
+interface Props { access: WorkspaceAccess; title: string; tab: string; fontsUrl?: string }
+const { access, title, tab, fontsUrl } = Astro.props;
+const { ws, base, role, user } = access;
+const tabs = [
+  { key: 'overview', href: base, label: 'Overview' },
+  { key: 'posts', href: `${base}/posts`, label: 'Posts' },
+  { key: 'calendar', href: `${base}/calendar`, label: 'Calendar' },
+  { key: 'requests', href: `${base}/requests`, label: 'Requests' },
+  { key: 'brand', href: `${base}/brand`, label: 'Brand' },
+  { key: 'context', href: `${base}/context`, label: 'Context pack' },
+  { key: 'connect', href: `${base}/connect`, label: 'Connect AI' },
+  ...(can(access.actor, 'workspace.manage') ? [{ key: 'settings', href: `${base}/settings`, label: 'Settings' }] : []),
+];
+---
+<Base title={`${title} · ${ws.name}`} fontsUrl={fontsUrl}>
+  <Fragment slot="subnav">
+    <div class="lr-ws">
+      <h1>{ws.name}</h1>
+      <span class="lr-badge is-plain">{ROLE_LABEL[role]}</span>
+      {user.is_staff ? <a class="lr-linkbtn" href="/admin">All clients</a> : null}
+    </div>
+    <nav class="lr-tabs" aria-label="Workspace sections">
+      {tabs.map((t) => <a href={t.href} aria-current={t.key === tab ? 'page' : undefined}>{t.label}</a>)}
+    </nav>
+  </Fragment>
+  <slot />
+</Base>

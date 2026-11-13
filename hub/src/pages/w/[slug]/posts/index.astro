@@ -1,0 +1,55 @@
+---
+import Status from '../../../../components/Status.astro';
+import Workspace from '../../../../layouts/Workspace.astro';
+import { can } from '../../../../lib/authz';
+import { CHANNEL_NAMES } from '../../../../lib/brand-check';
+import * as repo from '../../../../lib/repo';
+import { readImage } from '../../../../lib/service';
+import { POST_STATUS_LABEL, type PostStatus } from '../../../../lib/types';
+import { formatDay } from '../../../../lib/util';
+import { db, loadWorkspace } from '../../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, actor } = access;
+
+const STATUSES: PostStatus[] = ['draft', 'in_review', 'approved', 'published'];
+const status = STATUSES.find((s) => s === Astro.url.searchParams.get('status'));
+const posts = await repo.listPosts(db(), ws.id, { status });
+const canWrite = can(actor, 'post.write');
+---
+<Workspace access={access} title="Posts" tab="posts">
+  <div class="lr-head">
+    <h2>Posts</h2>
+    {canWrite && <div class="lr-actions"><a class="mm-btn is-primary is-md" href={`${base}/posts/new`}>New post</a></div>}
+  </div>
+  <nav class="lr-filters" aria-label="Filter by status">
+    <a class="mm-chip" href={`${base}/posts`} aria-current={!status ? 'true' : undefined}>All</a>
+    {STATUSES.map((s) => <a class="mm-chip" href={`${base}/posts?status=${s}`} aria-current={status === s ? 'true' : undefined}>{POST_STATUS_LABEL[s]}</a>)}
+  </nav>
+  {posts.length === 0 ? (
+    <div class="lr-card lr-empty">
+      <p>{status ? `No posts are ${POST_STATUS_LABEL[status].toLowerCase()} right now.` : 'No posts yet. Write the first one here, or ask your AI to draft it through the connector.'}</p>
+      {canWrite && !status && <p><a class="mm-btn is-solid is-md" href={`${base}/posts/new`}>Write a post</a> <a class="mm-btn is-ghost is-md" href={`${base}/connect`}>Connect your AI</a></p>}
+    </div>
+  ) : (
+    <div class="lr-card is-flush lr-tablewrap">
+      <table class="lr-table">
+        <thead><tr><th scope="col">Post</th><th scope="col">Channel</th><th scope="col">Date</th><th scope="col">Status</th></tr></thead>
+        <tbody>
+          {posts.map((p) => (
+            <tr>
+              <td>
+                <a class="lr-rowlink" href={`${base}/posts/${p.id}`}><span class="lr-clip">{p.copy || '(empty draft)'}</span></a>
+                <span class="lr-small lr-faint">{[readImage(p.image) ? 'With image' : '', p.source === 'mcp' ? 'Drafted by AI' : ''].filter(Boolean).join(' · ')}</span>
+              </td>
+              <td>{CHANNEL_NAMES[p.channel]}</td>
+              <td class="lr-nowrap">{p.scheduled_for ? formatDay(p.scheduled_for) : <span class="lr-faint">No date</span>}</td>
+              <td><Status kind={p.status} label={p.status === 'approved' && p.scheduled_for ? 'Scheduled' : POST_STATUS_LABEL[p.status]} /></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+</Workspace>

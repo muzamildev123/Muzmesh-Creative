@@ -1,0 +1,86 @@
+---
+// The consent screen an AI app sends people to. Nothing is shared until a signed-in person presses Allow.
+import Base from '../../layouts/Base.astro';
+import { checkAuthorizeRequest, issueCode, redirectWith } from '../../lib/oauth';
+import * as repo from '../../lib/repo';
+import { ROLE_LABEL } from '../../lib/types';
+import { db, formOf, loginRedirect } from '../../lib/web';
+
+const resource = `${Astro.url.origin}/mcp`;
+let form: Record<string, string> = {};
+let query = Astro.url.searchParams;
+if (Astro.request.method === 'POST') {
+  form = await formOf(Astro);
+  query = new URLSearchParams((form.q ?? '').slice(0, 4000));
+}
+const check = await checkAuthorizeRequest(db(), query, resource);
+if (!check.ok && check.kind === 'redirect') {
+  return Astro.redirect(redirectWith(check.redirectUri, { error: check.error, error_description: check.description, state: check.state }), 303);
+}
+
+const user = Astro.locals.user;
+if (check.ok && !user) return loginRedirect(Astro);
+const workspaces = user ? await repo.listWorkspacesForUser(db(), user) : [];
+let error = '';
+
+if (check.ok && user && Astro.request.method === 'POST') {
+  const p = check.params;
+  if (form.decision !== 'allow') return Astro.redirect(redirectWith(p.redirectUri, { error: 'access_denied', error_description: 'The request was declined.', state: p.state }), 303);
+  const ws = workspaces.find((w) => w.id === form.workspace);
+  if (!ws) error = 'Choose a workspace.';
+  else {
+    const code = await issueCode(db(), p, user, ws);
+    return Astro.redirect(redirectWith(p.redirectUri, { code, state: p.state, iss: Astro.url.origin }), 303);
+  }
+}
+const host = check.ok ? new URL(check.params.redirectUri).host : '';
+---
+<Base title="Connect an app">
+  <div slot="narrow" class="lr-stack is-lg">
+    {!check.ok ? (
+      <div class="lr-stack">
+        <span class="mm-label">Cannot connect</span>
+        <h1 class="mm-h3">This connection request is not valid.</h1>
+        <p class="lr-muted">{check.kind === 'page' ? check.message : ''}</p>
+      </div>
+    ) : workspaces.length === 0 ? (
+      <div class="lr-stack">
+        <span class="mm-label">Cannot connect</span>
+        <h1 class="mm-h3">Your account has no workspace yet.</h1>
+        <p class="lr-muted">Ask MuzMesh to add you, then try again from your AI app.</p>
+      </div>
+    ) : (
+      <form method="post" class="lr-stack is-lg">
+        <div class="lr-stack">
+          <span class="mm-label">Connect an app</span>
+          <h1 class="mm-h3">Let {check.params.client.client_name} use Launch Room?</h1>
+          <p class="lr-muted">It will return to <strong>{host}</strong>. Only continue if you started this from your own AI app.</p>
+        </div>
+        <input type="hidden" name="q" value={query.toString()} />
+        <div class="lr-field">
+          <label for="workspace">Workspace</label>
+          <select class="lr-select" id="workspace" name="workspace" aria-invalid={error ? 'true' : undefined}>
+            {workspaces.map((w) => <option value={w.id} selected={form.workspace === w.id}>{w.name} ({ROLE_LABEL[w.role]})</option>)}
+          </select>
+          {error && <p class="mm-error" role="alert">{error}</p>}
+        </div>
+        <div class="lr-stack is-sm">
+          <span class="lr-small lr-faint">It will be able to</span>
+          <ul class="lr-list">
+            <li>Read this workspace's context pack, brand rules, posts, requests and hours.</li>
+            <li>Save post drafts and send them for review, and send site change requests, if your role allows it.</li>
+          </ul>
+          <span class="lr-small lr-faint">It will never be able to</span>
+          <ul class="lr-list">
+            <li>Approve, publish or delete anything, or see other workspaces.</li>
+          </ul>
+        </div>
+        <div class="lr-row">
+          <button class="mm-btn is-primary is-md" type="submit" name="decision" value="allow">Allow</button>
+          <button class="mm-btn is-ghost is-md" type="submit" name="decision" value="deny">Deny</button>
+        </div>
+        <p class="lr-small lr-faint">Signed in as {user!.email}. You can disconnect it any time under Connect AI.</p>
+      </form>
+    )}
+  </div>
+</Base>
