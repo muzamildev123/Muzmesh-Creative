@@ -1,4 +1,5 @@
 ---
+import SubNav from '../../../../components/SubNav.astro';
 import Workspace from '../../../../layouts/Workspace.astro';
 import { can } from '../../../../lib/authz';
 import { readBrand } from '../../../../lib/brand';
@@ -27,7 +28,8 @@ const instructions = exportInstructions(ws.name, ws.slug, version);
 const llms = compileLlmsTxt({ workspaceName: ws.name, siteUrl: ws.site_url, pack });
 const lastExport = (t: string) => exportsDone.find((e) => e.target === t);
 ---
-<Workspace access={access} title="Context pack" tab="context">
+<Workspace access={access} title="Context pack" tab="accounts">
+  <SubNav base={base} current="context" group="accounts" />
   <div class="lr-head">
     <h2>Context pack</h2>
     <span class="lr-badge is-plain">{version ? `Version ${version} · ${formatDay(row!.created_at)}` : 'Not written yet'}</span>

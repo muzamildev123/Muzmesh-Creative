@@ -54,7 +54,7 @@ const imageProp = {
 };
 
 const postView = (ctx: McpContext, p: Post) => ({
-  id: p.id, channel: p.channel, status: POST_STATUS_LABEL[p.status], scheduled_for: p.scheduled_for, copy: p.copy,
+  id: p.id, channel: p.channel, status: POST_STATUS_LABEL[p.status], scheduled_for: p.scheduled_for, scheduled_time: p.scheduled_time, posts_automatically: !!p.social_account_id, copy: p.copy,
   characters: countChars(p.copy, p.channel), character_limit: CHANNEL_LIMITS[p.channel],
   image: service.readImage(p.image), published_url: p.published_url || null,
   review_link: `${ctx.origin}/w/${ctx.workspace.slug}/posts/${p.id}`,
@@ -127,18 +127,18 @@ export const TOOLS: ToolDef[] = [
   {
     name: 'create_post_draft', title: 'Create a post draft',
     description: 'Saves a new social post as a draft and returns its brand check result and a link for the person to review it. Call get_context first. The draft is not published: a person must approve it in Launch Room.',
-    inputSchema: { type: 'object', properties: { channel: channelProp, copy: { type: 'string', maxLength: service.COPY_MAX, description: 'The post text, ready to publish. No placeholders.' }, scheduled_for: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: 'Planned date, YYYY-MM-DD.' }, image: imageProp }, required: ['channel', 'copy'], additionalProperties: false }, annotations: WRITE,
+    inputSchema: { type: 'object', properties: { channel: channelProp, copy: { type: 'string', maxLength: service.COPY_MAX, description: 'The post text, ready to publish. No placeholders.' }, scheduled_for: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: 'Planned date, YYYY-MM-DD.' }, scheduled_time: { type: 'string', pattern: '^([01]\\d|2[0-3]):[0-5]\\d$', description: 'Planned time, HH:MM, in the workspace time zone.' }, image: imageProp }, required: ['channel', 'copy'], additionalProperties: false }, annotations: WRITE,
     run: async (ctx, a) => unwrap(
-      await service.createPost(ctx.db, ctx.workspace, ctx.actor, { channel: a.channel, copy: a.copy, scheduled_for: a.scheduled_for ?? null, image: a.image ?? {} }),
+      await service.createPost(ctx.db, ctx.workspace, ctx.actor, { channel: a.channel, copy: a.copy, scheduled_for: a.scheduled_for ?? null, scheduled_time: a.scheduled_time, image: a.image ?? {} }),
       ({ post, issues }) => json({ saved_as: 'draft', ...postView(ctx, post), brand_check: checkView(issues) }),
     ),
   },
   {
     name: 'update_post_draft', title: 'Update a post',
     description: 'Changes a post that is not yet published. Only pass the fields to change. Editing a post that was in review or approved sends it back to draft so it is approved again.',
-    inputSchema: { type: 'object', properties: { id: { type: 'string' }, channel: channelProp, copy: { type: 'string', maxLength: service.COPY_MAX }, scheduled_for: { type: ['string', 'null'], description: 'YYYY-MM-DD, or null to clear the date.' }, image: imageProp }, required: ['id'], additionalProperties: false }, annotations: { ...WRITE, idempotentHint: true },
+    inputSchema: { type: 'object', properties: { id: { type: 'string' }, channel: channelProp, copy: { type: 'string', maxLength: service.COPY_MAX }, scheduled_for: { type: ['string', 'null'], description: 'YYYY-MM-DD, or null to clear the date.' }, scheduled_time: { type: ['string', 'null'], description: 'HH:MM in the workspace time zone, or null to clear the time.' }, image: imageProp }, required: ['id'], additionalProperties: false }, annotations: { ...WRITE, idempotentHint: true },
     run: async (ctx, a) => unwrap(
-      await service.updatePost(ctx.db, ctx.workspace, ctx.actor, str(a.id), { channel: a.channel, copy: a.copy, scheduled_for: a.scheduled_for, image: a.image }),
+      await service.updatePost(ctx.db, ctx.workspace, ctx.actor, str(a.id), { channel: a.channel, copy: a.copy, scheduled_for: a.scheduled_for, scheduled_time: a.scheduled_time, image: a.image }),
       ({ post, issues, movedToDraft }) => json({ ...postView(ctx, post), moved_back_to_draft: movedToDraft, brand_check: checkView(issues) }),
     ),
   },

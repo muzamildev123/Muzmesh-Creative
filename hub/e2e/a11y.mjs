@@ -27,7 +27,7 @@ const scan = async (page, path) => {
   const r = await page.evaluate(() => window.axe.run(document, { runOnly: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa', 'best-practice'] }));
   for (const v of r.violations) { bad++; console.log(`${path}: ${v.id} (${v.impact}) ${v.help}\n   ${v.nodes.slice(0, 3).map((n) => n.target.join(' ')).join('\n   ')}`); }
 };
-const ws = ['', '/posts', '/posts/new', '/posts/p-1', '/posts/p-3', '/calendar', '/requests', '/requests/r-1', '/brand', '/context', '/connect'].map((p) => `/w/bookly${p}`);
+const ws = ['', '/posts', '/posts/new', '/posts/p-1', '/posts/p-3', '/calendar', '/assets', '/assets/make', '/site', '/requests', '/requests/r-1', '/brand', '/accounts', '/context', '/connect'].map((p) => `/w/bookly${p}`);
 await run('you@example.com', ['/admin', '/admin/new', '/admin/calendar', ...ws, '/w/bookly/settings', '/nope'], { width: 1280, height: 900 });
 await run('owner@bookly.test', ws, { width: 390, height: 844 });
 await browser.close();

@@ -10,6 +10,19 @@ declare namespace Cloudflare {
   BOOTSTRAP_ADMIN_EMAIL?: string;
   RESEND_API_KEY?: string;
   EMAIL_FROM?: string;
+  /** The app's public address, e.g. https://room.muzmesh.com. Used for short links and emails sent by the scheduler. */
+  APP_ORIGIN?: string;
+  /** 32 random bytes, base64. Encrypts LinkedIn and X tokens. */
+  TOKEN_KEY?: string;
+  LINKEDIN_CLIENT_ID?: string; LINKEDIN_CLIENT_SECRET?: string; LINKEDIN_API_VERSION?: string; LINKEDIN_ORG_POSTING?: string;
+  X_CLIENT_ID?: string; X_CLIENT_SECRET?: string;
+  /** Test only: point the networks and Google at a fake server. */
+  LINKEDIN_AUTH_BASE?: string; LINKEDIN_API_BASE?: string; X_AUTH_BASE?: string; X_API_BASE?: string;
+  GA4_API_BASE?: string; GSC_API_BASE?: string; GOOGLE_TOKEN_URL?: string;
+  /** The Google service account key (JSON) used to read clients' Analytics and Search Console. */
+  GOOGLE_SERVICE_ACCOUNT?: string;
+  /** R2 bucket for the assets library. */
+  FILES?: R2Bucket;
   }
 }
 

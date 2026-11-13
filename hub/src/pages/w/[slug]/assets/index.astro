@@ -1,0 +1,107 @@
+---
+import SubNav from '../../../../components/SubNav.astro';
+import Workspace from '../../../../layouts/Workspace.astro';
+import { can } from '../../../../lib/authz';
+import { ACCEPT, addAsset, allTags, deleteAsset, formatBytes, listAssets, POSTABLE, updateAsset } from '../../../../lib/assets';
+import { formatDay } from '../../../../lib/util';
+import { appEnv, db, flash, loadWorkspace } from '../../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, actor } = access;
+const write = can(actor, 'post.write');
+const bucket = appEnv().FILES;
+
+if (Astro.request.method === 'POST') {
+  let fd: FormData;
+  try { fd = await Astro.request.formData(); } catch { fd = new FormData(); }
+  const s = (k: string) => { const v = fd.get(k); return typeof v === 'string' ? v : ''; };
+  const action = s('action');
+  let r;
+  if (action === 'upload') {
+    const files = fd.getAll('file').filter((f): f is File => typeof f !== 'string' && f.size > 0);
+    if (files.length === 0) r = { ok: false as const, status: 400, error: 'Choose a file.' };
+    else {
+      let added = 0; let lastErr = '';
+      for (const file of files.slice(0, 20)) {
+        const one = await addAsset(db(), bucket, ws, actor, file, { alt: s('alt'), tags: s('tags') });
+        if (one.ok) added++; else lastErr = `${file.name}: ${one.error}`;
+      }
+      flash(Astro, added ? 'ok' : 'err', added ? `Added ${added} file${added === 1 ? '' : 's'}.${lastErr ? ` Skipped ${lastErr}` : ''}` : lastErr);
+      return Astro.redirect(`${base}/assets`, 303);
+    }
+  } else if (action === 'edit') r = await updateAsset(db(), ws, actor, s('id'), { alt: s('alt'), tags: s('tags'), filename: s('filename') });
+  else if (action === 'delete') r = await deleteAsset(db(), bucket, ws, actor, s('id'));
+  else r = { ok: false as const, status: 400, error: 'Unknown action.' };
+  flash(Astro, r.ok ? 'ok' : 'err', r.ok ? (action === 'delete' ? 'File deleted.' : 'Saved.') : r.error);
+  return Astro.redirect(`${base}/assets${s('tag') ? `?tag=${encodeURIComponent(s('tag'))}` : ''}`, 303);
+}
+
+const all = await listAssets(db(), ws.id);
+const tags = allTags(all);
+const tag = Astro.url.searchParams.get('tag') ?? '';
+const shown = tag ? all.filter((a) => a.tags.split(', ').includes(tag)) : all;
+const editing = Astro.url.searchParams.get('edit');
+---
+<Workspace access={access} title="Assets" tab="assets">
+  <SubNav base={base} current="library" group="assets" />
+  <div class="lr-stack is-lg">
+    {write && (
+      bucket ? (
+        <form class="lr-card lr-stack" method="post" enctype="multipart/form-data" aria-labelledby="up-h">
+          <span class="mm-label" id="up-h">Add files</span>
+          <input type="hidden" name="action" value="upload" />
+          <div class="lr-formrow">
+            <div class="lr-field"><label for="file">Files</label><input class="lr-input" id="file" name="file" type="file" multiple required accept={ACCEPT} /></div>
+            <div class="lr-field"><label for="tags">Tags</label><input class="lr-input" id="tags" name="tags" maxlength="300" placeholder="logo, team, product" /></div>
+          </div>
+          <div class="lr-field"><label for="alt">Description for screen readers</label><input class="lr-input" id="alt" name="alt" maxlength="500" placeholder="What the image shows" /></div>
+          <p class="lr-hint">PNG, JPG, WebP, GIF, SVG or PDF, up to 10 MB each. PNG, JPG, WebP and GIF can go on posts.</p>
+          <p><button class="mm-btn is-primary is-md" type="submit">Upload</button></p>
+        </form>
+      ) : <p class="lr-note">File storage is not set up yet. {actor.role === 'staff' ? 'Create the R2 bucket from the README.' : 'MuzMesh is setting this up.'}</p>
+    )}
+
+    {tags.length > 0 && (
+      <nav class="lr-filters" aria-label="Filter by tag">
+        <a class="mm-chip" href={`${base}/assets`} aria-current={tag ? undefined : 'true'}>All</a>
+        {tags.map((t) => <a class="mm-chip" href={`${base}/assets?tag=${encodeURIComponent(t)}`} aria-current={t === tag ? 'true' : undefined}>{t}</a>)}
+      </nav>
+    )}
+
+    {shown.length === 0 ? <div class="lr-card lr-empty"><p>{all.length ? 'No files with that tag.' : `No files yet. Upload logos, photos and documents here, or make an image from ${ws.name}'s templates.`}</p></div> : (
+      <ul class="lr-assets lr-plain">
+        {shown.map((a) => (
+          <li class="lr-card lr-asset lr-stack is-sm" id={`a-${a.id}`}>
+            <a class="lr-asset-thumb" href={`${base}/assets/${a.id}/file`} target="_blank" rel="noopener" aria-label={`Open ${a.filename}${a.alt ? `: ${a.alt}` : ''} (new tab)`}>
+              {POSTABLE.has(a.content_type) || a.content_type === 'image/svg+xml'
+                ? <img src={`${base}/assets/${a.id}/file`} alt="" loading="lazy" width={a.width ?? undefined} height={a.height ?? undefined} />
+                : <span class="lr-asset-type">{a.filename.split('.').pop()?.toUpperCase()}</span>}
+            </a>
+            {editing === a.id && write ? (
+              <form method="post" class="lr-stack is-sm">
+                <input type="hidden" name="action" value="edit" /><input type="hidden" name="id" value={a.id} /><input type="hidden" name="tag" value={tag} />
+                <div class="lr-field"><label for={`fn-${a.id}`}>Name</label><input class="lr-input" id={`fn-${a.id}`} name="filename" maxlength="90" value={a.filename} /></div>
+                <div class="lr-field"><label for={`alt-${a.id}`}>Description</label><input class="lr-input" id={`alt-${a.id}`} name="alt" maxlength="500" value={a.alt} /></div>
+                <div class="lr-field"><label for={`tg-${a.id}`}>Tags</label><input class="lr-input" id={`tg-${a.id}`} name="tags" maxlength="300" value={a.tags} /></div>
+                <div class="lr-row"><button class="mm-btn is-primary is-sm" type="submit">Save</button><a class="lr-linkbtn" href={`${base}/assets${tag ? `?tag=${encodeURIComponent(tag)}` : ''}#a-${a.id}`}>Cancel</a></div>
+              </form>
+            ) : (
+              <>
+                <strong class="lr-clip">{a.filename}</strong>
+                <span class="lr-small lr-faint">{a.kind === 'made' ? 'Made here' : 'Uploaded'} {formatDay(a.created_at)} · {formatBytes(a.size)}{a.width ? ` · ${a.width} x ${a.height}` : ''}</span>
+                {a.tags && <span class="lr-small">{a.tags}</span>}
+                {!a.alt && POSTABLE.has(a.content_type) && <span class="lr-small lr-faint">No description yet</span>}
+                <span class="lr-row">
+                  <a class="lr-linkbtn" href={`${base}/assets/${a.id}/file?download=1`}>Download</a>
+                  {write && <a class="lr-linkbtn" href={`${base}/assets?edit=${a.id}${tag ? `&tag=${encodeURIComponent(tag)}` : ''}#a-${a.id}`}>Edit</a>}
+                  {write && <form method="post" class="lr-inline"><input type="hidden" name="action" value="delete" /><input type="hidden" name="id" value={a.id} /><input type="hidden" name="tag" value={tag} /><button class="lr-linkbtn is-danger" type="submit" data-confirm={`Delete ${a.filename}?`}>Delete</button></form>}
+                </span>
+              </>
+            )}
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</Workspace>

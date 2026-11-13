@@ -15,3 +15,15 @@ export const sendLoginEmail = async (env: MailEnv, to: string, link: string): Pr
   if (!res.ok) console.error('login email failed', res.status);
   return res.ok;
 };
+
+/** A plain notification email. Returns false when email is not set up. */
+export const sendMail = async (env: MailEnv, to: string[], subject: string, text: string): Promise<boolean> => {
+  if (!env.RESEND_API_KEY || !env.EMAIL_FROM || to.length === 0) return false;
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { authorization: `Bearer ${env.RESEND_API_KEY}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ from: env.EMAIL_FROM, to: to.slice(0, 20), subject: subject.slice(0, 200), text }),
+  });
+  if (!res.ok) console.error('notification email failed', res.status);
+  return res.ok;
+};

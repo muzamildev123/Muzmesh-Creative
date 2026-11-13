@@ -5,11 +5,14 @@ import Workspace from '../../../../layouts/Workspace.astro';
 import { can } from '../../../../lib/authz';
 import { brandFontsUrl, readBrand } from '../../../../lib/brand';
 import { checkCopy, hasErrors } from '../../../../lib/brand-check';
+import { listAssets } from '../../../../lib/assets';
+import { MAX_ATTEMPTS, publishNow } from '../../../../lib/publisher';
 import * as repo from '../../../../lib/repo';
+import { listAccounts, NETWORK_NAMES } from '../../../../lib/social';
 import * as service from '../../../../lib/service';
 import { POST_STATUS_LABEL } from '../../../../lib/types';
 import { formatDay, safeUrl } from '../../../../lib/util';
-import { db, done, flash, formOf, loadWorkspace, notFound } from '../../../../lib/web';
+import { appEnv, db, done, flash, formOf, loadWorkspace, notFound } from '../../../../lib/web';
 
 const access = await loadWorkspace(Astro);
 if (access instanceof Response) return access;
@@ -23,7 +26,8 @@ if (Astro.request.method === 'POST') {
     case 'save':
     case 'save_submit': {
       const r = await service.updatePost(db(), ws, actor, id, {
-        channel: f.channel, copy: f.copy, scheduled_for: f.scheduled_for ?? '',
+        channel: f.channel, copy: f.copy, scheduled_for: f.scheduled_for ?? '', scheduled_time: f.scheduled_time ?? '',
+        social_account_id: f.social_account_id ?? '', asset_id: f.asset_id ?? '',
         image: { template: f.image_template, theme: f.image_theme, kicker: f.image_kicker, headline: f.image_headline, sub: f.image_sub },
       });
       if (!r.ok) return done(Astro, here, r, '');
@@ -35,6 +39,15 @@ if (Astro.request.method === 'POST') {
     case 'submit': return done(Astro, here, await service.submitPost(db(), ws, actor, id), 'Sent for review.');
     case 'approve': return done(Astro, here, await service.reviewPost(db(), ws, actor, id, 'approve'), 'Approved.');
     case 'changes': return done(Astro, here, await service.reviewPost(db(), ws, actor, id, 'changes', f.note ?? ''), 'Sent back with your note.');
+    case 'post_now': {
+      if (!can(actor, 'post.write')) return notFound(Astro);
+      const out = await publishNow(db(), appEnv(), ws, id, appEnv().APP_ORIGIN || Astro.url.origin);
+      if (out.result === 'published') flash(Astro, 'ok', 'Posted.');
+      else if (out.result === 'retry') flash(Astro, 'err', `Not posted yet: ${out.message} It will try again in a few minutes.`);
+      else flash(Astro, 'err', out.message ?? 'Not posted.');
+      return Astro.redirect(here, 303);
+    }
+    case 'manual': return done(Astro, here, await service.updatePost(db(), ws, actor, id, { social_account_id: '' }), 'Automatic posting is off for this post. Publish it by hand below.');
     case 'publish': return done(Astro, here, await service.markPublished(db(), ws, actor, id, f.url), 'Marked as published.');
     case 'delete': {
       const r = await service.deleteDraft(db(), ws, actor, id);
@@ -47,7 +60,14 @@ if (Astro.request.method === 'POST') {
 const post = await repo.getPost(db(), ws.id, id);
 if (!post) return notFound(Astro);
 const brand = readBrand(ws.brand_config);
-const [rules, history] = await Promise.all([service.checkRulesFor(db(), ws), repo.listActivity(db(), ws.id, 'post', post.id)]);
+const [rules, history, accounts, library] = await Promise.all([
+  service.checkRulesFor(db(), ws), repo.listActivity(db(), ws.id, 'post', post.id), listAccounts(db(), ws.id), listAssets(db(), ws.id, { postable: true }),
+]);
+const account = accounts.find((a) => a.id === post.social_account_id);
+const tz = ws.timezone || 'UTC';
+const when = post.scheduled_for ? `${formatDay(post.scheduled_for)}${post.scheduled_time ? ` at ${post.scheduled_time}` : ''}` : '';
+const gaveUp = post.status === 'approved' && !!post.publish_error && post.publish_attempts >= MAX_ATTEMPTS;
+const imagePending = !!post.social_account_id && !post.asset_id && !!service.readImage(post.image) && post.image_rendered !== post.image;
 const issues = checkCopy(post.copy, post.channel, rules);
 const canWrite = can(actor, 'post.write');
 const canApprove = can(actor, 'post.approve');
@@ -61,6 +81,7 @@ const hasImage = !!service.readImage(post.image);
 const ACTION_LABEL: Record<string, string> = {
   created: 'Created the draft', edited: 'Edited', edited_back_to_draft: 'Edited, so it went back to draft', rescheduled: 'Changed the date',
   sent_for_review: 'Sent for review', approved: 'Approved', changes_requested: 'Asked for changes', published: 'Marked as published',
+  auto_published: 'Posted automatically', publish_failed: 'Could not post', auto_post_off: 'Switched to posting by hand',
 };
 const lastNote = post.status === 'draft' ? history.find((h) => h.action === 'changes_requested' || h.action === 'sent_for_review') : undefined;
 const changeNote = lastNote?.action === 'changes_requested' ? lastNote : undefined;
@@ -69,7 +90,7 @@ const changeNote = lastNote?.action === 'changes_requested' ? lastNote : undefin
   <div class="lr-head">
     <div class="lr-row">
       <h2>Post</h2>
-      <Status kind={post.status} label={post.status === 'approved' && post.scheduled_for ? `Scheduled for ${formatDay(post.scheduled_for)}` : POST_STATUS_LABEL[post.status]} />
+      <Status kind={post.status} label={post.status === 'approved' && when ? `Scheduled for ${when}` : POST_STATUS_LABEL[post.status]} />
       {post.source === 'mcp' && <span class="lr-badge is-plain">Drafted by AI</span>}
     </div>
     <div class="lr-actions"><a class="lr-linkbtn" href={`${base}/posts`}>All posts</a></div>
@@ -81,7 +102,7 @@ const changeNote = lastNote?.action === 'changes_requested' ? lastNote : undefin
 
     {editable ? (
       <form method="post" id="edit">
-        <Composer post={post} issues={issues} rules={rules} brand={brand} wsName={ws.name} slug={ws.slug} editable={true}>
+        <Composer post={post} issues={issues} rules={rules} brand={brand} wsName={ws.name} slug={ws.slug} editable={true} base={base} timezone={tz} accounts={accounts} library={library}>
           <div class="lr-row">
             <button class="mm-btn is-solid is-md" type="submit" name="action" value="save">Save</button>
             {post.status === 'draft' && <button class="mm-btn is-primary is-md" type="submit" name="action" value="save_submit">Save and send for review</button>}
@@ -89,7 +110,7 @@ const changeNote = lastNote?.action === 'changes_requested' ? lastNote : undefin
         </Composer>
       </form>
     ) : (
-      <Composer post={post} issues={issues} rules={rules} brand={brand} wsName={ws.name} slug={ws.slug} editable={false} />
+      <Composer post={post} issues={issues} rules={rules} brand={brand} wsName={ws.name} slug={ws.slug} editable={false} base={base} timezone={tz} accounts={accounts} library={library} />
     )}
 
     {post.status === 'in_review' && canApprove && (
@@ -110,10 +131,29 @@ const changeNote = lastNote?.action === 'changes_requested' ? lastNote : undefin
     )}
     {post.status === 'in_review' && !canApprove && <p class="lr-note">Waiting for a workspace owner to approve.</p>}
 
-    {post.status === 'approved' && canWrite && (
+    {post.social_account_id && post.status !== 'published' && (
+      <section class="lr-card lr-stack" aria-labelledby="auto-h">
+        <span class="mm-label" id="auto-h">Automatic posting</span>
+        <p>{account ? <>Goes out on {NETWORK_NAMES[account.network]} as <strong>{account.name || account.handle}</strong></> : 'The chosen account was disconnected'}{when ? <> on {when} ({tz.replace(/_/g, ' ')} time)</> : null}{post.status === 'approved' ? '.' : ', once it is approved.'}</p>
+        {account?.status === 'reconnect' && <p class="mm-error" role="alert">{NETWORK_NAMES[account.network]} signed this account out. An owner needs to reconnect it under <a class="mm-link" href={`${base}/accounts`}>Accounts</a>.</p>}
+        {imagePending && <p class="lr-small lr-faint" data-render-status role="status">Preparing the post image…</p>}
+        {!imagePending && !post.asset_id && post.render_asset_id && post.image_rendered === post.image && (
+          <figure class="lr-render"><img src={`${base}/assets/${post.render_asset_id}/file`} alt="" width="120" height="120" loading="lazy" /><figcaption class="lr-small lr-faint">The exact image that will be attached.</figcaption></figure>
+        )}
+        {post.publish_error && <p class={gaveUp ? 'mm-error' : 'lr-note'} role="alert">{gaveUp ? 'It stopped trying: ' : `Try ${post.publish_attempts} did not work, it will try again soon: `}{post.publish_error}</p>}
+        {post.status === 'approved' && canWrite && (
+          <form method="post" class="lr-row">
+            <button class="mm-btn is-solid is-sm" type="submit" name="action" value="post_now" data-confirm={`Post this to ${account ? NETWORK_NAMES[account.network] : 'the network'} now?`}>{gaveUp ? 'Try again now' : 'Post now'}</button>
+            <button class="lr-linkbtn" type="submit" name="action" value="manual">Publish it by hand instead</button>
+          </form>
+        )}
+      </section>
+    )}
+
+    {post.status === 'approved' && canWrite && !post.social_account_id && (
       <section class="lr-card lr-stack" aria-labelledby="publish-h">
         <span class="mm-label" id="publish-h">Publish it</span>
-        <p class="lr-muted">Launch Room does not post for you yet. It takes three steps and about a minute.</p>
+        <p class="lr-muted">This post has no account to go out on, so it is published by hand. It takes three steps and about a minute.</p>
         <ol class="lr-steps">
           <li>
             <div class="lr-row">

@@ -1,0 +1,57 @@
+---
+import SubNav from '../../../../components/SubNav.astro';
+import Workspace from '../../../../layouts/Workspace.astro';
+import { can } from '../../../../lib/authz';
+import { brandFontsUrl, brandRenderData, readBrand } from '../../../../lib/brand';
+import { IMAGE_TEMPLATES } from '../../../../lib/service';
+import { appEnv, jsonForScript, loadWorkspace } from '../../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, actor } = access;
+const brand = readBrand(ws.brand_config);
+const render = brand ? brandRenderData(brand) : null;
+const canSave = can(actor, 'post.write') && !!appEnv().FILES;
+const TEMPLATE_NAMES: Record<string, string> = { announcement: 'Announcement', quote: 'Quote', stat: 'Big number', changelog: 'What shipped' };
+---
+<Workspace access={access} title="Make an image" tab="assets" fontsUrl={brand ? brandFontsUrl(brand) : undefined}>
+  <SubNav base={base} current="make" group="assets" />
+  {!render ? (
+    <div class="lr-card lr-empty"><p>The image templates turn on once MuzMesh adds {ws.name}'s brand kit.</p></div>
+  ) : (
+    <div class="lr-two" data-maker>
+      <form class="lr-stack lr-card" aria-labelledby="mk-h" data-maker-form>
+        <span class="mm-label" id="mk-h">On brand, every time</span>
+        <p class="lr-hint">Fixed layouts filled with {brand!.name}'s colours and fonts. Nothing is generated.</p>
+        <div class="lr-formrow">
+          <div class="lr-field"><label for="image_template">Layout</label>
+            <select class="lr-select" id="image_template" name="image_template">{IMAGE_TEMPLATES.map((t) => <option value={t}>{TEMPLATE_NAMES[t]}</option>)}</select></div>
+          <div class="lr-field"><label for="image_theme">Background</label>
+            <select class="lr-select" id="image_theme" name="image_theme"><option value="light" selected={render.defaultTheme === 'light'}>Light</option><option value="dark" selected={render.defaultTheme === 'dark'}>Dark</option></select></div>
+        </div>
+        <div class="lr-field"><label for="image_kicker">Label</label><input class="lr-input" id="image_kicker" name="image_kicker" maxlength="40" placeholder="New feature" /></div>
+        <div class="lr-field"><label for="image_headline">Headline</label><input class="lr-input" id="image_headline" name="image_headline" maxlength="160" required /></div>
+        <div class="lr-field"><label for="image_sub">Supporting line</label><input class="lr-input" id="image_sub" name="image_sub" maxlength="220" /></div>
+        <div class="lr-field"><label for="image-size">Size</label>
+          <select class="lr-select" id="image-size" name="size" data-size>
+            <option value="square">Square 1080 x 1080 (posts)</option>
+            <option value="portrait">Portrait 1080 x 1350</option>
+            <option value="wide">Wide 1200 x 627 (link previews)</option>
+          </select></div>
+        {canSave && <div class="lr-field"><label for="tags">Tags for the library</label><input class="lr-input" id="tags" name="tags" maxlength="300" placeholder="launch, social" /></div>}
+        <div class="lr-row">
+          {canSave && <button class="mm-btn is-primary is-md" type="submit" data-save>Save to library</button>}
+          <button class="mm-btn is-ghost is-md" type="button" data-download>Download PNG</button>
+        </div>
+        <p class="lr-small" data-maker-status role="status" aria-live="polite"></p>
+      </form>
+      <aside class="lr-stack" aria-label="Preview">
+        <span class="mm-label is-quiet">Preview</span>
+        <canvas class="lr-canvas" data-image width="1080" height="1080" role="img" aria-label="Image preview"></canvas>
+        <p class="lr-hint" data-empty>Type a headline to see the image.</p>
+      </aside>
+    </div>
+  )}
+  <script type="application/json" id="maker-data" set:html={jsonForScript({ brand: render, slug: ws.slug, saveUrl: `${base}/assets/made` })}></script>
+  <script src="../../../../scripts/maker.ts"></script>
+</Workspace>

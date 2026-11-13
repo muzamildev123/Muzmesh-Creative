@@ -3,6 +3,9 @@
   "name": "launch-room",
   "compatibility_date": "2026-11-01",
   "compatibility_flags": ["nodejs_compat"],
+  // Astro serves the pages; this file adds the cron trigger (scheduler and daily stats).
+  "main": "src/worker.ts",
+  "triggers": { "crons": ["*/5 * * * *"] },
   "observability": { "enabled": true },
   "d1_databases": [
     {
@@ -13,8 +16,14 @@
       "migrations_dir": "migrations"
     }
   ],
+  "r2_buckets": [
+    // The assets library. Create with `npx wrangler r2 bucket create launch-room-files`.
+    { "binding": "FILES", "bucket_name": "launch-room-files" }
+  ],
   "vars": {
     // Shown in emails and exports.
-    "APP_NAME": "Launch Room"
+    "APP_NAME": "Launch Room",
+    // The public address of this app. Short links and scheduler emails use it.
+    "APP_ORIGIN": "http://localhost:4321"
   }
 }

@@ -38,7 +38,7 @@ const now = today();
           <span class="lr-cal-n">{Number(day.slice(8))}</span>
           {items.map((p) => (
             <a class={`lr-cal-post is-${p.status}`} href={`/w/${p.workspace_slug}/posts/${p.id}`}>
-              <b>{p.workspace_name ? `${p.workspace_name} · ` : ''}{CHANNEL_NAMES[p.channel]} · {POST_STATUS_LABEL[p.status]}</b>
+              <b>{p.workspace_name ? `${p.workspace_name} · ` : ''}{p.scheduled_time ? `${p.scheduled_time} · ` : ""}{CHANNEL_NAMES[p.channel]} · {POST_STATUS_LABEL[p.status]}{p.social_account_id && p.status !== "published" ? " · auto" : ""}</b>
               <span>{p.copy || '(empty draft)'}</span>
             </a>
           ))}

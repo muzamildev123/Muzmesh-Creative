@@ -12,6 +12,7 @@ export interface User { id: string; email: string; name: string; is_staff: numbe
 export interface Workspace {
   id: string; slug: string; name: string; site_url: string; cms: Cms; cms_edit_url: string;
   monthly_minutes: number; monthly_posts: number; brand_config: string; created_at: string;
+  timezone: string; ga4_property_id: string; search_console_site: string; clarity_url: string; admin_host: string;
 }
 
 /** Who is acting, and with what rights in the current workspace. Built once per request. */
@@ -23,6 +24,12 @@ export interface Post {
   id: string; workspace_id: string; channel: Channel; copy: string; image: string; status: PostStatus;
   scheduled_for: string | null; published_url: string; published_at: string | null; source: Via;
   created_by: string | null; created_at: string; updated_at: string;
+  /** Local "HH:MM" on scheduled_for, in the workspace time zone. */
+  scheduled_time: string | null;
+  /** The exact UTC instant the scheduler posts it. Null without a date and time. */
+  publish_at: string | null;
+  social_account_id: string | null; asset_id: string | null; render_asset_id: string | null; image_rendered: string;
+  publish_claimed_at: string | null; publish_attempts: number; publish_error: string; external_id: string;
 }
 
 export interface WorkRequest {

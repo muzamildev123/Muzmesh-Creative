@@ -12,10 +12,9 @@ const tabs = [
   { key: 'overview', href: base, label: 'Overview' },
   { key: 'posts', href: `${base}/posts`, label: 'Posts' },
   { key: 'calendar', href: `${base}/calendar`, label: 'Calendar' },
-  { key: 'requests', href: `${base}/requests`, label: 'Requests' },
-  { key: 'brand', href: `${base}/brand`, label: 'Brand' },
-  { key: 'context', href: `${base}/context`, label: 'Context pack' },
-  { key: 'connect', href: `${base}/connect`, label: 'Connect AI' },
+  { key: 'assets', href: `${base}/assets`, label: 'Assets' },
+  { key: 'site', href: `${base}/site`, label: 'Site' },
+  { key: 'accounts', href: `${base}/accounts`, label: 'Accounts' },
   ...(can(access.actor, 'workspace.manage') ? [{ key: 'settings', href: `${base}/settings`, label: 'Settings' }] : []),
 ];
 ---

@@ -1,4 +1,5 @@
 ---
+import SubNav from '../../../components/SubNav.astro';
 import Workspace from '../../../layouts/Workspace.astro';
 import { can } from '../../../lib/authz';
 import { TOOLS } from '../../../lib/mcp';
@@ -21,7 +22,8 @@ const grants = await listGrantsForUser(db(), user.id);
 const url = `${Astro.url.origin}/mcp`;
 const canWrite = can(actor, 'post.write');
 ---
-<Workspace access={access} title="Connect AI" tab="connect">
+<Workspace access={access} title="Connect AI" tab="accounts">
+  <SubNav base={base} current="connect" group="accounts" />
   <div class="lr-head"><h2>Connect your AI</h2></div>
   <div class="lr-stack is-lg">
     <p class="lr-muted lr-lede">Add Launch Room to the AI app you already pay for. It can then read {ws.name}'s context pack and brand rules, check copy{canWrite ? ', and save drafts for review' : ''}. It can never approve or publish: a person does that here.</p>

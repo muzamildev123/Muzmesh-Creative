@@ -1,6 +1,7 @@
 ---
 import Meter from '../../../../components/Meter.astro';
 import Status from '../../../../components/Status.astro';
+import SubNav from '../../../../components/SubNav.astro';
 import Workspace from '../../../../layouts/Workspace.astro';
 import { can } from '../../../../lib/authz';
 import * as repo from '../../../../lib/repo';
@@ -25,7 +26,8 @@ const canCreate = can(actor, 'request.create');
 const open = requests.filter((r) => r.status === 'open' || r.status === 'in_progress');
 const closed = requests.filter((r) => r.status === 'done' || r.status === 'declined');
 ---
-<Workspace access={access} title="Requests" tab="requests">
+<Workspace access={access} title="Requests" tab="site">
+  <SubNav base={base} current="requests" group="site" />
   <div class="lr-head"><h2>Requests</h2></div>
   <div class="lr-two">
     <div class="lr-stack is-lg">

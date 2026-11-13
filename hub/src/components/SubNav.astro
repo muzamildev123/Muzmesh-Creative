@@ -1,0 +1,13 @@
+---
+// Second-level links inside a section, e.g. Library / Make / Brand kit under Assets.
+interface Props { base: string; current: string; group: 'assets' | 'site' | 'accounts' }
+const { base, current, group } = Astro.props;
+const GROUPS = {
+  assets: [{ key: 'library', href: `${base}/assets`, label: 'Library' }, { key: 'make', href: `${base}/assets/make`, label: 'Make an image' }, { key: 'brand', href: `${base}/brand`, label: 'Brand kit' }],
+  site: [{ key: 'site', href: `${base}/site`, label: 'Website' }, { key: 'requests', href: `${base}/requests`, label: 'Change requests' }],
+  accounts: [{ key: 'social', href: `${base}/accounts`, label: 'Social accounts' }, { key: 'connect', href: `${base}/connect`, label: 'AI apps' }, { key: 'context', href: `${base}/context`, label: 'Context pack' }],
+};
+---
+<nav class="lr-filters lr-subnav" aria-label="In this section">
+  {GROUPS[group].map((i) => <a class="mm-chip" href={i.href} aria-current={i.key === current ? 'page' : undefined}>{i.label}</a>)}
+</nav>

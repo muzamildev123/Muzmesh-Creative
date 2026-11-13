@@ -12,6 +12,7 @@ export type Action =
   | 'request.manage'  // change status, log time
   | 'checklist.toggle'
   | 'context.edit'
+  | 'accounts.manage'   // connect or remove LinkedIn and X accounts
   | 'workspace.manage'; // settings, brand kit, members
 
 const NEEDS: Record<Action, Role> = {
@@ -22,6 +23,7 @@ const NEEDS: Record<Action, Role> = {
   'request.manage': 'staff',
   'checklist.toggle': 'owner',
   'context.edit': 'owner',
+  'accounts.manage': 'owner',
   'workspace.manage': 'staff',
 };
 

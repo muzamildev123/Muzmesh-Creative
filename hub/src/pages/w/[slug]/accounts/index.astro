@@ -1,0 +1,79 @@
+---
+import SubNav from '../../../../components/SubNav.astro';
+import Workspace from '../../../../layouts/Workspace.astro';
+import { can } from '../../../../lib/authz';
+import { daysLeft, listAccounts, NETWORK_NAMES, removeAccount, setupProblem, type Network } from '../../../../lib/social';
+import * as repo from '../../../../lib/repo';
+import { formatDay } from '../../../../lib/util';
+import { appEnv, db, flash, formOf, loadWorkspace, notFound } from '../../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, actor } = access;
+const manage = can(actor, 'accounts.manage');
+
+if (Astro.request.method === 'POST') {
+  if (!manage) return notFound(Astro);
+  const f = await formOf(Astro);
+  const removed = await removeAccount(db(), ws.id, f.account ?? '');
+  if (removed) await repo.logActivity(db(), ws.id, 'workspace', ws.id, 'account_removed', actor.userId, 'hub');
+  flash(Astro, removed ? 'ok' : 'err', removed ? 'Disconnected. Posts planned for that account will need publishing by hand.' : 'That account was not found.');
+  return Astro.redirect(`${base}/accounts`, 303);
+}
+
+const accounts = await listAccounts(db(), ws.id);
+const env = appEnv();
+const networks: Network[] = ['linkedin', 'x'];
+const orgPosting = env.LINKEDIN_ORG_POSTING === '1';
+---
+<Workspace access={access} title="Social accounts" tab="accounts">
+  <SubNav base={base} current="social" group="accounts" />
+  <div class="lr-stack is-lg">
+    <p class="lr-muted lr-lede">Connect the accounts {ws.name} posts from. Approved posts then go out on their own at the time you pick. Nothing is posted without an approval.</p>
+
+    <section class="lr-card lr-stack" aria-labelledby="acc-h">
+      <span class="mm-label" id="acc-h">Connected</span>
+      {accounts.length === 0 ? <p class="lr-muted">No accounts yet.</p> : (
+        <ul class="lr-list">
+          {accounts.map((a) => {
+            const days = daysLeft(a);
+            return (
+              <li class="lr-row lr-between">
+                <span class="lr-stack is-xs">
+                  <span><strong>{a.name || a.handle}</strong> <span class="lr-badge is-plain">{NETWORK_NAMES[a.network]}{a.kind === 'organization' ? ' page' : ''}</span>
+                    {a.status === 'reconnect' ? <span class="lr-badge is-declined">Needs reconnecting</span> : days !== null && days <= 7 ? <span class="lr-badge is-in_review">Sign-in ends in {Math.max(days, 0)} days</span> : null}</span>
+                  <span class="lr-small lr-faint">{a.handle ? `@${a.handle} · ` : ''}Connected {formatDay(a.created_at)}{a.last_error && a.status === 'reconnect' ? ` · ${a.last_error}` : ''}</span>
+                </span>
+                {manage && (
+                  <span class="lr-row">
+                    {(a.status === 'reconnect' || (days !== null && days <= 14)) && !setupProblem(env, a.network) && <a class="mm-btn is-solid is-sm" href={`${base}/accounts/connect/${a.network}`}>Reconnect</a>}
+                    <form method="post" class="lr-inline"><input type="hidden" name="account" value={a.id} /><button class="lr-linkbtn" type="submit" data-confirm={`Disconnect ${a.name || a.handle}?`}>Disconnect</button></form>
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </section>
+
+    <div class="lr-two is-even">
+      {networks.map((n) => {
+        const problem = setupProblem(env, n);
+        return (
+          <section class="lr-card lr-stack" aria-labelledby={`n-${n}`}>
+            <span class="mm-label" id={`n-${n}`}>{NETWORK_NAMES[n]}</span>
+            {n === 'linkedin' ? (
+              <p class="lr-muted">{orgPosting ? 'Connects your profile and any company page you administer.' : 'Connects your personal profile. Company pages follow once LinkedIn approves MuzMesh for page posting.'} LinkedIn asks you to sign in again every 60 days; you get a reminder.</p>
+            ) : (
+              <p class="lr-muted">Connects one X account. X charges MuzMesh a small fee per post, more when the post has a link.</p>
+            )}
+            {problem ? <p class="lr-note">{problem} {actor.role === 'staff' ? 'See the README for setup.' : 'MuzMesh is setting this up.'}</p>
+              : manage ? <p><a class="mm-btn is-primary is-md" href={`${base}/accounts/connect/${n}`}>Connect {NETWORK_NAMES[n]}</a></p>
+              : <p class="lr-small lr-faint">A workspace owner can connect accounts.</p>}
+          </section>
+        );
+      })}
+    </div>
+  </div>
+</Workspace>

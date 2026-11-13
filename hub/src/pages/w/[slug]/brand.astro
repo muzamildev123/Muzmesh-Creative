@@ -1,4 +1,5 @@
 ---
+import SubNav from '../../../components/SubNav.astro';
 import Workspace from '../../../layouts/Workspace.astro';
 import { bannedPhrases, brandFontsUrl, readBrand } from '../../../lib/brand';
 import { loadWorkspace } from '../../../lib/web';
@@ -16,7 +17,8 @@ const img = brand?.imagery;
 const promptText = (subject: string, ar: string) =>
   [subject, img?.style, img?.avoid ? `Avoid: ${img.avoid}` : '', `Aspect ratio ${ar}.`].filter(Boolean).join('\n\n');
 ---
-<Workspace access={access} title="Brand" tab="brand" fontsUrl={brand ? brandFontsUrl(brand) : undefined}>
+<Workspace access={access} title="Brand" tab="assets" fontsUrl={brand ? brandFontsUrl(brand) : undefined}>
+  <SubNav base={base} current="brand" group="assets" />
   <div class="lr-head">
     <h2>Brand</h2>
     {brand && <div class="lr-actions"><a class="mm-btn is-ghost is-sm" href={`${base}/brand.json`} download={`${ws.slug}.brand.config.json`}>Download brand config</a></div>}

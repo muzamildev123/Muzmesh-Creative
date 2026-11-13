@@ -6,6 +6,8 @@ import { checkCopy, hasErrors, type Channel, type Issue } from './brand-check';
 import { approvedFactsText, CONTEXT_FIELDS, CONTEXT_FIELD_MAX, readContext, type ContextPack } from './context';
 import * as repo from './repo';
 import { fail, ok, type Actor, type Post, type PostImage, type RequestStatus, type Result, type Workspace, type WorkRequest } from './types';
+import { POSTABLE } from './assets';
+import { isTime, zonedToUtc } from './time';
 import { clampText, isDay, safeUrl, today } from './util';
 
 type DB = D1Database;
@@ -41,9 +43,9 @@ export const checkPostCopy = async (db: DB, ws: Workspace, channel: Channel, cop
   checkCopy(copy, channel, await checkRulesFor(db, ws));
 
 // ---------- posts ----------
-export interface PostInput { channel?: unknown; copy?: unknown; image?: unknown; scheduled_for?: unknown }
+export interface PostInput { channel?: unknown; copy?: unknown; image?: unknown; scheduled_for?: unknown; scheduled_time?: unknown; social_account_id?: unknown; asset_id?: unknown }
 
-const parsePostInput = (input: PostInput, base?: Post): Result<repo.PostFields> => {
+const parsePostInput = async (db: DB, ws: Workspace, input: PostInput, base?: Post): Promise<Result<repo.PostFields>> => {
   const channel = input.channel === undefined && base ? base.channel : input.channel;
   if (!isChannel(channel)) return fail(400, 'Choose LinkedIn or X.');
   const copy = input.copy === undefined && base ? base.copy : clampText(input.copy, COPY_MAX + 1);
@@ -54,13 +56,36 @@ const parsePostInput = (input: PostInput, base?: Post): Result<repo.PostFields> 
     else if (isDay(input.scheduled_for)) day = input.scheduled_for;
     else return fail(400, 'The date must look like 2026-11-30.');
   }
+  let time: string | null = base?.scheduled_time ?? null;
+  if (input.scheduled_time !== undefined) {
+    if (input.scheduled_time === null || input.scheduled_time === '') time = null;
+    else if (isTime(input.scheduled_time)) time = input.scheduled_time;
+    else return fail(400, 'The time must look like 09:30.');
+  }
   const image = input.image === undefined && base ? base.image : cleanImage(input.image);
-  return ok({ channel, copy, image, scheduled_for: day });
+
+  let account: string | null = base?.social_account_id ?? null;
+  if (input.social_account_id !== undefined) account = typeof input.social_account_id === 'string' && input.social_account_id ? input.social_account_id : null;
+  if (account) {
+    const acc = await db.prepare('SELECT network FROM social_accounts WHERE workspace_id = ? AND id = ?').bind(ws.id, account).first<{ network: string }>();
+    if (!acc) return fail(400, 'That account is not connected to this workspace.');
+    if (acc.network !== channel) return fail(400, `That account is on ${acc.network === 'x' ? 'X' : 'LinkedIn'}, but this post is for ${channel === 'x' ? 'X' : 'LinkedIn'}.`);
+    if (!day || !time) return fail(400, 'Pick a date and a time so it knows when to post.');
+  }
+  let asset: string | null = base?.asset_id ?? null;
+  if (input.asset_id !== undefined) asset = typeof input.asset_id === 'string' && input.asset_id ? input.asset_id : null;
+  if (asset) {
+    const a = await db.prepare('SELECT content_type FROM assets WHERE workspace_id = ? AND id = ?').bind(ws.id, asset).first<{ content_type: string }>();
+    if (!a) return fail(400, 'That image is not in this workspace\'s library.');
+    if (!POSTABLE.has(a.content_type)) return fail(400, 'Only PNG, JPG, GIF or WebP images can go on a post.');
+  }
+  const publish_at = day && time ? zonedToUtc(day, time, ws.timezone || 'UTC') : null;
+  return ok({ channel, copy, image, scheduled_for: day, scheduled_time: time, publish_at, social_account_id: account, asset_id: asset });
 };
 
 export const createPost = async (db: DB, ws: Workspace, actor: Actor, input: PostInput): Promise<Result<{ post: Post; issues: Issue[] }>> => {
   if (!can(actor, 'post.write')) return fail(403, 'Your role cannot create posts.');
-  const fields = parsePostInput(input);
+  const fields = await parsePostInput(db, ws, input);
   if (!fields.ok) return fields;
   const post = await repo.insertPost(db, ws.id, fields.value, actor.userId, actor.via);
   await repo.logActivity(db, ws.id, 'post', post.id, 'created', actor.userId, actor.via);
@@ -73,15 +98,19 @@ export const updatePost = async (db: DB, ws: Workspace, actor: Actor, id: string
   const current = await repo.getPost(db, ws.id, id);
   if (!current) return fail(404, 'Post not found.');
   if (current.status === 'published') return fail(409, 'Published posts cannot be edited.');
-  const fields = parsePostInput(input, current);
+  const fields = await parsePostInput(db, ws, input, current);
   if (!fields.ok) return fields;
   const f = fields.value;
-  const contentChanged = f.copy !== current.copy || f.channel !== current.channel || f.image !== current.image;
+  // Anything that changes what goes out, or where, needs a fresh approval. Removing the account
+  // (back to publishing by hand) or moving the date does not.
+  const contentChanged = f.copy !== current.copy || f.channel !== current.channel || f.image !== current.image || f.asset_id !== current.asset_id
+    || (f.social_account_id !== null && f.social_account_id !== current.social_account_id);
   const movedToDraft = contentChanged && current.status !== 'draft';
   const status = movedToDraft ? 'draft' : current.status;
   await repo.updatePostFields(db, ws.id, id, f, status);
   if (contentChanged) await repo.logActivity(db, ws.id, 'post', id, movedToDraft ? 'edited_back_to_draft' : 'edited', actor.userId, actor.via);
-  else if (f.scheduled_for !== current.scheduled_for) await repo.logActivity(db, ws.id, 'post', id, 'rescheduled', actor.userId, actor.via, f.scheduled_for ?? 'no date');
+  else if (f.publish_at !== current.publish_at || f.scheduled_for !== current.scheduled_for) await repo.logActivity(db, ws.id, 'post', id, 'rescheduled', actor.userId, actor.via, [f.scheduled_for ?? 'no date', f.scheduled_time ?? ''].join(' ').trim());
+  else if (f.social_account_id !== current.social_account_id) await repo.logActivity(db, ws.id, 'post', id, 'auto_post_off', actor.userId, actor.via);
   const post = { ...current, ...f, status } as Post;
   return ok({ post, issues: await checkPostCopy(db, ws, post.channel, post.copy), movedToDraft });
 };
@@ -111,6 +140,9 @@ export const reviewPost = async (db: DB, ws: Workspace, actor: Actor, id: string
     // Re-check at approval time: the avoid list or the facts may have changed since it was sent.
     const issues = await checkPostCopy(db, ws, post.channel, post.copy);
     if (hasErrors(issues)) return fail(400, `This post no longer passes the brand check: ${issues.filter((i) => i.level === 'error').map((i) => i.message).join(' ')}`);
+    if (post.social_account_id && readImage(post.image) && !post.asset_id && post.image_rendered !== post.image) {
+      return fail(409, 'The post image is still being prepared. Wait a moment and approve again.');
+    }
   }
   const to = decision === 'approve' ? 'approved' : 'draft';
   if (!(await repo.setPostStatus(db, ws.id, id, 'in_review', to))) return fail(409, 'This post changed in the meantime. Reload and try again.');

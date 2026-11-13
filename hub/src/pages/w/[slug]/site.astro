@@ -1,0 +1,86 @@
+---
+import Meter from '../../../components/Meter.astro';
+import Status from '../../../components/Status.astro';
+import SubNav from '../../../components/SubNav.astro';
+import Workspace from '../../../layouts/Workspace.astro';
+import { can } from '../../../lib/authz';
+import * as repo from '../../../lib/repo';
+import * as service from '../../../lib/service';
+import { REQUEST_STATUS_LABEL } from '../../../lib/types';
+import { formatDay, safeUrl, thisMonth } from '../../../lib/util';
+import { db, done, formOf, loadWorkspace } from '../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, actor } = access;
+
+if (Astro.request.method === 'POST') {
+  const form = await formOf(Astro);
+  return done(Astro, `${base}/site#checklist`, await service.toggleChecklist(db(), ws, actor, form.item ?? '', form.done === '1'), 'Checklist updated.');
+}
+
+const [meter, open, checklist] = await Promise.all([
+  service.hoursMeter(db(), ws, thisMonth()),
+  repo.listRequests(db(), ws.id).then((r) => r.filter((x) => x.status === 'open' || x.status === 'in_progress').slice(0, 5)),
+  repo.listChecklist(db(), ws.id),
+]);
+const siteUrl = safeUrl(ws.site_url);
+const editUrl = safeUrl(ws.cms_edit_url);
+const clarity = safeUrl(ws.clarity_url, { httpsOnly: true });
+const cmsName = ws.cms === 'sanity' ? 'Sanity Studio' : ws.cms === 'webflow' ? 'the Webflow Editor' : 'the site editor';
+const left = checklist.filter((c) => !c.done_at).length;
+const canToggle = can(actor, 'checklist.toggle');
+---
+<Workspace access={access} title="Website" tab="site">
+  <SubNav base={base} current="site" group="site" />
+  <div class="lr-stack is-lg">
+    <section class="lr-card lr-stack" aria-labelledby="edit-h">
+      <span class="mm-label" id="edit-h">Edit your website</span>
+      <p class="lr-muted">Change text, images, blog posts and case studies yourself in {cmsName}. Anything bigger, ask MuzMesh.</p>
+      <div class="lr-row">
+        {editUrl ? <a class="mm-btn is-primary is-md" href={editUrl} target="_blank" rel="noopener noreferrer">Open {ws.cms === 'sanity' ? 'Sanity' : cmsName}</a>
+          : <span class="lr-small lr-faint">The editor link appears here once MuzMesh adds it.</span>}
+        {siteUrl && <a class="mm-btn is-ghost is-md" href={siteUrl} target="_blank" rel="noopener noreferrer">Open the site</a>}
+        {clarity && <a class="mm-btn is-ghost is-md" href={clarity} target="_blank" rel="noopener noreferrer">Heatmaps and recordings</a>}
+      </div>
+      {ws.cms === 'sanity' && editUrl && <p class="lr-small lr-faint">Sanity asks you to sign in the first time. Use the same email as here.</p>}
+    </section>
+
+    <div class="lr-two">
+      <section class="lr-card lr-stack" aria-labelledby="req-h">
+        <div class="lr-row"><span class="mm-label" id="req-h">Open requests</span><a class="lr-linkbtn" href={`${base}/requests`}>All requests</a></div>
+        {open.length === 0 ? <p class="lr-muted">Nothing open.</p> : (
+          <ul class="lr-list">
+            {open.map((r) => <li><a class="lr-rowlink" href={`${base}/requests/${r.id}`}><span class="lr-row"><Status kind={r.status} label={REQUEST_STATUS_LABEL[r.status]} /><span class="lr-small lr-faint">{formatDay(r.created_at)}</span></span><span class="lr-clip">{r.title}</span></a></li>)}
+          </ul>
+        )}
+        {can(actor, 'request.create') && <p><a class="mm-btn is-solid is-sm" href={`${base}/requests#new`}>Ask MuzMesh for a change</a></p>}
+      </section>
+      <section class="lr-card lr-stack" aria-labelledby="hours-h">
+        <span class="mm-label" id="hours-h">MuzMesh edit time this month</span>
+        <Meter used={meter.used} limit={meter.limit} />
+      </section>
+    </div>
+
+    {checklist.length > 0 && (
+      <section class="lr-card lr-stack" id="checklist" aria-labelledby="ck-h">
+        <span class="mm-label" id="ck-h">Launch checklist</span>
+        <p class="lr-small lr-faint">{left === 0 ? 'Everything is in.' : `${left} to go. The 5-day launch starts when all of these are done.`}</p>
+        <ul class="lr-list">
+          {checklist.map((c) => (
+            <li>
+              <form method="post" class="lr-check">
+                <input type="hidden" name="item" value={c.id} />
+                <input type="hidden" name="done" value={c.done_at ? '0' : '1'} />
+                <button type="submit" aria-pressed={c.done_at ? 'true' : 'false'} aria-label={`${c.label}: ${c.done_at ? 'done' : 'not done'}`} disabled={!canToggle}>
+                  {c.done_at && <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6.5 4.8 9 10 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>}
+                </button>
+                <span class={c.done_at ? 'is-done' : ''}>{c.label}</span>
+              </form>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </div>
+</Workspace>

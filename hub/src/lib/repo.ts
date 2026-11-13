@@ -45,7 +45,8 @@ export const roleIn = async (db: DB, user: User, workspaceId: string): Promise<R
   return row?.role ?? null;
 };
 
-export interface WorkspaceInput { name: string; slug: string; site_url: string; cms: Cms; cms_edit_url: string; monthly_minutes: number; monthly_posts: number }
+export interface WorkspaceInput { name: string; slug: string; site_url: string; cms: Cms; cms_edit_url: string; monthly_minutes: number; monthly_posts: number; timezone?: string }
+export interface WorkspaceExtras { timezone: string; ga4_property_id: string; search_console_site: string; clarity_url: string; admin_host: string }
 
 export const DEFAULT_CHECKLIST = [
   'Setup payment received',
@@ -58,10 +59,10 @@ export const DEFAULT_CHECKLIST = [
 ];
 
 export const createWorkspace = async (db: DB, input: WorkspaceInput): Promise<Workspace> => {
-  const ws: Workspace = { id: newId(), brand_config: '{}', created_at: nowIso(), ...input };
+  const ws: Workspace = { id: newId(), brand_config: '{}', created_at: nowIso(), ga4_property_id: '', search_console_site: '', clarity_url: '', admin_host: '', ...input, timezone: input.timezone ?? 'UTC' };
   const stmts = [
-    db.prepare('INSERT INTO workspaces (id, slug, name, site_url, cms, cms_edit_url, monthly_minutes, monthly_posts, brand_config, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
-      .bind(ws.id, ws.slug, ws.name, ws.site_url, ws.cms, ws.cms_edit_url, ws.monthly_minutes, ws.monthly_posts, ws.brand_config, ws.created_at),
+    db.prepare('INSERT INTO workspaces (id, slug, name, site_url, cms, cms_edit_url, monthly_minutes, monthly_posts, brand_config, created_at, timezone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+      .bind(ws.id, ws.slug, ws.name, ws.site_url, ws.cms, ws.cms_edit_url, ws.monthly_minutes, ws.monthly_posts, ws.brand_config, ws.created_at, ws.timezone),
     ...DEFAULT_CHECKLIST.map((label, i) =>
       db.prepare('INSERT INTO checklist_items (id, workspace_id, label, position) VALUES (?, ?, ?, ?)').bind(newId(), ws.id, label, i)),
   ];
@@ -69,9 +70,14 @@ export const createWorkspace = async (db: DB, input: WorkspaceInput): Promise<Wo
   return ws;
 };
 
-export const updateWorkspace = (db: DB, workspaceId: string, input: Omit<WorkspaceInput, 'slug'>) =>
-  db.prepare('UPDATE workspaces SET name = ?, site_url = ?, cms = ?, cms_edit_url = ?, monthly_minutes = ?, monthly_posts = ? WHERE id = ?')
-    .bind(input.name, input.site_url, input.cms, input.cms_edit_url, input.monthly_minutes, input.monthly_posts, workspaceId).run();
+export const updateWorkspace = (db: DB, workspaceId: string, input: Omit<WorkspaceInput, 'slug' | 'timezone'> & WorkspaceExtras) =>
+  db.prepare(`UPDATE workspaces SET name = ?, site_url = ?, cms = ?, cms_edit_url = ?, monthly_minutes = ?, monthly_posts = ?,
+      timezone = ?, ga4_property_id = ?, search_console_site = ?, clarity_url = ?, admin_host = ? WHERE id = ?`)
+    .bind(input.name, input.site_url, input.cms, input.cms_edit_url, input.monthly_minutes, input.monthly_posts,
+      input.timezone, input.ga4_property_id, input.search_console_site, input.clarity_url, input.admin_host, workspaceId).run();
+
+export const listAllWorkspaces = async (db: DB) => (await db.prepare('SELECT * FROM workspaces ORDER BY name').all<Workspace>()).results;
+export const workspaceByHost = (db: DB, host: string) => db.prepare("SELECT * FROM workspaces WHERE admin_host = ? AND admin_host != ''").bind(host).first<Workspace>();
 
 export const setBrandConfig = (db: DB, workspaceId: string, json: string) =>
   db.prepare('UPDATE workspaces SET brand_config = ? WHERE id = ?').bind(json, workspaceId).run();
@@ -111,31 +117,49 @@ export const listPosts = async (db: DB, workspaceId: string, filter: PostFilter 
 export const getPost = (db: DB, workspaceId: string, id: string) =>
   db.prepare('SELECT * FROM posts WHERE workspace_id = ? AND id = ?').bind(workspaceId, id).first<Post>();
 
-export interface PostFields { channel: Channel; copy: string; image: string; scheduled_for: string | null }
+export interface PostFields {
+  channel: Channel; copy: string; image: string; scheduled_for: string | null;
+  scheduled_time: string | null; publish_at: string | null; social_account_id: string | null; asset_id: string | null;
+}
 export const insertPost = async (db: DB, workspaceId: string, fields: PostFields, userId: string, source: Via): Promise<Post> => {
   const t = nowIso();
-  const post: Post = { id: newId(), workspace_id: workspaceId, status: 'draft', published_url: '', published_at: null, source, created_by: userId, created_at: t, updated_at: t, ...fields };
-  await db.prepare('INSERT INTO posts (id, workspace_id, channel, copy, image, status, scheduled_for, source, created_by, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
-    .bind(post.id, workspaceId, post.channel, post.copy, post.image, post.status, post.scheduled_for, source, userId, t, t).run();
+  const post: Post = {
+    id: newId(), workspace_id: workspaceId, status: 'draft', published_url: '', published_at: null, source, created_by: userId, created_at: t, updated_at: t,
+    render_asset_id: null, image_rendered: '', publish_claimed_at: null, publish_attempts: 0, publish_error: '', external_id: '', ...fields,
+  };
+  await db.prepare(`INSERT INTO posts (id, workspace_id, channel, copy, image, status, scheduled_for, scheduled_time, publish_at, social_account_id, asset_id, source, created_by, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+    .bind(post.id, workspaceId, post.channel, post.copy, post.image, post.status, post.scheduled_for, post.scheduled_time, post.publish_at, post.social_account_id, post.asset_id, source, userId, t, t).run();
   return post;
 };
 
+// A failed auto-post is cleared whenever the post is edited or rescheduled, so it gets a fresh set of tries.
 export const updatePostFields = (db: DB, workspaceId: string, id: string, fields: PostFields, status: PostStatus) =>
-  db.prepare('UPDATE posts SET channel = ?, copy = ?, image = ?, scheduled_for = ?, status = ?, updated_at = ? WHERE workspace_id = ? AND id = ?')
-    .bind(fields.channel, fields.copy, fields.image, fields.scheduled_for, status, nowIso(), workspaceId, id).run();
+  db.prepare(`UPDATE posts SET channel = ?, copy = ?, image = ?, scheduled_for = ?, scheduled_time = ?, publish_at = ?, social_account_id = ?, asset_id = ?, status = ?,
+      publish_attempts = 0, publish_error = '', publish_claimed_at = NULL, updated_at = ? WHERE workspace_id = ? AND id = ? AND status != 'published'`)
+    .bind(fields.channel, fields.copy, fields.image, fields.scheduled_for, fields.scheduled_time, fields.publish_at, fields.social_account_id, fields.asset_id, status, nowIso(), workspaceId, id).run();
 
 /** Moves a post between statuses only if it is still in the expected one, so two people cannot both act on a stale page. */
-export const setPostStatus = async (db: DB, workspaceId: string, id: string, from: PostStatus, to: PostStatus, extra: { published_url?: string } = {}): Promise<boolean> => {
+export const setPostStatus = async (db: DB, workspaceId: string, id: string, from: PostStatus, to: PostStatus, extra: { published_url?: string; external_id?: string } = {}): Promise<boolean> => {
   const t = nowIso();
   const r = to === 'published'
-    ? await db.prepare('UPDATE posts SET status = ?, published_url = ?, published_at = ?, updated_at = ? WHERE workspace_id = ? AND id = ? AND status = ?')
-        .bind(to, extra.published_url ?? '', t, t, workspaceId, id, from).run()
+    ? await db.prepare(`UPDATE posts SET status = ?, published_url = ?, external_id = ?, published_at = ?, publish_error = '', publish_claimed_at = NULL, updated_at = ?
+        WHERE workspace_id = ? AND id = ? AND status = ?`)
+        .bind(to, extra.published_url ?? '', extra.external_id ?? '', t, t, workspaceId, id, from).run()
     : await db.prepare('UPDATE posts SET status = ?, updated_at = ? WHERE workspace_id = ? AND id = ? AND status = ?').bind(to, t, workspaceId, id, from).run();
   return (r.meta.changes ?? 0) > 0;
 };
 
 export const setPostDate = (db: DB, workspaceId: string, id: string, day: string | null) =>
   db.prepare("UPDATE posts SET scheduled_for = ?, updated_at = ? WHERE workspace_id = ? AND id = ? AND status != 'published'").bind(day, nowIso(), workspaceId, id).run();
+
+export const setRender = (db: DB, workspaceId: string, id: string, assetId: string, imageJson: string) =>
+  db.prepare("UPDATE posts SET render_asset_id = ?, image_rendered = ? WHERE workspace_id = ? AND id = ? AND image = ? AND status != 'published'").bind(assetId, imageJson, workspaceId, id, imageJson).run();
+
+/** Moves the planned moment, keeping approval. Used by "Post now". */
+export const setPublishAt = (db: DB, workspaceId: string, id: string, at: string) =>
+  db.prepare("UPDATE posts SET publish_at = ?, publish_attempts = 0, publish_error = '', publish_claimed_at = NULL, updated_at = ? WHERE workspace_id = ? AND id = ? AND status = 'approved'")
+    .bind(at, nowIso(), workspaceId, id).run();
 
 export const deletePost = async (db: DB, workspaceId: string, id: string): Promise<boolean> => {
   const r = await db.batch([
@@ -195,7 +219,7 @@ export const setChecklistDone = (db: DB, workspaceId: string, id: string, done: 
   db.prepare('UPDATE checklist_items SET done_at = ?, done_by = ? WHERE workspace_id = ? AND id = ?').bind(done ? nowIso() : null, done ? userId : null, workspaceId, id).run();
 
 // ---------- activity ----------
-export const logActivity = (db: DB, workspaceId: string, subjectType: 'post' | 'request' | 'context' | 'workspace', subjectId: string, action: string, userId: string, via: Via, note = '') =>
+export const logActivity = (db: DB, workspaceId: string, subjectType: 'post' | 'request' | 'context' | 'workspace', subjectId: string, action: string, userId: string | null, via: Via, note = '') =>
   db.prepare('INSERT INTO activity (id, workspace_id, subject_type, subject_id, action, note, user_id, via, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
     .bind(newId(), workspaceId, subjectType, subjectId, action, note.slice(0, 1000), userId, via, nowIso()).run();
 

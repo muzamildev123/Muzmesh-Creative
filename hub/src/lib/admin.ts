@@ -4,6 +4,8 @@ import { isEmail } from './auth';
 import { parseBrandConfig } from './brand';
 import * as repo from './repo';
 import { fail, ok, type Cms, type MemberRole, type Result, type User, type Workspace } from './types';
+import { isGa4Property, isSearchConsoleSite } from './stats';
+import { isTimeZone, zonedToUtc } from './time';
 import { clampText, safeUrl, slugify } from './util';
 
 type DB = D1Database;
@@ -33,11 +35,37 @@ export const createWorkspace = async (db: DB, user: User, f: Record<string, stri
   return ok(await repo.createWorkspace(db, { ...fields.value, slug }));
 };
 
+const HOST_RE = /^(?=.{3,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
+
+/** The settings added for publishing and stats. Empty strings switch a feature off. */
+export const parseExtras = (f: Record<string, string | undefined>, ws: Workspace): Result<repo.WorkspaceExtras> => {
+  const timezone = clampText(f.timezone ?? ws.timezone, 64) || 'UTC';
+  if (!isTimeZone(timezone)) return fail(400, 'Choose a time zone from the list.');
+  const ga4 = clampText(f.ga4_property_id ?? ws.ga4_property_id, 20).replace(/^properties\//, '');
+  if (ga4 && !isGa4Property(ga4)) return fail(400, 'The Google Analytics property ID is a number, like 412345678.');
+  const gsc = clampText(f.search_console_site ?? ws.search_console_site, 300);
+  if (gsc && !isSearchConsoleSite(gsc)) return fail(400, 'The Search Console property looks like sc-domain:bookly.com or https://bookly.com/.');
+  const clarityRaw = clampText(f.clarity_url ?? ws.clarity_url, 2000);
+  const clarity = safeUrl(clarityRaw, { httpsOnly: true });
+  if (clarityRaw && !clarity) return fail(400, 'The Clarity link must start with https://.');
+  const host = clampText(f.admin_host ?? ws.admin_host, 253).toLowerCase().replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+  if (host && !HOST_RE.test(host)) return fail(400, 'The client address should look like bookly.com.');
+  return ok({ timezone, ga4_property_id: ga4, search_console_site: gsc, clarity_url: clarity, admin_host: host });
+};
+
 export const updateWorkspace = async (db: DB, user: User, ws: Workspace, f: Record<string, string | undefined>): Promise<Result<true>> => {
   if (!user.is_staff) return notStaff;
   const fields = parseWorkspace(f);
   if (!fields.ok) return fields;
-  await repo.updateWorkspace(db, ws.id, fields.value);
+  const extras = parseExtras(f, ws);
+  if (!extras.ok) return extras;
+  await repo.updateWorkspace(db, ws.id, { ...fields.value, ...extras.value });
+  if (extras.value.timezone !== ws.timezone) {
+    // Planned times stay the same on the clock, in the new zone.
+    const rows = (await db.prepare("SELECT id, scheduled_for, scheduled_time FROM posts WHERE workspace_id = ? AND status != 'published' AND scheduled_for IS NOT NULL AND scheduled_time IS NOT NULL")
+      .bind(ws.id).all<{ id: string; scheduled_for: string; scheduled_time: string }>()).results;
+    if (rows.length) await db.batch(rows.map((r) => db.prepare('UPDATE posts SET publish_at = ? WHERE workspace_id = ? AND id = ?').bind(zonedToUtc(r.scheduled_for, r.scheduled_time, extras.value.timezone), ws.id, r.id)));
+  }
   await repo.logActivity(db, ws.id, 'workspace', ws.id, 'settings_saved', user.id, 'hub');
   return ok(true);
 };

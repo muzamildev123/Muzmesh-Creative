@@ -51,7 +51,7 @@ try {
   const viewer = await signIn('viewer@bookly.test');
 
   // ---- every tab renders ----
-  for (const tab of ['', '/posts', '/calendar', '/requests', '/brand', '/context', '/connect', '/settings']) {
+  for (const tab of ['', '/posts', '/calendar', '/assets', '/assets/make', '/site', '/requests', '/brand', '/accounts', '/context', '/connect', '/settings']) {
     const res = await staff.page.goto(`${BASE}/w/bookly${tab}`);
     ok(res.status() === 200, `staff can open /w/bookly${tab}`);
     await shot(staff.page, `staff${tab.replace('/', '-') || '-overview'}`);
@@ -181,7 +181,7 @@ try {
 
   // ---- phone layout ----
   const phone = await signIn('owner@bookly.test', { viewport: { width: 390, height: 844 } });
-  for (const tab of ['', '/posts', '/calendar', '/requests', '/brand', '/context', '/connect']) {
+  for (const tab of ['', '/posts', '/calendar', '/assets', '/site', '/requests', '/brand', '/accounts', '/context', '/connect']) {
     await phone.page.goto(`${BASE}/w/bookly${tab}`);
     const overflow = await phone.page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     ok(overflow <= 1, `no sideways scroll on a phone at /w/bookly${tab}`);

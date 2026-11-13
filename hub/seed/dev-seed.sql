@@ -22,3 +22,5 @@ INSERT INTO activity (id, workspace_id, subject_type, subject_id, action, user_i
 INSERT INTO requests (id, workspace_id, title, detail, page_url, status, source, created_by, created_at, updated_at) VALUES ('r-1','w-bookly','Change the pricing page headline','New headline: Read less. Remember more.','https://bookly.app/pricing','in_progress','hub','u-owner','2026-11-01T09:00:00.000Z','2026-11-01T09:00:00.000Z');
 INSERT INTO activity (id, workspace_id, subject_type, subject_id, action, user_id, via, created_at) VALUES ('a-r-1','w-bookly','request','r-1','created','u-owner','hub','2026-11-01T09:00:00.000Z');
 INSERT INTO time_entries (id, workspace_id, request_id, minutes, note, logged_on, user_id, created_at) VALUES ('t-1','w-bookly','r-1',35,'Headline and meta title',date('now','-1 day'),'u-staff','2026-11-01T09:00:00.000Z');
+UPDATE workspaces SET timezone = 'Asia/Karachi', admin_host = 'bookly.app' WHERE id = 'w-bookly';
+UPDATE posts SET scheduled_time = '10:00' WHERE id IN ('p-1', 'p-3');

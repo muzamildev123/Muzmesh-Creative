@@ -1,5 +1,6 @@
 ---
 import Status from '../../../../components/Status.astro';
+import SubNav from '../../../../components/SubNav.astro';
 import Workspace from '../../../../layouts/Workspace.astro';
 import { can } from '../../../../lib/authz';
 import * as repo from '../../../../lib/repo';
@@ -35,7 +36,8 @@ const label = (a: string, note: string) =>
   a === 'created' ? 'Sent the request' : a === 'time_logged' ? `Logged ${note}` : a === 'time_removed' ? 'Removed a time entry'
   : a.startsWith('status_') ? `Marked as ${(REQUEST_STATUS_LABEL[a.slice(7) as RequestStatus] ?? a.slice(7)).toLowerCase()}` : a;
 ---
-<Workspace access={access} title={req.title} tab="requests">
+<Workspace access={access} title={req.title} tab="site">
+  <SubNav base={base} current="requests" group="site" />
   <div class="lr-head">
     <div class="lr-row"><h2>{req.title}</h2><Status kind={req.status} label={REQUEST_STATUS_LABEL[req.status]} /></div>
     <div class="lr-actions"><a class="lr-linkbtn" href={`${base}/requests`}>All requests</a></div>

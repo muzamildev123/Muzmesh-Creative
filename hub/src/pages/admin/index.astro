@@ -1,9 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro';
 import * as admin from '../../lib/admin';
+import { MAX_ATTEMPTS, runDuePosts } from '../../lib/publisher';
 import * as repo from '../../lib/repo';
-import { formatMinutes, formatMonth, thisMonth } from '../../lib/util';
-import { db, done, formOf, notFound, requireStaff } from '../../lib/web';
+import type { Post } from '../../lib/types';
+import { formatDay, formatMinutes, formatMonth, thisMonth } from '../../lib/util';
+import { appEnv, db, done, flash, formOf, notFound, requireStaff } from '../../lib/web';
 
 const user = await requireStaff(Astro);
 if (user instanceof Response) return user;
@@ -11,6 +13,12 @@ if (user instanceof Response) return user;
 if (Astro.request.method === 'POST') {
   const f = await formOf(Astro);
   if (f.action === 'staff_add') return done(Astro, '/admin#team', await admin.addStaff(db(), user, f), 'Added to the MuzMesh team.');
+  if (f.action === 'run_scheduler') {
+    const out = await runDuePosts(db(), appEnv(), appEnv().APP_ORIGIN || Astro.url.origin);
+    const c = (r: string) => out.filter((o) => o.result === r).length;
+    flash(Astro, out.some((o) => o.result === 'failed') ? 'err' : 'ok', out.length ? `Ran: ${c('published')} posted, ${c('retry')} will retry, ${c('failed')} failed.` : 'Ran: nothing was due.');
+    return Astro.redirect('/admin#posting', 303);
+  }
   if (f.action === 'staff_remove') return done(Astro, '/admin#team', await admin.removeStaff(db(), user, f.user), 'Removed from the MuzMesh team.');
   return notFound(Astro);
 }
@@ -19,6 +27,11 @@ const month = thisMonth();
 const workspaces = await repo.listWorkspacesForUser(db(), user);
 const stats = await Promise.all(workspaces.map((w) => repo.workspaceStats(db(), w.id, month)));
 const staff = await repo.listStaff(db());
+const problems = (await db().prepare(`SELECT p.*, w.slug AS ws_slug, w.name AS ws_name FROM posts p JOIN workspaces w ON w.id = p.workspace_id
+  WHERE p.status = 'approved' AND p.publish_error != '' ORDER BY p.publish_at LIMIT 50`).all<Post & { ws_slug: string; ws_name: string }>()).results;
+const reconnects = (await db().prepare(`SELECT a.name, a.handle, a.network, w.slug AS ws_slug, w.name AS ws_name FROM social_accounts a JOIN workspaces w ON w.id = a.workspace_id WHERE a.status = 'reconnect'`)
+  .all<{ name: string; handle: string; network: string; ws_slug: string; ws_name: string }>()).results;
+const due = (await db().prepare("SELECT COUNT(*) AS n FROM posts WHERE status = 'approved' AND social_account_id IS NOT NULL AND publish_at IS NOT NULL").first<{ n: number }>())?.n ?? 0;
 ---
 <Base title="All clients">
   <div class="lr-head">
@@ -50,6 +63,20 @@ const staff = await repo.listStaff(db());
         </table>
       </div>
     )}
+    <section class="lr-card lr-stack" id="posting" aria-labelledby="posting-h">
+      <div class="lr-row lr-between"><span class="mm-label" id="posting-h">Automatic posting</span>
+        <form method="post"><button class="mm-btn is-solid is-sm" type="submit" name="action" value="run_scheduler">Run the scheduler now</button></form></div>
+      <p class="lr-small lr-faint">It runs by itself every 5 minutes. {due} approved post{due === 1 ? ' is' : 's are'} scheduled to post automatically.</p>
+      {problems.length === 0 && reconnects.length === 0 ? <p class="lr-muted">No problems.</p> : (
+        <ul class="lr-list">
+          {reconnects.map((a) => <li><a class="mm-link" href={`/w/${a.ws_slug}/accounts`}>{a.ws_name}: {a.name || a.handle} on {a.network === 'x' ? 'X' : 'LinkedIn'} needs reconnecting</a></li>)}
+          {problems.map((p) => (
+            <li><a class="mm-link" href={`/w/${p.ws_slug}/posts/${p.id}`}>{p.ws_name}: {p.channel === 'x' ? 'X' : 'LinkedIn'} post for {formatDay(p.scheduled_for)} {p.scheduled_time ?? ''}</a>
+              <br /><span class="lr-small lr-faint">{p.publish_attempts >= MAX_ATTEMPTS ? 'Stopped trying' : `Retrying (try ${p.publish_attempts})`}: {p.publish_error}</span></li>
+          ))}
+        </ul>
+      )}
+    </section>
     <section class="lr-card lr-stack" id="team" aria-labelledby="team-h">
       <span class="mm-label" id="team-h">MuzMesh team</span>
       <p class="lr-small lr-faint">Teammates see and manage every client workspace.</p>
