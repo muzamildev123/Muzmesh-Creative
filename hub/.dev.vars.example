@@ -1,0 +1,8 @@
+# Copy to .dev.vars for local development. Never commit .dev.vars.
+# Shows the sign-in link on screen instead of emailing it. Only honoured on localhost.
+DEV_SHOW_LOGIN_LINK=1
+# The first person to sign in with this address becomes MuzMesh staff, only while the users table is empty.
+BOOTSTRAP_ADMIN_EMAIL=you@example.com
+# Production only: Resend key and sender for sign-in emails.
+# RESEND_API_KEY=
+# EMAIL_FROM=Launch Room <login@yourdomain.com>
