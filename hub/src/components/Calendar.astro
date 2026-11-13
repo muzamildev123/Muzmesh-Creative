@@ -25,7 +25,7 @@ const now = today();
 <div class="lr-stack">
   <nav class="lr-row" aria-label="Month">
     <a class="mm-btn is-ghost is-sm" href={`${path}?month=${shiftMonth(month, -1)}`} rel="nofollow">Previous</a>
-    <h3 class="lr-h3" aria-live="polite">{formatMonth(month)}</h3>
+    <h2 class="lr-h3">{formatMonth(month)}</h2>
     <a class="mm-btn is-ghost is-sm" href={`${path}?month=${shiftMonth(month, 1)}`} rel="nofollow">Next</a>
   </nav>
   <div class="lr-cal">

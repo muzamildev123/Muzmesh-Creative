@@ -9,6 +9,8 @@ export default defineConfig({
   trailingSlash: 'never',
   // Every stylesheet is a file, so the Content-Security-Policy can forbid inline styles.
   build: { inlineStylesheets: 'never' },
+  // Same for scripts: never inline small ones into the page.
+  vite: { build: { assetsInlineLimit: 0 } },
   // Origin checks are done in src/middleware.ts so the OAuth and MCP endpoints
   // (which are called cross-origin with bearer tokens, never cookies) can be exempt.
   security: { checkOrigin: false },

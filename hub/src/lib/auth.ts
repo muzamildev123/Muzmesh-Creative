@@ -64,6 +64,6 @@ export const endSession = async (db: DB, sessionId: string | undefined) => {
 
 /** Only same-site paths are allowed as a post-login destination. */
 export const safeNext = (next: unknown): string => {
-  if (typeof next !== 'string' || !next.startsWith('/') || next.startsWith('//') || next.includes('\\') || next.length > 1500) return '/';
+  if (typeof next !== 'string' || !next.startsWith('/') || next.startsWith('//') || next.includes('\\') || next.length > 4000) return '/';
   return next;
 };

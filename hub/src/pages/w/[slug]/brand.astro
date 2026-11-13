@@ -71,7 +71,7 @@ const promptText = (subject: string, ar: string) =>
             {img.prompts.map((p, i) => (
               <li class="lr-stack is-sm">
                 <div class="lr-row"><strong>{p.title}</strong><span class="lr-small lr-faint">{p.ar}{p.use ? ` · ${p.use}` : ''}</span><button class="mm-btn is-ghost is-sm" type="button" data-copy={`#prompt-${i}`}>Copy prompt</button></div>
-                <pre class="lr-pre" id={`prompt-${i}`}>{promptText(p.subject, p.ar)}</pre>
+                <pre class="lr-pre" id={`prompt-${i}`} tabindex="0">{promptText(p.subject, p.ar)}</pre>
               </li>
             ))}
           </ul>

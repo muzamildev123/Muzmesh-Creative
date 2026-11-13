@@ -10,7 +10,7 @@ import { db, flash, formOf, loadWorkspace, notFound } from '../../../../lib/web'
 const access = await loadWorkspace(Astro);
 if (access instanceof Response) return access;
 const { ws, base, actor } = access;
-if (!can(actor, 'post.write')) return notFound();
+if (!can(actor, 'post.write')) return notFound(Astro);
 
 if (Astro.request.method === 'POST') {
   const f = await formOf(Astro);

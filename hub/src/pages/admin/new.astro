@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import * as admin from '../../lib/admin';
 import { db, flash, formOf, requireStaff } from '../../lib/web';
 
-const user = requireStaff(Astro);
+const user = await requireStaff(Astro);
 if (user instanceof Response) return user;
 if (Astro.request.method === 'POST') {
   const r = await admin.createWorkspace(db(), user, await formOf(Astro));

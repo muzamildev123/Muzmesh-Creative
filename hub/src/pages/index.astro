@@ -11,7 +11,7 @@ const workspaces = await repo.listWorkspacesForUser(db(), user);
 if (workspaces.length === 1) return Astro.redirect(`/w/${workspaces[0]!.slug}`, 303);
 ---
 <Base title="Your workspaces">
-  <div class="lr-head"><h2>Your workspaces</h2></div>
+  <div class="lr-head"><h1>Your workspaces</h1></div>
   {workspaces.length === 0 ? (
     <div class="lr-card lr-empty"><p>Your account is not part of a workspace yet. Ask MuzMesh to add you.</p></div>
   ) : (

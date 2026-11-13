@@ -40,12 +40,12 @@ if (Astro.request.method === 'POST') {
       const r = await service.deleteDraft(db(), ws, actor, id);
       return done(Astro, r.ok ? `${base}/posts` : here, r, 'Draft deleted.');
     }
-    default: return notFound();
+    default: return notFound(Astro);
   }
 }
 
 const post = await repo.getPost(db(), ws.id, id);
-if (!post) return notFound();
+if (!post) return notFound(Astro);
 const brand = readBrand(ws.brand_config);
 const [rules, history] = await Promise.all([service.checkRulesFor(db(), ws), repo.listActivity(db(), ws.id, 'post', post.id)]);
 const issues = checkCopy(post.copy, post.channel, rules);

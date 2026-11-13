@@ -3,7 +3,7 @@ import Calendar from '../../../components/Calendar.astro';
 import Workspace from '../../../layouts/Workspace.astro';
 import { can } from '../../../lib/authz';
 import * as repo from '../../../lib/repo';
-import { isMonth, thisMonth } from '../../../lib/util';
+import { formatMonth, isMonth, thisMonth } from '../../../lib/util';
 import { db, loadWorkspace } from '../../../lib/web';
 
 const access = await loadWorkspace(Astro);
@@ -18,7 +18,7 @@ const canWrite = can(actor, 'post.write');
 <Workspace access={access} title="Calendar" tab="calendar">
   <div class="lr-head">
     <h2>Calendar</h2>
-    <span class="lr-small lr-faint">{posts.length} of {ws.monthly_posts} posts planned this month</span>
+    <span class="lr-small lr-faint">{posts.length} of {ws.monthly_posts} posts planned in {formatMonth(month)}</span>
     {canWrite && <div class="lr-actions"><a class="mm-btn is-primary is-md" href={`${base}/posts/new`}>New post</a></div>}
   </div>
   <div class="lr-stack is-lg">

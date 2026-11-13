@@ -5,14 +5,14 @@ import * as repo from '../../lib/repo';
 import { isMonth, thisMonth } from '../../lib/util';
 import { db, requireStaff } from '../../lib/web';
 
-const user = requireStaff(Astro);
+const user = await requireStaff(Astro);
 if (user instanceof Response) return user;
 const q = Astro.url.searchParams.get('month');
 const month = isMonth(q) ? q : thisMonth();
 const posts = await repo.listAllPostsInMonth(db(), month);
 ---
 <Base title="All clients calendar">
-  <div class="lr-head"><h2>Calendar, all clients</h2><div class="lr-actions"><a class="lr-linkbtn" href="/admin">All clients</a></div></div>
+  <div class="lr-head"><h1>Calendar, all clients</h1><div class="lr-actions"><a class="lr-linkbtn" href="/admin">All clients</a></div></div>
   <Calendar month={month} posts={posts} path="/admin/calendar" />
   {posts.length === 0 && <p class="lr-muted">Nothing is planned for this month yet.</p>}
 </Base>

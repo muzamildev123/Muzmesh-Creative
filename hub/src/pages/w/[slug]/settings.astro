@@ -10,7 +10,7 @@ import { db, done, formOf, loadWorkspace, notFound } from '../../../lib/web';
 const access = await loadWorkspace(Astro);
 if (access instanceof Response) return access;
 const { ws, base, user } = access;
-if (!user.is_staff) return notFound();
+if (!user.is_staff) return notFound(Astro);
 const here = `${base}/settings`;
 
 if (Astro.request.method === 'POST') {
@@ -20,7 +20,7 @@ if (Astro.request.method === 'POST') {
     case 'brand': return done(Astro, `${here}#brand`, await admin.saveBrand(db(), user, ws, f.brand_config), 'Brand kit saved.');
     case 'member_add': return done(Astro, `${here}#people`, await admin.addMember(db(), user, ws, f), 'Saved. They can sign in with that email now.');
     case 'member_remove': return done(Astro, `${here}#people`, await admin.removeMember(db(), user, ws, f.user), 'Removed. Their connected AI apps were cut off too.');
-    default: return notFound();
+    default: return notFound(Astro);
   }
 }
 const members = await repo.listMembers(db(), ws.id);

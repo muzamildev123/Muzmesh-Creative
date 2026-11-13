@@ -11,7 +11,7 @@ export const GET: APIRoute = async (ctx) => {
   if (access instanceof Response) return access;
   const { ws, user } = access;
   const row = await repo.latestContext(db(), ws.id);
-  if (!row) return notFound();
+  if (!row) return notFound(ctx);
   const target = ctx.url.searchParams.get('target');
   if (isExportTarget(target)) await repo.recordExport(db(), ws.id, user.id, target, row.version);
   const body = compileContext({ workspaceName: ws.name, siteUrl: ws.site_url, brand: readBrand(ws.brand_config), pack: readContext(row.body), version: row.version, updatedAt: row.created_at });

@@ -5,14 +5,14 @@ import * as repo from '../../lib/repo';
 import { formatMinutes, formatMonth, thisMonth } from '../../lib/util';
 import { db, done, formOf, notFound, requireStaff } from '../../lib/web';
 
-const user = requireStaff(Astro);
+const user = await requireStaff(Astro);
 if (user instanceof Response) return user;
 
 if (Astro.request.method === 'POST') {
   const f = await formOf(Astro);
   if (f.action === 'staff_add') return done(Astro, '/admin#team', await admin.addStaff(db(), user, f), 'Added to the MuzMesh team.');
   if (f.action === 'staff_remove') return done(Astro, '/admin#team', await admin.removeStaff(db(), user, f.user), 'Removed from the MuzMesh team.');
-  return notFound();
+  return notFound(Astro);
 }
 
 const month = thisMonth();
@@ -22,7 +22,7 @@ const staff = await repo.listStaff(db());
 ---
 <Base title="All clients">
   <div class="lr-head">
-    <h2>All clients</h2>
+    <h1>All clients</h1>
     <span class="lr-small lr-faint">{formatMonth(month)}</span>
     <div class="lr-actions"><a class="mm-btn is-ghost is-md" href="/admin/calendar">Calendar</a><a class="mm-btn is-primary is-md" href="/admin/new">New client</a></div>
   </div>

@@ -40,7 +40,8 @@ export const done = <T>(ctx: Ctx, to: string, result: Result<T>, okText: string)
 export const loginRedirect = (ctx: Ctx): Response =>
   ctx.redirect(`/login?next=${encodeURIComponent(ctx.url.pathname + ctx.url.search)}`, 303);
 
-export const notFound = (): Response => new Response('Not found', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+/** The same "not found" page for a missing thing and for a thing you may not see, so neither can be told apart. */
+export const notFound = (ctx: Ctx): Promise<Response> => ctx.rewrite('/404');
 
 export interface WorkspaceAccess { user: User; ws: Workspace; role: Role; actor: Actor; base: string }
 
@@ -53,16 +54,16 @@ export const loadWorkspace = async (ctx: Ctx): Promise<WorkspaceAccess | Respons
   if (!user) return loginRedirect(ctx);
   const slug = ctx.params.slug ?? '';
   const ws = /^[a-z0-9-]{1,40}$/.test(slug) ? await repo.getWorkspaceBySlug(db(), slug) : null;
-  if (!ws) return notFound();
+  if (!ws) return notFound(ctx);
   const role = await repo.roleIn(db(), user, ws.id);
-  if (!role) return notFound();
+  if (!role) return notFound(ctx);
   return { user, ws, role, actor: { userId: user.id, role, via: 'hub' }, base: `/w/${ws.slug}` };
 };
 
-export const requireStaff = (ctx: Ctx): User | Response => {
+export const requireStaff = async (ctx: Ctx): Promise<User | Response> => {
   const user = ctx.locals.user;
   if (!user) return loginRedirect(ctx);
-  return user.is_staff ? user : notFound();
+  return user.is_staff ? user : notFound(ctx);
 };
 
 export const formOf = async (ctx: Ctx): Promise<Record<string, string>> => {

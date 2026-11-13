@@ -20,12 +20,12 @@ if (Astro.request.method === 'POST') {
     case 'status': return done(Astro, here, await service.changeRequestStatus(db(), ws, actor, id, f.status), 'Status updated.');
     case 'time': return done(Astro, here, await service.logTime(db(), ws, actor, id, { minutes: f.minutes, note: f.note, logged_on: f.logged_on }), 'Time logged.');
     case 'time_remove': return done(Astro, here, await service.removeTime(db(), ws, actor, id, f.entry ?? ''), 'Time entry removed.');
-    default: return notFound();
+    default: return notFound(Astro);
   }
 }
 
 const req = await repo.getRequest(db(), ws.id, id);
-if (!req) return notFound();
+if (!req) return notFound(Astro);
 const [entries, history] = await Promise.all([repo.listTimeEntries(db(), ws.id, req.id), repo.listActivity(db(), ws.id, 'request', req.id)]);
 const total = entries.reduce((n, e) => n + e.minutes, 0);
 const manage = can(actor, 'request.manage');

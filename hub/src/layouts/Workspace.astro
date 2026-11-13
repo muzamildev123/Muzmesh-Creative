@@ -20,7 +20,7 @@ const tabs = [
 ];
 ---
 <Base title={`${title} · ${ws.name}`} fontsUrl={fontsUrl}>
-  <Fragment slot="subnav">
+  <section slot="subnav" aria-label="Current workspace">
     <div class="lr-ws">
       <h1>{ws.name}</h1>
       <span class="lr-badge is-plain">{ROLE_LABEL[role]}</span>
@@ -29,6 +29,6 @@ const tabs = [
     <nav class="lr-tabs" aria-label="Workspace sections">
       {tabs.map((t) => <a href={t.href} aria-current={t.key === tab ? 'page' : undefined}>{t.label}</a>)}
     </nav>
-  </Fragment>
+  </section>
   <slot />
 </Base>
