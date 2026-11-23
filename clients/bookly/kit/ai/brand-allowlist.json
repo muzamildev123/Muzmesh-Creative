@@ -1,0 +1,61 @@
+{
+  "hex": [
+    "#FAF6EE",
+    "#14231C",
+    "#1E2420",
+    "#F3EFE6",
+    "#1F7A55",
+    "#E8B44C",
+    "#C8603F",
+    "#FDFBF7",
+    "#EFECE4",
+    "#5C5E59",
+    "#6D706A",
+    "#979891",
+    "#CAC8C1",
+    "#1B6B4B",
+    "#185F42",
+    "#FFFFFF",
+    "#B42318",
+    "#1F7A35",
+    "#1F2D26",
+    "#28352E",
+    "#B9BAB1",
+    "#91958D",
+    "#848981",
+    "#576059",
+    "#529678",
+    "#277F5B",
+    "#FF7A59",
+    "#6FDC8C",
+    "#000000"
+  ],
+  "rgb": [
+    "30,36,32",
+    "243,239,230"
+  ],
+  "fonts": [
+    "Fraunces",
+    "Inter",
+    "Georgia",
+    "serif",
+    "system-ui",
+    "sans-serif",
+    "inherit",
+    "monospace"
+  ],
+  "bannedWords": [
+    "hack",
+    "10x",
+    "grind",
+    "unlock",
+    "revolutionary",
+    "ai-powered",
+    "game-changer",
+    "seamless",
+    "get started",
+    "learn more",
+    "click here"
+  ],
+  "prefix": "bk"
+}

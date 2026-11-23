@@ -1,0 +1,88 @@
+/*
+  MuzMesh Creative brand tokens, Tailwind CSS v4.
+  Source of truth: docs/brand-guidelines.html (v1.0, 30 Oct 2026, direction A "The Mesh", approved 30 Oct 2026).
+
+  Usage in web/src/styles/global.css:
+    @import 'tailwindcss';
+    @plugin '@tailwindcss/typography';
+    @import './brand-theme.css';   (or paste the @theme block in place of the old one)
+
+  Fonts (add to BaseLayout <head>):
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100,400;100,500;100,700;125,700;125,800&family=JetBrains+Mono:wght@400;600&display=swap">
+*/
+
+@theme {
+  /* Type */
+  --font-display: 'Archivo', ui-sans-serif, system-ui, sans-serif;  /* use with font-stretch 125% (see @utility display) */
+  --font-sans: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Colour: core */
+  --color-ink: #0e0e10;        /* text, primary buttons, dark bands */
+  --color-ink-2: #17171d;      /* raised surface on ink */
+  --color-paper: #f2f2ee;      /* page background */
+  --color-card: #ffffff;       /* cards and inputs on paper */
+  --color-graphite: #55555f;   /* secondary text on paper (6.5:1) */
+  --color-mist: #a1a1aa;       /* secondary text on ink (7.7:1) */
+  --color-line: #d9d9df;       /* borders on paper */
+  --color-line-ink: #2c2c35;   /* borders on ink */
+
+  /* Colour: accent. Fill only, never text on paper (1.2:1). */
+  --color-marker: #ffd60a;
+  --color-marker-deep: #f2c200;  /* hover / pressed */
+
+  /* Colour: status. Not brand colours, only for UI state. */
+  --color-danger: #b42318;
+  --color-success: #1f7a35;
+
+  /* Type scale (size / line-height) */
+  --text-label: 0.75rem;        --text-label--line-height: 1.2;  --text-label--letter-spacing: 0.08em;
+  --text-sm: 0.875rem;          --text-sm--line-height: 1.5;
+  --text-base: 1.0625rem;       --text-base--line-height: 1.6;
+  --text-lead: 1.25rem;         --text-lead--line-height: 1.5;
+  --text-h3: 1.5rem;            --text-h3--line-height: 1.1;
+  --text-h2: 3rem;              --text-h2--line-height: 1;
+  --text-h1: 4.25rem;           --text-h1--line-height: 0.95;
+  --text-hero: clamp(3rem, 8vw, 7rem); --text-hero--line-height: 0.95;
+
+  /* Shape */
+  --radius-sm: 4px;   /* buttons, inputs, chips */
+  --radius-md: 8px;   /* cards, screenshots */
+  --radius-lg: 14px;  /* monogram, large media */
+
+  /* Layout */
+  --container-page: 75rem;     /* 1200px max content width */
+  --container-prose: 40rem;    /* ~65 characters */
+
+  /* Motion */
+  --ease-snap: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Brand utilities */
+@utility marker {
+  /* Hand-marked highlight behind a word or short phrase. Max one per heading. */
+  background: linear-gradient(transparent 12%, var(--color-marker) 12%, var(--color-marker) 88%, transparent 88%);
+  padding-inline: 0.12em;
+  margin-inline: -0.06em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  color: var(--color-ink);
+}
+
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@utility display {
+  /* Headlines: Archivo Expanded ExtraBold, sentence case */
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}

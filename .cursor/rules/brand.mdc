@@ -1,0 +1,5 @@
+---
+description: MuzMesh brand rules for any UI, page, post, deck, document or copy
+alwaysApply: true
+---
+Read `docs/brand/ai/BRAND.md` before designing or writing anything, and follow it exactly. Use the `.mm-*` classes from `web/src/styles/brand.css` and the `--mm-*` variables from `tokens.css`. No new colours or fonts. Run `node docs/brand/ai/check-brand.mjs <file>` before finishing.

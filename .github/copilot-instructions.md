@@ -1,0 +1,1 @@
+Follow the MuzMesh brand rules in `docs/brand/ai/BRAND.md` for every page, component, post, document and piece of copy. Use the `.mm-*` classes and `--mm-*` variables; never add new colours or fonts. Check output with `node docs/brand/ai/check-brand.mjs <file>`.
