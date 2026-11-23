@@ -1,0 +1,181 @@
+---
+// How the website and posts are doing, for a period, against the period just before it.
+// Website numbers come from the daily Google snapshot; post-link clicks are counted live.
+import Trend from '../../../components/Trend.astro';
+import Workspace from '../../../layouts/Workspace.astro';
+import { can } from '../../../lib/authz';
+import { CHANNEL_NAMES } from '../../../lib/brand-check';
+import { clicksByDay, clicksByPost } from '../../../lib/links';
+import * as repo from '../../../lib/repo';
+import { PERIODS, readStats, type PeriodKey } from '../../../lib/stats';
+import { formatDay } from '../../../lib/util';
+import { db, loadWorkspace } from '../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, actor } = access;
+
+const asked = Astro.url.searchParams.get('p') ?? '';
+const period: PeriodKey = (PERIODS as string[]).includes(asked) ? (asked as PeriodKey) : '28';
+const days = Number(period);
+const dayAgo = (n: number) => new Date(Date.now() - n * 86_400_000).toISOString().slice(0, 10);
+
+const [stats, published, perDay, perPost] = await Promise.all([
+  readStats(db(), ws.id),
+  repo.listPosts(db(), ws.id, { status: 'published' }),
+  clicksByDay(db(), ws.id, dayAgo(2 * days - 1)),
+  clicksByPost(db(), ws.id, dayAgo(days - 1)),
+]);
+const ga4 = stats.ga4?.body ?? null;
+const gsc = stats.gsc?.body ?? null;
+const gp = ga4?.periods?.[period] ?? null;
+const sp = gsc?.periods?.[period] ?? null;
+const statsOn = !!(ws.ga4_property_id || ws.search_console_site);
+const isStaff = can(actor, 'workspace.manage') && access.user.is_staff === 1;
+
+// Post-link clicks: the last n days including today, and the n days before.
+let clicks = 0, clicksPrev = 0;
+for (const [day, c] of perDay) { if (day >= dayAgo(days - 1)) clicks += c; else clicksPrev += c; }
+
+// The chart: Google Analytics days end yesterday.
+const from = dayAgo(days), to = dayAgo(1);
+const history = ga4?.history ?? [];
+const byDay = new Map(history.map((d) => [d.day, d.users]));
+const postsByDay = new Map<string, string[]>();
+for (const p of published) {
+  const d = p.published_at?.slice(0, 10);
+  if (!d || d < from || d > to) continue;
+  const label = `${CHANNEL_NAMES[p.channel]}: ${p.copy.replace(/\s+/g, ' ').slice(0, 60)}${p.copy.length > 60 ? '…' : ''}`;
+  postsByDay.set(d, [...(postsByDay.get(d) ?? []), label]);
+}
+const points = history.length ? Array.from({ length: days }, (_, i) => {
+  const day = dayAgo(days - i), before = dayAgo(2 * days - i);
+  return { day, value: byDay.get(day) ?? 0, prev: byDay.has(before) ? byDay.get(before)! : null, posts: postsByDay.get(day) ?? [] };
+}) : [];
+
+const n = (v: number) => Math.round(v).toLocaleString('en-US');
+const change = (cur: number, prev: number) => {
+  if (!prev) return cur > 0 ? { cls: 'is-up', text: '↑ from none', pct: null } : { cls: '', text: 'None', pct: 0 };
+  const pct = Math.round(((cur - prev) / prev) * 100);
+  if (Math.abs(pct) < 2) return { cls: '', text: 'About the same', pct };
+  return { cls: pct > 0 ? 'is-up' : 'is-down', text: `${pct > 0 ? '↑' : '↓'} ${Math.abs(pct)}%`, pct };
+};
+const vs = `vs the ${days} days before`;
+
+const best = published.filter((p) => (perPost.get(p.id) ?? 0) > 0)
+  .sort((a, b) => (perPost.get(b.id) ?? 0) - (perPost.get(a.id) ?? 0)).slice(0, 5);
+
+// The headline, in plain words.
+const sentences: string[] = [];
+if (gp) {
+  const c = change(gp.totals.users, gp.prev.users);
+  const top = gp.channels[0];
+  const share = top && gp.totals.sessions ? Math.round((top.sessions / gp.totals.sessions) * 100) : 0;
+  const visited = `${n(gp.totals.users)} people visited the website`;
+  sentences.push(c.pct === null ? `${visited}.`
+    : Math.abs(c.pct) < 2 ? `${visited}, about the same as the ${days} days before.`
+    : `${visited}, ${c.pct > 0 ? 'up' : 'down'} ${Math.abs(c.pct)}% on the ${days} days before.`);
+  if (top && share) sentences.push(`Most came from ${top.name} (${share}%).`);
+}
+if (sp) sentences.push(`Google search sent ${n(sp.totals.clicks)} click${sp.totals.clicks === 1 ? '' : 's'}.`);
+if (best[0]) sentences.push(`The best post brought ${n(perPost.get(best[0].id) ?? 0)} click${perPost.get(best[0].id) === 1 ? '' : 's'}.`);
+
+const tag = (q: { clicks: number; prevClicks: number | null }) => {
+  if (q.prevClicks === null) return { cls: 'is-up', text: 'New' };
+  if (q.clicks >= q.prevClicks * 1.5 && q.clicks - q.prevClicks >= 5) return { cls: 'is-up', text: 'Rising' };
+  if (q.clicks <= q.prevClicks * 0.67 && q.prevClicks - q.clicks >= 5) return { cls: 'is-down', text: 'Falling' };
+  return null;
+};
+const maxChannel = Math.max(1, ...(gp?.channels ?? []).map((c) => c.sessions));
+const fetched = stats.ga4?.fetched_at ?? stats.gsc?.fetched_at ?? null;
+const oldSnapshot = (stats.ga4?.body && !gp) || (stats.gsc?.body && !sp);
+const big = [
+  { label: 'Website visitors', value: gp?.totals.users, prev: gp?.prev.users, note: gp ? `${n(gp.totals.views)} page views` : '' },
+  { label: 'Key actions', value: gp?.totals.keyEvents, prev: gp?.prev.keyEvents, note: 'Signups, forms or bookings marked as key events in Google Analytics' },
+  { label: 'Clicks from Google', value: sp?.totals.clicks, prev: sp?.prev.clicks, note: sp ? `Shown ${n(sp.totals.impressions)} times in search` : '' },
+  { label: 'Clicks on post links', value: clicks, prev: clicksPrev, note: 'Counted by our short links' },
+];
+---
+<Workspace access={access} title="Analytics" tab="analytics">
+  <div class="lr-stack is-lg">
+    <div class="lr-head">
+      <h2>Analytics</h2>
+      <nav class="lr-filters" aria-label="Period">
+        {PERIODS.map((k) => <a class="mm-btn is-ghost is-sm" href={`${base}/analytics?p=${k}`} aria-current={k === period ? 'page' : undefined}>Last {k} days</a>)}
+      </nav>
+    </div>
+
+    {!statsOn && (
+      <div class="lr-note">
+        Website numbers appear once {ws.name}'s Google Analytics and Search Console are connected.
+        {isStaff ? <> Add them in <a class="mm-link" href={`${base}/settings#stats`}>Settings</a>.</> : ' MuzMesh sets this up.'}
+        Clicks on post links are counted already.
+      </div>
+    )}
+
+    <section class="lr-card lr-stack" aria-labelledby="an-sum">
+      <div class="lr-row lr-between">
+        <span class="mm-label" id="an-sum">Last {days} days</span>
+        {fetched && <span class="lr-small lr-faint">Website numbers updated {formatDay(fetched)}{isStaff && <> · <a class="mm-link" href={`${base}/settings#stats`}>Refresh</a></>}</span>}
+      </div>
+      {sentences.length > 0 && <p class="lr-summary" data-testid="summary">{sentences.join(' ')}</p>}
+      <div class="lr-big">
+        {big.map((b) => {
+          const c = b.value !== undefined && b.prev !== undefined ? change(b.value, b.prev) : null;
+          return (
+            <div class="lr-stat">
+              <span class="lr-small lr-faint">{b.label}</span>
+              <strong>{b.value !== undefined ? n(b.value) : '–'}</strong>
+              {c && <span class={`lr-delta ${c.cls}`}>{c.text} <span class="lr-faint">{vs}</span></span>}
+              {b.note && <span class="lr-small lr-faint">{b.note}</span>}
+            </div>
+          );
+        })}
+      </div>
+      {points.length > 1 && <Trend points={points} label="Visitors" />}
+      {oldSnapshot && <p class="lr-small lr-faint">Comparisons and the chart appear after the next refresh.</p>}
+      {(stats.ga4?.error || stats.gsc?.error) && <p class="lr-small lr-faint">The last refresh had a problem, so these may be older: {stats.ga4?.error || stats.gsc?.error}</p>}
+    </section>
+
+    <div class="lr-two is-even">
+      {gp && gp.channels.length > 0 && (
+        <section class="lr-card lr-stack" aria-labelledby="an-ch">
+          <span class="mm-label" id="an-ch">Where visitors came from</span>
+          <div class="lr-bars">
+            {gp.channels.map((c) => {
+              const d = change(c.sessions, c.prev);
+              return (
+                <div class="lr-bar">
+                  <div class="lr-row lr-between"><span>{c.name}</span><span class="lr-small">{n(c.sessions)} visits <span class={`lr-delta ${d.cls}`}>{d.text}</span></span></div>
+                  <svg viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><rect class="lr-bar-track" width="100" height="8" rx="4" /><rect class="lr-bar-fill" width={Math.max(1, (c.sessions / maxChannel) * 100)} height="8" rx="4" /></svg>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+      {gp && gp.pages.length > 0 && (
+        <section class="lr-card lr-stack" aria-labelledby="an-pages">
+          <span class="mm-label" id="an-pages">Most viewed pages</span>
+          <table class="lr-table"><thead><tr><th scope="col">Page</th><th scope="col" class="is-num">Views</th></tr></thead>
+            <tbody>{gp.pages.map((p) => <tr><td><span class="lr-clip">{p.path}</span></td><td class="is-num">{n(p.views)}</td></tr>)}</tbody></table>
+        </section>
+      )}
+      {sp && sp.queries.length > 0 && (
+        <section class="lr-card lr-stack" aria-labelledby="an-q">
+          <span class="mm-label" id="an-q">What people searched on Google</span>
+          <table class="lr-table"><thead><tr><th scope="col">Search</th><th scope="col" class="is-num">Clicks</th><th scope="col" class="is-num">Position</th></tr></thead>
+            <tbody>{sp.queries.map((q) => { const t = tag(q); return <tr><td>{q.query}{t && <span class={`lr-tag ${t.cls}`}>{t.text}</span>}</td><td class="is-num">{n(q.clicks)}</td><td class="is-num">{q.position.toFixed(1)}</td></tr>; })}</tbody></table>
+          <p class="lr-small lr-faint">Position is the average place in Google results. Lower is better.</p>
+        </section>
+      )}
+      <section class="lr-card lr-stack" aria-labelledby="an-posts">
+        <span class="mm-label" id="an-posts">Posts people clicked</span>
+        {best.length === 0 ? <p class="lr-muted">No clicks on post links in the last {days} days yet.</p> : (
+          <table class="lr-table"><thead><tr><th scope="col">Post</th><th scope="col">Posted</th><th scope="col" class="is-num">Clicks</th></tr></thead>
+            <tbody>{best.map((p) => <tr><td><a class="lr-clip mm-link" href={`${base}/posts/${p.id}`}>{p.copy}</a><span class="lr-small lr-faint">{CHANNEL_NAMES[p.channel]}</span></td><td class="lr-nowrap">{p.published_at ? formatDay(p.published_at) : '–'}</td><td class="is-num">{n(perPost.get(p.id) ?? 0)}</td></tr>)}</tbody></table>
+        )}
+      </section>
+    </div>
+  </div>
+</Workspace>

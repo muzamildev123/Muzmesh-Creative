@@ -11,6 +11,7 @@ Strategy, offer, copy, sitemap and the 301 redirect map live in **[docs/position
 ```
 web/      the website (Astro + TypeScript + Tailwind), deployed to Vercel
 studio/   Sanity Studio, where the team writes blog posts and case studies
+hub/      Launch Room, the dashboard MuzMesh and its clients share (see hub/README.md)
 docs/     strategy, positioning, redirects
 ```
 

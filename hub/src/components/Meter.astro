@@ -1,0 +1,16 @@
+---
+// The monthly hours meter. Clients and MuzMesh see the same numbers.
+import { formatMinutes } from '../lib/util';
+interface Props { used: number; limit: number; label?: string }
+const { used, limit, label = 'MuzMesh time used this month' } = Astro.props;
+const over = used > limit;
+---
+<div class={`lr-meter ${over ? 'is-over' : ''}`}>
+  <div class="lr-row">
+    <span class="lr-num">{formatMinutes(used)} <small>of {formatMinutes(limit)}</small></span>
+  </div>
+  <progress max={Math.max(limit, 1)} value={Math.min(used, Math.max(limit, 1))} aria-label={label}>{used} of {limit} minutes</progress>
+  <p class="lr-small lr-faint">
+    {over ? `${formatMinutes(used - limit)} over the included time. Extra work is quoted separately.` : `${formatMinutes(limit - used)} left. Unused time does not roll over.`}
+  </p>
+</div>

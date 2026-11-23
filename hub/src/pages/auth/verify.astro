@@ -1,0 +1,44 @@
+---
+// Opening the emailed link shows a button; only pressing it signs you in.
+// That way a mail scanner that pre-opens links cannot use the link up.
+import Base from '../../layouts/Base.astro';
+import { consumeLoginToken, loginTokenIsLive, safeNext, SESSION_SECONDS } from '../../lib/auth';
+import { db, formOf, SESSION_COOKIE } from '../../lib/web';
+
+let token = Astro.url.searchParams.get('token') ?? '';
+let next = safeNext(Astro.url.searchParams.get('next'));
+let failed = false;
+
+if (Astro.request.method === 'POST') {
+  const form = await formOf(Astro);
+  token = form.token ?? '';
+  next = safeNext(form.next);
+  const session = await consumeLoginToken(db(), token);
+  if (session) {
+    Astro.cookies.set(SESSION_COOKIE(Astro.url), session.sessionId, { path: '/', httpOnly: true, sameSite: 'lax', secure: Astro.url.protocol === 'https:', maxAge: SESSION_SECONDS });
+    return Astro.redirect(next, 303);
+  }
+  failed = true;
+}
+const live = !failed && token.length > 0 && token.length < 200 && (await loginTokenIsLive(db(), token));
+---
+<Base title="Sign in">
+  <div slot="narrow" class="lr-stack">
+    {live ? (
+      <form method="post" class="lr-stack">
+        <span class="mm-label">Almost there</span>
+        <h1 class="mm-h3">Finish signing in</h1>
+        <input type="hidden" name="token" value={token} />
+        <input type="hidden" name="next" value={next} />
+        <button class="mm-btn is-primary is-md" type="submit" autofocus>Sign in to Launch Room</button>
+      </form>
+    ) : (
+      <div class="lr-stack">
+        <span class="mm-label">Link expired</span>
+        <h1 class="mm-h3">This sign-in link no longer works.</h1>
+        <p class="lr-muted">Links work once and expire after 15 minutes.</p>
+        <p><a class="mm-btn is-solid is-md" href="/login">Get a new link</a></p>
+      </div>
+    )}
+  </div>
+</Base>

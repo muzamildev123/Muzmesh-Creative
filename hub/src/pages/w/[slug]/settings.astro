@@ -1,0 +1,127 @@
+---
+import WorkspaceFields from '../../../components/WorkspaceFields.astro';
+import Workspace from '../../../layouts/Workspace.astro';
+import * as admin from '../../../lib/admin';
+import { readBrand } from '../../../lib/brand';
+import * as repo from '../../../lib/repo';
+import { refreshStats, serviceAccount } from '../../../lib/stats';
+import { COMMON_TIME_ZONES } from '../../../lib/time';
+import { ROLE_LABEL } from '../../../lib/types';
+import { appEnv, db, done, flash, formOf, loadWorkspace, notFound } from '../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, user } = access;
+if (!user.is_staff) return notFound(Astro);
+const here = `${base}/settings`;
+
+if (Astro.request.method === 'POST') {
+  const f = await formOf(Astro);
+  switch (f.action) {
+    case 'workspace': return done(Astro, here, await admin.updateWorkspace(db(), user, ws, f), 'Settings saved.');
+    case 'stats': {
+      await refreshStats(db(), appEnv(), ws);
+      flash(Astro, 'ok', 'Stats refreshed. Any problem shows on the Overview.');
+      return Astro.redirect(`${here}#stats`, 303);
+    }
+    case 'brand': return done(Astro, `${here}#brand`, await admin.saveBrand(db(), user, ws, f.brand_config), 'Brand kit saved.');
+    case 'member_add': return done(Astro, `${here}#people`, await admin.addMember(db(), user, ws, f), 'Saved. They can sign in with that email now.');
+    case 'member_remove': return done(Astro, `${here}#people`, await admin.removeMember(db(), user, ws, f.user), 'Removed. Their connected AI apps were cut off too.');
+    default: return notFound(Astro);
+  }
+}
+const members = await repo.listMembers(db(), ws.id);
+const brand = readBrand(ws.brand_config);
+const sa = serviceAccount(appEnv());
+const zones = COMMON_TIME_ZONES.includes(ws.timezone) ? COMMON_TIME_ZONES : [ws.timezone, ...COMMON_TIME_ZONES];
+const appOrigin = appEnv().APP_ORIGIN || Astro.url.origin;
+const target = `${appOrigin}${base}`;
+const clientHost = ws.admin_host || (ws.site_url ? new URL(ws.site_url).hostname.replace(/^www\./, '') : 'your-site.com');
+const vercelSnippet = JSON.stringify({ redirects: [
+  { source: '/admin', destination: target, permanent: false },
+  { source: '/admin/:path*', destination: `${target}/:path*`, permanent: false },
+] }, null, 2);
+const netlifySnippet = `/admin    ${target}    302\n/admin/*  ${target}/:splat  302`;
+---
+<Workspace access={access} title="Settings" tab="settings">
+  <div class="lr-head"><h2>Settings</h2><span class="lr-small lr-faint">Only MuzMesh sees this page.</span></div>
+  <div class="lr-two">
+    <div class="lr-stack is-lg">
+      <section class="lr-card lr-stack" aria-labelledby="ws-h">
+        <span class="mm-label" id="ws-h">Workspace</span>
+        <form method="post" class="lr-stack">
+          <WorkspaceFields ws={ws} />
+          <fieldset class="lr-stack lr-fieldset">
+            <legend class="lr-legend">Posting and stats</legend>
+            <div class="lr-formrow">
+              <div class="lr-field"><label for="timezone">Time zone</label>
+                <select class="lr-select" id="timezone" name="timezone" aria-describedby="tz-h">{zones.map((z) => <option value={z} selected={z === ws.timezone}>{z.replace(/_/g, ' ')}</option>)}</select></div>
+              <div class="lr-field"><label for="admin_host">Client's site address</label><input class="lr-input" id="admin_host" name="admin_host" maxlength="253" placeholder="bookly.com" value={ws.admin_host} /></div>
+            </div>
+            <p class="lr-hint" id="tz-h">Post times are entered in this zone. Changing it keeps planned posts at the same clock time.</p>
+            <div class="lr-formrow">
+              <div class="lr-field"><label for="ga4_property_id">Google Analytics property ID</label><input class="lr-input" id="ga4_property_id" name="ga4_property_id" inputmode="numeric" maxlength="20" placeholder="412345678" value={ws.ga4_property_id} /></div>
+              <div class="lr-field"><label for="search_console_site">Search Console property</label><input class="lr-input" id="search_console_site" name="search_console_site" maxlength="300" placeholder="sc-domain:bookly.com" value={ws.search_console_site} /></div>
+            </div>
+            <div class="lr-field"><label for="clarity_url">Microsoft Clarity dashboard link (optional)</label><input class="lr-input" id="clarity_url" name="clarity_url" type="url" maxlength="2000" placeholder="https://clarity.microsoft.com/projects/view/..." value={ws.clarity_url} /></div>
+          </fieldset>
+          <div><button class="mm-btn is-primary is-md" type="submit" name="action" value="workspace">Save</button></div>
+        </form>
+      </section>
+      <section class="lr-card lr-stack" id="stats" aria-labelledby="st-h">
+        <span class="mm-label" id="st-h">Website stats</span>
+        {sa ? (
+          <>
+            <p class="lr-muted">Add this address as a <strong>Viewer</strong> in the client's Google Analytics property, and as a <strong>Restricted</strong> user in Search Console:</p>
+            <p><button class="lr-linkbtn" type="button" data-copy="" data-copy-text={sa.client_email}><code class="lr-code">{sa.client_email}</code></button></p>
+            <p class="lr-small lr-faint">Numbers refresh every night. The Overview shows the last 28 days.</p>
+            <form method="post"><button class="mm-btn is-solid is-sm" type="submit" name="action" value="stats" disabled={!ws.ga4_property_id && !ws.search_console_site}>Refresh stats now</button></form>
+          </>
+        ) : <p class="lr-note">Stats are off until the GOOGLE_SERVICE_ACCOUNT secret is set. The README has the steps.</p>}
+      </section>
+      <section class="lr-card lr-stack" id="admin-link" aria-labelledby="al-h">
+        <span class="mm-label" id="al-h">The {clientHost}/admin link</span>
+        <p class="lr-muted">Add a redirect on the client's site so <strong>{clientHost}/admin</strong> opens this workspace. People sign in here with their email, so nothing about the client's site changes.</p>
+        <details class="lr-details"><summary>Site on Vercel (vercel.json)</summary><pre class="lr-code lr-pre" tabindex="0">{vercelSnippet}</pre></details>
+        <details class="lr-details"><summary>Site on Netlify or Cloudflare Pages (_redirects)</summary><pre class="lr-code lr-pre" tabindex="0">{netlifySnippet}</pre></details>
+        <details class="lr-details"><summary>Anything else</summary><p class="lr-small">Point a "Client login" link in the footer at <code class="lr-code">{target}</code>.</p></details>
+      </section>
+      <section class="lr-card lr-stack" id="brand" aria-labelledby="bk-h">
+        <span class="mm-label" id="bk-h">Brand kit</span>
+        <p class="lr-muted">{brand ? `Loaded: ${brand.name}.` : 'Not added yet.'} Paste the client's <code class="lr-code">brand.config.json</code> from the brand kit tool. It drives the brand page, image templates, the brand check and the context pack.</p>
+        <form method="post" class="lr-stack">
+          <div class="lr-field"><label for="brand_config">brand.config.json</label><textarea class="lr-textarea lr-code" id="brand_config" name="brand_config" rows="12" spellcheck="false">{brand ? ws.brand_config : ''}</textarea></div>
+          <div><button class="mm-btn is-primary is-md" type="submit" name="action" value="brand">Save brand kit</button></div>
+        </form>
+      </section>
+    </div>
+    <section class="lr-card lr-stack" id="people" aria-labelledby="pp-h">
+      <span class="mm-label" id="pp-h">People</span>
+      {members.length === 0 ? <p class="lr-muted">No one from the client has access yet.</p> : (
+        <ul class="lr-list">
+          {members.map((m) => (
+            <li class="lr-row">
+              <span>{m.name || m.email}<br /><span class="lr-small lr-faint">{m.name ? `${m.email} · ` : ''}{ROLE_LABEL[m.role]}</span></span>
+              <form method="post" class="lr-inline"><input type="hidden" name="user" value={m.user_id} /><button class="lr-linkbtn" type="submit" name="action" value="member_remove" data-confirm={`Remove ${m.email} from ${ws.name}?`}>Remove</button></form>
+            </li>
+          ))}
+        </ul>
+      )}
+      <form method="post" class="lr-stack">
+        <div class="lr-field"><label for="email">Email</label><input class="lr-input" id="email" name="email" type="email" required maxlength="200" /></div>
+        <div class="lr-formrow">
+          <div class="lr-field"><label for="mname">Name (optional)</label><input class="lr-input" id="mname" name="name" maxlength="80" /></div>
+          <div class="lr-field">
+            <label for="role">Role</label>
+            <select class="lr-select" id="role" name="role" aria-describedby="role-hint">
+              <option value="owner">Owner</option><option value="editor">Editor</option><option value="viewer">Viewer</option>
+            </select>
+          </div>
+        </div>
+        <p class="lr-hint" id="role-hint">Owners approve posts and edit the context pack. Editors write posts and send requests. Viewers only read. Adding someone again changes their role.</p>
+        <div><button class="mm-btn is-solid is-md" type="submit" name="action" value="member_add">Add or update</button></div>
+      </form>
+      <p class="lr-small lr-faint">No invitation email is sent. Tell them to sign in at this address with their email.</p>
+    </section>
+  </div>
+</Workspace>

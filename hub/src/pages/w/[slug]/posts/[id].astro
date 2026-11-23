@@ -1,0 +1,203 @@
+---
+import Composer from '../../../../components/Composer.astro';
+import Status from '../../../../components/Status.astro';
+import Workspace from '../../../../layouts/Workspace.astro';
+import { can } from '../../../../lib/authz';
+import { brandFontsUrl, readBrand } from '../../../../lib/brand';
+import { checkCopy, hasErrors } from '../../../../lib/brand-check';
+import { listAssets } from '../../../../lib/assets';
+import { MAX_ATTEMPTS, publishNow } from '../../../../lib/publisher';
+import * as repo from '../../../../lib/repo';
+import { listAccounts, NETWORK_NAMES } from '../../../../lib/social';
+import * as service from '../../../../lib/service';
+import { POST_STATUS_LABEL } from '../../../../lib/types';
+import { formatDay, safeUrl } from '../../../../lib/util';
+import { appEnv, db, done, flash, formOf, loadWorkspace, notFound } from '../../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, actor } = access;
+const id = Astro.params.id ?? '';
+const here = `${base}/posts/${id}`;
+
+if (Astro.request.method === 'POST') {
+  const f = await formOf(Astro);
+  switch (f.action) {
+    case 'save':
+    case 'save_submit': {
+      const r = await service.updatePost(db(), ws, actor, id, {
+        channel: f.channel, copy: f.copy, scheduled_for: f.scheduled_for ?? '', scheduled_time: f.scheduled_time ?? '',
+        social_account_id: f.social_account_id ?? '', asset_id: f.asset_id ?? '',
+        image: { template: f.image_template, theme: f.image_theme, kicker: f.image_kicker, headline: f.image_headline, sub: f.image_sub },
+      });
+      if (!r.ok) return done(Astro, here, r, '');
+      if (f.action === 'save_submit') return done(Astro, here, await service.submitPost(db(), ws, actor, id), 'Sent for review.');
+      flash(Astro, 'ok', r.value.movedToDraft ? 'Saved. The text changed, so this post is a draft again and needs a fresh approval.' : 'Saved.');
+      return Astro.redirect(here, 303);
+    }
+    case 'date': return done(Astro, here, await service.updatePost(db(), ws, actor, id, { scheduled_for: f.scheduled_for ?? '' }), 'Date saved.');
+    case 'submit': return done(Astro, here, await service.submitPost(db(), ws, actor, id), 'Sent for review.');
+    case 'approve': return done(Astro, here, await service.reviewPost(db(), ws, actor, id, 'approve'), 'Approved.');
+    case 'changes': return done(Astro, here, await service.reviewPost(db(), ws, actor, id, 'changes', f.note ?? ''), 'Sent back with your note.');
+    case 'post_now': {
+      if (!can(actor, 'post.write')) return notFound(Astro);
+      const out = await publishNow(db(), appEnv(), ws, id, appEnv().APP_ORIGIN || Astro.url.origin);
+      if (out.result === 'published') flash(Astro, 'ok', 'Posted.');
+      else if (out.result === 'retry') flash(Astro, 'err', `Not posted yet: ${out.message} It will try again in a few minutes.`);
+      else flash(Astro, 'err', out.message ?? 'Not posted.');
+      return Astro.redirect(here, 303);
+    }
+    case 'manual': return done(Astro, here, await service.updatePost(db(), ws, actor, id, { social_account_id: '' }), 'Automatic posting is off for this post. Publish it by hand below.');
+    case 'publish': return done(Astro, here, await service.markPublished(db(), ws, actor, id, f.url), 'Marked as published.');
+    case 'delete': {
+      const r = await service.deleteDraft(db(), ws, actor, id);
+      return done(Astro, r.ok ? `${base}/posts` : here, r, 'Draft deleted.');
+    }
+    default: return notFound(Astro);
+  }
+}
+
+const post = await repo.getPost(db(), ws.id, id);
+if (!post) return notFound(Astro);
+const brand = readBrand(ws.brand_config);
+const [rules, history, accounts, library] = await Promise.all([
+  service.checkRulesFor(db(), ws), repo.listActivity(db(), ws.id, 'post', post.id), listAccounts(db(), ws.id), listAssets(db(), ws.id, { postable: true }),
+]);
+const account = accounts.find((a) => a.id === post.social_account_id);
+const tz = ws.timezone || 'UTC';
+const when = post.scheduled_for ? `${formatDay(post.scheduled_for)}${post.scheduled_time ? ` at ${post.scheduled_time}` : ''}` : '';
+const gaveUp = post.status === 'approved' && !!post.publish_error && post.publish_attempts >= MAX_ATTEMPTS;
+const imagePending = !!post.social_account_id && !post.asset_id && !!service.readImage(post.image) && post.image_rendered !== post.image;
+const issues = checkCopy(post.copy, post.channel, rules);
+const canWrite = can(actor, 'post.write');
+const canApprove = can(actor, 'post.approve');
+const editable = canWrite && post.status !== 'published';
+const blocked = hasErrors(issues);
+const publishedUrl = safeUrl(post.published_url, { httpsOnly: true });
+const shareUrl = post.channel === 'x'
+  ? `https://x.com/intent/post?text=${encodeURIComponent(post.copy)}`
+  : `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(post.copy)}`;
+const hasImage = !!service.readImage(post.image);
+const ACTION_LABEL: Record<string, string> = {
+  created: 'Created the draft', edited: 'Edited', edited_back_to_draft: 'Edited, so it went back to draft', rescheduled: 'Changed the date',
+  sent_for_review: 'Sent for review', approved: 'Approved', changes_requested: 'Asked for changes', published: 'Marked as published',
+  auto_published: 'Posted automatically', publish_failed: 'Could not post', auto_post_off: 'Switched to posting by hand',
+};
+const lastNote = post.status === 'draft' ? history.find((h) => h.action === 'changes_requested' || h.action === 'sent_for_review') : undefined;
+const changeNote = lastNote?.action === 'changes_requested' ? lastNote : undefined;
+---
+<Workspace access={access} title="Post" tab="posts" fontsUrl={brand ? brandFontsUrl(brand) : undefined}>
+  <div class="lr-head">
+    <div class="lr-row">
+      <h2>Post</h2>
+      <Status kind={post.status} label={post.status === 'approved' && when ? `Scheduled for ${when}` : POST_STATUS_LABEL[post.status]} />
+      {post.source === 'mcp' && <span class="lr-badge is-plain">Drafted by AI</span>}
+    </div>
+    <div class="lr-actions"><a class="lr-linkbtn" href={`${base}/posts`}>All posts</a></div>
+  </div>
+
+  <div class="lr-stack is-lg">
+    {changeNote && <p class="lr-note"><strong>Changes asked for:</strong> {changeNote.note}</p>}
+    {post.status !== 'draft' && editable && <p class="lr-hint">Changing the text or image sends this post back to draft, so an approval always covers exactly what goes out.</p>}
+
+    {editable ? (
+      <form method="post" id="edit">
+        <Composer post={post} issues={issues} rules={rules} brand={brand} wsName={ws.name} slug={ws.slug} editable={true} base={base} timezone={tz} accounts={accounts} library={library}>
+          <div class="lr-row">
+            <button class="mm-btn is-solid is-md" type="submit" name="action" value="save">Save</button>
+            {post.status === 'draft' && <button class="mm-btn is-primary is-md" type="submit" name="action" value="save_submit">Save and send for review</button>}
+          </div>
+        </Composer>
+      </form>
+    ) : (
+      <Composer post={post} issues={issues} rules={rules} brand={brand} wsName={ws.name} slug={ws.slug} editable={false} base={base} timezone={tz} accounts={accounts} library={library} />
+    )}
+
+    {post.status === 'in_review' && canApprove && (
+      <section class="lr-card lr-stack" aria-labelledby="review-h">
+        <span class="mm-label" id="review-h">Your decision</span>
+        {blocked && <p class="mm-error" role="alert">This post does not pass the brand check, so it cannot be approved as it is.</p>}
+        <form method="post" class="lr-row">
+          <button class="mm-btn is-primary is-md" type="submit" name="action" value="approve" disabled={blocked}>Approve</button>
+        </form>
+        <form method="post" class="lr-stack">
+          <div class="lr-field">
+            <label for="note">Or say what should change</label>
+            <textarea class="lr-textarea" id="note" name="note" rows="3" maxlength="1000" required></textarea>
+          </div>
+          <div><button class="mm-btn is-ghost is-md" type="submit" name="action" value="changes">Ask for changes</button></div>
+        </form>
+      </section>
+    )}
+    {post.status === 'in_review' && !canApprove && <p class="lr-note">Waiting for a workspace owner to approve.</p>}
+
+    {post.social_account_id && post.status !== 'published' && (
+      <section class="lr-card lr-stack" aria-labelledby="auto-h">
+        <span class="mm-label" id="auto-h">Automatic posting</span>
+        <p>{account ? <>Goes out on {NETWORK_NAMES[account.network]} as <strong>{account.name || account.handle}</strong></> : 'The chosen account was disconnected'}{when ? <> on {when} ({tz.replace(/_/g, ' ')} time)</> : null}{post.status === 'approved' ? '.' : ', once it is approved.'}</p>
+        {account?.status === 'reconnect' && <p class="mm-error" role="alert">{NETWORK_NAMES[account.network]} signed this account out. An owner needs to reconnect it under <a class="mm-link" href={`${base}/accounts`}>Accounts</a>.</p>}
+        {imagePending && <p class="lr-small lr-faint" data-render-status role="status">Preparing the post image…</p>}
+        {!imagePending && !post.asset_id && post.render_asset_id && post.image_rendered === post.image && (
+          <figure class="lr-render"><img src={`${base}/assets/${post.render_asset_id}/file`} alt="" width="120" height="120" loading="lazy" /><figcaption class="lr-small lr-faint">The exact image that will be attached.</figcaption></figure>
+        )}
+        {post.publish_error && <p class={gaveUp ? 'mm-error' : 'lr-note'} role="alert">{gaveUp ? 'It stopped trying: ' : `Try ${post.publish_attempts} did not work, it will try again soon: `}{post.publish_error}</p>}
+        {post.status === 'approved' && canWrite && (
+          <form method="post" class="lr-row">
+            <button class="mm-btn is-solid is-sm" type="submit" name="action" value="post_now" data-confirm={`Post this to ${account ? NETWORK_NAMES[account.network] : 'the network'} now?`}>{gaveUp ? 'Try again now' : 'Post now'}</button>
+            <button class="lr-linkbtn" type="submit" name="action" value="manual">Publish it by hand instead</button>
+          </form>
+        )}
+      </section>
+    )}
+
+    {post.status === 'approved' && canWrite && !post.social_account_id && (
+      <section class="lr-card lr-stack" aria-labelledby="publish-h">
+        <span class="mm-label" id="publish-h">Publish it</span>
+        <p class="lr-muted">This post has no account to go out on, so it is published by hand. It takes three steps and about a minute.</p>
+        <ol class="lr-steps">
+          <li>
+            <div class="lr-row">
+              <button class="mm-btn is-solid is-sm" type="button" data-copy="#copy">Copy the text</button>
+              {hasImage && <span class="lr-small lr-faint">Then download the image from the preview.</span>}
+            </div>
+          </li>
+          <li><a class="mm-btn is-solid is-sm" href={shareUrl} target="_blank" rel="noopener noreferrer">Open {post.channel === 'x' ? 'X' : 'LinkedIn'} with the text filled in</a></li>
+          <li>
+            <form method="post" class="lr-stack is-sm">
+              <div class="lr-field">
+                <label for="url">Paste the link to the live post</label>
+                <input class="lr-input" id="url" name="url" type="url" required placeholder="https://" />
+              </div>
+              <div><button class="mm-btn is-primary is-sm" type="submit" name="action" value="publish">Mark as published</button></div>
+            </form>
+          </li>
+        </ol>
+      </section>
+    )}
+
+    {post.status === 'published' && (
+      <section class="lr-card lr-stack" aria-labelledby="live-h">
+        <span class="mm-label" id="live-h">Live</span>
+        <p>Published {formatDay(post.published_at ?? post.scheduled_for)}. {publishedUrl && <a class="mm-link" href={publishedUrl} target="_blank" rel="noopener noreferrer">Open the live post</a>}</p>
+      </section>
+    )}
+
+    {post.status === 'draft' && canWrite && (
+      <form method="post">
+        <button class="lr-linkbtn is-danger" type="submit" name="action" value="delete" data-confirm="Delete this draft? This cannot be undone.">Delete this draft</button>
+      </form>
+    )}
+
+    <section class="lr-stack" aria-labelledby="history-h">
+      <span class="mm-label is-quiet" id="history-h">History</span>
+      <ol class="lr-history">
+        {history.map((h) => (
+          <li>
+            <span>{ACTION_LABEL[h.action] ?? h.action}{h.via === 'mcp' ? ' through the AI connector' : ''}{h.action === 'changes_requested' && h.note ? `: ${h.note}` : ''}</span>
+            <time datetime={h.created_at}>{h.user_name || h.user_email || "Someone"} · {formatDay(h.created_at)}</time>
+          </li>
+        ))}
+      </ol>
+    </section>
+  </div>
+</Workspace>

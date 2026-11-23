@@ -1,0 +1,104 @@
+---
+import Status from '../../../../components/Status.astro';
+import SubNav from '../../../../components/SubNav.astro';
+import Workspace from '../../../../layouts/Workspace.astro';
+import { can } from '../../../../lib/authz';
+import * as repo from '../../../../lib/repo';
+import * as service from '../../../../lib/service';
+import { REQUEST_STATUS_LABEL, type RequestStatus } from '../../../../lib/types';
+import { formatDay, formatMinutes, safeUrl, today } from '../../../../lib/util';
+import { db, done, formOf, loadWorkspace, notFound } from '../../../../lib/web';
+
+const access = await loadWorkspace(Astro);
+if (access instanceof Response) return access;
+const { ws, base, actor } = access;
+const id = Astro.params.id ?? '';
+const here = `${base}/requests/${id}`;
+
+if (Astro.request.method === 'POST') {
+  const f = await formOf(Astro);
+  switch (f.action) {
+    case 'status': return done(Astro, here, await service.changeRequestStatus(db(), ws, actor, id, f.status), 'Status updated.');
+    case 'time': return done(Astro, here, await service.logTime(db(), ws, actor, id, { minutes: f.minutes, note: f.note, logged_on: f.logged_on }), 'Time logged.');
+    case 'time_remove': return done(Astro, here, await service.removeTime(db(), ws, actor, id, f.entry ?? ''), 'Time entry removed.');
+    default: return notFound(Astro);
+  }
+}
+
+const req = await repo.getRequest(db(), ws.id, id);
+if (!req) return notFound(Astro);
+const [entries, history] = await Promise.all([repo.listTimeEntries(db(), ws.id, req.id), repo.listActivity(db(), ws.id, 'request', req.id)]);
+const total = entries.reduce((n, e) => n + e.minutes, 0);
+const manage = can(actor, 'request.manage');
+const pageUrl = safeUrl(req.page_url);
+const STATUSES: RequestStatus[] = ['open', 'in_progress', 'done', 'declined'];
+const label = (a: string, note: string) =>
+  a === 'created' ? 'Sent the request' : a === 'time_logged' ? `Logged ${note}` : a === 'time_removed' ? 'Removed a time entry'
+  : a.startsWith('status_') ? `Marked as ${(REQUEST_STATUS_LABEL[a.slice(7) as RequestStatus] ?? a.slice(7)).toLowerCase()}` : a;
+---
+<Workspace access={access} title={req.title} tab="site">
+  <SubNav base={base} current="requests" group="site" />
+  <div class="lr-head">
+    <div class="lr-row"><h2>{req.title}</h2><Status kind={req.status} label={REQUEST_STATUS_LABEL[req.status]} /></div>
+    <div class="lr-actions"><a class="lr-linkbtn" href={`${base}/requests`}>All requests</a></div>
+  </div>
+  <div class="lr-two">
+    <div class="lr-stack is-lg">
+      <section class="lr-card lr-stack">
+        <span class="mm-label">Request</span>
+        {req.detail ? <p class="lr-preview-copy">{req.detail}</p> : <p class="lr-muted">No extra details.</p>}
+        {pageUrl && <p><a class="mm-link" href={pageUrl} target="_blank" rel="noopener noreferrer">Open the page</a></p>}
+        <p class="lr-small lr-faint">Sent {formatDay(req.created_at)}{req.source === 'mcp' ? ' through the AI connector' : ''}.</p>
+      </section>
+      <section class="lr-stack" aria-labelledby="rh">
+        <span class="mm-label is-quiet" id="rh">History</span>
+        <ol class="lr-history">
+          {history.map((h) => <li><span>{label(h.action, h.note)}</span><time datetime={h.created_at}>{h.user_name || h.user_email || 'Someone'} · {formatDay(h.created_at)}</time></li>)}
+        </ol>
+      </section>
+    </div>
+    <div class="lr-stack is-lg">
+      <section class="lr-card lr-stack" aria-labelledby="time-h">
+        <span class="mm-label" id="time-h">Time on this request</span>
+        <p class="lr-num">{formatMinutes(total)}</p>
+        {entries.length > 0 && (
+          <ul class="lr-list">
+            {entries.map((e) => (
+              <li class="lr-row">
+                <span>{formatMinutes(e.minutes)} on {formatDay(e.logged_on)}{e.note ? `: ${e.note}` : ''}</span>
+                {manage && (
+                  <form method="post" class="lr-inline">
+                    <input type="hidden" name="entry" value={e.id} />
+                    <button class="lr-linkbtn" type="submit" name="action" value="time_remove" data-confirm="Remove this time entry?">Remove</button>
+                  </form>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+        {manage && (
+          <form method="post" class="lr-stack">
+            <div class="lr-formrow">
+              <div class="lr-field"><label for="minutes">Minutes</label><input class="lr-input" id="minutes" name="minutes" type="number" min="1" max="1440" step="1" required /></div>
+              <div class="lr-field"><label for="logged_on">Date</label><input class="lr-input" id="logged_on" name="logged_on" type="date" value={today()} max={today()} /></div>
+            </div>
+            <div class="lr-field"><label for="tnote">Note (optional)</label><input class="lr-input" id="tnote" name="note" maxlength="300" /></div>
+            <div><button class="mm-btn is-solid is-sm" type="submit" name="action" value="time">Log time</button></div>
+          </form>
+        )}
+      </section>
+      {manage && (
+        <section class="lr-card lr-stack" aria-labelledby="st-h">
+          <span class="mm-label" id="st-h">Status</span>
+          <form method="post" class="lr-row">
+            <label class="sr-only" for="status">Status</label>
+            <select class="lr-select" id="status" name="status">
+              {STATUSES.map((s) => <option value={s} selected={req.status === s}>{REQUEST_STATUS_LABEL[s]}</option>)}
+            </select>
+            <button class="mm-btn is-solid is-sm" type="submit" name="action" value="status">Update</button>
+          </form>
+        </section>
+      )}
+    </div>
+  </div>
+</Workspace>
