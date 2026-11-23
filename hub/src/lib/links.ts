@@ -52,3 +52,10 @@ export const clicksByPost = async (db: DB, workspaceId: string, since: string): 
 export const totalClicks = async (db: DB, workspaceId: string, since: string): Promise<number> =>
   (await db.prepare('SELECT COALESCE(SUM(clicks), 0) AS n FROM link_clicks WHERE workspace_id = ? AND day >= ?')
     .bind(workspaceId, since).first<{ n: number }>())?.n ?? 0;
+
+/** Human clicks on post links per day since a day (inclusive). */
+export const clicksByDay = async (db: DB, workspaceId: string, since: string): Promise<Map<string, number>> => {
+  const rows = (await db.prepare('SELECT day, SUM(clicks) AS clicks FROM link_clicks WHERE workspace_id = ? AND day >= ? GROUP BY day')
+    .bind(workspaceId, since).all<{ day: string; clicks: number }>()).results;
+  return new Map(rows.map((r) => [r.day, r.clicks]));
+};

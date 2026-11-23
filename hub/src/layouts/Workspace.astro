@@ -10,6 +10,7 @@ const { access, title, tab, fontsUrl } = Astro.props;
 const { ws, base, role, user } = access;
 const tabs = [
   { key: 'overview', href: base, label: 'Overview' },
+  { key: 'analytics', href: `${base}/analytics`, label: 'Analytics' },
   { key: 'posts', href: `${base}/posts`, label: 'Posts' },
   { key: 'calendar', href: `${base}/calendar`, label: 'Calendar' },
   { key: 'assets', href: `${base}/assets`, label: 'Assets' },

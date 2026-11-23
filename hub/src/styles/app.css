@@ -230,3 +230,37 @@ a.lr-card:hover { box-shadow: inset 0 0 0 1px var(--mm-border); }
 .lr-attn { display: grid; gap: var(--mm-space-2); }
 .lr-attn li { padding: 10px 14px; border-radius: var(--mm-radius-md); background: var(--mm-surface-2); }
 .lr-render { margin: 0; display: flex; gap: 12px; align-items: center; } .lr-render img { border-radius: 8px; background: var(--mm-surface-2); }
+
+/* Analytics */
+.lr-big { display: grid; gap: var(--mm-space-4); grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.lr-big .lr-stat strong { font-size: 34px; }
+.lr-delta { font-size: 13px; font-variant-numeric: tabular-nums; color: var(--mm-text-muted); }
+.lr-delta.is-up { color: var(--mm-success); }
+.lr-delta.is-down { color: var(--mm-danger); }
+.lr-summary { font-size: var(--mm-type-body-lg); line-height: 1.5; max-width: 70ch; }
+.lr-trend { margin: 0; display: grid; gap: 8px; }
+.lr-trend svg { width: 100%; height: auto; display: block; overflow: visible; }
+.lr-trend-grid { stroke: var(--mm-hair); stroke-dasharray: 2 4; }
+.lr-trend-axis { stroke: var(--mm-hair); }
+.lr-trend-line { fill: none; stroke: var(--mm-accent); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.lr-trend-prev { fill: none; stroke: var(--mm-text-dim); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.lr-trend-area { fill: var(--mm-accent); opacity: .08; }
+.lr-trend-post { fill: var(--mm-text); }
+.lr-trend-mark { stroke: var(--mm-text); opacity: .25; stroke-dasharray: 2 3; }
+.lr-trend-hit { fill: transparent; }
+.lr-trend-hit:hover { fill: var(--mm-text); opacity: .06; }
+.lr-trend-key { display: flex; flex-wrap: wrap; gap: var(--mm-space-4); align-items: center; }
+.lr-trend-key span { display: inline-flex; align-items: center; gap: 6px; }
+.lr-trend-key i { display: inline-block; width: 16px; height: 0; border-top: 2.5px solid var(--mm-accent); }
+.lr-trend-key i.is-prev { border-top: 1.5px dashed var(--mm-text-dim); }
+.lr-trend-key i.is-post { width: 8px; height: 8px; border: 0; border-radius: 50%; background: var(--mm-text); }
+.lr-trend-max { margin-left: auto; }
+.lr-trend details summary { cursor: pointer; color: var(--mm-text-muted); }
+.lr-bars { display: grid; gap: 10px; }
+.lr-bar { display: grid; gap: 4px; }
+.lr-bar svg { width: 100%; height: 8px; display: block; }
+.lr-bar-track { fill: var(--mm-surface-2); }
+.lr-bar-fill { fill: var(--mm-accent); }
+.lr-tag { font-size: 11px; padding: 1px 7px; border-radius: var(--mm-radius-pill); box-shadow: inset 0 0 0 1px var(--mm-hair); color: var(--mm-text-muted); white-space: nowrap; margin-left: 6px; }
+.lr-tag.is-up { color: var(--mm-success); box-shadow: inset 0 0 0 1px currentColor; }
+.lr-tag.is-down { color: var(--mm-danger); box-shadow: inset 0 0 0 1px currentColor; }

@@ -55,7 +55,7 @@ const attention = failed.length + reconnect.length + (canApprove ? waiting.lengt
   <div class="lr-stack is-lg">
     <section class="lr-card lr-stack" aria-labelledby="ov-stats">
       <div class="lr-row lr-between"><span class="mm-label" id="ov-stats">Last 28 days</span>
-        {(stats.ga4 || stats.gsc) && <span class="lr-small lr-faint">Updated {formatDay((stats.ga4 ?? stats.gsc)!.fetched_at)}</span>}</div>
+        <span class="lr-small lr-faint">{(stats.ga4 || stats.gsc) && <>Updated {formatDay((stats.ga4 ?? stats.gsc)!.fetched_at)} · </>}<a class="mm-link" href={`${base}/analytics`}>See analytics</a></span></div>
       <div class="lr-stats">
         <div class="lr-stat"><span class="lr-small lr-faint">Website visitors</span><strong>{ga4 ? n(ga4.totals.users) : '–'}</strong>{ga4 && <span class="lr-small lr-faint">{n(ga4.totals.views)} page views</span>}</div>
         <div class="lr-stat"><span class="lr-small lr-faint">Clicks from Google</span><strong>{gsc ? n(gsc.totals.clicks) : '–'}</strong>{gsc && <span class="lr-small lr-faint">{n(gsc.totals.impressions)} times shown</span>}</div>

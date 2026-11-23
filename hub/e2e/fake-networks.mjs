@@ -18,6 +18,24 @@ const send = (res, status, body, headers = {}) => {
 const read = (req) => new Promise((resolve) => { const chunks = []; req.on('data', (c) => chunks.push(c)); req.on('end', () => resolve(Buffer.concat(chunks))); });
 const dayStr = (n) => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10).replace(/-/g, '');
 
+// Google Analytics batch reports. With several date ranges each row carries the range name, like the real API.
+const TOTALS = { c7: [480, 600, 1300, 20], p7: [450, 560, 1200, 15], c28: [1830, 2390, 5120, 74], p28: [1500, 1900, 4300, 60], c90: [5200, 6800, 15000, 210], p90: [4100, 5300, 12000, 160] };
+const ga4Report = (r) => {
+  const dims = (r.dimensions ?? []).map((d) => d.name);
+  const ranges = (r.dateRanges ?? []).map((d) => d.name ?? '');
+  const multi = ranges.length > 1;
+  const headers = [...dims.map((name) => ({ name })), ...(multi ? [{ name: 'dateRange' }] : [])];
+  const row = (values, range, metrics) => ({ dimensionValues: [...values.map((value) => ({ value })), ...(multi ? [{ value: range }] : [])], metricValues: metrics.map((m) => ({ value: String(m) })) });
+  const scale = (range) => ({ c7: 0.25, p7: 0.22, c28: 1, p28: 0.8, c90: 3, p90: 2.4 })[range] ?? 1;
+  if (dims[0] === 'date') {
+    const days = Math.round((Date.now() - new Date(`${r.dateRanges[0].startDate}T00:00:00Z`).getTime()) / 864e5);
+    return { dimensionHeaders: headers, rows: Array.from({ length: days }, (_, i) => { const n = 40 + ((i * 37) % 60); return row([dayStr(days - i)], '', [n, n + 10, n * 3, i % 4]); }) };
+  }
+  if (dims[0] === 'pagePath') return { dimensionHeaders: headers, rows: ranges.flatMap((g) => [['/', 2210], ['/pricing', 940], ['/blog/remember-what-you-read', 610], ['/signup', 380]].map(([v, n]) => row([v], g, [Math.round(n * scale(g))]))) };
+  if (dims[0] === 'sessionDefaultChannelGroup') return { dimensionHeaders: headers, rows: ranges.flatMap((g) => [['Organic Search', 820], ['Direct', 610], ['Organic Social', 290], ['Referral', 95]].map(([v, n]) => row([v], g, [Math.round(n * scale(g))]))) };
+  return { dimensionHeaders: headers, rows: ranges.map((g) => row([], g, TOTALS[g] ?? [0, 0, 0, 0])) };
+};
+
 createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   const raw = await read(req);
@@ -68,8 +86,20 @@ createServer(async (req, res) => {
     if (dim === 'sessionDefaultChannelGroup') return send(res, 200, { rows: [['Organic Search', 820], ['Direct', 610], ['Organic Social', 290], ['Referral', 95]].map(([v, n]) => ({ dimensionValues: [{ value: v }], metricValues: [{ value: String(n) }] })) });
     return send(res, 200, { rows: [{ metricValues: [{ value: '1830' }, { value: '2390' }, { value: '5120' }, { value: '74' }] }] });
   }
+  if (/^\/v1beta\/properties\/\d+:batchRunReports$/.test(p)) return send(res, 200, { reports: (body?.requests ?? []).map(ga4Report) });
   if (p.startsWith('/webmasters/v3/sites/')) {
-    if (body?.dimensions?.[0] === 'query') return send(res, 200, { rows: [['ai reading app', 61, 900, 4.2], ['book summaries app', 44, 1300, 7.9], ['bookly', 38, 120, 1.1]].map(([k, c, i, pos]) => ({ keys: [k], clicks: c, impressions: i, ctr: c / i, position: pos })) });
+    if (body?.dimensions?.[0] === 'date') {
+      // 9 clicks a day in the last 30 days, 6 before that: the latest 28 days come out at 252, up 50%.
+      const rows = [];
+      for (let d = new Date(`${body.startDate}T00:00:00Z`); d <= new Date(`${body.endDate}T00:00:00Z`); d = new Date(d.getTime() + 864e5)) {
+        const day = d.toISOString().slice(0, 10);
+        const recent = Date.now() - d.getTime() < 31 * 864e5;
+        rows.push({ keys: [day], clicks: recent ? 9 : 6, impressions: recent ? 240 : 200, ctr: 0.03, position: 11 });
+      }
+      return send(res, 200, { rows });
+    }
+    const older = body?.rowLimit === 100; // the period before, used for rising searches
+    if (body?.dimensions?.[0] === 'query') return send(res, 200, { rows: (older ? [['ai reading app', 30, 800, 5.0], ['bookly', 40, 120, 1.2]] : [['ai reading app', 61, 900, 4.2], ['book summaries app', 44, 1300, 7.9], ['bookly', 38, 120, 1.1]]).map(([k, c, i, pos]) => ({ keys: [k], clicks: c, impressions: i, ctr: c / i, position: pos })) });
     return send(res, 200, { rows: [{ clicks: 212, impressions: 6400, ctr: 0.033, position: 11.4 }] });
   }
   send(res, 404, { error: 'not faked', path: p });

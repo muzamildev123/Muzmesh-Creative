@@ -1,0 +1,50 @@
+---
+// Daily visitors for a period, the period before as a faint dashed line, and a dot under each day
+// a post went out. Hover any day for its numbers; the same numbers are in a table below.
+interface Props {
+  points: { day: string; value: number; prev: number | null; posts: string[] }[];
+  label: string;
+}
+const { points, label } = Astro.props;
+const W = 900, H = 200, TOP = 8, BOTTOM = 26, LEFT = 4, RIGHT = 4;
+const plotH = H - TOP - BOTTOM;
+const max = Math.max(1, ...points.map((p) => Math.max(p.value, p.prev ?? 0)));
+const step = points.length > 1 ? (W - LEFT - RIGHT) / (points.length - 1) : 0;
+const x = (i: number) => LEFT + i * step;
+const y = (v: number) => TOP + plotH - (v / max) * plotH;
+const path = (vals: (number | null)[]) => vals.map((v, i) => (v === null ? '' : `${i && vals[i - 1] !== null ? 'L' : 'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`)).join(' ');
+const line = path(points.map((p) => p.value));
+const prevLine = points.some((p) => p.prev !== null) ? path(points.map((p) => p.prev)) : '';
+const area = points.length > 1 ? `${line} L${x(points.length - 1).toFixed(1)} ${TOP + plotH} L${x(0).toFixed(1)} ${TOP + plotH} Z` : '';
+const fmt = (d: string) => new Date(`${d}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+const postDays = points.filter((p) => p.posts.length).length;
+const tip = (p: Props['points'][number]) =>
+  `${fmt(p.day)}: ${p.value} ${label.toLowerCase()}${p.prev !== null ? ` (period before: ${p.prev})` : ''}${p.posts.length ? `. Posted: ${p.posts.join('; ')}` : ''}`;
+---
+{points.length > 1 && (
+  <figure class="lr-trend">
+    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${label} per day, ${fmt(points[0]!.day)} to ${fmt(points[points.length - 1]!.day)}. Highest day ${max}. ${postDays} day${postDays === 1 ? '' : 's'} with a post.`}>
+      <line class="lr-trend-grid" x1={LEFT} x2={W - RIGHT} y1={TOP} y2={TOP} />
+      <line class="lr-trend-grid" x1={LEFT} x2={W - RIGHT} y1={TOP + plotH / 2} y2={TOP + plotH / 2} />
+      <line class="lr-trend-axis" x1={LEFT} x2={W - RIGHT} y1={TOP + plotH} y2={TOP + plotH} />
+      <path class="lr-trend-area" d={area} />
+      {prevLine && <path class="lr-trend-prev" d={prevLine} vector-effect="non-scaling-stroke" />}
+      <path class="lr-trend-line" d={line} vector-effect="non-scaling-stroke" />
+      {points.map((p, i) => p.posts.length > 0 && <line class="lr-trend-mark" x1={x(i)} x2={x(i)} y1={TOP} y2={H - 14} />)}
+      {points.map((p, i) => p.posts.length > 0 && <circle class="lr-trend-post" cx={x(i)} cy={H - 9} r="5" />)}
+      {points.map((p, i) => <rect class="lr-trend-hit" x={x(i) - Math.max(step, 6) / 2} y="0" width={Math.max(step, 6)} height={H}><title>{tip(p)}</title></rect>)}
+    </svg>
+    <figcaption class="lr-trend-key lr-small lr-faint">
+      <span><i class="is-line" aria-hidden="true"></i>This period</span>
+      {prevLine && <span><i class="is-prev" aria-hidden="true"></i>Period before</span>}
+      <span><i class="is-post" aria-hidden="true"></i>Day a post went out</span>
+      <span class="lr-trend-max">Top of chart: {max.toLocaleString('en-US')}</span>
+    </figcaption>
+    <details class="lr-small"><summary>Show as a table</summary>
+      <div class="lr-tablewrap">
+        <table class="lr-table"><thead><tr><th scope="col">Day</th><th scope="col" class="is-num">{label}</th><th scope="col" class="is-num">Period before</th><th scope="col">Posts</th></tr></thead>
+          <tbody>{points.map((p) => <tr><td class="lr-nowrap">{fmt(p.day)}</td><td class="is-num">{p.value}</td><td class="is-num">{p.prev ?? '–'}</td><td>{p.posts.join('; ')}</td></tr>)}</tbody></table>
+      </div>
+    </details>
+  </figure>
+)}

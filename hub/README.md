@@ -11,7 +11,9 @@ Clients reach it from their own site at **yoursite.com/admin**, a redirect to th
 
 Not built yet: monthly PDF reports, Instagram, Facebook and other networks, an icon maker, file uploads on requests, and WebMCP. A post without a connected account is still published by hand: copy the text, open the network with it filled in, paste the live link back.
 
-Tabs: **Overview** (stats, what needs you, what is coming up), **Posts**, **Calendar**, **Assets** (library, image maker, brand kit), **Site** (open Sanity, the site, Clarity, change requests, edit hours, launch checklist), **Accounts** (LinkedIn and X, AI apps, context pack), and **Settings** for MuzMesh.
+Website stats refresh from Google about once a day: each 5-minute cron run refreshes up to two workspaces whose numbers are over 20 hours old (about 11 Google calls each), so a run stays inside the Workers subrequest limit.
+
+Tabs: **Overview** (stats, what needs you, what is coming up), **Analytics** (last 7, 28 or 90 days against the period before: a plain-words summary, visitors, key actions, Google clicks, post-link clicks, a daily chart with post days marked, sources, pages, rising searches, best posts), **Posts**, **Calendar**, **Assets** (library, image maker, brand kit), **Site** (open Sanity, the site, Clarity, change requests, edit hours, launch checklist), **Accounts** (LinkedIn and X, AI apps, context pack), and **Settings** for MuzMesh.
 
 ## How it is built
 

@@ -203,11 +203,27 @@ try {
   ok((await flash(s)).includes('Stats refreshed'), 'stats refresh on demand');
   await o.goto(`${BASE}/w/bookly`);
   const ov = await o.locator('main').innerText();
-  ok(ov.includes('1,830') && ov.includes('212'), 'the Overview shows visitors and Google clicks');
+  ok(ov.includes('1,830') && ov.includes('252'), 'the Overview shows visitors and Google clicks');
   ok(/Clicks on post links\s*1\b/.test(ov), 'and one human click on the short link (the bot was not counted)');
   ok(ov.includes('/pricing') && ov.includes('ai reading app'), 'with top pages and searches');
   ok((await o.locator('.lr-spark svg').count()) === 1, 'and a daily visitors line');
   await shot(o, 'overview');
+
+  // ---- analytics ----
+  await o.goto(`${BASE}/w/bookly/analytics`);
+  const an = await o.locator('main').innerText();
+  ok((await o.getByTestId('summary').innerText()).includes('1,830 people visited the website, up 22% on the 28 days before'), 'Analytics opens with a plain-words summary');
+  ok(an.includes('Most came from Organic Search'), 'naming where most visitors came from');
+  ok(an.includes('252') && an.includes('↑ 50%'), 'Google clicks with the change on the period before');
+  ok(an.includes('74') && an.includes('Key actions'), 'and key actions from Google Analytics');
+  ok((await o.locator('.lr-trend svg').count()) === 1, 'a daily visitors chart');
+  ok((await o.locator('.lr-trend-prev').count()) === 1, 'and the period before as a faint line');
+  ok(an.includes('book summaries app') && an.includes('New'), 'searches new this period are tagged');
+  ok(/ai reading app\s*Rising/.test(an), 'and rising searches too');
+  await o.click('a:has-text("Last 7 days")');
+  ok((await o.getByTestId('summary').innerText()).includes('480 people visited'), 'the period switch shows the last 7 days');
+  ok((await o.locator('.lr-trend-hit').count()) === 7, 'with one chart day per day');
+  await shot(o, 'analytics');
 
   // ---- disconnect ----
   await o.goto(`${BASE}/w/bookly/accounts`);
@@ -217,7 +233,7 @@ try {
 
   // ---- phone layout ----
   const phone = await signIn('owner@bookly.test', { viewport: { width: 390, height: 844 } });
-  for (const path of ['', '/assets', '/assets/make', '/site', '/accounts', `/posts/${postUrl.split('/').pop()}`]) {
+  for (const path of ['', '/analytics', '/assets', '/assets/make', '/site', '/accounts', `/posts/${postUrl.split('/').pop()}`]) {
     await phone.page.goto(`${BASE}/w/bookly${path}`);
     const overflow = await phone.page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     ok(overflow <= 1, `no sideways scroll on a phone at /w/bookly${path}`);
