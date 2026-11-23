@@ -1,0 +1,42 @@
+---
+// The homepage markup, shared by the live page (static) and the visual-editor
+// preview (on demand, draft content). Homepage: the scroll story, referral, FAQ, launch brief and footer.
+// Words, prices, the five days and the FAQ are edited in Sanity (Homepage);
+// defaults live in src/data/home.ts.
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import Story from '@/components/home/Story.astro';
+import Referral from '@/components/home/Referral.astro';
+import Faq from '@/components/home/Faq.astro';
+import LaunchBrief from '@/components/home/LaunchBrief.astro';
+import HomeFooter from '@/components/home/HomeFooter.astro';
+import { tokens, plain } from '@/lib/home';
+import { stegaClean } from '@sanity/client/stega';
+import type { HomeContent } from '@/data/home';
+// The scripts run inline, right after the markup, exactly as in the prototype,
+// so the story is set up before the first paint.
+import storyJs from '@/scripts/home/story.js?raw';
+import faqJs from '@/scripts/home/faq.js?raw';
+import briefJs from '@/scripts/home/brief.js?raw';
+import footerJs from '@/scripts/home/footer.js?raw';
+
+interface Props {
+  c: HomeContent;
+  preview?: boolean;
+}
+const { c, preview = false } = Astro.props;
+const t = tokens(c);
+// Invisible click-to-edit markers must never reach <title> or meta tags.
+const clean = (s: string) => stegaClean(plain(s, t));
+---
+
+<HomeLayout title={clean(c.seo.title)} description={clean(c.seo.description)} visualEditing={preview} noindex={preview}>
+  <Story c={c} t={t} />
+  <Referral c={c} t={t} />
+  <Faq c={c} t={t} />
+  <LaunchBrief c={c} t={t} />
+  <HomeFooter c={c} t={t} />
+  <script is:inline set:html={storyJs} />
+  <script is:inline set:html={faqJs} />
+  <script is:inline set:html={briefJs} />
+  <script is:inline set:html={footerJs} />
+</HomeLayout>

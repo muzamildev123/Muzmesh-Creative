@@ -1,33 +1,11 @@
 ---
-// Homepage: the scroll story, referral, FAQ, launch brief and footer.
-// Words, prices, the five days and the FAQ are edited in Sanity (Homepage);
-// defaults live in src/data/home.ts.
-import HomeLayout from '@/layouts/HomeLayout.astro';
-import Story from '@/components/home/Story.astro';
-import Referral from '@/components/home/Referral.astro';
-import Faq from '@/components/home/Faq.astro';
-import LaunchBrief from '@/components/home/LaunchBrief.astro';
-import HomeFooter from '@/components/home/HomeFooter.astro';
-import { getHome, tokens, plain } from '@/lib/home';
-// The scripts run inline, right after the markup, exactly as in the prototype,
-// so the story is set up before the first paint.
-import storyJs from '@/scripts/home/story.js?raw';
-import faqJs from '@/scripts/home/faq.js?raw';
-import briefJs from '@/scripts/home/brief.js?raw';
-import footerJs from '@/scripts/home/footer.js?raw';
+// Homepage. The markup is in components/home/HomePage.astro (shared with the
+// visual-editor preview). Words, prices, the five days and the FAQ are edited
+// in Sanity (Homepage); defaults live in src/data/home.ts.
+import HomePage from '@/components/home/HomePage.astro';
+import { getHome } from '@/lib/home';
 
 const c = await getHome();
-const t = tokens(c);
 ---
 
-<HomeLayout title={plain(c.seo.title, t)} description={plain(c.seo.description, t)}>
-  <Story c={c} t={t} />
-  <Referral c={c} t={t} />
-  <Faq c={c} t={t} />
-  <LaunchBrief c={c} t={t} />
-  <HomeFooter c={c} t={t} />
-  <script is:inline set:html={storyJs} />
-  <script is:inline set:html={faqJs} />
-  <script is:inline set:html={briefJs} />
-  <script is:inline set:html={footerJs} />
-</HomeLayout>
+<HomePage c={c} />

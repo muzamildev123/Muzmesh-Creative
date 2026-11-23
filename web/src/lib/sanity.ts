@@ -30,6 +30,42 @@ export function sanityClient() {
   return client;
 }
 
+// ---------- Visual editing (preview deployment only) ----------
+// On the preview deployment (PUBLIC_SANITY_VISUAL_EDITING_ENABLED=true) the
+// homepage is rendered on demand from DRAFT content, with invisible "stega"
+// markers on each text so the Studio's Presentation tool can click-to-edit.
+// The live site never sets this flag, so it stays fully static.
+export const visualEditingEnabled = import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === 'true';
+
+// Never mark values that end up in links, ids, classes or numbers: the invisible
+// characters would break them.
+const STEGA_SKIP_KEY = /(^_|url|href|link|email|slug|^id$|key|type|icon|class|style|lang|date|currency|number|percent|price|setup|monthly)/i;
+const stegaFilter = ({ sourcePath, value }: { sourcePath: Array<string | number>; value: unknown }) => {
+  if (typeof value !== 'string' || !value.trim()) return false;
+  if (/^(https?:|mailto:|tel:|\/|#)/.test(value) || /^\d{4}-\d{2}-\d{2}/.test(value)) return false;
+  const last = [...sourcePath].reverse().find((k) => typeof k === 'string') as string | undefined;
+  return !(last && STEGA_SKIP_KEY.test(last));
+};
+
+let previewClient: SanityClient | undefined;
+export function sanityPreviewClient() {
+  const projectId = sanityProjectId();
+  const token = import.meta.env.SANITY_API_READ_TOKEN;
+  if (!projectId) throw new Error('SANITY_PROJECT_ID is not set.');
+  if (!token) throw new Error('SANITY_API_READ_TOKEN is required for the visual editor preview.');
+  previewClient ??= createClient({
+    projectId,
+    dataset: sanityDataset(),
+    token,
+    apiVersion: '2026-10-01',
+    useCdn: false,
+    perspective: 'drafts',
+    resultSourceMap: 'withKeyArraySelector',
+    stega: { enabled: true, studioUrl: import.meta.env.SANITY_STUDIO_URL || 'https://muzmeshcreative.com/studio', filter: stegaFilter },
+  });
+  return previewClient;
+}
+
 type SanityImage = { asset?: { _ref: string }; alt?: string };
 
 const imageUrl = (image: SanityImage, width: number) =>
