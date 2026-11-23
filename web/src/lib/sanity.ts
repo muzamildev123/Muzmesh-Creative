@@ -7,27 +7,14 @@ import type { Loader } from 'astro/loaders';
 // Vercel deploy hook, which rebuilds the site with the new content.
 let client: SanityClient | undefined;
 
-// Our own names come first (web/.env). The Sanity integration on Vercel sets
-// SANITY_API_* and SANITY_STUDIO_* instead, so read those as fallbacks.
-const env = (key: string): string | undefined =>
-  (import.meta.env as Record<string, string | undefined>)[key] || process.env[key] || undefined;
-
-export const sanityProjectId = () =>
-  env('SANITY_PROJECT_ID') ?? env('SANITY_API_PROJECT_ID') ?? env('SANITY_STUDIO_PROJECT_ID');
-
-const sanityDataset = () =>
-  env('SANITY_DATASET') ?? env('SANITY_API_DATASET') ?? env('SANITY_STUDIO_DATASET') ?? 'production';
-
 export function sanityClient() {
-  const projectId = sanityProjectId();
+  const projectId = import.meta.env.SANITY_PROJECT_ID;
   if (!projectId) {
-    throw new Error(
-      'No Sanity project ID. Set SANITY_PROJECT_ID (or connect the Sanity integration on Vercel). See README.',
-    );
+    throw new Error('SANITY_PROJECT_ID is not set. Copy web/.env.example to web/.env and fill it in (see README).');
   }
   client ??= createClient({
     projectId,
-    dataset: sanityDataset(),
+    dataset: import.meta.env.SANITY_DATASET || 'production',
     apiVersion: '2026-10-01',
     // Skip the CDN so a rebuild right after Publish never gets stale content.
     useCdn: false,
@@ -78,7 +65,7 @@ export function sanityLoader(query: string): Loader {
     load: async ({ store, parseData, generateDigest, logger }) => {
       // Lets the team work on design locally before Sanity is set up.
       // Production builds still fail loudly without a project ID.
-      if (!sanityProjectId() && import.meta.env.DEV) {
+      if (!import.meta.env.SANITY_PROJECT_ID && import.meta.env.DEV) {
         logger.warn('SANITY_PROJECT_ID is not set, so this collection is empty. See README to connect Sanity.');
         store.clear();
         return;
