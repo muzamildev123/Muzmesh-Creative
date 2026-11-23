@@ -2,7 +2,7 @@
 // Only hashes of link tokens and session ids are stored, so a database leak cannot be replayed.
 import * as repo from './repo';
 import type { User } from './types';
-import { addSeconds, nowIso, randomToken, sha256Hex } from './util';
+import { addSeconds, nowIso, randomToken, safeEqual, sha256Hex } from './util';
 
 type DB = D1Database;
 export const LOGIN_LINK_SECONDS = 15 * 60;
@@ -46,10 +46,38 @@ export const consumeLoginToken = async (db: DB, token: string): Promise<{ sessio
   if (!row) return null;
   const user = await repo.getUserById(db, row.user_id);
   if (!user) return null;
+  return { sessionId: await startSession(db, user.id), user };
+};
+
+const startSession = async (db: DB, userId: string): Promise<string> => {
   const sessionId = randomToken();
   await db.prepare('INSERT INTO sessions (id_hash, user_id, expires_at, created_at) VALUES (?, ?, ?, ?)')
-    .bind(await sha256Hex(sessionId), user.id, addSeconds(SESSION_SECONDS), t).run();
-  return { sessionId, user };
+    .bind(await sha256Hex(sessionId), userId, addSeconds(SESSION_SECONDS), nowIso()).run();
+  return sessionId;
+};
+
+/** The admin password sign-in is on only when ADMIN_PASSWORD (12+ characters) and BOOTSTRAP_ADMIN_EMAIL are both set. */
+export const MIN_ADMIN_PASSWORD = 12;
+export const adminPasswordEnabled = (env: { ADMIN_PASSWORD?: string; BOOTSTRAP_ADMIN_EMAIL?: string }): boolean =>
+  (env.ADMIN_PASSWORD ?? '').length >= MIN_ADMIN_PASSWORD && isEmail((env.BOOTSTRAP_ADMIN_EMAIL ?? '').trim());
+
+/**
+ * Fixed-credential sign-in for the MuzMesh admin only: BOOTSTRAP_ADMIN_EMAIL plus the ADMIN_PASSWORD secret.
+ * Clients still sign in by emailed link. Deleting the secret turns this off.
+ */
+export const passwordLogin = async (
+  db: DB, email: string, password: string,
+  env: { ADMIN_PASSWORD?: string; BOOTSTRAP_ADMIN_EMAIL?: string },
+): Promise<{ sessionId: string; user: User } | null> => {
+  if (!adminPasswordEnabled(env)) return null;
+  const admin = env.BOOTSTRAP_ADMIN_EMAIL!.trim().toLowerCase();
+  // Compare hashes so the check takes the same time whatever the input length.
+  const [given, want] = await Promise.all([sha256Hex(password), sha256Hex(env.ADMIN_PASSWORD!)]);
+  const emailOk = safeEqual(email.trim().toLowerCase(), admin);
+  if (!safeEqual(given, want) || !emailOk) return null;
+  const user = await userForLogin(db, admin, admin);
+  if (!user || !user.is_staff) return null;
+  return { sessionId: await startSession(db, user.id), user };
 };
 
 export const userForSession = async (db: DB, sessionId: string | undefined): Promise<User | null> => {

@@ -3,6 +3,8 @@
 DEV_SHOW_LOGIN_LINK=1
 # The first person to sign in with this address becomes MuzMesh staff, only while the users table is empty.
 BOOTSTRAP_ADMIN_EMAIL=you@example.com
+# Optional: password sign-in for the address above only (12+ characters).
+# ADMIN_PASSWORD=
 # Production only: Resend key and sender for sign-in emails.
 # RESEND_API_KEY=
 # EMAIL_FROM=Launch Room <login@yourdomain.com>

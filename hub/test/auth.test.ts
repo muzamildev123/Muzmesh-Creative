@@ -51,6 +51,36 @@ describe('sign-in links', () => {
   });
 });
 
+describe('admin password sign-in', () => {
+  const env = { ADMIN_PASSWORD: 'correct horse battery', BOOTSTRAP_ADMIN_EMAIL: 'boss@muzmesh.test' };
+  it('is off unless a long enough password and the admin email are set', async () => {
+    expect(auth.adminPasswordEnabled({})).toBe(false);
+    expect(auth.adminPasswordEnabled({ ADMIN_PASSWORD: 'short', BOOTSTRAP_ADMIN_EMAIL: 'boss@muzmesh.test' })).toBe(false);
+    expect(auth.adminPasswordEnabled({ ADMIN_PASSWORD: 'correct horse battery' })).toBe(false);
+    expect(auth.adminPasswordEnabled(env)).toBe(true);
+    expect(await auth.passwordLogin(makeDb(), 'boss@muzmesh.test', 'short', { ...env, ADMIN_PASSWORD: 'short' })).toBeNull();
+  });
+  it('creates the first staff account and a working session', async () => {
+    const empty = makeDb();
+    const s = await auth.passwordLogin(empty, 'Boss@MuzMesh.test', 'correct horse battery', env);
+    expect(s?.user.is_staff).toBe(1);
+    expect((await auth.userForSession(empty, s!.sessionId))?.email).toBe('boss@muzmesh.test');
+    const again = await auth.passwordLogin(empty, 'boss@muzmesh.test', 'correct horse battery', env);
+    expect(again?.user.id).toBe(s!.user.id);
+    expect(await repo.countUsers(empty)).toBe(1);
+  });
+  it('rejects a wrong password, any other email, and a non-staff admin address', async () => {
+    const empty = makeDb();
+    expect(await auth.passwordLogin(empty, 'boss@muzmesh.test', 'wrong password here', env)).toBeNull();
+    expect(await auth.passwordLogin(empty, 'owner@acme.test', 'correct horse battery', env)).toBeNull();
+    expect(await repo.countUsers(empty)).toBe(0);
+    // A client account that happens to use the admin address never gets in by password.
+    expect(await auth.passwordLogin(w.db, 'owner@acme.test', 'correct horse battery', { ...env, BOOTSTRAP_ADMIN_EMAIL: 'owner@acme.test' })).toBeNull();
+    // Once other users exist, an unknown admin address is not created.
+    expect(await auth.passwordLogin(w.db, 'boss@muzmesh.test', 'correct horse battery', env)).toBeNull();
+  });
+});
+
 describe('rate limit', () => {
   it('allows up to the limit in a window', async () => {
     const r = [];

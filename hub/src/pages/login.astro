@@ -1,9 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
-import { createLoginToken, isEmail, safeNext, userForLogin } from '../lib/auth';
+import { adminPasswordEnabled, createLoginToken, isEmail, passwordLogin, safeNext, SESSION_SECONDS, userForLogin } from '../lib/auth';
 import { sendLoginEmail } from '../lib/email';
 import { allow, sweep } from '../lib/ratelimit';
-import { appEnv, clientIp, db, formOf, isLocalhost } from '../lib/web';
+import { appEnv, clientIp, db, formOf, isLocalhost, SESSION_COOKIE } from '../lib/web';
 
 const next = safeNext(Astro.url.searchParams.get('next'));
 if (Astro.locals.user) return Astro.redirect(next, 303);
@@ -11,11 +11,25 @@ if (Astro.locals.user) return Astro.redirect(next, 303);
 let sent = false;
 let devLink = '';
 let error = '';
+let pwError = '';
+const env = appEnv();
+const passwordOn = adminPasswordEnabled(env);
 if (Astro.request.method === 'POST') {
   const form = await formOf(Astro);
   const email = (form.email ?? '').trim().toLowerCase();
-  const env = appEnv();
-  if (!isEmail(email)) error = 'Enter a valid email address.';
+  if (form.mode === 'password') {
+    if (!passwordOn) pwError = 'Password sign-in is off.';
+    else if (!(await allow(db(), `login-ip:${clientIp(Astro)}`, 20, 900)) || !(await allow(db(), 'login-password', 10, 900))) {
+      pwError = 'Too many sign-in attempts. Wait 15 minutes and try again.';
+    } else {
+      const session = await passwordLogin(db(), email, form.password ?? '', env);
+      if (session) {
+        Astro.cookies.set(SESSION_COOKIE(Astro.url), session.sessionId, { path: '/', httpOnly: true, sameSite: 'lax', secure: Astro.url.protocol === 'https:', maxAge: SESSION_SECONDS });
+        return Astro.redirect(safeNext(form.next), 303);
+      }
+      pwError = 'That email and password do not match.';
+    }
+  } else if (!isEmail(email)) error = 'Enter a valid email address.';
   else if (!(await allow(db(), `login-ip:${clientIp(Astro)}`, 20, 900)) || !(await allow(db(), `login-email:${email}`, 5, 900))) {
     error = 'Too many sign-in attempts. Wait 15 minutes and try again.';
   } else {
@@ -56,6 +70,25 @@ if (Astro.request.method === 'POST') {
         <button class="mm-btn is-primary is-md" type="submit">Email me a link</button>
         <p class="lr-small lr-faint">Accounts are by invitation. Ask MuzMesh if you need access.</p>
       </form>
+    )}
+    {!sent && passwordOn && (
+      <details class="lr-stack" open={pwError ? true : undefined}>
+        <summary>MuzMesh admin: sign in with password</summary>
+        <form method="post" class="lr-stack" novalidate>
+          <input type="hidden" name="mode" value="password" />
+          <input type="hidden" name="next" value={next} />
+          <div class="lr-field">
+            <label for="pw-email">Email</label>
+            <input class="lr-input" id="pw-email" name="email" type="email" autocomplete="username" required />
+          </div>
+          <div class="lr-field">
+            <label for="pw-password">Password</label>
+            <input class="lr-input" id="pw-password" name="password" type="password" autocomplete="current-password" required aria-invalid={pwError ? 'true' : undefined} aria-describedby={pwError ? 'pw-error' : undefined} />
+            {pwError && <p class="mm-error" id="pw-error" role="alert">{pwError}</p>}
+          </div>
+          <button class="mm-btn is-solid is-md" type="submit">Sign in</button>
+        </form>
+      </details>
     )}
   </div>
 </Base>

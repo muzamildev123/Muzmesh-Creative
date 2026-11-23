@@ -8,6 +8,8 @@ declare namespace Cloudflare {
   DEV_SHOW_LOGIN_LINK?: string;
   /** The first sign-in with this address creates the first MuzMesh staff account, only while there are no users. */
   BOOTSTRAP_ADMIN_EMAIL?: string;
+  /** Optional fixed password for BOOTSTRAP_ADMIN_EMAIL only (12+ characters). Delete the secret to turn password sign-in off. */
+  ADMIN_PASSWORD?: string;
   RESEND_API_KEY?: string;
   EMAIL_FROM?: string;
   /** The app's public address, e.g. https://room.muzmesh.com. Used for short links and emails sent by the scheduler. */

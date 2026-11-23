@@ -76,7 +76,9 @@ To run the browser checks against the production build (with the Content-Securit
    npx wrangler secret put BOOTSTRAP_ADMIN_EMAIL   # your own address, used once to create the first MuzMesh account
    npx wrangler secret put RESEND_API_KEY          # from resend.com
    npx wrangler secret put EMAIL_FROM              # e.g. Launch Room <login@yourdomain.com>, on a domain verified in Resend
+   npx wrangler secret put ADMIN_PASSWORD          # optional, 12+ characters: lets BOOTSTRAP_ADMIN_EMAIL sign in with a password
    ```
+   With `ADMIN_PASSWORD` set, the sign-in page shows "MuzMesh admin: sign in with password". It works for the `BOOTSTRAP_ADMIN_EMAIL` staff account only; clients always use emailed links. Delete the secret to turn it off.
 5. Files and posting:
    ```sh
    npx wrangler r2 bucket create launch-room-files
