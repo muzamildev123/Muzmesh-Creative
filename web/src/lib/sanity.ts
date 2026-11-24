@@ -40,7 +40,7 @@ export const visualEditingEnabled = import.meta.env.PUBLIC_SANITY_VISUAL_EDITING
 // Never mark values that end up in links, ids, classes or numbers: the invisible
 // characters would break them.
 const STEGA_SKIP_KEY = /(^_|url|href|link|email|slug|^id$|key|type|icon|class|style|lang|date|currency|number|percent|price|setup|monthly)/i;
-const stegaFilter = ({ sourcePath, value }: { sourcePath: Array<string | number>; value: unknown }) => {
+const stegaFilter = ({ sourcePath, value }: { sourcePath: ReadonlyArray<unknown>; value: unknown }) => {
   if (typeof value !== 'string' || !value.trim()) return false;
   if (/^(https?:|mailto:|tel:|\/|#)/.test(value) || /^\d{4}-\d{2}-\d{2}/.test(value)) return false;
   const last = [...sourcePath].reverse().find((k) => typeof k === 'string') as string | undefined;
