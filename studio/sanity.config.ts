@@ -3,6 +3,7 @@ import { structureTool } from 'sanity/structure';
 import { presentationTool } from 'sanity/presentation';
 import { visionTool } from '@sanity/vision';
 import { schemaTypes } from './schemaTypes';
+import { PublishToStagingAction, asPublishToLive } from './publishActions';
 
 // The Homepage is a single document: no "new Homepage", no delete or duplicate.
 const singletons = new Set(['homePage']);
@@ -50,9 +51,13 @@ export default defineConfig({
     templates: (templates) => templates.filter(({ schemaType }) => !singletons.has(schemaType)),
   },
   document: {
-    actions: (actions, { schemaType }) =>
-      singletons.has(schemaType)
+    // Webflow-style: "Publish to staging" first (safe), "Publish to live" in the menu next to it.
+    actions: (actions, { schemaType }) => {
+      const kept = singletons.has(schemaType)
         ? actions.filter(({ action }) => action && ['publish', 'discardChanges', 'restore'].includes(action))
-        : actions,
+        : actions;
+      const relabelled = kept.map((a) => (a.action === 'publish' ? asPublishToLive(a) : a));
+      return [PublishToStagingAction, ...relabelled];
+    },
   },
 });

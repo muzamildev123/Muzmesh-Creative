@@ -12,8 +12,16 @@ let client: SanityClient | undefined;
 export const sanityProjectId = () => import.meta.env.SANITY_PROJECT_ID || import.meta.env.SANITY_API_PROJECT_ID;
 const sanityDataset = () => import.meta.env.SANITY_DATASET || import.meta.env.SANITY_API_DATASET || 'production';
 
+// The staging site (staging branch on Vercel) sets SANITY_PERSPECTIVE=drafts, so
+// it is built from unpublished drafts. The live site leaves it unset and only
+// ever shows published content.
+const showDrafts = () => import.meta.env.SANITY_PERSPECTIVE === 'drafts';
+
 export function sanityClient() {
   const projectId = sanityProjectId();
+  if (showDrafts() && !import.meta.env.SANITY_API_READ_TOKEN) {
+    throw new Error('SANITY_PERSPECTIVE=drafts needs SANITY_API_READ_TOKEN, because drafts are private.');
+  }
   if (!projectId) {
     throw new Error('SANITY_PROJECT_ID is not set. Copy web/.env.example to web/.env and fill it in (see README).');
   }
@@ -25,7 +33,7 @@ export function sanityClient() {
     apiVersion: '2026-10-01',
     // Skip the CDN so a rebuild right after Publish never gets stale content.
     useCdn: false,
-    perspective: 'published',
+    perspective: showDrafts() ? 'drafts' : 'published',
   });
   return client;
 }
