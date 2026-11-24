@@ -1,6 +1,6 @@
 # MuzMesh Creative website
 
-The new muzmeshcreative.com: an Astro + TypeScript + Tailwind site in `web/`, blog posts and projects edited in Sanity Studio in `studio/`, hosted on Vercel.
+The new muzmeshcreative.com: an Astro + TypeScript + Tailwind site in `web/`, the homepage copy, blog posts and projects edited in Sanity Studio in `studio/`, hosted on Vercel.
 
 Start with **[docs/project-brief.md](docs/project-brief.md)**: goals, team, phases and open questions on one page.
 
@@ -10,7 +10,7 @@ Strategy, offer, copy, sitemap and the 301 redirect map live in **[docs/position
 
 ```
 web/      the website (Astro + TypeScript + Tailwind), deployed to Vercel
-studio/   Sanity Studio, where the team writes blog posts and case studies
+studio/   Sanity Studio, where the team edits the homepage, blog posts and case studies
 docs/     strategy, positioning, redirects
 ```
 
@@ -21,10 +21,10 @@ Each folder has its own `package.json`. Run `npm install` inside each one. Needs
 1. Create a free project at [sanity.io/manage](https://www.sanity.io/manage) (dataset `production`, **public**). Copy the project ID.
 2. `cp web/.env.example web/.env` and set `SANITY_PROJECT_ID`.
 3. `cp studio/.env.example studio/.env` and set `SANITY_STUDIO_PROJECT_ID` (same ID).
-4. Import the old content once: `cd studio && npm install && npx sanity login && npm run migrate`. This keeps every slug, so all URLs and 301s stay the same, and copies cover images off Webflow's CDN.
+4. Import the old content once: `cd studio && npm install && npx sanity login && npm run migrate`. Then `npm run seed:home` creates the Homepage document with the copy that is on the site today. This keeps every slug, so all URLs and 301s stay the same, and copies cover images off Webflow's CDN.
 5. Put the Studio online for the team: `cd studio && npm run deploy` (https://muzmesh.sanity.studio). Invite your teammates in sanity.io/manage -> Members.
 6. Vercel: set **Root Directory** to `web`, add `SANITY_PROJECT_ID` and `SANITY_DATASET=production` for Production and Preview.
-7. Auto-publish: in Vercel -> Settings -> Git -> Deploy Hooks, create a hook for `main`. In sanity.io/manage -> API -> Webhooks, add that URL, dataset `production`, trigger on create/update/delete, filter `_type in ["post", "caseStudy", "author"]`. Now Publish in the Studio rebuilds the site in about a minute.
+7. Auto-publish: in Vercel -> Settings -> Git -> Deploy Hooks, create a hook for `main`. In sanity.io/manage -> API -> Webhooks, add that URL, dataset `production`, trigger on create/update/delete, filter `_type in ["homePage", "post", "caseStudy", "author"]`. Now Publish in the Studio rebuilds the site in about a minute.
 
 ## Run it
 
@@ -39,14 +39,19 @@ cd studio && npm install && npm run dev   # studio: http://localhost:3333
 
 ```
 docs/positioning.md               offer, tiers, referral rules, homepage copy, sitemap, redirects
-web/src/data/site.ts              nav, four pillars, plans/prices, team (edit copy here)
+web/src/pages/index.astro         homepage: the scroll story, referral, FAQ, launch brief, footer
+web/src/components/home/          homepage sections (Story, Referral, Faq, LaunchBrief, HomeFooter)
+web/src/scripts/home/             homepage scripts (story.js is the scroll animation)
+web/src/data/home.ts              homepage copy and prices; Sanity's Homepage document overrides it
+web/src/data/site.ts              nav, four pillars, plans/prices, team for the other pages
 web/src/content.config.ts         content collections: blog + work from Sanity, industries from files
 web/src/lib/sanity.ts             Sanity client and the loader that turns documents into collections
 web/src/content/industries/       industry pages (Markdown, stay in code)
 web/src/pages/                    one file per route
 web/src/components/               Astro components; ContactForm.tsx is the only React island
 web/vercel.json                   301 redirects from old Webflow URLs
-studio/schemaTypes/               Sanity document types: post, caseStudy, author
+studio/schemaTypes/               Sanity document types: homePage, post, caseStudy, author
+tools/hero-explore/prompt-hero.html  the original one-file homepage prototype (reference only)
 studio/scripts/migrate-content.ts one-off import of the old posts (studio/scripts/legacy/)
 ```
 
@@ -57,6 +62,8 @@ studio/scripts/migrate-content.ts one-off import of the old posts (studio/script
 - Never change a published slug in Sanity without adding a 301 in `web/vercel.json`.
 
 ## Adding content
+
+- **Homepage text, prices, the five days, FAQ:** in the Studio under **Homepage**. A field left empty keeps the copy in `web/src/data/home.ts`. Text can use `**bold**`, and `{setup}`, `{monthly}` and `{percent}` follow the prices. The five days and the kit lists have a fixed number of items, because the animation is built for them.
 
 - **Blog post / case study:** in the Studio. Fill case study `results` only with real, client-approved numbers.
 - **Industry:** add `web/src/content/industries/my-slug.mdx`.

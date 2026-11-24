@@ -7,7 +7,8 @@
     "dev": "sanity dev",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "migrate": "sanity exec scripts/migrate-content.ts --with-user-token"
+    "migrate": "sanity exec scripts/migrate-content.ts --with-user-token",
+    "seed:home": "sanity exec scripts/seed-homepage.ts --with-user-token"
   },
   "dependencies": {
     "@sanity/vision": "^6.21.0",

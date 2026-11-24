@@ -3,7 +3,7 @@
 export const site = {
   name: 'MuzMesh Creative',
   tagline: 'Design, web, social and automation on one monthly plan.',
-  email: 'hello@muzmeshcreative.com', // [CONFIRM] real inbox
+  email: 'muzamilawez@gmail.com',
   bookingUrl: import.meta.env.PUBLIC_BOOKING_URL || '/contact',
 };
 

@@ -1,0 +1,38 @@
+---
+// Every traffic tool the site uses, in one place. Each one is switched on by
+// setting its ID in Vercel (Project → Settings → Environment Variables) and
+// redeploying; while an ID is empty, nothing for that tool is loaded.
+import Analytics from '@vercel/analytics/astro';
+
+const gaId = import.meta.env.PUBLIC_GA_ID; // Google Analytics 4, "G-XXXXXXX"
+const clarityId = import.meta.env.PUBLIC_CLARITY_ID; // Microsoft Clarity project ID
+const googleVerify = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION; // Search Console HTML tag content
+const bingVerify = import.meta.env.PUBLIC_BING_SITE_VERIFICATION; // Bing Webmaster msvalidate.01 content
+---
+
+{googleVerify && <meta name="google-site-verification" content={googleVerify} />}
+{bingVerify && <meta name="msvalidate.01" content={bingVerify} />}
+
+<Analytics />
+
+{gaId && (
+  <>
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+    <script is:inline define:vars={{ gaId }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', gaId);
+    </script>
+  </>
+)}
+
+{clarityId && (
+  <script is:inline define:vars={{ clarityId }}>
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+      t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, 'clarity', 'script', clarityId);
+  </script>
+)}

@@ -1,0 +1,31 @@
+---
+import type { HomeContent } from '@/data/home';
+import { rich } from '@/lib/home';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  c: HomeContent;
+  t: Record<string, string>;
+}
+const { c, t } = Astro.props;
+const r = c.referral;
+---
+
+<section class="rf pad" id="referral" aria-labelledby="rf-h">
+<div class="rf-in">
+  <div class="rf-head">
+    <div>
+      <span class="rf-eye">{r.eyebrow}</span>
+      <h2 class="rf-h" id="rf-h">{r.line1} <span>{r.line2}</span></h2>
+    </div>
+    <div>
+      <p class="rf-p" set:html={rich(r.intro, t)} />
+      <div class="rf-btns"><a class="cta" href="#launch-brief">{c.ctaLabel} <Arrow /></a></div>
+    </div>
+  </div>
+  <ol class="rf-bench">
+    {r.steps.map((s, i) => <li><span class="rf-n">0{i + 1}</span><b>{s.title}</b><span set:html={rich(s.text, t)} /></li>)}
+    <li><span class="rf-n">0{r.steps.length + 1} · For you</span><span class="rf-big"><b>{t.percent}</b><i aria-hidden="true"></i></span><span>off your next month: <s>{t.monthly}</s> {t.referred}</span></li>
+  </ol>
+</div>
+</section>

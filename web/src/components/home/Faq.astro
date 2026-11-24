@@ -1,0 +1,77 @@
+---
+import type { HomeContent, FaqItem } from '@/data/home';
+import { rich, plain } from '@/lib/home';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  c: HomeContent;
+  t: Record<string, string>;
+}
+const { c, t } = Astro.props;
+const f = c.faq;
+
+// Number the questions across groups: fq-q1, fq-q2, ...
+let n = 0;
+// Questions left empty in Sanity are skipped.
+const groups = f.groups.map((g) => ({ ...g, items: g.items.filter((it) => it.question.trim()).map((it) => ({ ...it, n: ++n })) }));
+
+// The same answers as plain text, for the FAQPage structured data.
+const answerText = (it: FaqItem) =>
+  [
+    ...it.answer.map((p) => plain(p, t)),
+    ...(it.list?.items ?? []).map((x) =>
+      it.list!.style === 'owned' ? `${plain(x.label, t)}.` : `${plain(x.label, t)}: ${plain(x.text ?? '', t)}.`,
+    ),
+  ].join(' ');
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: groups.flatMap((g) =>
+    g.items.map((it) => ({
+      '@type': 'Question',
+      name: plain(it.question, t),
+      acceptedAnswer: { '@type': 'Answer', text: answerText(it) },
+    })),
+  ),
+};
+---
+
+<section class="fq pad" id="faq" aria-labelledby="fq-h">
+<div class="fq-in">
+  <span class="fq-eye">{f.eyebrow}</span>
+  <h2 class="fq-h" id="fq-h">{f.line1} <span>{f.line2}</span></h2>
+  <div class="fq-list" id="fq-list">
+    {groups.map((g) => (
+      <Fragment>
+        <h3 class="fq-g">{g.title}</h3>
+        {g.items.map((it) => {
+          const open = it.n === 1;
+          const q = plain(it.question, t);
+          const list = it.list;
+          return (
+            <div class="fq-item">
+              <button type="button" class="fq-q" id={`fq-q${it.n}`} aria-expanded={open ? 'true' : 'false'} aria-controls={`fq-a${it.n}`}><i aria-hidden="true"></i><span>{q}</span><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></button>
+              <div class={open ? 'fq-a on' : 'fq-a'} id={`fq-a${it.n}`} role="region" aria-labelledby={`fq-q${it.n}`}>
+                <p class="fq-aq" aria-hidden="true">{q}</p>
+                {it.answer.map((p) => <p set:html={rich(p, t)} />)}
+                {list?.style === 'days' && (
+                  <ol class="fq-days" aria-label="A typical week">{list.items.map((x) => <li><b>{x.label}</b>{x.text}</li>)}</ol>
+                )}
+                {list?.style === 'labelled' && (
+                  <ul class="fq-mo">{list.items.map((x) => <li><b>{x.label}</b>{x.text}</li>)}</ul>
+                )}
+                {list?.style === 'owned' && (
+                  <ul class="fq-own">{list.items.map((x) => <li>{x.label}<span>{x.text || 'Yours'}</span></li>)}</ul>
+                )}
+                <div class="fq-by"><span class="fq-av" aria-hidden="true">{f.answeredBy.trim().charAt(0)}</span><span>{f.answeredBy}</span><small>Answered by a person</small></div>
+              </div>
+            </div>
+          );
+        })}
+      </Fragment>
+    ))}
+  </div>
+  <div class="fq-end"><p set:html={rich(f.end, t)} /><a class="cta" href="#launch-brief">{c.ctaLabel} <Arrow /></a></div>
+</div>
+</section>
+<script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />

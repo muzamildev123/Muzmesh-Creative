@@ -1,15 +1,140 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import Button from '@/components/Button.astro';
+// 404: same look as the homepage (black, bone, one orange, Inter Tight + mono),
+// and every way out points back to the one page and its sections.
+// The button label and email come from the Homepage content, so they stay in step with Sanity.
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import Arrow from '@/components/home/Arrow.astro';
+import { getHome } from '@/lib/home';
+
+const c = await getHome();
+const year = new Date().getFullYear();
+const sections = [
+  { href: '/#included', label: 'What’s included', note: 'The kit, piece by piece' },
+  { href: '/#pricing', label: 'Pricing', note: 'One price, the five days' },
+  { href: '/#referral', label: 'Referral', note: 'Send a founder our way' },
+  { href: '/#faq', label: 'FAQ', note: 'Straight answers' },
+  { href: '/#launch-brief', label: c.ctaLabel, note: 'Tell us about your startup' },
+];
 ---
 
-<BaseLayout title="Page not found" description="This page does not exist." noindex>
-  <section class="mx-auto max-w-3xl px-4 py-24 text-center">
-    <h1 class="text-4xl font-bold">Page not found</h1>
-    <p class="mt-4 text-muted">The page you are looking for has moved or does not exist.</p>
-    <div class="mt-8 flex justify-center gap-3">
-      <Button href="/">Go home</Button>
-      <Button href="/blog" variant="secondary">Read the blog</Button>
-    </div>
-  </section>
-</BaseLayout>
+<HomeLayout title="Page not found | MuzMesh" description="This page doesn’t exist. Everything MuzMesh does is on the homepage." noindex>
+  <div class="nf">
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="nav pad"><div class="in">
+      <a class="logo" href="/" aria-label="muzmesh home">muzmesh</a>
+      <div class="navr">
+        <nav class="links" aria-label="Main"><a href="/#included">What's included</a><a href="/#pricing">Pricing</a><a href="/#referral">Referral</a><a href="/#faq">FAQ</a></nav>
+        <a class="pill white" href="/#launch-brief">{c.ctaLabel}</a>
+      </div>
+    </div></header>
+
+    <main class="nf-main pad">
+      <div class="nf-in">
+        <div class="nf-copy">
+          <span class="lab">404 · Page not found</span>
+          <h1 class="nf-h"><span>This page got lost.</span> Yours won’t.</h1>
+          <p class="nf-lead">The link is old, or a letter slipped. Everything MuzMesh does lives on one page: the kit, the price and how to start.</p>
+          <div class="nf-cta">
+            <a class="nf-btn is-primary" href="/">Take me home <Arrow weight={1.7} /></a>
+            <a class="nf-btn is-ghost" href="/#included">See what’s included</a>
+          </div>
+        </div>
+
+        <div class="nf-win" role="group" aria-label="Where to next">
+          <div class="nf-bar" aria-hidden="true"><i></i><i></i><i></i><span class="nf-url">muzmeshcreative.com<b id="nf-path">/this-page</b></span></div>
+          <div class="nf-body">
+            <ol class="nf-log" aria-hidden="true">
+              <li><span>Looking for this page</span><b class="nf-no">Not found</b></li>
+              <li><span>Checking the homepage</span><b>Live</b></li>
+            </ol>
+            <p class="nf-k">On the homepage</p>
+            <ul class="nf-list">
+              {sections.map((s, i) => (
+                <li><a href={s.href}><span class="nf-n">{String(i + 1).padStart(2, '0')}</span><span class="nf-t">{s.label}<small>{s.note}</small></span><Arrow weight={1.6} /></a></li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="nf-ft pad"><div class="nf-ftin">
+      <span>© {year} MuzMesh Creative</span>
+      <a href={`mailto:${c.footer.email}`}>{c.footer.email}</a>
+    </div></footer>
+  </div>
+
+  <script is:inline>
+    // Show the address they actually tried, so the window reads true.
+    (function () {
+      var el = document.getElementById('nf-path');
+      var p = decodeURI(location.pathname + location.search);
+      if (el && p && p !== '/404' && p !== '/404.html') el.textContent = p;
+    })();
+  </script>
+</HomeLayout>
+
+<style>
+  .nf{position:relative;min-height:100vh;min-height:100svh;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}
+  .nf .grain{z-index:0}
+  .nf>*{position:relative;z-index:1}
+
+  .nf-main{display:flex;align-items:center;padding-block:clamp(48px,8vh,96px)}
+  .nf-in{width:min(1120px,100%);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,460px);gap:64px;align-items:center}
+
+  .nf-h{margin:22px 0 0;max-width:none}
+  .nf-h span{color:#77777c}
+  @media (min-width:901px){.nf-h span{display:block}}
+  .nf-lead{margin:24px 0 0;max-width:40ch;font-size:clamp(17px,1.35vw,20px);line-height:1.5;letter-spacing:-.01em;color:var(--muted);text-wrap:pretty}
+
+  .nf-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:40px}
+  .nf-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:52px;padding:0 24px;border-radius:999px;font-size:16px;font-weight:600;letter-spacing:-.01em;line-height:1;text-decoration:none;white-space:nowrap;transition:background .2s,box-shadow .2s,transform .15s}
+  .nf-btn :global(svg){width:16px;height:16px}
+  .nf-btn.is-primary{background:var(--y);color:var(--on-y)}
+  .nf-btn.is-primary:hover{background:#ff6a20;transform:translateY(-1px)}
+  .nf-btn.is-primary:active{background:var(--y-deep)}
+  .nf-btn.is-ghost{color:var(--fg);box-shadow:inset 0 0 0 1px rgba(var(--fg-c),.3)}
+  .nf-btn.is-ghost:hover{box-shadow:inset 0 0 0 1px rgba(var(--fg-c),.6)}
+
+  /* the browser window: the address they tried, a two-line log, then the way back */
+  .nf-win{border-radius:12px;overflow:hidden;background:#141418;box-shadow:0 0 0 1px var(--hair),0 40px 100px -30px rgba(0,0,0,.9)}
+  .nf-bar{display:flex;align-items:center;gap:6px;height:34px;padding:0 12px;background:#1b1b20;border-bottom:1px solid rgba(255,255,255,.06)}
+  .nf-bar i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.16);flex:none}
+  .nf-url{margin-left:10px;min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--mono);font-size:12px;color:var(--faint)}
+  .nf-url b{font-weight:400;color:var(--fg)}
+  .nf-body{padding:22px 22px 10px;background-image:radial-gradient(rgba(244,244,241,.1) 1px,transparent 1.2px);background-size:24px 24px}
+
+  .nf-log{list-style:none;margin:0;padding:0 0 18px;display:grid;gap:8px;font-family:var(--mono);font-size:12px;color:var(--muted);border-bottom:1px solid var(--hair)}
+  .nf-log li{display:flex;justify-content:space-between;gap:16px}
+  .nf-log b{font-weight:500;color:var(--fg);display:inline-flex;align-items:center;gap:8px}
+  .nf-log b::before{content:"";width:6px;height:6px;border-radius:50%;background:#6fdc8c}
+  .nf-log b.nf-no::before{border-radius:0;width:5px;height:5px;background:var(--y)}
+  .nf-log b.nf-no{color:var(--y)}
+
+  .nf-k{margin:20px 0 6px;font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .nf-list{list-style:none;margin:0;padding:0}
+  .nf-list li+li{border-top:1px solid var(--hair)}
+  .nf-list a{display:grid;grid-template-columns:28px minmax(0,1fr) 16px;align-items:center;gap:12px;padding:13px 0;text-decoration:none;color:var(--fg)}
+  .nf-n{font-family:var(--mono);font-size:12px;color:var(--faint);font-variant-numeric:tabular-nums}
+  .nf-t{font-size:15px;line-height:1.3}
+  .nf-t small{display:block;margin-top:2px;font-size:13px;color:var(--faint)}
+  .nf-list :global(svg){width:16px;height:16px;color:var(--faint);transition:transform .2s,color .2s}
+  .nf-list a:hover :global(svg),.nf-list a:focus-visible :global(svg){color:var(--y);transform:translateX(3px)}
+
+  .nf-ft{border-top:1px solid var(--hair)}
+  .nf-ftin{max-width:1640px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 22px;padding:16px 0;font-family:var(--mono);font-size:12px;color:var(--faint)}
+  .nf-ftin a{color:var(--muted);text-decoration:none}
+  .nf-ftin a:hover{color:var(--fg)}
+
+  @media (max-width:900px){
+    .nf-in{grid-template-columns:minmax(0,1fr);gap:48px}
+    .nf-main{align-items:flex-start}
+  }
+  @media (max-width:560px){
+    .nf-h{letter-spacing:-.02em}
+    .nf-cta{flex-direction:column;align-items:stretch}
+    .nf-body{padding:18px 16px 6px}
+  }
+  @media (prefers-reduced-motion:reduce){.nf-btn,.nf-list :global(svg){transition:none}}
+</style>
