@@ -1,10 +1,16 @@
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
+import { presentationTool } from 'sanity/presentation';
 import { visionTool } from '@sanity/vision';
 import { schemaTypes } from './schemaTypes';
 
 // The Homepage is a single document: no "new Homepage", no delete or duplicate.
 const singletons = new Set(['homePage']);
+
+// Where the live preview is served from. It must be a deployment of the site that has the
+// /preview route turned on (PUBLIC_SANITY_VISUAL_EDITING_ENABLED=true). Set SANITY_STUDIO_PREVIEW_URL
+// to that deployment's address, for example https://muzmeshcreative.com
+const previewOrigin = process.env.SANITY_STUDIO_PREVIEW_URL || 'http://localhost:4321';
 
 export default defineConfig({
   name: 'default',
@@ -28,6 +34,14 @@ export default defineConfig({
             S.divider(),
             S.documentTypeListItem('author').title('Authors'),
           ]),
+    }),
+    presentationTool({
+      previewUrl: { origin: previewOrigin, previewMode: { enable: '/preview' } },
+      resolve: {
+        locations: {
+          homePage: { select: { title: 'title' }, resolve: () => ({ locations: [{ title: 'Homepage', href: '/' }] }) },
+        },
+      },
     }),
     visionTool(),
   ],
