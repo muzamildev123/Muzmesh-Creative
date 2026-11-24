@@ -1,0 +1,22 @@
+# Keeps the staging branch identical to main, so staging.muzmeshcreative.com
+# always runs the same code as the live site. The only difference is content:
+# staging shows Sanity drafts (SANITY_PERSPECTIVE=drafts on Vercel), live shows
+# published content.
+name: Sync staging with main
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: git push --force origin HEAD:refs/heads/staging

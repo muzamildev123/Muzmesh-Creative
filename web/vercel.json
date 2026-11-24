@@ -7,7 +7,12 @@
   ],
   "headers": [
     { "source": "/studio/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] },
-    { "source": "/studio", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] }
+    { "source": "/studio", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "staging.muzmeshcreative.com" }],
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    }
   ],
   "redirects": [
     { "source": "/blogs", "destination": "/blog", "statusCode": 301 },

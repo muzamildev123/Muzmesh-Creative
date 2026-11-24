@@ -8,6 +8,8 @@ interface ImportMetaEnv {
   readonly PUBLIC_BING_SITE_VERIFICATION?: string;
   readonly SANITY_PROJECT_ID?: string;
   readonly SANITY_DATASET?: string;
+  /** 'drafts' on the staging site; unset (published) on the live site. */
+  readonly SANITY_PERSPECTIVE?: string;
   // Set by the Sanity integration on Vercel
   readonly SANITY_API_PROJECT_ID?: string;
   readonly SANITY_API_DATASET?: string;

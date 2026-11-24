@@ -5,6 +5,9 @@ import type { Loader } from 'astro/loaders';
 
 // Content is read at build time only. Publishing in the Studio triggers a
 // Vercel deploy hook, which rebuilds the site with the new content.
+// The staging site (staging branch) sets SANITY_PERSPECTIVE=drafts, so it shows
+// unpublished drafts and is rebuilt on every draft save. The live site always
+// shows published content only.
 let client: SanityClient | undefined;
 
 // Our own names first; the SANITY_API_* names are the ones the Sanity
@@ -12,8 +15,14 @@ let client: SanityClient | undefined;
 export const sanityProjectId = () => import.meta.env.SANITY_PROJECT_ID || import.meta.env.SANITY_API_PROJECT_ID;
 const sanityDataset = () => import.meta.env.SANITY_DATASET || import.meta.env.SANITY_API_DATASET || 'production';
 
+const showDrafts = () => import.meta.env.SANITY_PERSPECTIVE === 'drafts';
+
 export function sanityClient() {
   const projectId = sanityProjectId();
+  const token = import.meta.env.SANITY_API_READ_TOKEN || undefined;
+  if (showDrafts() && !token) {
+    throw new Error('SANITY_PERSPECTIVE=drafts needs SANITY_API_READ_TOKEN, because drafts are private.');
+  }
   if (!projectId) {
     throw new Error('SANITY_PROJECT_ID is not set. Copy web/.env.example to web/.env and fill it in (see README).');
   }
@@ -21,11 +30,11 @@ export function sanityClient() {
     projectId,
     dataset: sanityDataset(),
     // Only used at build time, never sent to the browser. Lets the build read a private dataset.
-    token: import.meta.env.SANITY_API_READ_TOKEN || undefined,
+    token,
     apiVersion: '2026-10-01',
     // Skip the CDN so a rebuild right after Publish never gets stale content.
     useCdn: false,
-    perspective: 'published',
+    perspective: showDrafts() ? 'drafts' : 'published',
   });
   return client;
 }
