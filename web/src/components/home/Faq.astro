@@ -64,7 +64,7 @@ const schema = {
                 {list?.style === 'owned' && (
                   <ul class="fq-own">{list.items.map((x) => <li>{x.label}<span>{x.text || 'Yours'}</span></li>)}</ul>
                 )}
-                <div class="fq-by"><span class="fq-av" aria-hidden="true">{f.answeredBy.trim().charAt(0)}</span><span>{f.answeredBy}</span><small>Answered by a person</small></div>
+                <div class="fq-by"><span class="fq-av" aria-hidden="true">{f.answeredBy.trim().charAt(0)}</span><span>{f.answeredBy}</span><small>{f.personLabel}</small></div>
               </div>
             </div>
           );

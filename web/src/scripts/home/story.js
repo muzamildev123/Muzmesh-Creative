@@ -625,7 +625,8 @@
     slots.forEach(s => s.classList.toggle('on', +s.dataset.at <= lvl));
     const k = Math.min(1, Math.max(0, (T - LEAD) / BUILD)), ready = T >= T_DONE;
     text($('bclock'), '00:' + String(Math.floor(k * 15)).padStart(2, '0'));
-    text($('bstate'), ready ? 'Ready' : 'Building');
+    const bs = $('bstate');   // the two words are edited in Sanity (Homepage > Build)
+    text(bs, ready ? bs.dataset.ready || 'Ready' : bs.dataset.building || 'Building');
     text($('wurl'), ready && cur ? cur.url : 'localhost:3000');
     on('built', ready);
     on('launchable', T >= T_LAUNCHABLE);

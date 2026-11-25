@@ -12,7 +12,8 @@ interface Props {
   t: Record<string, string>;
 }
 const { c, t } = Astro.props;
-const { hero, launch, answer, kit, pricing } = c;
+const { hero, launch, answer, kit, pricing, build, sample } = c;
+const pass = pricing.pass;
 const kitAll = [...kit.look, ...kit.launch, ...kit.run];
 ---
 
@@ -25,7 +26,7 @@ const kitAll = [...kit.look, ...kit.launch, ...kit.run];
   <header class="nav pad"><div class="in">
     <a class="logo" href="/" id="home" aria-label="muzmesh home">muzmesh</a>
     <div class="navr">
-      <nav class="links" aria-label="Main"><a href="#included">What's included</a><a href="#pricing">Pricing</a><a href="#referral">Referral</a><a href="#faq">FAQ</a></nav>
+      <nav class="links" aria-label="Main"><a href="#included">{c.nav.included}</a><a href="#pricing">{c.nav.pricing}</a><a href="#referral">{c.nav.referral}</a><a href="#faq">{c.nav.faq}</a></nav>
       <a class="pill white" href="#launch-brief">{c.ctaLabel}</a>
     </div>
   </div></header>
@@ -35,7 +36,7 @@ const kitAll = [...kit.look, ...kit.launch, ...kit.run];
     <h1>{hero.headline}</h1>
     <form class="ask" id="ask" autocomplete="off">
       <div class="bar">
-        <label for="idea">Your startup idea</label>
+        <label for="idea">{hero.inputLabel}</label>
         <input id="idea" maxlength="80" spellcheck="false" placeholder={hero.placeholder} />
         <button type="submit" class="pill white go" id="go" disabled>{hero.button} <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
       </div>
@@ -48,17 +49,12 @@ const kitAll = [...kit.look, ...kit.launch, ...kit.run];
   <div class="build pad" id="build">
     <div class="bwrap">
       <div class="blog">
-        <div class="bhead"><span class="lab" id="bstate">Building</span><span class="bclock" id="bclock">00:00</span></div>
+        <div class="bhead"><span class="lab" id="bstate" data-building={build.building} data-ready={build.ready}>{build.building}</span><span class="bclock" id="bclock">00:00</span></div>
         <p class="bidea" id="bidea"></p>
         <ol class="steps" id="steps" aria-live="polite">
-          <li><span class="st"></span>Reading your idea<small>Turning it into a product brief</small></li>
-          <li><span class="st"></span>Setting up the app<small>Next.js · Supabase · Vercel</small></li>
-          <li><span class="st"></span>Creating the database<small>users · plans · payments</small></li>
-          <li><span class="st"></span>Generating your brand<small>name · logo · colours</small></li>
-          <li><span class="st"></span>Writing the copy<small>headline · features · CTA</small></li>
-          <li><span class="st"></span>Designing the landing page<small>hero · buttons · cards</small></li>
+          {build.steps.map((st) => <li><span class="st"></span>{st.title}<small>{st.text}</small></li>)}
         </ol>
-        <div class="bdone" id="bdone"><b>Ready in 15 seconds.</b> <span id="bname"></span> is live on your screen.</div>
+        <div class="bdone" id="bdone"><b>{build.doneTitle}</b> <span id="bname"></span> {build.doneText}</div>
       </div>
       <div class="bright">
       <div class="win" id="win" aria-hidden="true">
@@ -67,25 +63,23 @@ const kitAll = [...kit.look, ...kit.launch, ...kit.run];
           <div class="pbg"></div>
           <div class="pnav">
             <span class="slot plogo" data-at="4"><span class="sk"></span><span class="rl"><i>&#10022;</i><span class="pname"></span></span></span>
-            <span class="plinks"><span class="slot" data-at="5"><span class="sk"></span><span class="rl">Product</span></span><span class="slot" data-at="5"><span class="sk"></span><span class="rl">Solutions</span></span><span class="slot" data-at="5"><span class="sk"></span><span class="rl">Pricing</span></span></span>
-            <span class="slot pgo" data-at="6"><span class="sk"></span><span class="rl">Get started</span></span>
+            <span class="plinks">{sample.links.map((l) => <span class="slot" data-at="5"><span class="sk"></span><span class="rl">{l}</span></span>)}</span>
+            <span class="slot pgo" data-at="6"><span class="sk"></span><span class="rl">{sample.navButton}</span></span>
           </div>
           <div class="phero">
-            <span class="slot pbadge" data-at="6"><span class="sk"></span><span class="rl">&#10024; Powered by GPT-5 &rarr;</span></span>
+            <span class="slot pbadge" data-at="6"><span class="sk"></span><span class="rl">{sample.badge}</span></span>
             <span class="slot ph1" data-at="5"><span class="sk"></span><span class="rl" id="ph1"></span></span>
             <span class="slot psub" data-at="5"><span class="sk"></span><span class="rl" id="psub"></span></span>
-            <span class="pbtns"><span class="slot a" data-at="6"><span class="sk"></span><span class="rl">Get started free</span></span><span class="slot b" data-at="6"><span class="sk"></span><span class="rl">Watch demo &#9654;</span></span></span>
+            <span class="pbtns"><span class="slot a" data-at="6"><span class="sk"></span><span class="rl">{sample.primary}</span></span><span class="slot b" data-at="6"><span class="sk"></span><span class="rl">{sample.secondary}</span></span></span>
           </div>
           <div class="pcards">
-            <span class="slot" data-at="6"><span class="sk"></span><span class="rl"><b>&#9889; Lightning fast</b><span>Get results in seconds, not hours.</span></span></span>
-            <span class="slot" data-at="6"><span class="sk"></span><span class="rl"><b>&#129302; AI-powered</b><span>Smart automation that learns from you.</span></span></span>
-            <span class="slot" data-at="6"><span class="sk"></span><span class="rl"><b>&#128274; Secure by default</b><span>Enterprise-grade security built in.</span></span></span>
+            {sample.cards.map((card) => <span class="slot" data-at="6"><span class="sk"></span><span class="rl"><b>{card.title}</b><span>{card.text}</span></span></span>)}
           </div>
-        </div><span class="boot">Starting dev server…</span></div>
+        </div><span class="boot">{sample.booting}</span></div>
       </div>
       <div class="bfoot">
-        <button type="button" class="launch" id="launch">Launch now <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M5 13 13 5M6.5 5H13v6.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
-        <button type="button" class="again" id="again">Start over</button>
+        <button type="button" class="launch" id="launch">{build.launchButton} <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M5 13 13 5M6.5 5H13v6.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+        <button type="button" class="again" id="again">{build.startOver}</button>
       </div>
       </div>
     </div>
@@ -104,7 +98,7 @@ const kitAll = [...kit.look, ...kit.launch, ...kit.run];
           <h2 class="sh" id="sh"><span class="s1">{answer.line1}</span><span class="s2">{answer.line2}</span></h2>
           <p class="sp" set:html={rich(answer.intro, t)} />
           <div class="sbtns"><a class="cta" id="cta" href="#launch-brief">{c.ctaLabel} <Arrow /></a><a class="ghost" href="#top">{answer.secondary}</a></div>
-          <button type="button" class="again sagain" id="again2">Start over</button>
+          <button type="button" class="again sagain" id="again2">{build.startOver}</button>
         </div>
         <div class="yslot" id="yslot">
           <div class="ywin" id="ywin" aria-hidden="true">
@@ -124,10 +118,10 @@ const kitAll = [...kit.look, ...kit.launch, ...kit.run];
           <p class="kp" set:html={rich(kit.intro, t)} />
         </div>
         <div class="kbento" id="kbento" aria-hidden="true">
-          <div class="kcol kc1"><div class="kch"><b>Look</b><ul class="kul">{kit.look.map((x) => <li>{x}</li>)}</ul></div><div class="kt klogo"></div><div class="kt kbrand kp-s"></div></div>
-          <div class="kcol kc2"><div class="kch"><b>Launch</b><ul class="kul">{kit.launch.map((x) => <li>{x}</li>)}</ul></div><div class="kslot" id="kslot"></div>
+          <div class="kcol kc1"><div class="kch"><b>{kit.lookTitle}</b><ul class="kul">{kit.look.map((x) => <li>{x}</li>)}</ul></div><div class="kt klogo"></div><div class="kt kbrand kp-s"></div></div>
+          <div class="kcol kc2"><div class="kch"><b>{kit.launchTitle}</b><ul class="kul">{kit.launch.map((x) => <li>{x}</li>)}</ul></div><div class="kslot" id="kslot"></div>
             <div class="krow"><div class="kt kpost kx-s"></div><div class="kt kvid"></div></div></div>
-          <div class="kcol kc3"><div class="kch"><b>Run</b><ul class="kul">{kit.run.map((x) => <li>{x}</li>)}</ul></div><div class="kt ktrack kp-s"></div><div class="kt kcrm"></div><div class="kt kedit kp-s"></div></div>
+          <div class="kcol kc3"><div class="kch"><b>{kit.runTitle}</b><ul class="kul">{kit.run.map((x) => <li>{x}</li>)}</ul></div><div class="kt ktrack kp-s"></div><div class="kt kcrm"></div><div class="kt kedit kp-s"></div></div>
         </div>
       </div>
     </div>
@@ -144,27 +138,27 @@ const kitAll = [...kit.look, ...kit.launch, ...kit.run];
     </div>
     <div class="tk" role="group" aria-label="Your launch pass: what you get and what it costs">
       <div class="tkm">
-        <div class="tkh"><b>muzmesh</b><span>Launch pass</span></div>
+        <div class="tkh"><b>muzmesh</b><span>{pass.title}</span></div>
         <div class="tkr">
-          <div class="tke"><span class="tkl">From</span><b>IDEA</b><span>Today</span></div>
+          <div class="tke"><span class="tkl">{pass.fromLabel}</span><b>{pass.fromValue}</b><span>{pass.fromWhen}</span></div>
           <div class="tkway" aria-hidden="true"><i class="tkfill"></i><span class="tkgo"><i></i></span></div>
-          <div class="tke r"><span class="tkl">To</span><b class="tkto">LIVE</b><span>Day 5</span></div>
+          <div class="tke r"><span class="tkl">{pass.toLabel}</span><b class="tkto">{pass.toValue}</b><span>{pass.toWhen}</span></div>
         </div>
         <div class="tkf">
-          <div><span class="tkl">Passenger</span><b id="rname">your startup</b></div>
-          <div><span class="tkl">Flight time</span><b>5 business days</b></div>
-          <div><span class="tkl">Class</span><b>All included</b></div>
+          <div><span class="tkl">{pass.passengerLabel}</span><b id="rname">{pass.passengerValue}</b></div>
+          <div><span class="tkl">{pass.flightLabel}</span><b>{pass.flightValue}</b></div>
+          <div><span class="tkl">{pass.seatLabel}</span><b>{pass.seatValue}</b></div>
         </div>
-        <div class="tki"><span class="tkl">Your five days</span>
+        <div class="tki"><span class="tkl">{pass.daysTitle}</span>
           <ol class="tkd">
             {pricing.days.map((d, i) => (
-              <li class={i === pricing.days.length - 1 ? 'tkdl' : undefined}><i class="tkx"><b></b></i><span class="tkdn">Day {i + 1}</span><span>{d}</span></li>
+              <li class={i === pricing.days.length - 1 ? 'tkdl' : undefined}><i class="tkx"><b></b></i><span class="tkdn">{pass.dayLabel} {i + 1}</span><span>{d}</span></li>
             ))}
           </ol></div>
         <div class="tkp"><span>{pricing.setupLabel}</span><b data-sanity={sanityAttr('prices.setup')}>{t.setup}</b></div>
       </div>
       <div class="tks">
-        <div class="tkst"><span class="tkl">{pricing.monthlyLabel}</span><b data-sanity={sanityAttr('prices.monthly')}>{t.monthly}<small>/mo</small></b>
+        <div class="tkst"><span class="tkl">{pricing.monthlyLabel}</span><b data-sanity={sanityAttr('prices.monthly')}>{t.monthly}<small>/{pass.perMonth}</small></b>
           <p set:html={rich(pricing.monthlyText, t)} /></div>
         <i class="tkbar" aria-hidden="true"></i>
       </div>

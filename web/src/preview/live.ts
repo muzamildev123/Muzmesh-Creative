@@ -12,7 +12,7 @@
 // Anything else, such as a list getting a new item, falls back to one quiet page reload
 // after typing stops.
 import { VERCEL_STEGA_REGEX, vercelStegaDecode } from '@vercel/stega';
-import { mergeHome, plain, rich, tokens } from '@/lib/home';
+import { briefTokens, mergeHome, plain, rich, tokens } from '@/lib/home';
 import { fieldOf } from '@/preview/field';
 
 type Doc = Record<string, unknown>;
@@ -108,8 +108,8 @@ function patchText(text: string, runs: Run[], prev: Map<string, string>, next: M
   return { text: out, missed };
 }
 
-// The launch brief's promise also fills {startup} (see LaunchBrief.astro).
-const withStartup = (t: Record<string, string>) => [t, { ...t, startup: '<b class="lc-nm">your startup</b>' }];
+// The launch brief fills a few extra tokens, such as {startup} (see LaunchBrief.astro).
+const withStartup = (t: Record<string, string>) => [t, ...Object.values(briefTokens).map((extra) => ({ ...t, ...extra }))];
 const skip = (el: Element | null) => !el || !!el.closest('sanity-visual-editing, [contenteditable]');
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 

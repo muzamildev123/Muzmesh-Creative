@@ -26,7 +26,7 @@ const r = c.referral;
   </div>
   <ol class="rf-bench">
     {r.steps.map((s, i) => <li><span class="rf-n">0{i + 1}</span><b>{s.title}</b><span set:html={rich(s.text, t)} /></li>)}
-    <li><span class="rf-n">0{r.steps.length + 1} · For you</span><span class="rf-big"><b data-sanity={sanityAttr('prices.referralPercent')}>{t.percent}</b><i aria-hidden="true"></i></span><span>off your next month: <s>{t.monthly}</s> {t.referred}</span></li>
+    <li><span class="rf-n">0{r.steps.length + 1} · {r.rewardLabel}</span><span class="rf-big"><b data-sanity={sanityAttr('prices.referralPercent')}>{t.percent}</b><i aria-hidden="true"></i></span><span>{r.rewardText} <s>{t.monthly}</s> {t.referred}</span></li>
   </ol>
 </div>
 </section>

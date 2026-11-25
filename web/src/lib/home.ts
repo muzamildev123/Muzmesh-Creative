@@ -83,6 +83,13 @@ export function rich(s: string, t: Record<string, string>) {
     .replace(/`(.+?)`/g, '<code>$1</code>');
 }
 
+/** Extra tokens in the launch brief. The script fills in what the visitor typed. */
+export const briefTokens = {
+  promise: { startup: '<b class="lc-nm">your startup</b>' },
+  next: { startup: '<span class="lc-nm">your startup</span>' },
+  done: { name: '<span id="lc-first">there</span>', Startup: '<span class="lc-nm">Your startup</span>', startup: '<span class="lc-nm">your startup</span>' },
+};
+
 /** Editor text as plain text, for meta tags and structured data. */
 export function plain(s: string, t: Record<string, string>) {
   return fill(s, t).replace(/\*\*(.+?)\*\*/g, '$1').replace(/`(.+?)`/g, '$1');
