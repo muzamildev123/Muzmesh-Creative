@@ -4,6 +4,7 @@
 // from the .chip buttons and expects five days on the pass and the kit lists as they are.
 import type { HomeContent } from '@/data/home';
 import { rich } from '@/lib/home';
+import { sanityAttr } from '@/lib/sanity';
 import Arrow from './Arrow.astro';
 
 interface Props {
@@ -160,10 +161,10 @@ const kitAll = [...kit.look, ...kit.launch, ...kit.run];
               <li class={i === pricing.days.length - 1 ? 'tkdl' : undefined}><i class="tkx"><b></b></i><span class="tkdn">Day {i + 1}</span><span>{d}</span></li>
             ))}
           </ol></div>
-        <div class="tkp"><span>{pricing.setupLabel}</span><b>{t.setup}</b></div>
+        <div class="tkp"><span>{pricing.setupLabel}</span><b data-sanity={sanityAttr('prices.setup')}>{t.setup}</b></div>
       </div>
       <div class="tks">
-        <div class="tkst"><span class="tkl">{pricing.monthlyLabel}</span><b>{t.monthly}<small>/mo</small></b>
+        <div class="tkst"><span class="tkl">{pricing.monthlyLabel}</span><b data-sanity={sanityAttr('prices.monthly')}>{t.monthly}<small>/mo</small></b>
           <p set:html={rich(pricing.monthlyText, t)} /></div>
         <i class="tkbar" aria-hidden="true"></i>
       </div>

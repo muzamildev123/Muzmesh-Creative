@@ -7,5 +7,5 @@ export default defineCliConfig({
   },
   // `npm run deploy` publishes the Studio to https://muzmesh.sanity.studio
   studioHost: 'muzmesh',
-  deployment: { autoUpdates: true },
+  deployment: { appId: 'h2sphxavaogl3c2tymj47r7m', autoUpdates: true },
 });

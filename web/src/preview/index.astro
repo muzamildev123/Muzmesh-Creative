@@ -1,0 +1,17 @@
+---
+// Visual-editor preview of the homepage. Only exists on the preview deployment
+// (added by astro.config.mjs when PUBLIC_SANITY_VISUAL_EDITING_ENABLED=true).
+// Rendered on demand from DRAFT content so the Studio's Presentation tool can
+// show unpublished edits next to the form.
+import HomePage from '@/components/home/HomePage.astro';
+import { getHome } from '@/lib/home';
+import InlineEdit from '@/components/home/InlineEdit';
+
+export const prerender = false;
+const c = await getHome({ draft: true });
+Astro.response.headers.set('Cache-Control', 'no-store');
+---
+
+<HomePage c={c} preview />
+<!-- Double-click a text to type on it (only does anything inside the Studio's Presentation tab). -->
+<InlineEdit client:only="react" />
