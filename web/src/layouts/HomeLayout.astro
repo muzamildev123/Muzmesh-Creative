@@ -45,6 +45,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   </head>
   <body>
     <slot />
-    <VisualEditing enabled={visualEditing} />
+    <VisualEditing enabled={visualEditing} experimental_refreshStrategy="in-place" />
   </body>
 </html>
