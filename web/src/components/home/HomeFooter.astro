@@ -1,6 +1,7 @@
 ---
 import type { HomeContent } from '@/data/home';
 import { rich } from '@/lib/home';
+import { sanityAttr } from '@/lib/sanity';
 
 interface Props {
   c: HomeContent;
@@ -16,7 +17,7 @@ const year = new Date().getFullYear();
   <div class="ft-top">
     <div class="ft-brand">
       <p class="ft-tag" set:html={rich(f.tagline, t)} />
-      <a class="ft-mail" href={`mailto:${f.email}`}>{f.email}</a>
+      <a class="ft-mail" href={`mailto:${f.email}`} data-sanity={sanityAttr('footer.email')}>{f.email}</a>
     </div>
     <nav class="ft-col" aria-label="On this page"><h3>On this page</h3><ul><li><a href="#included">What’s included</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#referral">Referral</a></li><li><a href="#faq">FAQ</a></li><li><a href="#launch-brief">{c.ctaLabel}</a></li></ul></nav>
   </div>

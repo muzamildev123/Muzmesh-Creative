@@ -45,6 +45,9 @@ export function sanityClient() {
 // The live site never sets this flag, so it stays fully static.
 export const visualEditingEnabled = import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === 'true';
 
+/** `data-sanity` for text that isn't marked invisibly (numbers, links): click it in the Studio preview to open its field. */
+export const sanityAttr = (path: string) => (visualEditingEnabled ? `id=homePage;type=homePage;path=${path}` : undefined);
+
 // Never mark values that end up in links, ids, classes or numbers: the invisible
 // characters would break them.
 const STEGA_SKIP_KEY = /(^_|url|href|link|email|slug|^id$|key|type|icon|class|style|lang|date|currency|number|percent|price|setup|monthly)/i;
