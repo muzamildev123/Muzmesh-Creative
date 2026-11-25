@@ -13,6 +13,7 @@
 // after typing stops.
 import { VERCEL_STEGA_REGEX, vercelStegaDecode } from '@vercel/stega';
 import { mergeHome, plain, rich, tokens } from '@/lib/home';
+import { fieldOf } from '@/preview/field';
 
 type Doc = Record<string, unknown>;
 type Run = { path: string; from: number; end: number; enc: string };
@@ -54,9 +55,8 @@ function pathOf(enc: string): string | null {
   if (path !== undefined) return path;
   path = null;
   try {
-    const href = decodeURIComponent(vercelStegaDecode<{ href?: string }>(enc)?.href ?? '');
-    const m = href.match(/;id=([^;]+);type=[^;]+;path=([^?]+)/);
-    if (m && m[1].replace(/^drafts\./, '') === DOC_ID) path = m[2];
+    const field = fieldOf(vercelStegaDecode<{ href?: string }>(enc)?.href ?? '');
+    if (field && field.id.replace(/^drafts\./, '') === DOC_ID) path = field.path;
   } catch {
     // Not a marker of ours.
   }

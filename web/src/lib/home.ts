@@ -1,5 +1,5 @@
 import { homeDefaults, type HomeContent } from '@/data/home';
-import { sanityClient, sanityPreviewClient, sanityProjectId } from '@/lib/sanity';
+import { compactStega, sanityClient, sanityPreviewClient, sanityProjectId } from '@/lib/sanity';
 
 // The Homepage is one fixed document in Sanity (_id "homePage").
 const query = `*[_id == "homePage"][0]`;
@@ -49,7 +49,9 @@ export async function getHome({ draft = false }: { draft?: boolean } = {}): Prom
     if (!import.meta.env.DEV) throw new Error('SANITY_PROJECT_ID is not set (see README).');
     return homeDefaults;
   }
-  const doc = await (draft ? sanityPreviewClient() : sanityClient()).fetch<Plain | null>(query);
+  const doc = draft
+    ? compactStega(await sanityPreviewClient().fetch<Plain | null>(query))
+    : await sanityClient().fetch<Plain | null>(query);
   if (!doc) console.warn('[home] No Homepage document in Sanity yet, using the defaults. Run `npm run seed:home` in studio/.');
   return mergeHome(doc);
 }

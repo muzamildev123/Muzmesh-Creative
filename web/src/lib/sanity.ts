@@ -1,4 +1,5 @@
 import { createClient, type SanityClient } from '@sanity/client';
+import { vercelStegaCombine, vercelStegaDecode, vercelStegaSplit } from '@vercel/stega';
 import { createImageUrlBuilder } from '@sanity/image-url';
 import { toHTML, uriLooksSafe, escapeHTML } from '@portabletext/to-html';
 import type { Loader } from 'astro/loaders';
@@ -46,7 +47,8 @@ export function sanityClient() {
 export const visualEditingEnabled = import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === 'true';
 
 /** `data-sanity` for text that isn't marked invisibly (numbers, links): click it in the Studio preview to open its field. */
-export const sanityAttr = (path: string) => (visualEditingEnabled ? `id=homePage;type=homePage;path=${path}` : undefined);
+// `base` is required: without it the Studio ignores the attribute and draws no outline.
+export const sanityAttr = (path: string) => (visualEditingEnabled ? `id=homePage;type=homePage;path=${path};base=%2F` : undefined);
 
 // Never mark values that end up in links, ids, classes or numbers: the invisible
 // characters would break them.
@@ -76,6 +78,33 @@ export function sanityPreviewClient() {
     stega: { enabled: true, studioUrl: import.meta.env.SANITY_STUDIO_URL || 'https://muzmeshcreative.com/studio', filter: stegaFilter },
   });
   return previewClient;
+}
+
+/**
+ * Shortens the invisible click-to-edit markers. The client writes the Studio's full edit
+ * link into every text (about 1.2 KB of invisible characters each, half the preview
+ * page); the Presentation tab only needs the document, the field and a base URL, which
+ * is about a third of that. Same format the Studio reads, so click-to-edit is unchanged.
+ */
+export function compactStega<T>(value: T): T {
+  if (typeof value === 'string') {
+    const { cleaned, encoded } = vercelStegaSplit(value);
+    if (!encoded) return value;
+    try {
+      const { origin, href } = vercelStegaDecode<{ origin?: string; href?: string }>(encoded) ?? {};
+      const q = new URL(href ?? '', 'https://x.invalid').searchParams;
+      const id = q.get('id'), path = q.get('path');
+      if (origin !== 'sanity.io' || !id || !path) return value;
+      const short = new URLSearchParams({ baseUrl: '/', id, path });
+      for (const k of ['type', 'perspective']) if (q.get(k)) short.set(k, q.get(k)!);
+      return vercelStegaCombine(cleaned, { origin, href: `?${short}` }, false) as T;
+    } catch {
+      return value;
+    }
+  }
+  if (Array.isArray(value)) return value.map(compactStega) as T;
+  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, compactStega(v)])) as T;
+  return value;
 }
 
 type SanityImage = { asset?: { _ref: string }; alt?: string };

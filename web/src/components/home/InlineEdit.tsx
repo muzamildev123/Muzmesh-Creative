@@ -8,6 +8,7 @@ import { useEffect, useRef } from 'react';
 import { useDocuments } from '@sanity/visual-editing/react';
 import { at, set } from '@sanity/mutate';
 import { vercelStegaDecode, vercelStegaSplit } from '@vercel/stega';
+import { fieldOf as hrefField } from '@/preview/field';
 
 const INVISIBLE = /[​-‍⁠﻿]/;
 const norm = (s: string) => s.replace(/\s+/g, ' ').trim();
@@ -19,9 +20,7 @@ function fieldOf(text: string): Target | null {
   if (!INVISIBLE.test(text)) return null;
   try {
     const d = vercelStegaDecode<{ href?: string }>(text);
-    const href = d?.href ? decodeURIComponent(d.href) : '';
-    const m = href.match(/;id=([^;]+);type=([^;]+);path=([^?]+)/);
-    return m ? { id: m[1], type: m[2], path: m[3] } : null;
+    return d?.href ? hrefField(d.href) : null;
   } catch {
     return null;
   }
