@@ -44,17 +44,20 @@ function valueAt(doc: unknown, path: string): unknown {
 }
 
 /** The text under the pointer, looking through the Studio's blue overlay. */
-function textNodeAt(x: number, y: number): Text | null {
+function textNodeAt(x: number, y: number): { node: Text; offset: number } | null {
   const overlay = document.querySelector<HTMLElement>('sanity-visual-editing');
   const before = overlay?.style.pointerEvents ?? '';
   if (overlay) overlay.style.pointerEvents = 'none';
   try {
     const doc = document as Document & {
-      caretPositionFromPoint?: (x: number, y: number) => { offsetNode: Node } | null;
+      caretPositionFromPoint?: (x: number, y: number) => { offsetNode: Node; offset: number } | null;
       caretRangeFromPoint?: (x: number, y: number) => Range | null;
     };
-    const node = doc.caretPositionFromPoint?.(x, y)?.offsetNode ?? doc.caretRangeFromPoint?.(x, y)?.startContainer;
-    return node && node.nodeType === Node.TEXT_NODE ? (node as Text) : null;
+    const pos = doc.caretPositionFromPoint?.(x, y);
+    const range = pos ? null : doc.caretRangeFromPoint?.(x, y);
+    const node = pos?.offsetNode ?? range?.startContainer;
+    const offset = pos?.offset ?? range?.startOffset ?? 0;
+    return node && node.nodeType === Node.TEXT_NODE ? { node: node as Text, offset } : null;
   } finally {
     if (overlay) overlay.style.pointerEvents = before;
   }
@@ -82,8 +85,9 @@ export default function InlineEdit() {
 
     async function onDblClick(e: MouseEvent) {
       if (busy.current || e.button !== 0) return;
-      const node = textNodeAt(e.clientX, e.clientY);
-      if (!node || !node.parentElement || node.parentElement.closest('[contenteditable]')) return;
+      const hit = textNodeAt(e.clientX, e.clientY);
+      const node = hit?.node;
+      if (!hit || !node || !node.parentElement || node.parentElement.closest('[contenteditable]')) return;
       const target = fieldOf(node.data);
       if (!target) return;
       busy.current = true;
@@ -97,7 +101,7 @@ export default function InlineEdit() {
           toast('This text has a price or formatting in it. Edit it in the panel on the right.');
           return;
         }
-        edit(node, target, raw);
+        edit(node, target, raw, hit.offset);
       } catch {
         toast('Could not open this text for editing. Use the panel on the right.');
       } finally {
@@ -105,26 +109,34 @@ export default function InlineEdit() {
       }
     }
 
-    function edit(node: Text, target: Target, original: string) {
+    function edit(node: Text, target: Target, original: string, offset: number) {
       const marked = node.data;
       const span = document.createElement('span');
       span.contentEditable = 'plaintext-only';
       span.spellcheck = true;
       span.textContent = original;
-      span.style.cssText = 'outline:2px solid #4f6cff;outline-offset:3px;border-radius:2px;cursor:text;white-space:pre-wrap';
+      span.style.cssText = 'outline:1.5px solid #4f6cff;outline-offset:2px;border-radius:2px;cursor:text;white-space:pre-wrap';
       // One outline only: hide the Studio's blue hover box while typing, so just this text is outlined.
       const overlay = document.querySelector<HTMLElement>('sanity-visual-editing');
-      if (overlay) overlay.style.visibility = 'hidden';
+      if (overlay) overlay.style.display = 'none';
       node.replaceWith(span);
       span.focus();
-      const sel = window.getSelection();
-      sel?.selectAllChildren(span);
+      // Caret where you double-clicked, no highlighted selection (like the Webflow designer).
+      const textNode = span.firstChild;
+      if (textNode) {
+        const range = document.createRange();
+        range.setStart(textNode, Math.min(offset, original.length));
+        range.collapse(true);
+        const sel = window.getSelection();
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+      }
 
       let done = false;
       const finish = (save: boolean) => {
         if (done) return;
         done = true;
-        if (overlay) overlay.style.visibility = '';
+        if (overlay) overlay.style.display = '';
         const next = (span.textContent ?? '').replace(/ /g, ' ');
         const changed = save && next.trim() !== '' && next !== original;
         const text = document.createTextNode(changed ? next : marked);
