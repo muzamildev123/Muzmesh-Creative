@@ -2,6 +2,7 @@
 import type { HomeContent, FaqItem } from '@/data/home';
 import { rich, plain } from '@/lib/home';
 import Arrow from './Arrow.astro';
+import { stegaClean } from '@sanity/client/stega';
 
 interface Props {
   c: HomeContent;
@@ -74,4 +75,5 @@ const schema = {
   <div class="fq-end"><p set:html={rich(f.end, t)} /><a class="cta" href="#launch-brief">{c.ctaLabel} <Arrow /></a></div>
 </div>
 </section>
-<script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
+<!-- No click-to-edit markers in structured data: they'd only bloat the preview page. -->
+<script type="application/ld+json" set:html={JSON.stringify(stegaClean(schema)).replace(/</g, '\\u003c')} />

@@ -3,17 +3,14 @@
 // doesn't use BaseLayout or the Tailwind base styles.
 import '@/styles/home.css';
 import Tracking from '@/components/Tracking.astro';
-import { VisualEditing } from '@sanity/astro/visual-editing';
 
 interface Props {
   title: string;
   description: string;
   noindex?: boolean;
-  /** Visual-editor preview: shows click-to-edit overlays inside the Studio. */
-  visualEditing?: boolean;
 }
 
-const { title, description, noindex = false, visualEditing = false } = Astro.props;
+const { title, description, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -45,6 +42,5 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   </head>
   <body>
     <slot />
-    <VisualEditing enabled={visualEditing} experimental_refreshStrategy="in-place" />
   </body>
 </html>

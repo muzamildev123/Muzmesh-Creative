@@ -139,7 +139,8 @@ export default function InlineEdit() {
         if (overlay) overlay.style.display = '';
         const next = (span.textContent ?? '').replace(/ /g, ' ');
         const changed = save && next.trim() !== '' && next !== original;
-        const text = document.createTextNode(changed ? next : marked);
+        // Keep the invisible marker on the new text, so it stays click-to-edit and live.
+        const text = document.createTextNode(changed ? next + vercelStegaSplit(marked).encoded : marked);
         span.replaceWith(text);
         if (!changed) return;
         try {

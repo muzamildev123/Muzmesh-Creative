@@ -50,7 +50,8 @@ export const sanityAttr = (path: string) => (visualEditingEnabled ? `id=homePage
 
 // Never mark values that end up in links, ids, classes or numbers: the invisible
 // characters would break them.
-const STEGA_SKIP_KEY = /(^_|url|href|link|email|slug|^id$|key|type|icon|class|style|lang|date|currency|number|percent|price|setup|monthly)/i;
+// Whole field names, so labels like `setupLabel` or `monthlyText` still get click-to-edit.
+const STEGA_SKIP_KEY = /^(_.*|id|key|type|icon|class|style|lang|date|currency|number|percent|price|setup|monthly|referralPercent|timeZone)$|(url|href|link|email|slug)$/i;
 const stegaFilter = ({ sourcePath, value }: { sourcePath: ReadonlyArray<unknown>; value: unknown }) => {
   if (typeof value !== 'string' || !value.trim()) return false;
   if (/^(https?:|mailto:|tel:|\/|#)/.test(value) || /^\d{4}-\d{2}-\d{2}/.test(value)) return false;

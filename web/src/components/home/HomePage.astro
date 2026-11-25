@@ -29,7 +29,7 @@ const t = tokens(c);
 const clean = (s: string) => stegaClean(plain(s, t));
 ---
 
-<HomeLayout title={clean(c.seo.title)} description={clean(c.seo.description)} visualEditing={preview} noindex={preview}>
+<HomeLayout title={clean(c.seo.title)} description={clean(c.seo.description)} noindex={preview}>
   <Story c={c} t={t} />
   <Referral c={c} t={t} />
   <Faq c={c} t={t} />

@@ -5,7 +5,7 @@
 // show unpublished edits next to the form.
 import HomePage from '@/components/home/HomePage.astro';
 import { getHome } from '@/lib/home';
-import InlineEdit from '@/components/home/InlineEdit';
+import PreviewEditing from '@/components/home/PreviewEditing';
 
 export const prerender = false;
 const c = await getHome({ draft: true });
@@ -13,5 +13,6 @@ Astro.response.headers.set('Cache-Control', 'no-store');
 ---
 
 <HomePage c={c} preview />
-<!-- Double-click a text to type on it (only does anything inside the Studio's Presentation tab). -->
-<InlineEdit client:only="react" />
+<!-- Click-to-edit overlay, live text while typing in the panel, and double-click editing.
+     Only does anything inside the Studio's Presentation tab. -->
+<PreviewEditing client:only="react" />
