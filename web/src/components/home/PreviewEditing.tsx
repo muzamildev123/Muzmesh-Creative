@@ -5,7 +5,7 @@
 // the form you are typing in and sends the result here on every keystroke
 // (usePresentationQuery). live.ts rewrites just the texts that changed. There is no server
 // render and no page reload, so the update is immediate and the overlay doesn't flash.
-// Only edits a text patch can't show (a new list item, a price) reload the page, once,
+// Only edits a text patch can't show (a list item added, removed or moved) reload the page, once,
 // after typing stops.
 import { useCallback, useEffect, useState } from 'react';
 import { VisualEditing, usePresentationQuery, type HistoryAdapter, type HistoryAdapterNavigate, type HistoryRefresh } from '@sanity/visual-editing/react';

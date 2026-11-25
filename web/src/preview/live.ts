@@ -8,8 +8,9 @@
 //
 // Each text on the page carries an invisible marker naming its field (the same marker
 // that makes click-to-edit work). A text is shown either as typed (plain) or through
-// `rich()` (bold, `code` and {price} tokens). Anything else, such as a list getting a new
-// item or a price changing, falls back to one quiet page reload after typing stops.
+// `rich()` (bold, `code` and {price} tokens). Prices are rewritten wherever they show.
+// Anything else, such as a list getting a new item, falls back to one quiet page reload
+// after typing stops.
 import { VERCEL_STEGA_REGEX, vercelStegaDecode } from '@vercel/stega';
 import { mergeHome, plain, rich, tokens } from '@/lib/home';
 
@@ -107,6 +108,20 @@ function patchText(text: string, runs: Run[], prev: Map<string, string>, next: M
   return { text: out, missed };
 }
 
+// The launch brief's promise also fills {startup} (see LaunchBrief.astro).
+const withStartup = (t: Record<string, string>) => [t, { ...t, startup: '<b class="lc-nm">your startup</b>' }];
+const skip = (el: Element | null) => !el || !!el.closest('sanity-visual-editing, [contenteditable]');
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/** Text nodes on the page, leaving out the Studio overlay and a text being typed on the page. */
+function textNodes(onlyMarked: boolean) {
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  const nodes: Text[] = [];
+  for (let n = walker.nextNode(); n; n = walker.nextNode())
+    if ((!onlyMarked || INVISIBLE.test((n as Text).data)) && !skip(n.parentElement)) nodes.push(n as Text);
+  return nodes;
+}
+
 const template = document.createElement('template');
 const asDom = (html: string) => ((template.innerHTML = html), template.innerHTML);
 
@@ -121,22 +136,17 @@ export function createLivePatcher(): LivePatcher {
   let prevDoc: Doc | undefined;
   let prevStrings = new Map<string, string>();
   let prevShape = '';
+  let prevTokens: Record<string, string> = {};
   let live = false;
 
   function apply(next: Map<string, string>, t: Record<string, string>): boolean {
     const onPage = new Set<string>();
     let ok = true;
-    const skip = (el: Element | null) => !el || !!el.closest('sanity-visual-editing, [contenteditable]');
 
     // Text on the page.
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-    const nodes: Text[] = [];
-    for (let n = walker.nextNode(); n; n = walker.nextNode()) if (INVISIBLE.test((n as Text).data)) nodes.push(n as Text);
     const richDone = new Set<Element>();
-    // The launch brief's promise also fills {startup} (see LaunchBrief.astro).
-    const richTokens = [t, { ...t, startup: '<b class="lc-nm">your startup</b>' }];
-    for (const node of nodes) {
-      if (skip(node.parentElement)) continue;
+    const richTokens = withStartup(t);
+    for (const node of textNodes(true)) {
       const runs = runsIn(node.data);
       runs.forEach((r) => onPage.add(r.path));
       const { text, missed } = patchText(node.data, runs, prevStrings, next, t);
@@ -183,6 +193,46 @@ export function createLivePatcher(): LivePatcher {
     return ok;
   }
 
+  /**
+   * A price changed: the prices themselves, and every text that shows one through a
+   * {setup}, {monthly}, {percent} or {referred} token, are rewritten with the new amounts.
+   */
+  function applyPrices(was: Record<string, string>, now: Record<string, string>, values: Map<string, string>) {
+    const swap = new Map<string, string>();
+    for (const k of Object.keys(now)) if (was[k] !== now[k]) swap.set(was[k], now[k]);
+    if (!swap.size) return;
+    // Texts formatted with rich(): render them again with the new amounts.
+    const done = new Set<Element>();
+    const wasSets = withStartup(was);
+    const nowSets = withStartup(now);
+    for (const node of textNodes(true)) {
+      for (const run of runsIn(node.data)) {
+        const value = values.get(run.path);
+        if (value === undefined) continue;
+        wasSets.forEach((set, i) => {
+          const before = asDom(rich(value + run.enc, set));
+          const after = asDom(rich(value + run.enc, nowSets[i]));
+          if (before === after) return;
+          let el: Element | null = node.parentElement;
+          for (let up = 0; el && up < 3; up++, el = el.parentElement)
+            if (!done.has(el) && el.innerHTML === before) {
+              el.innerHTML = after;
+              done.add(el);
+              break;
+            }
+        });
+      }
+    }
+    // Everything else that shows an amount (the price tags, "off your next month: $200 $180").
+    // Old amounts are swapped all at once, and only as whole amounts: $20 never matches inside $200.
+    const pattern = new RegExp(`(?<![\\d$.,])(${[...swap.keys()].sort((a, b) => b.length - a.length).map(escapeRe).join('|')})(?![.,]?\\d)`, 'g');
+    for (const node of textNodes(false)) {
+      if ([...done].some((el) => el.contains(node))) continue;
+      const text = node.data.replace(pattern, (m) => swap.get(m) ?? m);
+      if (text !== node.data) node.data = text;
+    }
+  }
+
   return {
     get live() {
       return live;
@@ -190,18 +240,22 @@ export function createLivePatcher(): LivePatcher {
     update(doc) {
       live = true;
       const next = strings(doc);
-      const shape = shapeOf(doc);
-      if (!prevDoc) {
-        // The page was rendered from this version.
-        prevDoc = doc;
-        prevStrings = next;
-        prevShape = shape;
-        return true;
+      // Prices are numbers, so they are part of the shape; they are handled here instead.
+      const shape = shapeOf({ ...doc, prices: null });
+      const t = tokens(mergeHome(doc));
+      let ok = true;
+      if (prevDoc) {
+        ok = shape === prevShape;
+        if (ok) {
+          applyPrices(prevTokens, t, prevStrings);
+          ok = apply(next, t);
+        }
       }
-      const ok = shape === prevShape && apply(next, tokens(mergeHome(doc)));
+      // The first version is the one the page was rendered from.
       prevDoc = doc;
       prevStrings = next;
       prevShape = shape;
+      prevTokens = t;
       return ok;
     },
   };
