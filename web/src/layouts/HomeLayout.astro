@@ -34,10 +34,20 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- The site's own fonts block the first paint, so text never flashes in another face. -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+    <!-- The sample brand kits' fonts (further down the story) load without holding up the page. -->
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Serif:ital@0;1&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Serif:ital@0;1&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Serif:ital@0;1&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap" />
+    </noscript>
+    <!-- The sample photo in the story's brand kits, fetched early but after everything else. -->
+    <link rel="preload" as="image" href="/home/lex.webp" fetchpriority="low" />
     <Tracking />
   </head>
   <body>
