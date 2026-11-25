@@ -112,6 +112,9 @@ export default function InlineEdit() {
       span.spellcheck = true;
       span.textContent = original;
       span.style.cssText = 'outline:2px solid #4f6cff;outline-offset:3px;border-radius:2px;cursor:text;white-space:pre-wrap';
+      // One outline only: hide the Studio's blue hover box while typing, so just this text is outlined.
+      const overlay = document.querySelector<HTMLElement>('sanity-visual-editing');
+      if (overlay) overlay.style.visibility = 'hidden';
       node.replaceWith(span);
       span.focus();
       const sel = window.getSelection();
@@ -121,6 +124,7 @@ export default function InlineEdit() {
       const finish = (save: boolean) => {
         if (done) return;
         done = true;
+        if (overlay) overlay.style.visibility = '';
         const next = (span.textContent ?? '').replace(/ /g, ' ');
         const changed = save && next.trim() !== '' && next !== original;
         const text = document.createTextNode(changed ? next : marked);
