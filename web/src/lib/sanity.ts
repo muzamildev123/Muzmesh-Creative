@@ -11,7 +11,16 @@ let client: SanityClient | undefined;
 // Our own names first; the SANITY_API_* names are the ones the Sanity
 // integration on Vercel sets, so either way of connecting works.
 export const sanityProjectId = () => import.meta.env.SANITY_PROJECT_ID || import.meta.env.SANITY_API_PROJECT_ID;
-const sanityTarget = () => resolveSanityEnvironment(import.meta.env);
+// Astro replaces individual environment references when it bundles the site.
+// Pass explicit keys so prerendering uses the same target as content sync.
+const sanityTarget = () => resolveSanityEnvironment({
+  VERCEL_ENV: import.meta.env.VERCEL_ENV,
+  TEAM_ENV: import.meta.env.TEAM_ENV,
+  SANITY_PROJECT_ID: import.meta.env.SANITY_PROJECT_ID,
+  SANITY_API_PROJECT_ID: import.meta.env.SANITY_API_PROJECT_ID,
+  SANITY_DATASET: import.meta.env.SANITY_DATASET,
+  SANITY_API_DATASET: import.meta.env.SANITY_API_DATASET,
+});
 
 export function sanityClient() {
   const projectId = sanityProjectId();
