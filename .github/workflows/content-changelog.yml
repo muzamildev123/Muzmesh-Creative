@@ -1,0 +1,67 @@
+# Keeps a changelog of Sanity content (staging drafts and the live site) on the
+# `content-log` branch: CHANGELOG.md plus a JSON snapshot of every document.
+# Read it at github.com/muzamildev123/Muzmesh-Creative/blob/content-log/CHANGELOG.md
+# Needs the repo secret SANITY_READ_TOKEN (a Sanity token with the Viewer role).
+
+name: Content changelog
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+  # Lets a Sanity webhook log a change straight away instead of within 15 minutes.
+  repository_dispatch:
+    types: [sanity-change]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: content-changelog
+  cancel-in-progress: false
+
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check out the content-log branch
+        run: |
+          git config --global user.name "content-changelog[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin content-log >/dev/null; then
+            git fetch --depth=1 origin content-log
+            git worktree add -B content-log log origin/content-log
+          else
+            git worktree add --detach log
+            cd log
+            git checkout --orphan content-log
+            git rm -rfq .
+            # This branch only holds the log: tell Vercel never to deploy it.
+            mkdir -p web
+            echo '{ "git": { "deploymentEnabled": false } }' > web/vercel.json
+          fi
+
+      - name: Update the changelog
+        env:
+          SANITY_READ_TOKEN: ${{ secrets.SANITY_READ_TOKEN }}
+        run: |
+          if [ -z "$SANITY_READ_TOKEN" ]; then
+            echo "::error::Add the SANITY_READ_TOKEN repo secret (Sanity token, Viewer role). Without it drafts are invisible."
+            exit 1
+          fi
+          node scripts/content-changelog.mjs --dir log
+
+      - name: Save it
+        working-directory: log
+        run: |
+          git add -A
+          if git diff --cached --quiet; then echo "Nothing changed."; exit 0; fi
+          git commit -qm "Content changes $(TZ=Asia/Karachi date '+%d %b %Y %H:%M') PKT"
+          git push -q origin content-log

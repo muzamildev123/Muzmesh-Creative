@@ -61,6 +61,17 @@ studio/scripts/migrate-content.ts one-off import of the old posts (studio/script
 - Unverified content is marked: the **Not verified yet** switch in Sanity, `placeholder: true` in industry frontmatter, or `<Placeholder />` in pages. All show a visible yellow banner. New Sanity documents start with it on.
 - Never change a published slug in Sanity without adding a 301 in `web/vercel.json`.
 
+## Content changelog
+
+Every change in Sanity is logged, field by field, with old → new text:
+**[content-log/CHANGELOG.md](https://github.com/muzamildev123/Muzmesh-Creative/blob/content-log/CHANGELOG.md)**.
+The top of that file always shows what is on staging but not live yet (staging shows drafts, live shows published).
+
+- The **Content changelog** GitHub Action (`.github/workflows/content-changelog.yml`) checks Sanity every 15 minutes and commits to the `content-log` branch only when something changed. Run it now: GitHub → Actions → Content changelog → Run workflow, or `gh workflow run content-changelog.yml`.
+- Each run also saves every document as JSON under `snapshot/` on that branch, so `git log -p` there shows exact history, kept forever.
+- Instant check from a terminal: `SANITY_READ_TOKEN=... node scripts/content-changelog.mjs --now`.
+- Setup, once: in sanity.io/manage → API → Tokens, add a token with the **Viewer** role, then save it as the repo secret `SANITY_READ_TOKEN` (`gh secret set SANITY_READ_TOKEN`). Drafts are never public, so without it only the live content is visible.
+
 ## Adding content
 
 - **Homepage text, prices, the five days, FAQ:** in the Studio under **Homepage**. A field left empty keeps the copy in `web/src/data/home.ts`. Text can use `**bold**`, and `{setup}`, `{monthly}` and `{percent}` follow the prices. The five days and the kit lists have a fixed number of items, because the animation is built for them.
