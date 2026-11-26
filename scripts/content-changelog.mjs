@@ -118,6 +118,7 @@ function fieldChanges(before, after) {
     const label = (b[key] || a[key]).label;
     if (x === undefined) lines.push(`${label}: added ${show(y)}`);
     else if (y === undefined) lines.push(`${label}: removed (was ${show(x)})`);
+    else if (show(x) === show(y)) lines.push(`${label}: only spaces or line breaks changed in ${show(y)}`);
     else lines.push(`${label}: ${show(x)} → ${show(y)}`);
   }
   return lines;
