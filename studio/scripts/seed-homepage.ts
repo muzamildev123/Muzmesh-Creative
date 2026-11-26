@@ -8,8 +8,10 @@
 import { randomUUID } from 'node:crypto';
 import { getCliClient } from 'sanity/cli';
 import { homeDefaults } from '../../web/src/data/home';
+import { assertNonProductionMutation } from '../../scripts/sanity-environment';
 
 const client = getCliClient({ apiVersion: '2026-10-01' });
+assertNonProductionMutation(client.config(), process.env);
 
 // Sanity needs a _key on every object inside an array.
 const withKeys = (v: unknown): unknown => {

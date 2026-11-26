@@ -1,5 +1,7 @@
 # MuzMesh Creative website
 
+**Team setup amendment (26 November 2026):** use [AGENTS.md](AGENTS.md), [team workflow](docs/team-workflow.md) and [environment safeguards](docs/sanity-environments.md) for new development. The historical setup below targets production and must not be followed for local/staging setup. Production migration/seed commands are now blocked; hosted environment setup and release approval remain separate.
+
 The new muzmeshcreative.com: an Astro + TypeScript + Tailwind site in `web/`, the homepage copy, blog posts and projects edited in Sanity Studio in `studio/`, hosted on Vercel.
 
 Start with **[docs/project-brief.md](docs/project-brief.md)**: goals, team, phases and open questions on one page.

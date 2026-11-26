@@ -14,3 +14,12 @@
 ## Reviewer
 
 <!-- Every PR is reviewed by another team member before merge. -->
+
+## Task, context and environment
+
+- Issue / Notion context / handoff:
+- Human owner / independent reviewer:
+- Base branch / environment / Sanity dataset:
+- [ ] Environment safeguards pass; no production mutations or secrets included
+- [ ] Shared files coordinated; previous agent writer stopped before handoff
+- Rollback and remaining checks:
