@@ -21,3 +21,7 @@ npm-debug.log*
 
 # sanity
 .sanity/
+
+# notion context sync
+automation/notion-sync/.state.json
+automation/notion-sync/sync.log
