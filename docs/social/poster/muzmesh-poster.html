@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MuzMesh Poster</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050505;
+    --ink: #f8f7f3;
+    --dim: #77777c;
+    --line: rgba(248,247,243,.14);
+    --ember: #ff6a20;
+    --yellow: #FFD60A;
+    --sans: "Inter Tight", "Inter", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1350px; background: var(--bg); }
+  .poster {
+    position: relative; width: 1080px; height: 1350px; overflow: hidden;
+    background: var(--bg); color: var(--ink); font-family: var(--sans);
+    padding: 72px 80px; display: flex; flex-direction: column;
+  }
+  /* ember columns, same language as the LinkedIn covers */
+  .glow { position: absolute; inset: 0; pointer-events: none; }
+  .glow span {
+    position: absolute; bottom: -10%; width: var(--w); height: var(--h); left: var(--x);
+    background: linear-gradient(to top, rgba(255,106,32,.0) 0%, rgba(255,106,32,.85) 30%, rgba(196,60,10,.35) 70%, rgba(255,106,32,0) 100%);
+    filter: blur(var(--b)); opacity: var(--o);
+  }
+  .fade { position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to bottom, var(--bg) 0%, rgba(5,5,5,.55) 28%, rgba(5,5,5,.05) 60%, rgba(5,5,5,.7) 100%); }
+  .grain { position: absolute; inset: 0; opacity: .07; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .z { position: relative; z-index: 2; }
+
+  header { display: flex; justify-content: space-between; align-items: center; }
+  header svg { height: 34px; width: auto; color: var(--ink); }
+  .tag { font-family: var(--mono); font-size: 15px; letter-spacing: .18em; color: var(--dim); text-transform: uppercase; }
+
+  .kicker { margin-top: 132px; font-family: var(--mono); font-size: 17px; letter-spacing: .2em; text-transform: uppercase; color: var(--ember); display: flex; align-items: center; gap: 14px; }
+  .kicker i { width: 10px; height: 10px; border-radius: 50%; background: var(--yellow); display: inline-block; }
+  h1 { margin-top: 30px; font-weight: 500; font-size: 112px; line-height: .98; letter-spacing: -.045em; }
+  h1 .dim { color: var(--dim); display: block; }
+  .sub { margin-top: 40px; max-width: 760px; font-size: 30px; line-height: 1.35; font-weight: 300; color: rgba(248,247,243,.78); letter-spacing: -.01em; }
+  .sub b { font-weight: 500; color: var(--ink); }
+
+  .kit { margin-top: auto; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(3, 1fr); }
+  .kit div { padding: 22px 0 22px; border-bottom: 1px solid var(--line); font-size: 24px; font-weight: 400; display: flex; gap: 14px; align-items: baseline; }
+  .kit div em { font-style: normal; font-family: var(--mono); font-size: 14px; color: var(--dim); letter-spacing: .08em; }
+
+  .price { margin-top: 44px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .amounts { display: flex; gap: 56px; align-items: flex-end; }
+  .amt strong { display: block; font-size: 76px; font-weight: 500; letter-spacing: -.04em; line-height: 1; }
+  .amt span { display: block; margin-top: 10px; font-family: var(--mono); font-size: 15px; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); }
+  .plus { font-size: 48px; font-weight: 300; color: var(--dim); padding-bottom: 34px; }
+  .cta { text-align: right; }
+  .cta .btn { display: inline-block; background: var(--ink); color: #0b0b0b; font-weight: 600; font-size: 24px; padding: 20px 30px; border-radius: 999px; letter-spacing: -.01em; }
+  .cta .url { margin-top: 14px; font-family: var(--mono); font-size: 16px; letter-spacing: .1em; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="glow">
+    <span style="--x:-2%;--w:90px;--h:78%;--b:26px;--o:.9"></span>
+    <span style="--x:9%;--w:46px;--h:52%;--b:18px;--o:.55"></span>
+    <span style="--x:19%;--w:70px;--h:64%;--b:24px;--o:.7"></span>
+    <span style="--x:33%;--w:40px;--h:40%;--b:20px;--o:.35"></span>
+    <span style="--x:58%;--w:52px;--h:46%;--b:22px;--o:.4"></span>
+    <span style="--x:70%;--w:80px;--h:70%;--b:26px;--o:.75"></span>
+    <span style="--x:82%;--w:44px;--h:56%;--b:18px;--o:.6"></span>
+    <span style="--x:93%;--w:96px;--h:82%;--b:28px;--o:.95"></span>
+  </div>
+  <div class="fade"></div>
+  <div class="grain"></div>
+
+  <header class="z">
+    <svg viewBox="0 0 752 96" role="img" aria-label="MuzMesh Creative">
+      <path d="M16 80V16L48 48L80 16V80" fill="none" stroke="currentColor" stroke-width="13" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="48" cy="16" r="4.5" fill="currentColor"/><circle cx="48" cy="80" r="4.5" fill="currentColor"/>
+      <circle cx="48" cy="48" r="11" fill="#FFD60A" stroke="currentColor" stroke-width="4"/>
+      <text x="120" y="80" font-family="Inter Tight, sans-serif" font-weight="600" font-size="82" letter-spacing="-3" fill="currentColor">muzmesh</text>
+    </svg>
+    <div class="tag">For AI startups</div>
+  </header>
+
+  <div class="z kicker"><i></i>The AI Starter Kit</div>
+  <h1 class="z"><span class="dim">Every AI startup looks the same.</span>Yours won’t.</h1>
+  <p class="z sub">Everything you need to launch online, <b>designed by people, not AI slop.</b> We set it up, then keep it running so you can ship the product.</p>
+
+  <div class="z kit">
+    <div><em>01</em>Landing page</div>
+    <div><em>02</em>Social media</div>
+    <div><em>03</em>AEO / GEO</div>
+    <div><em>04</em>Tracking</div>
+    <div><em>05</em>CRM</div>
+    <div><em>06</em>Headless CMS</div>
+  </div>
+
+  <div class="z price">
+    <div class="amounts">
+      <div class="amt"><strong>$500</strong><span>Setup, once</span></div>
+      <div class="plus">+</div>
+      <div class="amt"><strong>$200</strong><span>Per month</span></div>
+    </div>
+    <div class="cta">
+      <div class="btn">Launch with us →</div>
+      <div class="url">muzmeshcreative.com</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
