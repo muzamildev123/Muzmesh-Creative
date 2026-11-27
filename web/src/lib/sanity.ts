@@ -2,6 +2,7 @@ import { createClient, type SanityClient } from '@sanity/client';
 import { createImageUrlBuilder } from '@sanity/image-url';
 import { toHTML, uriLooksSafe, escapeHTML } from '@portabletext/to-html';
 import type { Loader } from 'astro/loaders';
+import { resolveSanityEnvironment } from '../../../scripts/sanity-environment';
 
 // Content is read at build time only. Publishing in the Studio triggers a
 // Vercel deploy hook, which rebuilds the site with the new content.
@@ -10,16 +11,26 @@ let client: SanityClient | undefined;
 // Our own names first; the SANITY_API_* names are the ones the Sanity
 // integration on Vercel sets, so either way of connecting works.
 export const sanityProjectId = () => import.meta.env.SANITY_PROJECT_ID || import.meta.env.SANITY_API_PROJECT_ID;
-const sanityDataset = () => import.meta.env.SANITY_DATASET || import.meta.env.SANITY_API_DATASET || 'production';
+// Astro replaces individual environment references when it bundles the site.
+// Pass explicit keys so prerendering uses the same target as content sync.
+const sanityTarget = () => resolveSanityEnvironment({
+  VERCEL_ENV: import.meta.env.VERCEL_ENV,
+  TEAM_ENV: import.meta.env.TEAM_ENV,
+  SANITY_PROJECT_ID: import.meta.env.SANITY_PROJECT_ID,
+  SANITY_API_PROJECT_ID: import.meta.env.SANITY_API_PROJECT_ID,
+  SANITY_DATASET: import.meta.env.SANITY_DATASET,
+  SANITY_API_DATASET: import.meta.env.SANITY_API_DATASET,
+});
 
 export function sanityClient() {
   const projectId = sanityProjectId();
   if (!projectId) {
     throw new Error('SANITY_PROJECT_ID is not set. Copy web/.env.example to web/.env and fill it in (see README).');
   }
+  const target = sanityTarget();
   client ??= createClient({
-    projectId,
-    dataset: sanityDataset(),
+    projectId: target.projectId,
+    dataset: target.dataset,
     // Only used at build time, never sent to the browser. Lets the build read a private dataset.
     token: import.meta.env.SANITY_API_READ_TOKEN || undefined,
     apiVersion: '2026-10-01',

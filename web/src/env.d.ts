@@ -1,4 +1,6 @@
 interface ImportMetaEnv {
+  readonly VERCEL_ENV?: string;
+  readonly TEAM_ENV?: string;
   readonly PUBLIC_LEAD_ENDPOINT?: string;
   readonly PUBLIC_BOOKING_URL?: string;
   // Traffic tools (see src/components/Tracking.astro); empty = off

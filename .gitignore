@@ -14,6 +14,11 @@ npm-debug.log*
 # environment variables
 .env
 .env.production
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+*.local
 
 # OS / editor
 .DS_Store

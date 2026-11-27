@@ -17,8 +17,10 @@ import { htmlToBlocks } from '@portabletext/block-tools';
 import { JSDOM } from 'jsdom';
 import matter from 'gray-matter';
 import { blockContent } from '../schemaTypes/blockContent';
+import { assertNonProductionMutation } from '../../scripts/sanity-environment';
 
 const client = getCliClient({ apiVersion: '2026-10-01' });
+assertNonProductionMutation(client.config(), process.env);
 const legacyDir = path.join(import.meta.dirname, 'legacy');
 
 // Only text blocks are needed for the import (the old bodies have no inline

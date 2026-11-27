@@ -1,11 +1,14 @@
 import { defineCliConfig } from 'sanity/cli';
+import { resolveSanityEnvironment } from '../scripts/sanity-environment';
+
+const target = resolveSanityEnvironment(process.env, true);
 
 export default defineCliConfig({
   api: {
-    projectId: process.env.SANITY_STUDIO_PROJECT_ID,
-    dataset: process.env.SANITY_STUDIO_DATASET || 'production',
+    projectId: target.projectId,
+    dataset: target.dataset,
   },
   // `npm run deploy` publishes the Studio to https://muzmesh.sanity.studio
-  studioHost: 'muzmesh',
+  studioHost: target.environment === 'production' ? 'muzmesh' : `muzmesh-${target.environment}`,
   deployment: { autoUpdates: true },
 });
