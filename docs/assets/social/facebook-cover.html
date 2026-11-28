@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MuzMesh Facebook Cover</title>
+<!-- Facebook cover, 1640x924. Desktop crops to the middle 1640x624 band (y 150-774), mobile shows all of it. Keep text inside the band. Brand v2. -->
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --mm-bg: #000000; --mm-text: #F4F4F1; --mm-text-muted: rgba(244,244,241,.74);
+    --mm-text-dim: #77777C; --mm-hair: rgba(244,244,241,.16);
+    --mm-accent: #F2580F; --mm-deep: #CC3D08;
+    --mm-font-sans: "Inter Tight", "Inter", system-ui, sans-serif;
+    --mm-font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1640px; height: 924px; background: var(--mm-bg); }
+  .cover { position: relative; width: 1640px; height: 924px; overflow: hidden; background: var(--mm-bg); color: var(--mm-text); font-family: var(--mm-font-sans); font-feature-settings: "kern" 1, "liga" 1, "calt" 1; }
+
+  /* copper light curtain, rising from the bottom */
+  .curtain { position: absolute; inset: 0; pointer-events: none; }
+  .curtain span { position: absolute; bottom: -8%; left: var(--x); width: var(--w); height: var(--h);
+    background: linear-gradient(to top, rgba(204,61,8,0) 0%, rgba(204,61,8,.9) 28%, rgba(242,88,15,.35) 68%, rgba(204,61,8,0) 100%);
+    filter: blur(var(--b)); opacity: var(--o); }
+  .shade { position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to right, #000 0%, rgba(0,0,0,.92) 38%, rgba(0,0,0,.35) 70%, rgba(0,0,0,.15) 100%),
+                linear-gradient(to bottom, #000 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 80%, #000 100%); }
+  .grain { position: absolute; inset: 0; opacity: .05; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  /* safe band: y 150-774 */
+  .band { position: absolute; left: 0; right: 0; top: 150px; height: 624px; padding: 64px 128px; display: flex; flex-direction: column; }
+  .wordmark { height: 40px; width: auto; display: block; align-self: flex-start; }
+  .label { margin-top: auto; font-family: var(--mm-font-mono); font-size: 24px; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; color: var(--mm-text-muted); display: flex; align-items: center; gap: 16px; white-space: nowrap; }
+  .label i { width: 12px; height: 12px; background: var(--mm-accent); display: inline-block; }
+  h1 { margin-top: 28px; font-weight: 500; font-size: 96px; line-height: 1.02; letter-spacing: -.045em; text-wrap: balance; }
+  h1 .dim { color: var(--mm-text-dim); display: block; }
+  h1 .dot { color: var(--mm-accent); }
+  .foot { margin-top: 40px; display: flex; gap: 40px; align-items: center; font-family: var(--mm-font-mono); font-size: 24px; letter-spacing: .06em; text-transform: uppercase; color: var(--mm-text-muted); font-feature-settings: "tnum" 1, "lnum" 1; white-space: nowrap; }
+  .foot b { font-weight: 500; color: var(--mm-text); }
+  .foot .sep { width: 1px; height: 24px; background: var(--mm-hair); }
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="curtain">
+    <span style="--x:58%;--w:60px;--h:58%;--b:26px;--o:.45"></span>
+    <span style="--x:66%;--w:110px;--h:84%;--b:34px;--o:.8"></span>
+    <span style="--x:75%;--w:48px;--h:50%;--b:22px;--o:.5"></span>
+    <span style="--x:82%;--w:90px;--h:72%;--b:30px;--o:.7"></span>
+    <span style="--x:90%;--w:56px;--h:60%;--b:24px;--o:.55"></span>
+    <span style="--x:96%;--w:120px;--h:92%;--b:36px;--o:.9"></span>
+  </div>
+  <div class="shade"></div>
+  <div class="grain"></div>
+
+  <div class="band">
+    <img class="wordmark" alt="muzmesh" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjkxIC0xNDkwIDkwMDcgMTUxMiIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJtdXptZXNoIj48dGl0bGU+bXV6bWVzaDwvdGl0bGU+PHBhdGggZmlsbD0iI0Y0RjRGMSIgZD0iTTkxIDBWLTExMThIMzg0Vi05MTlIMzk4UTQzMyAtMTAxOCA1MTUuMCAtMTA3NS4wUTU5NyAtMTEzMiA3MTAgLTExMzJRODI1IC0xMTMyIDkwNS41IC0xMDc0LjVROTg2IC0xMDE3IDEwMTMgLTkxOUgxMDI1UTEwNTkgLTEwMTYgMTE0OS4wIC0xMDc0LjBRMTIzOSAtMTEzMiAxMzYxIC0xMTMyUTE1MTcgLTExMzIgMTYxNS41IC0xMDMzLjBRMTcxNCAtOTM0IDE3MTQgLTc1MlYwSDE0MDRWLTY5MFExNDA0IC03ODQgMTM1NC41IC04MzAuMFExMzA1IC04NzYgMTIzMSAtODc2UTExNDcgLTg3NiAxMDk5LjUgLTgyMi41UTEwNTIgLTc2OSAxMDUyIC02ODJWMEg3NTJWLTY5OFE3NTIgLTc3OSA3MDUuMCAtODI3LjVRNjU4IC04NzYgNTgyIC04NzZRNTMwIC04NzYgNDg5LjAgLTg1MC4wUTQ0OCAtODI0IDQyNC4wIC03NzguNVE0MDAgLTczMyA0MDAgLTY3MFYwWiBNMjU4MS4yNzk5OTk5OTk5OTk3IC00NzVWLTExMThIMjg5MC4yNzk5OTk5OTk5OTk3VjBIMjU5My4yNzk5OTk5OTk5OTk3Vi0yMDNIMjU4MS4yNzk5OTk5OTk5OTk3UTI1NDMuMjc5OTk5OTk5OTk5NyAtMTA2IDI0NTYuMjc5OTk5OTk5OTk5NyAtNDUuNVEyMzY5LjI3OTk5OTk5OTk5OTcgMTUgMjI0My4yNzk5OTk5OTk5OTk3IDE0UTIxMzEuMjc5OTk5OTk5OTk5NyAxNCAyMDQ1Ljc3OTk5OTk5OTk5OTcgLTM2LjVRMTk2MC4yOCAtODcgMTkxMi43OCAtMTgxLjBRMTg2NS4yOCAtMjc1IDE4NjUuMjggLTQwNlYtMTExOEgyMTc0LjI3OTk5OTk5OTk5OTdWLTQ2MFEyMTc0LjI3OTk5OTk5OTk5OTcgLTM2MiAyMjI3LjI3OTk5OTk5OTk5OTcgLTMwNC41UTIyODAuMjc5OTk5OTk5OTk5NyAtMjQ3IDIzNjguMjc5OTk5OTk5OTk5NyAtMjQ4UTI0MjQuMjc5OTk5OTk5OTk5NyAtMjQ4IDI0NzIuMjc5OTk5OTk5OTk5NyAtMjczLjVRMjUyMC4yNzk5OTk5OTk5OTk3IC0yOTkgMjU1MC43Nzk5OTk5OTk5OTk3IC0zNTAuMFEyNTgxLjI3OTk5OTk5OTk5OTcgLTQwMSAyNTgxLjI3OTk5OTk5OTk5OTcgLTQ3NVogTTMwMzUuNTYgMFYtMTg1TDM1ODIuNTYgLTg2MlYtODcwSDMwNTMuNTZWLTExMThIMzk1NC41NlYtOTE1TDM0NDEuNTYgLTI1NlYtMjQ4SDM5NzMuNTZWMFogTTQxMTQuODQgMFYtMTExOEg0NDA3Ljg0Vi05MTlINDQyMS44NFE0NDU2Ljg0IC0xMDE4IDQ1MzguODQgLTEwNzUuMFE0NjIwLjg0IC0xMTMyIDQ3MzMuODQgLTExMzJRNDg0OC44NCAtMTEzMiA0OTI5LjM0IC0xMDc0LjVRNTAwOS44NCAtMTAxNyA1MDM2Ljg0IC05MTlINTA0OC44NFE1MDgyLjg0IC0xMDE2IDUxNzIuODQgLTEwNzQuMFE1MjYyLjg0IC0xMTMyIDUzODQuODQgLTExMzJRNTU0MC44NCAtMTEzMiA1NjM5LjM0IC0xMDMzLjBRNTczNy44NCAtOTM0IDU3MzcuODQgLTc1MlYwSDU0MjcuODRWLTY5MFE1NDI3Ljg0IC03ODQgNTM3OC4zNCAtODMwLjBRNTMyOC44NCAtODc2IDUyNTQuODQgLTg3NlE1MTcwLjg0IC04NzYgNTEyMy4zNCAtODIyLjVRNTA3NS44NCAtNzY5IDUwNzUuODQgLTY4MlYwSDQ3NzUuODRWLTY5OFE0Nzc1Ljg0IC03NzkgNDcyOC44NCAtODI3LjVRNDY4MS44NCAtODc2IDQ2MDUuODQgLTg3NlE0NTUzLjg0IC04NzYgNDUxMi44NCAtODUwLjBRNDQ3MS44NCAtODI0IDQ0NDcuODQgLTc3OC41UTQ0MjMuODQgLTczMyA0NDIzLjg0IC02NzBWMFogTTYzOTguMTIgMjJRNjIyNi4xMiAyMiA2MTAxLjEyIC00OC4wUTU5NzYuMTIgLTExOCA1OTA5LjYyIC0yNDcuNVE1ODQzLjEyIC0zNzcgNTg0My4xMiAtNTU0UTU4NDMuMTIgLTcyNiA1OTA5LjYyIC04NTYuMFE1OTc2LjEyIC05ODYgNjA5Ny42MiAtMTA1OS4wUTYyMTkuMTIgLTExMzIgNjM4My4xMiAtMTEzMlE2NDk0LjEyIC0xMTMyIDY1OTAuMTIgLTEwOTYuNVE2Njg2LjEyIC0xMDYxIDY3NTguMTIgLTk5MC41UTY4MzAuMTIgLTkyMCA2ODcwLjEyIC04MTMuNVE2OTEwLjEyIC03MDcgNjkxMC4xMiAtNTY0Vi00ODBINTk2Ni4xMlYtNjcxSDY3NjAuMTJMNjYxNi4xMiAtNjIxUTY2MTYuMTIgLTcwNiA2NTkwLjEyIC03NjkuMFE2NTY0LjEyIC04MzIgNjUxMi42MiAtODY2LjVRNjQ2MS4xMiAtOTAxIDYzODUuMTIgLTkwMVE2MzA5LjEyIC05MDEgNjI1Ni42MiAtODY2LjBRNjIwNC4xMiAtODMxIDYxNzYuMTIgLTc3MS4wUTYxNDguMTIgLTcxMSA2MTQ4LjEyIC02MzNWLTQ5OFE2MTQ4LjEyIC00MDcgNjE4MC4xMiAtMzQyLjVRNjIxMi4xMiAtMjc4IDYyNjkuNjIgLTI0My41UTYzMjcuMTIgLTIwOSA2NDAyLjEyIC0yMDlRNjQ1NC4xMiAtMjA5IDY0OTYuMTIgLTIyNC4wUTY1MzguMTIgLTIzOSA2NTY4LjYyIC0yNjguMFE2NTk5LjEyIC0yOTcgNjYxNC4xMiAtMzM4TDY5MDAuMTIgLTMxOVE2ODc5LjEyIC0yMTYgNjgxMi42MiAtMTM5LjVRNjc0Ni4xMiAtNjMgNjY0MS4xMiAtMjAuNVE2NTM2LjEyIDIyIDYzOTguMTIgMjJaIE03OTM5LjQgLTc5OSA3NjU2LjQgLTc4MlE3NjQ1LjQgLTgzNSA3NTk3LjQgLTg3My41UTc1NDkuNCAtOTEyIDc0NjguNCAtOTEyUTczOTYuNCAtOTEyIDczNDcuOSAtODgyLjBRNzI5OS40IC04NTIgNzI5OS40IC04MDJRNzI5OS40IC03NjIgNzMzMC45IC03MzMuNVE3MzYyLjQgLTcwNSA3NDM5LjQgLTY4OUw3NjQyLjQgLTY0OVE3ODA1LjQgLTYxNiA3ODg1LjQgLTU0Mi4wUTc5NjUuNCAtNDY4IDc5NjUuNCAtMzQ3UTc5NjUuNCAtMjM2IDc5MDEuNCAtMTUzLjVRNzgzNy40IC03MSA3NzI1LjQgLTI0LjVRNzYxMy40IDIyIDc0NjguNCAyMlE3MjQ2LjQgMjIgNzExNC45IC03MS4wUTY5ODMuNCAtMTY0IDY5NjEuNCAtMzIzTDcyNjQuNCAtMzM5UTcyNzkuNCAtMjcxIDczMzIuNCAtMjM2LjBRNzM4NS40IC0yMDEgNzQ2OC40IC0yMDFRNzU0OS40IC0yMDEgNzU5OS45IC0yMzMuMFE3NjUwLjQgLTI2NSA3NjUwLjQgLTMxNFE3NjUwLjQgLTM5NyA3NTA2LjQgLTQyNkw3MzEzLjQgLTQ2NlE3MTUwLjQgLTQ5OSA3MDcwLjQgLTU3OS4wUTY5OTAuNCAtNjU5IDY5OTAuNCAtNzg0UTY5OTAuNCAtODkyIDcwNDkuNCAtOTcwLjBRNzEwOC40IC0xMDQ4IDcyMTQuOSAtMTA5MC4wUTczMjEuNCAtMTEzMiA3NDY0LjQgLTExMzJRNzY3Ni40IC0xMTMyIDc3OTcuOSAtMTA0Mi41UTc5MTkuNCAtOTUzIDc5MzkuNCAtNzk5WiBNODM3Mi42OCAtNjQ2VjBIODA2My42Nzk5OTk5OTk5OTlWLTE0OTBIODM2Mi42OFYtOTE5SDgzNzYuNjhRODQxNC42OCAtMTAxOCA4NDk5LjE4IC0xMDc1LjBRODU4My42OCAtMTEzMiA4NzEwLjY4IC0xMTMyUTg4MjYuNjggLTExMzIgODkxMy42OCAtMTA4MS41UTkwMDAuNjggLTEwMzEgOTA0OS4xOCAtOTM3LjBROTA5Ny42OCAtODQzIDkwOTcuNjggLTcxMVYwSDg3ODcuNjhWLTY1NlE4Nzg3LjY4IC03NTkgODczNS4xOCAtODE3LjBRODY4Mi42OCAtODc1IDg1ODcuNjggLTg3NVE4NTIzLjY4IC04NzUgODQ3NS42OCAtODQ3LjVRODQyNy42OCAtODIwIDg0MDAuMTggLTc2OS4wUTgzNzIuNjggLTcxOCA4MzcyLjY4IC02NDZaIi8+PC9zdmc+Cg==">
+    <div class="label"><i></i>The AI Starter Kit · for AI startups</div>
+    <h1><span class="dim">Every AI startup looks the same.</span>Yours won’t<span class="dot">.</span></h1>
+    <div class="foot">
+      <span>Designed by people</span><span class="sep"></span>
+      <span><b>$500</b> setup · <b>$200</b> / month</span><span class="sep"></span>
+      <span>muzmeshcreative.com</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
