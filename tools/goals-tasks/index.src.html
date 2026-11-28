@@ -1,0 +1,677 @@
+<title>Goals &amp; Tasks</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: dotted workbench. Header, two-tone intro with a month switcher, a summary strip, then two views: This week (tasks by person) and Goals (one card per monthly goal with its tasks). Brand v2, Launch theme only. */
+:root {
+  color-scheme: dark;
+  --bg: #000000;
+  --surface: #0E0E10;
+  --surface-2: #141418;
+  --text: #F4F4F1;
+  --muted: rgba(244,244,241,.74);
+  --faint: rgba(244,244,241,.56);
+  --dim: #77777C;
+  --hair: rgba(244,244,241,.16);
+  --border: rgba(244,244,241,.30);
+  --accent: #F2580F;
+  --accent-hover: #FF6A20;
+  --on-accent: #0E0E10;
+  --success: #6FDC8C;
+  --warn: #F4F4F1;
+  --danger: #FF7A59;
+  --sans: "Inter Tight", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --gutter: 28px;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--text); }
+body {
+  margin: 0; font-family: var(--sans); font-size: 15px; line-height: 1.5;
+  background-image: radial-gradient(rgba(244,244,241,.07) 1px, transparent 1.2px);
+  background-size: 24px 24px; min-height: 100vh;
+}
+body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: .05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap {
+  max-width: 1240px; margin: 0 auto;
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+  padding-block: 24px 72px; display: grid; gap: 40px;
+}
+@media (max-width: 640px) { :root { --gutter: 16px; } .wrap { gap: 32px; } }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+a { color: inherit; }
+button, select, input { font: inherit; color: inherit; }
+
+.label { font-family: var(--mono); font-size: 11.5px; line-height: 1.2; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
+.label::before { content: ""; width: 5px; height: 5px; background: var(--accent); flex: none; }
+.micro { font-family: var(--mono); font-size: 10.5px; font-weight: 500; line-height: 1.2; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+.num { font-feature-settings: "tnum" 1, "lnum" 1; font-variant-numeric: tabular-nums; }
+
+/* header */
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; padding-bottom: 20px; border-bottom: 1px solid var(--hair); }
+.brand { display: flex; align-items: center; gap: 16px; min-width: 0; text-decoration: none; }
+.brand svg { height: 20px; width: auto; display: block; }
+.brand .sep { width: 1px; height: 20px; background: var(--hair); }
+.brand .micro { color: var(--muted); }
+.sync { display: flex; align-items: center; gap: 10px; color: var(--faint); }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dim); display: inline-block; }
+.dot.on { background: var(--accent); animation: pulse 2s ease-in-out infinite; }
+.dot.err { background: var(--danger); }
+@keyframes pulse { 50% { opacity: .35; } }
+
+/* intro */
+.intro { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px; }
+.intro .copy { display: grid; gap: 14px; max-width: 720px; min-width: 0; }
+h1 { margin: 0; font-size: clamp(32px, 3.5vw, 52px); font-weight: 500; line-height: 1.04; letter-spacing: -.03em; text-wrap: balance; }
+h1 .dim { color: var(--dim); }
+h1 .stop { color: var(--accent); }
+.lead { margin: 0; font-size: clamp(16px, 1.3vw, 19px); color: var(--muted); max-width: 52ch; }
+.month { display: inline-flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid var(--border); border-radius: 999px; }
+.month b { font-weight: 600; font-size: 15px; min-width: 9.5ch; text-align: center; letter-spacing: -.01em; }
+.iconbtn { width: 36px; height: 36px; border-radius: 50%; border: 0; background: transparent; display: grid; place-items: center; cursor: pointer; color: var(--muted); }
+.iconbtn:hover { background: var(--surface-2); color: var(--text); }
+.iconbtn:disabled { opacity: .3; cursor: default; background: transparent; }
+svg.i { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+/* summary strip */
+.strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--hair); border-left: 1px solid var(--hair); }
+.stat { padding: 16px 20px; border-right: 1px solid var(--hair); border-bottom: 1px solid var(--hair); display: grid; gap: 6px; min-width: 0; }
+.stat .micro { color: var(--faint); }
+.stat strong { font-size: 30px; font-weight: 500; letter-spacing: -.02em; line-height: 1; }
+.stat.alert strong { color: var(--danger); }
+@media (max-width: 640px) { .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* toolbar */
+.bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 16px; }
+.tabs, .people { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.tab, .chipbtn { height: 36px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--hair); background: transparent; cursor: pointer; font-weight: 500; font-size: 14px; color: var(--muted); }
+.chipbtn { height: 30px; padding: 0 12px; font-size: 13px; }
+.tab:hover, .chipbtn:hover { border-color: var(--border); color: var(--text); }
+.tab[aria-selected="true"], .chipbtn[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: var(--bg); }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text); font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; text-decoration: none; }
+.btn:hover { border-color: var(--text); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn:disabled { opacity: .5; cursor: progress; }
+.btn.small { height: 32px; padding: 0 12px; font-size: 13px; }
+
+/* forms */
+.panel { border: 1px solid var(--border); background: var(--surface-2); border-radius: 14px; padding: 20px; display: grid; gap: 16px; }
+.panel h2 { margin: 0; font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+.fields { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+.field { display: grid; gap: 6px; grid-column: span 2; min-width: 0; }
+.field.wide { grid-column: span 6; }
+.field.half { grid-column: span 3; }
+.field label { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+.field input, .field select { height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--hair); background: var(--bg); min-width: 0; width: 100%; }
+.field input:focus, .field select:focus { border-color: var(--border); outline: none; }
+@media (max-width: 760px) { .field, .field.half { grid-column: span 3; } }
+@media (max-width: 480px) { .field, .field.half { grid-column: span 6; } }
+.formfoot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.formfoot .note { flex: 1 1 200px; }
+.note { margin: 0; font-size: 13px; color: var(--faint); }
+
+/* notice */
+.notice { border: 1px dashed var(--border); border-radius: 14px; padding: 20px; display: grid; gap: 12px; justify-items: start; }
+.notice h2 { margin: 0; font-size: 17px; font-weight: 600; }
+.notice p { margin: 0; color: var(--muted); max-width: 60ch; }
+
+/* this week */
+.week { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); gap: 16px; align-items: start; }
+.person { border: 1px solid var(--hair); background: var(--surface); border-radius: 14px; padding: 8px 0; min-width: 0; }
+.person header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 20px 12px; }
+.person h3 { margin: 0; font-size: 17px; font-weight: 600; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; }
+.avatar { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border); display: grid; place-items: center; font-size: 12px; font-weight: 600; color: var(--muted); }
+.person header .micro { color: var(--faint); }
+.tasks { list-style: none; margin: 0; padding: 0; }
+.task { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 4px 12px; align-items: start; padding: 12px 20px; border-top: 1px solid var(--hair); }
+.task .tname { font-size: 15px; font-weight: 500; line-height: 1.35; overflow-wrap: anywhere; }
+.task.done .tname { color: var(--faint); text-decoration: line-through; text-decoration-color: var(--dim); }
+.tmeta { grid-column: 2 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: 13px; color: var(--faint); min-width: 0; }
+.tmeta a { color: var(--muted); text-underline-offset: 3px; }
+.tmeta a:hover { color: var(--text); }
+.blocked { grid-column: 2 / -1; font-size: 13px; color: var(--danger); }
+.check { width: 20px; height: 20px; margin-top: 1px; border-radius: 6px; border: 1.5px solid var(--border); background: transparent; cursor: pointer; display: grid; place-items: center; padding: 0; }
+.check:hover { border-color: var(--text); }
+.check svg { width: 12px; height: 12px; stroke: var(--bg); stroke-width: 2.4; fill: none; opacity: 0; }
+.task.done .check { background: var(--success); border-color: var(--success); }
+.task.done .check svg { opacity: 1; }
+.st { height: 28px; padding: 0 8px; border-radius: 999px; border: 1px solid var(--hair); background: var(--bg); font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; color: var(--muted); }
+.st[data-v="Doing"] { color: var(--text); border-color: var(--border); }
+.st[data-v="Blocked"] { color: var(--danger); border-color: var(--danger); }
+.st[data-v="Done"] { color: var(--success); }
+.due.late { color: var(--danger); }
+.due.today { color: var(--warn); }
+.prio { color: var(--text); }
+.empty { padding: 14px 20px 10px; color: var(--faint); font-size: 14px; border-top: 1px solid var(--hair); margin: 0; }
+
+/* goals */
+.goals { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 16px; align-items: start; }
+.goal { border: 1px solid var(--hair); background: var(--surface); border-radius: 14px; display: grid; min-width: 0; }
+.goal .gtop { padding: 20px 20px 16px; display: grid; gap: 12px; }
+.ghead { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ghead .micro { color: var(--faint); }
+.goal h3 { margin: 0; font-size: 22px; font-weight: 600; line-height: 1.25; letter-spacing: -.015em; overflow-wrap: anywhere; }
+.gowner { font-size: 13px; color: var(--faint); }
+.gst { height: 28px; padding: 0 8px; border-radius: 999px; border: 1px solid var(--hair); background: var(--bg); font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; color: var(--success); }
+.gst[data-v="At risk"] { color: var(--warn); border-color: var(--warn); }
+.gst[data-v="Off track"] { color: var(--danger); border-color: var(--danger); }
+.gst[data-v="Done"] { color: var(--muted); }
+.progress { display: grid; gap: 8px; }
+.prow { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.prow strong { font-size: 24px; font-weight: 500; letter-spacing: -.02em; }
+.prow strong small { font-size: 15px; color: var(--faint); font-weight: 400; }
+.prow span { font-size: 13px; color: var(--faint); }
+.track { height: 6px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--hair); overflow: hidden; }
+.track i { display: block; height: 100%; background: var(--text); border-radius: 999px; }
+.goal.risk .track i { background: var(--warn); }
+.goal.off .track i { background: var(--danger); }
+.goal.gdone .track i { background: var(--success); }
+.curr { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; color: var(--faint); }
+.curr input { width: 76px; height: 32px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--hair); background: var(--bg); }
+.gfoot { padding: 12px 20px; border-top: 1px solid var(--hair); display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
+.gfoot a { font-size: 13px; color: var(--faint); text-underline-offset: 3px; }
+.gfoot a:hover { color: var(--text); }
+
+.pagefoot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; color: var(--dim); font-size: 13px; }
+.pagefoot a { color: var(--faint); text-underline-offset: 3px; }
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--text); color: var(--bg); font-size: 14px; font-weight: 500; padding: 10px 16px; border-radius: 999px; z-index: 60; max-width: calc(100vw - 32px); text-align: center; }
+.skeleton { height: 140px; border-radius: 14px; border: 1px solid var(--hair); background: linear-gradient(90deg, var(--surface), var(--surface-2), var(--surface)); background-size: 200% 100%; animation: shimmer 1.6s linear infinite; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .dot.on, .skeleton { animation: none; } }
+</style>
+
+<template id="wordmark"><!--WORDMARK--></template>
+
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="https://claude.ai/artifact/4jLcoVL4axgzvHHScoHUo1" target="_blank" rel="noopener" title="Back to MuzMesh Tools">
+      <span id="wm" aria-label="muzmesh"></span>
+      <span class="sep" aria-hidden="true"></span>
+      <span class="micro">Goals &amp; Tasks</span>
+    </a>
+    <div class="sync micro" role="status"><i class="dot" id="syncDot" aria-hidden="true"></i><span id="syncText">Connecting to Notion</span></div>
+  </header>
+
+  <section class="intro">
+    <div class="copy">
+      <span class="label">Monthly goals</span>
+      <h1><span class="dim">A few goals a month.</span> Every task tied to one<span class="stop">.</span></h1>
+      <p class="lead">What we're aiming for this month and who is doing what this week. Saved in Notion, so you can edit it here or there.</p>
+    </div>
+    <div class="month" aria-label="Month">
+      <button class="iconbtn" id="prevMonth" type="button" aria-label="Previous month"><svg class="i" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <b id="monthName" class="num">Month</b>
+      <button class="iconbtn" id="nextMonth" type="button" aria-label="Next month"><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+    </div>
+  </section>
+
+  <section class="strip" aria-label="Summary">
+    <div class="stat"><span class="micro">Goals this month</span><strong class="num" id="sGoals">–</strong></div>
+    <div class="stat"><span class="micro">Open tasks</span><strong class="num" id="sOpen">–</strong></div>
+    <div class="stat" id="sLateBox"><span class="micro">Overdue</span><strong class="num" id="sLate">–</strong></div>
+    <div class="stat" id="sBlockedBox"><span class="micro">Blocked</span><strong class="num" id="sBlocked">–</strong></div>
+  </section>
+
+  <div id="notice" hidden></div>
+
+  <section class="panel" id="taskForm" hidden aria-labelledby="taskFormHead">
+    <h2 id="taskFormHead">Add a task</h2>
+    <form id="tForm" class="fields" autocomplete="off">
+      <div class="field wide"><label for="tName">Task</label><input id="tName" required maxlength="200" placeholder="What needs doing, in a few words"></div>
+      <div class="field half"><label for="tGoal">Goal</label><select id="tGoal" required></select></div>
+      <div class="field half"><label for="tOwner">Owner</label><select id="tOwner"></select></div>
+      <div class="field"><label for="tDue">Due</label><input id="tDue" type="date"></div>
+      <div class="field"><label for="tPrio">Priority</label><select id="tPrio"><option>Normal</option><option>High</option><option>Low</option></select></div>
+      <div class="field"><label for="tLink">Link</label><input id="tLink" type="url" placeholder="https://"></div>
+    </form>
+    <div class="formfoot">
+      <p class="note" id="tNote">Saves to the Muzmesh Tasks database in Notion.</p>
+      <button class="btn" type="button" data-close="taskForm">Cancel</button>
+      <button class="btn primary" type="submit" form="tForm" id="tSave">Add task</button>
+    </div>
+  </section>
+
+  <section class="panel" id="goalForm" hidden aria-labelledby="goalFormHead">
+    <h2 id="goalFormHead">Add a goal for <span id="gFormMonth"></span></h2>
+    <form id="gForm" class="fields" autocomplete="off">
+      <div class="field wide"><label for="gName">Goal</label><input id="gName" required maxlength="200" placeholder="The outcome, e.g. Close the first paid client"></div>
+      <div class="field"><label for="gArea">Area</label><select id="gArea"><option>Sales</option><option>Pipeline</option><option>Content</option><option>Brand</option><option>Ops</option></select></div>
+      <div class="field"><label for="gOwner">Owner</label><select id="gOwner"></select></div>
+      <div class="field"><label for="gTarget">Target number</label><input id="gTarget" type="number" min="0" step="1" placeholder="Optional"></div>
+      <div class="field wide"><label for="gMeasure">What the number counts</label><input id="gMeasure" maxlength="120" placeholder="e.g. paid clients, emails sent, days with a post"></div>
+    </form>
+    <div class="formfoot">
+      <p class="note" id="gNote">Saves to the Muzmesh Goals database in Notion.</p>
+      <button class="btn" type="button" data-close="goalForm">Cancel</button>
+      <button class="btn primary" type="submit" form="gForm" id="gSave">Add goal</button>
+    </div>
+  </section>
+
+  <section style="display:grid;gap:20px">
+    <div class="bar">
+      <div class="tabs" role="tablist" aria-label="View">
+        <button class="tab" role="tab" id="tabWeek" aria-selected="true" aria-controls="viewWeek" type="button">This week</button>
+        <button class="tab" role="tab" id="tabGoals" aria-selected="false" aria-controls="viewGoals" type="button">Goals</button>
+      </div>
+      <div class="actions">
+        <button class="btn" type="button" id="openGoal">Add goal</button>
+        <button class="btn primary" type="button" id="openTask">Add task</button>
+      </div>
+    </div>
+    <div class="people" id="people" aria-label="Show tasks for"></div>
+
+    <div id="viewWeek" role="tabpanel" aria-labelledby="tabWeek">
+      <div class="week" id="week"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+    </div>
+    <div id="viewGoals" role="tabpanel" aria-labelledby="tabGoals" hidden>
+      <div class="goals" id="goals"></div>
+    </div>
+  </section>
+
+  <footer class="pagefoot">
+    <span>MuzMesh Creative · designed by people</span>
+    <span>Data: <a href="https://app.notion.com/p/426c3f20aab9812295fcc76a1b6dc7fe" target="_blank" rel="noopener">Muzmesh Goals</a> · <a href="https://app.notion.com/p/426c3f20aab981a38f3bc8e48f27f00a" target="_blank" rel="noopener">Muzmesh Tasks</a></span>
+  </footer>
+</div>
+
+<script>
+/* ---------- config ---------- */
+const NOTION = 'Notion';
+const GOALS_DS = '426c3f20-aab9-8164-b7fb-000bdf5876a5';
+const TASKS_DS = '426c3f20-aab9-81be-929f-000ba47058d7';
+const GOALS_VIEW = 'view://426c3f20-aab9-8185-b217-000cc6f5a457';
+const TASKS_VIEW = 'view://426c3f20-aab9-81aa-bb85-000c15333b00';
+/* Notion user id (no dashes) -> name shown on the page */
+const TEAM = {
+  '1a5d872b594c8103857100022333be4d': 'Malik Basit',
+  '19dd872b594c81da9c4600023ba0dfd5': 'Muzamil Awan',
+  'ddf4a935c21f41fbbd249f6fbfed54f4': 'Usama Saleem',
+};
+const TASK_STATUSES = ['To do', 'Doing', 'Blocked', 'Done'];
+const GOAL_STATUSES = ['On track', 'At risk', 'Off track', 'Done'];
+
+/* ---------- helpers ---------- */
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const safeUrl = (u) => (typeof u === 'string' && u.startsWith('https://') ? u : '');
+const hexIds = (v) => {
+  const s = Array.isArray(v) ? v.join(' ') : String(v ?? '');
+  const out = [];
+  s.replace(/[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}/gi, (m) => { out.push(m.replace(/-/g, '').toLowerCase()); return m; });
+  return out;
+};
+const pad = (n) => String(n).padStart(2, '0');
+const isoDay = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const TODAY = isoDay(new Date());
+const inDays = (n) => { const d = new Date(); d.setDate(d.getDate() + n); return isoDay(d); };
+const monthKey = (iso) => (iso || '').slice(0, 7);
+const monthLabel = (key) => { const [y, m] = key.split('-').map(Number); return new Date(y, m - 1, 1).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }); };
+const shiftMonth = (key, n) => { const [y, m] = key.split('-').map(Number); const d = new Date(y, m - 1 + n, 1); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}`; };
+const fmtDay = (iso) => { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }); };
+const name = (id) => TEAM[id] || 'Teammate';
+const initials = (n) => n.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
+
+/* ---------- state ---------- */
+const state = {
+  goals: [], tasks: [], loaded: { goals: false, tasks: false },
+  month: null, view: store.get('gt.view') === 'goals' ? 'goals' : 'week',
+  who: store.get('gt.who') || 'all',
+};
+
+function parseRows(result) {
+  let p = result && result.payload;
+  if (typeof p === 'string') { try { p = JSON.parse(p); } catch { p = null; } }
+  return p && Array.isArray(p.results) ? p : { results: [], has_more: false };
+}
+function toGoal(r) {
+  return {
+    id: hexIds(r.url).pop(), url: safeUrl(r.url), name: r.Goal || 'Untitled goal',
+    month: monthKey(r['date:Month:start']), area: r.Area || '', status: r.Status || 'On track',
+    target: typeof r.Target === 'number' ? r.Target : (r.Target ? Number(r.Target) : null),
+    current: typeof r.Current === 'number' ? r.Current : (r.Current ? Number(r.Current) : 0),
+    measure: r.Measure || '', owners: hexIds(r.Owner),
+  };
+}
+function toTask(r) {
+  return {
+    id: hexIds(r.url).pop(), url: safeUrl(r.url), name: r.Task || 'Untitled task',
+    goalIds: hexIds(r.Goal), owners: hexIds(r.Owner), due: r['date:Due:start'] ? r['date:Due:start'].slice(0, 10) : '',
+    status: r.Status || 'To do', priority: r.Priority || 'Normal', link: safeUrl(r.Link), blockedBy: r['Blocked by'] || '',
+  };
+}
+
+/* ---------- rendering ---------- */
+const ICON_CHECK = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+function goalsOfMonth() { return state.goals.filter((g) => g.month === state.month); }
+function goalById(id) { return state.goals.find((g) => g.id === id); }
+
+function pickMonth() {
+  const now = monthKey(TODAY);
+  const months = [...new Set(state.goals.map((g) => g.month).filter(Boolean))].sort();
+  if (!months.length || months.includes(now)) return now;
+  return months.find((m) => m > now) || months[months.length - 1];
+}
+
+function renderSummary() {
+  const ready = state.loaded.goals && state.loaded.tasks;
+  const gIds = new Set(goalsOfMonth().map((g) => g.id));
+  const scoped = state.tasks.filter((t) => t.goalIds.some((id) => gIds.has(id)));
+  const open = scoped.filter((t) => t.status !== 'Done');
+  const late = open.filter((t) => t.due && t.due < TODAY);
+  const blocked = open.filter((t) => t.status === 'Blocked');
+  $('#sGoals').textContent = ready ? gIds.size : '–';
+  $('#sOpen').textContent = ready ? open.length : '–';
+  $('#sLate').textContent = ready ? late.length : '–';
+  $('#sBlocked').textContent = ready ? blocked.length : '–';
+  $('#sLateBox').classList.toggle('alert', ready && late.length > 0);
+  $('#sBlockedBox').classList.toggle('alert', ready && blocked.length > 0);
+  $('#monthName').textContent = state.month ? monthLabel(state.month) : 'Month';
+  $('#gFormMonth').textContent = state.month ? monthLabel(state.month) : '';
+}
+
+function statusSelect(t) {
+  return `<select class="st" data-status="${esc(t.id)}" data-v="${esc(t.status)}" aria-label="Status of ${esc(t.name)}">${TASK_STATUSES.map((s) => `<option${s === t.status ? ' selected' : ''}>${s}</option>`).join('')}</select>`;
+}
+function dueChip(t) {
+  if (!t.due) return '<span>No due date</span>';
+  if (t.status !== 'Done' && t.due < TODAY) return `<span class="due late">Overdue · ${esc(fmtDay(t.due))}</span>`;
+  if (t.due === TODAY) return '<span class="due today">Due today</span>';
+  return `<span class="due">${esc(fmtDay(t.due))}</span>`;
+}
+function taskRow(t, showGoal) {
+  const g = showGoal ? goalById(t.goalIds[0]) : null;
+  const done = t.status === 'Done';
+  return `<li class="task${done ? ' done' : ''}">
+    <button class="check" type="button" data-done="${esc(t.id)}" aria-pressed="${done}" aria-label="${done ? 'Mark not done' : 'Mark done'}: ${esc(t.name)}">${ICON_CHECK}</button>
+    <span class="tname">${esc(t.name)}</span>
+    ${statusSelect(t)}
+    <span class="tmeta">
+      ${dueChip(t)}
+      ${t.priority === 'High' ? '<span class="prio">High priority</span>' : ''}
+      ${g ? `<span>${esc(g.name)}</span>` : ''}
+      ${!showGoal && t.owners.length ? `<span>${esc(t.owners.map(name).join(', '))}</span>` : ''}
+      ${t.link ? `<a href="${esc(t.link)}" target="_blank" rel="noopener">Link</a>` : ''}
+      ${t.url ? `<a href="${esc(t.url)}" target="_blank" rel="noopener">Notion</a>` : ''}
+    </span>
+    ${t.status === 'Blocked' && t.blockedBy ? `<span class="blocked">Blocked by: ${esc(t.blockedBy)}</span>` : ''}
+  </li>`;
+}
+
+function renderPeople() {
+  const opts = [['all', 'Everyone'], ...Object.entries(TEAM).map(([id, n]) => [id, n.split(' ')[0]])];
+  $('#people').innerHTML = opts.map(([id, n]) => `<button class="chipbtn" type="button" data-who="${esc(id)}" aria-pressed="${state.who === id}">${esc(n)}</button>`).join('');
+  $('#people').hidden = state.view !== 'week';
+}
+
+function renderWeek() {
+  if (!state.loaded.tasks) return;
+  const horizon = inDays(7);
+  const sortKey = (t) => (t.status === 'Blocked' ? '0' : '1') + (t.due || '9999') + (t.priority === 'High' ? '0' : '1');
+  const week = state.tasks.filter((t) => {
+    if (t.status === 'Done') return false;
+    return t.status === 'Doing' || t.status === 'Blocked' || !t.due || t.due <= horizon;
+  }).sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+  const groups = new Map(Object.keys(TEAM).map((id) => [id, []]));
+  groups.set('none', []);
+  for (const t of week) {
+    const owners = t.owners.length ? t.owners : ['none'];
+    for (const o of owners) { if (!groups.has(o)) groups.set(o, []); groups.get(o).push(t); }
+  }
+  const html = [...groups.entries()]
+    .filter(([id, list]) => (state.who === 'all' ? (id !== 'none' || list.length) : id === state.who))
+    .map(([id, list]) => {
+      const n = id === 'none' ? 'No owner yet' : name(id);
+      const body = list.length ? `<ul class="tasks">${list.map((t) => taskRow(t, true)).join('')}</ul>` : '<p class="empty">Nothing due this week.</p>';
+      return `<article class="person"><header><h3><span class="avatar" aria-hidden="true">${id === 'none' ? '?' : esc(initials(n))}</span>${esc(n)}</h3><span class="micro num">${list.length} open</span></header>${body}</article>`;
+    }).join('');
+  $('#week').innerHTML = html || '<p class="note">No tasks yet. Add the first one with Add task.</p>';
+}
+
+function renderGoals() {
+  if (!state.loaded.goals) { $('#goals').innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>'; return; }
+  const list = goalsOfMonth();
+  if (!list.length) {
+    $('#goals').innerHTML = `<div class="notice"><h2>No goals for ${esc(monthLabel(state.month))} yet</h2><p>Pick three to five outcomes the team commits to this month. Each one gets a number if it has one, and the tasks that move it.</p><button class="btn primary" type="button" data-open="goalForm">Add the first goal</button></div>`;
+    return;
+  }
+  $('#goals').innerHTML = list.map((g) => {
+    const tasks = state.tasks.filter((t) => t.goalIds.includes(g.id)).sort((a, b) => (a.status === 'Done') - (b.status === 'Done') || (a.due || '9999').localeCompare(b.due || '9999'));
+    const doneN = tasks.filter((t) => t.status === 'Done').length;
+    let pct, big, sub;
+    if (g.target) {
+      pct = Math.min(100, Math.round((g.current / g.target) * 100));
+      big = `${g.current}<small> / ${g.target}</small>`; sub = g.measure || 'progress';
+    } else {
+      pct = tasks.length ? Math.round((doneN / tasks.length) * 100) : 0;
+      big = `${doneN}<small> / ${tasks.length}</small>`; sub = 'tasks done';
+    }
+    const cls = { 'At risk': 'risk', 'Off track': 'off', 'Done': 'gdone' }[g.status] || '';
+    const owner = g.owners.length ? g.owners.map(name).join(', ') : 'No owner yet';
+    return `<article class="goal ${cls}">
+      <div class="gtop">
+        <div class="ghead"><span class="micro">${esc(g.area || 'Goal')}</span>
+          <select class="gst" data-gstatus="${esc(g.id)}" data-v="${esc(g.status)}" aria-label="Status of ${esc(g.name)}">${GOAL_STATUSES.map((s) => `<option${s === g.status ? ' selected' : ''}>${s}</option>`).join('')}</select></div>
+        <h3>${esc(g.name)}</h3>
+        <span class="gowner">${esc(owner)}</span>
+        <div class="progress">
+          <div class="prow"><strong class="num">${big}</strong><span>${esc(sub)}</span></div>
+          <div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="${esc(g.name)} progress"><i style="width:${pct}%"></i></div>
+          ${g.target ? `<label class="curr" for="cur-${esc(g.id)}">Current <input id="cur-${esc(g.id)}" type="number" min="0" step="1" class="num" value="${esc(g.current)}" data-current="${esc(g.id)}"> of ${esc(g.target)}</label>` : ''}
+        </div>
+      </div>
+      ${tasks.length ? `<ul class="tasks">${tasks.map((t) => taskRow(t, false)).join('')}</ul>` : '<p class="empty">No tasks yet.</p>'}
+      <div class="gfoot">
+        <button class="btn small" type="button" data-addtask="${esc(g.id)}">Add task</button>
+        ${g.url ? `<a href="${esc(g.url)}" target="_blank" rel="noopener">Open in Notion</a>` : ''}
+      </div>
+    </article>`;
+  }).join('');
+}
+
+function renderTabs() {
+  $('#tabWeek').setAttribute('aria-selected', state.view === 'week');
+  $('#tabGoals').setAttribute('aria-selected', state.view === 'goals');
+  $('#viewWeek').hidden = state.view !== 'week';
+  $('#viewGoals').hidden = state.view !== 'goals';
+}
+
+function fillSelects() {
+  const ownerOpts = '<option value="">No owner</option>' + Object.entries(TEAM).map(([id, n]) => `<option value="${esc(id)}">${esc(n)}</option>`).join('');
+  for (const sel of ['#tOwner', '#gOwner']) { const v = $(sel).value; $(sel).innerHTML = ownerOpts; $(sel).value = v; }
+  const goals = goalsOfMonth().length ? goalsOfMonth() : state.goals;
+  const v = $('#tGoal').value;
+  $('#tGoal').innerHTML = goals.length ? goals.map((g) => `<option value="${esc(g.id)}">${esc(g.name)}</option>`).join('') : '<option value="">Add a goal first</option>';
+  if (v && goals.some((g) => g.id === v)) $('#tGoal').value = v;
+}
+
+function render() {
+  if (!state.month && state.loaded.goals) state.month = pickMonth();
+  if (!state.month) state.month = monthKey(TODAY);
+  renderSummary(); renderTabs(); renderPeople(); renderWeek(); renderGoals(); fillSelects();
+}
+
+/* ---------- sync status + notices ---------- */
+function setSync(kind, text) {
+  $('#syncDot').className = 'dot' + (kind === 'on' ? ' on' : kind === 'err' ? ' err' : '');
+  $('#syncText').textContent = text;
+}
+function showNotice(html) { const n = $('#notice'); n.innerHTML = html ? `<div class="notice">${html}</div>` : ''; n.hidden = !html; }
+function noticeFor(err) {
+  const c = err && err.code;
+  if (c === 'server_not_connected' || c === 'selection_required') return '<h2>Connect Notion to load goals and tasks</h2><p>Add the Notion connector in claude.ai Settings → Connectors, signed in to the Muzmesh workspace, then reload this page.</p>';
+  if (c === 'needs_reauth') return '<h2>Reconnect Notion</h2><p>Your Notion sign-in has expired. Reconnect it in claude.ai Settings → Connectors, then reload this page.</p>';
+  if (c === 'not_in_manifest' || c === 'approval_required' || c === 'consent_required') return '<h2>Allow Notion for this page</h2><p>The page reads and saves goals and tasks through your Notion connector. It only touches the Muzmesh Goals and Tasks databases.</p><button class="btn primary" type="button" id="allowNotion">Allow and load</button>';
+  if (c === 'blocked_by_policy') return '<h2>Notion is blocked for your account</h2><p>Your organisation does not allow this connector here. Open the databases in Notion instead.</p>';
+  return null;
+}
+
+/* ---------- Notion I/O ---------- */
+let mcp = null;
+const unsub = [];
+
+async function fetchRest(viewUrl, first) {
+  let rows = first.results, page = first;
+  while (page.has_more && page.next_cursor) {
+    const r = await mcp.callTool(NOTION, 'notion-query-data-sources', { data: { mode: 'view', view_url: viewUrl, page_size: 100, start_cursor: page.next_cursor } });
+    page = parseRows(r); rows = rows.concat(page.results);
+  }
+  return rows;
+}
+
+function watchView(kind, viewUrl) {
+  return mcp.watchTool(NOTION, 'notion-query-data-sources', { data: { mode: 'view', view_url: viewUrl, page_size: 100 } }, async (ev) => {
+    if (ev.type === 'data') {
+      try {
+        const rows = await fetchRest(viewUrl, parseRows(ev.result));
+        state[kind] = rows.map(kind === 'goals' ? toGoal : toTask).filter((x) => x.id);
+        state.loaded[kind] = true;
+        showNotice('');
+        const at = ev.result.cache && ev.result.cache.storedAt ? new Date(ev.result.cache.storedAt) : new Date();
+        setSync('on', `Synced ${at.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`);
+        render();
+      } catch (e) { handleReadError(e); }
+    } else handleReadError(ev.error);
+  }, { refetchInterval: 5 * 60 * 1000 });
+}
+
+function handleReadError(err) {
+  const n = noticeFor(err);
+  if (n) {
+    state.goals = []; state.tasks = []; state.loaded = { goals: true, tasks: true };
+    showNotice(n); setSync('err', 'Notion not connected'); render();
+    $('#week').innerHTML = ''; $('#goals').innerHTML = '';
+  } else {
+    setSync('err', (state.loaded.goals || state.loaded.tasks) ? 'Showing last sync. Notion did not answer' : 'Notion did not answer. Reload to try again');
+  }
+}
+
+async function refresh() {
+  try { await mcp.invalidate(NOTION, 'notion-query-data-sources'); } catch {}
+}
+
+async function write(tool, input) {
+  if (!mcp) throw { code: 'not_granted' };
+  return mcp.callTool(NOTION, tool, input);
+}
+function writeErrorText(e) {
+  const c = e && e.code;
+  if (c === 'tool_error') return 'Notion refused the change. Check you can edit the Muzmesh databases.';
+  if (c === 'server_unavailable' || c === 'upstream_error') return 'Notion did not confirm the save. Reload to check before trying again.';
+  if (c === 'approval_required' || c === 'not_in_manifest') return 'Allow Notion for this page to save changes.';
+  if (c === 'server_not_connected' || c === 'needs_reauth') return 'Connect Notion in claude.ai Settings → Connectors to save.';
+  return 'Could not save to Notion.';
+}
+
+async function setTaskStatus(id, status) {
+  const t = state.tasks.find((x) => x.id === id); if (!t || t.status === status) return;
+  const prev = t.status; t.status = status; render();
+  try { await write('notion-update-page', { page_id: id, command: 'update_properties', properties: { Status: status } }); toast(status === 'Done' ? 'Marked done' : `Moved to ${status}`); refresh(); }
+  catch (e) { t.status = prev; render(); toast(writeErrorText(e)); }
+}
+async function setGoal(id, props, local) {
+  const g = state.goals.find((x) => x.id === id); if (!g) return;
+  const prev = { ...g }; Object.assign(g, local); render();
+  try { await write('notion-update-page', { page_id: id, command: 'update_properties', properties: props }); toast('Goal updated'); refresh(); }
+  catch (e) { Object.assign(g, prev); render(); toast(writeErrorText(e)); }
+}
+
+/* ---------- events ---------- */
+let toastTimer;
+function toast(msg) {
+  let el = $('.toast');
+  if (!el) { el = document.createElement('div'); el.className = 'toast'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+  el.textContent = msg; el.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 2600);
+}
+function openPanel(id, goalId) {
+  $('#taskForm').hidden = id !== 'taskForm'; $('#goalForm').hidden = id !== 'goalForm';
+  if (id === 'taskForm') { fillSelects(); if (goalId) $('#tGoal').value = goalId; if (state.who !== 'all' && !$('#tOwner').value) $('#tOwner').value = state.who; $('#tName').focus(); }
+  if (id === 'goalForm') $('#gName').focus();
+}
+
+document.addEventListener('click', async (e) => {
+  const el = e.target.closest('button, [data-who]'); if (!el) return;
+  if (el.id === 'tabWeek' || el.id === 'tabGoals') { state.view = el.id === 'tabWeek' ? 'week' : 'goals'; store.set('gt.view', state.view); render(); }
+  else if (el.dataset.who) { state.who = el.dataset.who; store.set('gt.who', state.who); render(); }
+  else if (el.id === 'prevMonth') { state.month = shiftMonth(state.month, -1); render(); }
+  else if (el.id === 'nextMonth') { state.month = shiftMonth(state.month, 1); render(); }
+  else if (el.id === 'openTask') openPanel('taskForm');
+  else if (el.id === 'openGoal' || el.dataset.open === 'goalForm') openPanel('goalForm');
+  else if (el.dataset.addtask) openPanel('taskForm', el.dataset.addtask);
+  else if (el.dataset.close) $('#' + el.dataset.close).hidden = true;
+  else if (el.dataset.done) { const t = state.tasks.find((x) => x.id === el.dataset.done); if (t) setTaskStatus(t.id, t.status === 'Done' ? 'To do' : 'Done'); }
+  else if (el.id === 'allowNotion') {
+    el.disabled = true;
+    try { await mcp.callTool(NOTION, 'notion-query-data-sources', { data: { mode: 'view', view_url: GOALS_VIEW, page_size: 1 } }); showNotice(''); start(); }
+    catch (err) { el.disabled = false; toast(writeErrorText(err)); }
+  }
+});
+
+document.addEventListener('change', (e) => {
+  const el = e.target;
+  if (el.dataset.status) setTaskStatus(el.dataset.status, el.value);
+  else if (el.dataset.gstatus) setGoal(el.dataset.gstatus, { Status: el.value }, { status: el.value });
+  else if (el.dataset.current) { const n = Number(el.value); if (Number.isFinite(n) && n >= 0) setGoal(el.dataset.current, { Current: n }, { current: n }); }
+});
+
+$('#tForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const goalId = $('#tGoal').value; const title = $('#tName').value.trim();
+  if (!title || !goalId) { toast(goalId ? 'Give the task a name.' : 'Add a goal first.'); return; }
+  const props = { Task: title, Goal: [goalId], Status: 'To do', Priority: $('#tPrio').value };
+  if ($('#tOwner').value) props.Owner = [$('#tOwner').value];
+  if ($('#tDue').value) { props['date:Due:start'] = $('#tDue').value; props['date:Due:is_datetime'] = 0; }
+  const link = $('#tLink').value.trim(); if (link) { if (!safeUrl(link)) { toast('Links must start with https://'); return; } props.Link = link; }
+  $('#tSave').disabled = true; $('#tNote').textContent = 'Saving to Notion…';
+  try {
+    await write('notion-create-pages', { parent: { data_source_id: TASKS_DS }, pages: [{ properties: props }] });
+    $('#tForm').reset(); $('#taskForm').hidden = true; toast('Task added'); refresh();
+  } catch (err) { toast(writeErrorText(err)); }
+  finally { $('#tSave').disabled = false; $('#tNote').textContent = 'Saves to the Muzmesh Tasks database in Notion.'; }
+});
+
+$('#gForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const title = $('#gName').value.trim(); if (!title) return;
+  const props = { Goal: title, Area: $('#gArea').value, Status: 'On track', 'date:Month:start': `${state.month}-01`, 'date:Month:is_datetime': 0, Current: 0 };
+  if ($('#gOwner').value) props.Owner = [$('#gOwner').value];
+  const tgt = $('#gTarget').value; if (tgt !== '') props.Target = Number(tgt);
+  const m = $('#gMeasure').value.trim(); if (m) props.Measure = m;
+  $('#gSave').disabled = true; $('#gNote').textContent = 'Saving to Notion…';
+  try {
+    await write('notion-create-pages', { parent: { data_source_id: GOALS_DS }, pages: [{ properties: props }] });
+    $('#gForm').reset(); $('#goalForm').hidden = true; toast('Goal added'); state.view = 'goals'; refresh();
+  } catch (err) { toast(writeErrorText(err)); }
+  finally { $('#gSave').disabled = false; $('#gNote').textContent = 'Saves to the Muzmesh Goals database in Notion.'; }
+});
+
+/* ---------- boot ---------- */
+$('#wm').innerHTML = $('#wordmark').innerHTML.trim();
+render();
+
+function start() {
+  while (unsub.length) unsub.pop()();
+  unsub.push(watchView('goals', GOALS_VIEW), watchView('tasks', TASKS_VIEW));
+}
+
+(async () => {
+  mcp = window.claude && window.claude.use ? await window.claude.use('mcp').catch(() => null) : null;
+  if (!mcp) {
+    setSync('err', 'Open in claude.ai to load');
+    state.loaded = { goals: true, tasks: true }; render();
+    $('#week').innerHTML = ''; $('#goals').innerHTML = '';
+    showNotice('<h2>Open this page in claude.ai</h2><p>Goals and tasks load from Notion through your claude.ai Notion connector. Outside claude.ai, open the databases in Notion directly.</p><a class="btn" href="https://app.notion.com/p/426c3f20aab981a38f3bc8e48f27f00a" target="_blank" rel="noopener">Open tasks in Notion</a>');
+    return;
+  }
+  start();
+})();
+</script>
