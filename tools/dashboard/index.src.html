@@ -213,10 +213,18 @@ const TOOLS = [
   {
     id: 'sales-prospects',
     name: 'Sales Prospects',
-    status: 'planned',
+    status: 'live',
     icon: 'pipeline',
-    summary: 'Every lead from first message to signed project.',
-    features: ['Pipeline by stage', 'Owner and next follow-up date', 'Notes from each conversation'],
+    summary: 'Every lead from first message to signed project, read from Notion.',
+    features: [
+      'Pipeline by stage, from To contact to Won',
+      'Lead cards with context, next step and contact details',
+      'Board view by stage, filters for potential and possible leads',
+      'Refreshes from the Notion Client Outreach database',
+    ],
+    meta: [['Source', 'Notion'], ['Leads', 'Client Outreach'], ['Edit in', 'Notion']],
+    url: 'https://claude.ai/artifact/AzxhjBHNbbYhRWJMLuygTw',
+    cta: 'Open sales prospects',
   },
 ];
 
