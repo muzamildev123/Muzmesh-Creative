@@ -1,0 +1,307 @@
+<title>MuzMesh Tools</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a dotted workbench. Header bar, a short two-tone intro, then one grid of tool cards (live, planned, open slot) and a small reference row. Brand v2, Launch theme only. */
+:root {
+  color-scheme: dark;
+  --bg: #000000;
+  --surface: #0E0E10;
+  --surface-2: #141418;
+  --text: #F4F4F1;
+  --muted: rgba(244,244,241,.74);
+  --faint: rgba(244,244,241,.56);
+  --dim: #77777C;
+  --hair: rgba(244,244,241,.16);
+  --border: rgba(244,244,241,.30);
+  --accent: #F2580F;
+  --accent-hover: #FF6A20;
+  --on-accent: #0E0E10;
+  --success: #6FDC8C;
+  --sans: "Inter Tight", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --gutter: 28px;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--text); }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.55;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  background-image: radial-gradient(rgba(244,244,241,.07) 1px, transparent 1.2px);
+  background-size: 24px 24px;
+  min-height: 100vh;
+}
+/* 5% grain over the full-bleed dark page */
+body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: .05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+  padding-block: 24px 72px;
+  display: grid;
+  gap: 56px;
+}
+@media (max-width: 640px) { :root { --gutter: 16px; } .wrap { gap: 40px; } }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+a { color: inherit; }
+
+.label { font-family: var(--mono); font-size: 11.5px; line-height: 1.2; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
+.label::before { content: ""; width: 5px; height: 5px; background: var(--accent); flex: none; }
+.micro { font-family: var(--mono); font-size: 10.5px; font-weight: 500; line-height: 1.2; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+.num { font-feature-settings: "tnum" 1, "lnum" 1; }
+
+/* header */
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; padding-bottom: 20px; border-bottom: 1px solid var(--hair); }
+.brand { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.brand svg { height: 20px; width: auto; display: block; }
+.brand .sep { width: 1px; height: 20px; background: var(--hair); }
+.brand .micro { color: var(--muted); }
+.status { display: flex; align-items: center; gap: 20px; color: var(--faint); }
+.status span { display: inline-flex; align-items: center; gap: 8px; }
+.live { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
+
+/* intro */
+.intro { display: grid; gap: 16px; max-width: 760px; }
+h1 { margin: 0; font-size: clamp(34px, 3.7vw, 56px); font-weight: 500; line-height: 1.04; letter-spacing: -.03em; text-wrap: balance; }
+h1 .dim { color: var(--dim); }
+h1 .stop { color: var(--accent); }
+.lead { margin: 0; font-size: clamp(17px, 1.35vw, 20px); line-height: 1.5; letter-spacing: -.01em; color: var(--muted); max-width: 46ch; }
+
+/* tools */
+.section { display: grid; gap: 20px; }
+.sechead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.sechead .count { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+.tool { grid-column: span 6; min-width: 0; display: grid; grid-template-rows: auto auto 1fr auto; gap: 16px; padding: 24px; border-radius: 14px; border: 1px solid var(--hair); background: var(--surface); }
+.tool.featured { background: var(--surface-2); border-color: var(--border); }
+.tool.planned, .tool.slot { border-style: dashed; background: transparent; }
+@media (max-width: 760px) { .tool { grid-column: span 12; } }
+@media (max-width: 640px) { .tool { padding: 20px; } }
+
+.toolhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.glyph { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--hair); display: grid; place-items: center; color: var(--text); flex: none; }
+.glyph svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.tool.planned .glyph, .tool.slot .glyph { color: var(--faint); }
+.pill { display: inline-flex; align-items: center; gap: 8px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid var(--hair); color: var(--faint); }
+.pill.on { color: var(--text); border-color: var(--border); }
+.pill.on::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+
+.toolname { display: grid; gap: 6px; }
+.toolname h3 { margin: 0; font-size: 22px; font-weight: 600; line-height: 1.2; letter-spacing: -.015em; }
+.toolname p { margin: 0; color: var(--muted); font-size: 15px; max-width: 48ch; }
+.feat { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; align-content: start; }
+.feat li { display: grid; grid-template-columns: 5px minmax(0, 1fr); gap: 12px; align-items: baseline; font-size: 14px; color: var(--muted); }
+.feat li::before { content: ""; width: 5px; height: 5px; background: var(--faint); transform: translateY(-2px); }
+.tool.featured .feat li::before { background: var(--text); }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 20px; padding-top: 16px; border-top: 1px solid var(--hair); color: var(--faint); }
+.meta b { font-weight: 500; color: var(--muted); }
+.foot { display: grid; gap: 16px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.note { margin: 0; font-size: 13px; color: var(--faint); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text); font-family: var(--sans); font-size: 15px; font-weight: 600; letter-spacing: -.01em; cursor: pointer; white-space: nowrap; text-decoration: none; transition: background .15s, border-color .15s, color .15s; }
+.btn:hover { border-color: var(--text); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.urlbox { flex: 1 1 220px; min-width: 0; height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--hair); background: var(--bg); color: var(--muted); font-family: var(--mono); font-size: 12px; }
+
+/* reference row */
+.refs { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); border-top: 1px solid var(--hair); border-left: 1px solid var(--hair); }
+.ref { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; align-items: center; padding: 18px 20px; border-right: 1px solid var(--hair); border-bottom: 1px solid var(--hair); text-decoration: none; transition: background .15s; min-width: 0; }
+.ref:hover { background: var(--surface); }
+.ref strong { font-weight: 500; font-size: 15px; }
+.ref span { grid-column: 1; font-size: 13px; color: var(--faint); }
+.ref svg { grid-row: 1 / span 2; grid-column: 2; width: 16px; height: 16px; stroke: var(--faint); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.ref:hover svg { stroke: var(--text); }
+
+.pagefoot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; color: var(--dim); font-size: 13px; }
+
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--text); color: var(--bg); font-size: 14px; font-weight: 500; padding: 10px 16px; border-radius: 999px; z-index: 60; }
+@media (prefers-reduced-motion: reduce) { .live { animation: none; } * { transition: none !important; } }
+</style>
+
+<template id="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="91 -1490 9007 1512" role="img" aria-label="muzmesh"><title>muzmesh</title><path fill="#F4F4F1" d="M91 0V-1118H384V-919H398Q433 -1018 515.0 -1075.0Q597 -1132 710 -1132Q825 -1132 905.5 -1074.5Q986 -1017 1013 -919H1025Q1059 -1016 1149.0 -1074.0Q1239 -1132 1361 -1132Q1517 -1132 1615.5 -1033.0Q1714 -934 1714 -752V0H1404V-690Q1404 -784 1354.5 -830.0Q1305 -876 1231 -876Q1147 -876 1099.5 -822.5Q1052 -769 1052 -682V0H752V-698Q752 -779 705.0 -827.5Q658 -876 582 -876Q530 -876 489.0 -850.0Q448 -824 424.0 -778.5Q400 -733 400 -670V0Z M2581.2799999999997 -475V-1118H2890.2799999999997V0H2593.2799999999997V-203H2581.2799999999997Q2543.2799999999997 -106 2456.2799999999997 -45.5Q2369.2799999999997 15 2243.2799999999997 14Q2131.2799999999997 14 2045.7799999999997 -36.5Q1960.28 -87 1912.78 -181.0Q1865.28 -275 1865.28 -406V-1118H2174.2799999999997V-460Q2174.2799999999997 -362 2227.2799999999997 -304.5Q2280.2799999999997 -247 2368.2799999999997 -248Q2424.2799999999997 -248 2472.2799999999997 -273.5Q2520.2799999999997 -299 2550.7799999999997 -350.0Q2581.2799999999997 -401 2581.2799999999997 -475Z M3035.56 0V-185L3582.56 -862V-870H3053.56V-1118H3954.56V-915L3441.56 -256V-248H3973.56V0Z M4114.84 0V-1118H4407.84V-919H4421.84Q4456.84 -1018 4538.84 -1075.0Q4620.84 -1132 4733.84 -1132Q4848.84 -1132 4929.34 -1074.5Q5009.84 -1017 5036.84 -919H5048.84Q5082.84 -1016 5172.84 -1074.0Q5262.84 -1132 5384.84 -1132Q5540.84 -1132 5639.34 -1033.0Q5737.84 -934 5737.84 -752V0H5427.84V-690Q5427.84 -784 5378.34 -830.0Q5328.84 -876 5254.84 -876Q5170.84 -876 5123.34 -822.5Q5075.84 -769 5075.84 -682V0H4775.84V-698Q4775.84 -779 4728.84 -827.5Q4681.84 -876 4605.84 -876Q4553.84 -876 4512.84 -850.0Q4471.84 -824 4447.84 -778.5Q4423.84 -733 4423.84 -670V0Z M6398.12 22Q6226.12 22 6101.12 -48.0Q5976.12 -118 5909.62 -247.5Q5843.12 -377 5843.12 -554Q5843.12 -726 5909.62 -856.0Q5976.12 -986 6097.62 -1059.0Q6219.12 -1132 6383.12 -1132Q6494.12 -1132 6590.12 -1096.5Q6686.12 -1061 6758.12 -990.5Q6830.12 -920 6870.12 -813.5Q6910.12 -707 6910.12 -564V-480H5966.12V-671H6760.12L6616.12 -621Q6616.12 -706 6590.12 -769.0Q6564.12 -832 6512.62 -866.5Q6461.12 -901 6385.12 -901Q6309.12 -901 6256.62 -866.0Q6204.12 -831 6176.12 -771.0Q6148.12 -711 6148.12 -633V-498Q6148.12 -407 6180.12 -342.5Q6212.12 -278 6269.62 -243.5Q6327.12 -209 6402.12 -209Q6454.12 -209 6496.12 -224.0Q6538.12 -239 6568.62 -268.0Q6599.12 -297 6614.12 -338L6900.12 -319Q6879.12 -216 6812.62 -139.5Q6746.12 -63 6641.12 -20.5Q6536.12 22 6398.12 22Z M7939.4 -799 7656.4 -782Q7645.4 -835 7597.4 -873.5Q7549.4 -912 7468.4 -912Q7396.4 -912 7347.9 -882.0Q7299.4 -852 7299.4 -802Q7299.4 -762 7330.9 -733.5Q7362.4 -705 7439.4 -689L7642.4 -649Q7805.4 -616 7885.4 -542.0Q7965.4 -468 7965.4 -347Q7965.4 -236 7901.4 -153.5Q7837.4 -71 7725.4 -24.5Q7613.4 22 7468.4 22Q7246.4 22 7114.9 -71.0Q6983.4 -164 6961.4 -323L7264.4 -339Q7279.4 -271 7332.4 -236.0Q7385.4 -201 7468.4 -201Q7549.4 -201 7599.9 -233.0Q7650.4 -265 7650.4 -314Q7650.4 -397 7506.4 -426L7313.4 -466Q7150.4 -499 7070.4 -579.0Q6990.4 -659 6990.4 -784Q6990.4 -892 7049.4 -970.0Q7108.4 -1048 7214.9 -1090.0Q7321.4 -1132 7464.4 -1132Q7676.4 -1132 7797.9 -1042.5Q7919.4 -953 7939.4 -799Z M8372.68 -646V0H8063.679999999999V-1490H8362.68V-919H8376.68Q8414.68 -1018 8499.18 -1075.0Q8583.68 -1132 8710.68 -1132Q8826.68 -1132 8913.68 -1081.5Q9000.68 -1031 9049.18 -937.0Q9097.68 -843 9097.68 -711V0H8787.68V-656Q8787.68 -759 8735.18 -817.0Q8682.68 -875 8587.68 -875Q8523.68 -875 8475.68 -847.5Q8427.68 -820 8400.18 -769.0Q8372.68 -718 8372.68 -646Z"/></svg></template>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span id="wm" aria-label="muzmesh"></span>
+      <span class="sep" aria-hidden="true"></span>
+      <span class="micro">Internal tools</span>
+    </div>
+    <div class="status micro">
+      <span><i class="live" aria-hidden="true"></i><b id="nLive" class="num">0</b>&nbsp;live</span>
+      <span><b id="nPlanned" class="num">0</b>&nbsp;planned</span>
+      <span id="today" class="num"></span>
+    </div>
+  </header>
+
+  <section class="intro">
+    <span class="label">Studio workbench</span>
+    <h1><span class="dim">Everything we run the studio with.</span> One place to open it<span class="stop">.</span></h1>
+    <p class="lead">Every MuzMesh tool lives on this page. Pick one and it opens in a new tab with the team's shared data.</p>
+  </section>
+
+  <section class="section" aria-labelledby="toolsHead">
+    <div class="sechead">
+      <span class="label" id="toolsHead">Tools</span>
+      <span class="count num" id="toolCount"></span>
+    </div>
+    <div class="grid" id="tools"></div>
+  </section>
+
+  <section class="section" aria-labelledby="refHead">
+    <div class="sechead"><span class="label" id="refHead">Reference</span></div>
+    <div class="refs" id="refs"></div>
+  </section>
+
+  <footer class="pagefoot">
+    <span>MuzMesh Creative · designed by people</span>
+    <span class="micro">Brand v2</span>
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   Add a tool: add one object to TOOLS.
+   status: "live" (has a url) or "planned" (no url yet).
+   icon: one of the keys in ICONS below.
+   ============================================================ */
+const TOOLS = [
+  {
+    id: 'content-calendar',
+    name: 'Content Calendar',
+    status: 'live',
+    icon: 'calendar',
+    summary: 'Plan, write and design our LinkedIn posts in one shared calendar.',
+    features: [
+      'Month and list views, with open posting slots marked',
+      'Idea backlog you drag onto a day to schedule',
+      'Four post templates with a live 1080×1350 preview',
+      'PNG export at 1x and 2x, brand check on every post',
+    ],
+    meta: [['Channel', 'LinkedIn'], ['Post days', 'Mon · Wed · Fri'], ['Data', 'Shared with the team']],
+    url: 'https://claude.ai/artifact/YTfrz1fBQL7bbmr2Lt4B32',
+    cta: 'Open the calendar',
+  },
+  {
+    id: 'sanity-studio',
+    name: 'Sanity Studio',
+    status: 'live',
+    icon: 'studio',
+    summary: 'Edit the website: homepage copy, blog posts and case studies.',
+    features: [
+      'Change homepage sections without touching code',
+      'Write and edit blog posts and case studies',
+      'Drafts show on staging.muzmeshcreative.com first',
+      'Publish sends the change to muzmeshcreative.com',
+    ],
+    meta: [['Site', 'muzmeshcreative.com'], ['Sign in', 'Sanity account']],
+    url: 'https://muzmesh.sanity.studio',
+    cta: 'Open Sanity Studio',
+  },
+  {
+    id: 'sales-prospects',
+    name: 'Sales Prospects',
+    status: 'planned',
+    icon: 'pipeline',
+    summary: 'Every lead from first message to signed project.',
+    features: ['Pipeline by stage', 'Owner and next follow-up date', 'Notes from each conversation'],
+  },
+];
+
+const REFERENCES = [
+  { name: 'Brand guideline', note: 'Colours, type, logo and voice (v2)', url: 'https://claude.ai/artifact/NK3Tfrv2J1CZfGvVgevsRV' },
+  { name: 'Repository', note: 'Website, Studio and tool source on GitHub', url: 'https://github.com/muzamildev123/Muzmesh-Creative' },
+];
+
+const ICONS = {
+  calendar: '<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4M8 13.5h2M14 13.5h2M8 16.5h2"/></svg>',
+  studio: '<svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 8.5h17M8 12.5h8M8 15.5h5"/></svg>',
+  pipeline: '<svg viewBox="0 0 24 24"><path d="M4 6h16M6 12h12M9 18h6"/></svg>',
+  plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+  open: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
+  copy: '<svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>',
+  arrow: '<svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg>',
+};
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+$('#wm').innerHTML = $('#wordmark').innerHTML.trim();
+$('#today').textContent = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+
+function toolCard(t, first) {
+  const live = t.status === 'live';
+  const cls = live ? 'tool featured' : 'tool planned';
+  const feats = (t.features || []).map((f) => `<li>${esc(f)}</li>`).join('');
+  const meta = (t.meta || []).map(([k, v]) => `<span class="micro">${esc(k)} <b>${esc(v)}</b></span>`).join('');
+  const foot = live
+    ? `<div class="foot">
+         ${meta ? `<div class="meta">${meta}</div>` : ''}
+         <div class="actions">
+           <a class="btn ${first ? 'primary' : ''}" href="${esc(t.url)}" target="_blank" rel="noopener">${ICONS.open}${esc(t.cta || 'Open ' + t.name)}</a>
+           <button class="btn" type="button" data-copy="${esc(t.url)}" id="copy-${esc(t.id)}">${ICONS.copy}Copy link</button>
+         </div>
+       </div>`
+    : `<div class="foot"><p class="note">Not built yet. Ask Claude to build it and it gets a working card here.</p></div>`;
+  return `<article class="${cls}" id="tool-${esc(t.id)}">
+    <div class="toolhead">
+      <span class="glyph" aria-hidden="true">${ICONS[t.icon] || ICONS.plus}</span>
+      <span class="pill micro ${live ? 'on' : ''}">${live ? 'Live' : 'Planned'}</span>
+    </div>
+    <div class="toolname"><h3>${esc(t.name)}</h3><p>${esc(t.summary)}</p></div>
+    <ul class="feat">${feats}</ul>
+    ${foot}
+  </article>`;
+}
+
+const slot = `<article class="tool slot">
+  <div class="toolhead"><span class="glyph" aria-hidden="true">${ICONS.plus}</span><span class="pill micro">Open slot</span></div>
+  <div class="toolname"><h3>Next tool</h3><p>Proposals, invoices, client reports or anything else we do by hand every week.</p></div>
+  <ul class="feat"></ul>
+  <div class="foot"><p class="note">Tell Claude what it should do. It lands here with its own card.</p></div>
+</article>`;
+
+const live = TOOLS.filter((t) => t.status === 'live');
+const planned = TOOLS.filter((t) => t.status !== 'live');
+$('#tools').innerHTML = live.map((t, i) => toolCard(t, i === 0)).join('') + planned.map((t) => toolCard(t, false)).join('') + slot;
+$('#nLive').textContent = live.length;
+$('#nPlanned').textContent = planned.length;
+$('#toolCount').textContent = `${TOOLS.length} ${TOOLS.length === 1 ? 'tool' : 'tools'}`;
+
+$('#refs').innerHTML = REFERENCES.map((r) => `<a class="ref" href="${esc(r.url)}" target="_blank" rel="noopener"><strong>${esc(r.name)}</strong><span>${esc(r.note)}</span>${ICONS.arrow}</a>`).join('');
+
+let toastTimer;
+function toast(msg) {
+  let el = $('.toast');
+  if (!el) { el = document.createElement('div'); el.className = 'toast'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+  el.textContent = msg; el.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 2200);
+}
+
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-copy]');
+  if (!b) return;
+  const url = b.dataset.copy;
+  try {
+    await navigator.clipboard.writeText(url);
+    toast('Link copied');
+  } catch {
+    const box = document.createElement('input');
+    box.className = 'urlbox'; box.value = url; box.readOnly = true; box.id = b.id + '-url';
+    b.replaceWith(box); box.focus(); box.select();
+    toast('Press Cmd+C to copy the link');
+  }
+});
+</script>

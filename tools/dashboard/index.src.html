@@ -1,0 +1,307 @@
+<title>MuzMesh Tools</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a dotted workbench. Header bar, a short two-tone intro, then one grid of tool cards (live, planned, open slot) and a small reference row. Brand v2, Launch theme only. */
+:root {
+  color-scheme: dark;
+  --bg: #000000;
+  --surface: #0E0E10;
+  --surface-2: #141418;
+  --text: #F4F4F1;
+  --muted: rgba(244,244,241,.74);
+  --faint: rgba(244,244,241,.56);
+  --dim: #77777C;
+  --hair: rgba(244,244,241,.16);
+  --border: rgba(244,244,241,.30);
+  --accent: #F2580F;
+  --accent-hover: #FF6A20;
+  --on-accent: #0E0E10;
+  --success: #6FDC8C;
+  --sans: "Inter Tight", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --gutter: 28px;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--text); }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.55;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  background-image: radial-gradient(rgba(244,244,241,.07) 1px, transparent 1.2px);
+  background-size: 24px 24px;
+  min-height: 100vh;
+}
+/* 5% grain over the full-bleed dark page */
+body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: .05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+  padding-block: 24px 72px;
+  display: grid;
+  gap: 56px;
+}
+@media (max-width: 640px) { :root { --gutter: 16px; } .wrap { gap: 40px; } }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+a { color: inherit; }
+
+.label { font-family: var(--mono); font-size: 11.5px; line-height: 1.2; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
+.label::before { content: ""; width: 5px; height: 5px; background: var(--accent); flex: none; }
+.micro { font-family: var(--mono); font-size: 10.5px; font-weight: 500; line-height: 1.2; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+.num { font-feature-settings: "tnum" 1, "lnum" 1; }
+
+/* header */
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; padding-bottom: 20px; border-bottom: 1px solid var(--hair); }
+.brand { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.brand svg { height: 20px; width: auto; display: block; }
+.brand .sep { width: 1px; height: 20px; background: var(--hair); }
+.brand .micro { color: var(--muted); }
+.status { display: flex; align-items: center; gap: 20px; color: var(--faint); }
+.status span { display: inline-flex; align-items: center; gap: 8px; }
+.live { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
+
+/* intro */
+.intro { display: grid; gap: 16px; max-width: 760px; }
+h1 { margin: 0; font-size: clamp(34px, 3.7vw, 56px); font-weight: 500; line-height: 1.04; letter-spacing: -.03em; text-wrap: balance; }
+h1 .dim { color: var(--dim); }
+h1 .stop { color: var(--accent); }
+.lead { margin: 0; font-size: clamp(17px, 1.35vw, 20px); line-height: 1.5; letter-spacing: -.01em; color: var(--muted); max-width: 46ch; }
+
+/* tools */
+.section { display: grid; gap: 20px; }
+.sechead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.sechead .count { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+.tool { grid-column: span 6; min-width: 0; display: grid; grid-template-rows: auto auto 1fr auto; gap: 16px; padding: 24px; border-radius: 14px; border: 1px solid var(--hair); background: var(--surface); }
+.tool.featured { background: var(--surface-2); border-color: var(--border); }
+.tool.planned, .tool.slot { border-style: dashed; background: transparent; }
+@media (max-width: 760px) { .tool { grid-column: span 12; } }
+@media (max-width: 640px) { .tool { padding: 20px; } }
+
+.toolhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.glyph { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--hair); display: grid; place-items: center; color: var(--text); flex: none; }
+.glyph svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.tool.planned .glyph, .tool.slot .glyph { color: var(--faint); }
+.pill { display: inline-flex; align-items: center; gap: 8px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid var(--hair); color: var(--faint); }
+.pill.on { color: var(--text); border-color: var(--border); }
+.pill.on::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+
+.toolname { display: grid; gap: 6px; }
+.toolname h3 { margin: 0; font-size: 22px; font-weight: 600; line-height: 1.2; letter-spacing: -.015em; }
+.toolname p { margin: 0; color: var(--muted); font-size: 15px; max-width: 48ch; }
+.feat { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; align-content: start; }
+.feat li { display: grid; grid-template-columns: 5px minmax(0, 1fr); gap: 12px; align-items: baseline; font-size: 14px; color: var(--muted); }
+.feat li::before { content: ""; width: 5px; height: 5px; background: var(--faint); transform: translateY(-2px); }
+.tool.featured .feat li::before { background: var(--text); }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 20px; padding-top: 16px; border-top: 1px solid var(--hair); color: var(--faint); }
+.meta b { font-weight: 500; color: var(--muted); }
+.foot { display: grid; gap: 16px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.note { margin: 0; font-size: 13px; color: var(--faint); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text); font-family: var(--sans); font-size: 15px; font-weight: 600; letter-spacing: -.01em; cursor: pointer; white-space: nowrap; text-decoration: none; transition: background .15s, border-color .15s, color .15s; }
+.btn:hover { border-color: var(--text); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.urlbox { flex: 1 1 220px; min-width: 0; height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--hair); background: var(--bg); color: var(--muted); font-family: var(--mono); font-size: 12px; }
+
+/* reference row */
+.refs { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); border-top: 1px solid var(--hair); border-left: 1px solid var(--hair); }
+.ref { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; align-items: center; padding: 18px 20px; border-right: 1px solid var(--hair); border-bottom: 1px solid var(--hair); text-decoration: none; transition: background .15s; min-width: 0; }
+.ref:hover { background: var(--surface); }
+.ref strong { font-weight: 500; font-size: 15px; }
+.ref span { grid-column: 1; font-size: 13px; color: var(--faint); }
+.ref svg { grid-row: 1 / span 2; grid-column: 2; width: 16px; height: 16px; stroke: var(--faint); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.ref:hover svg { stroke: var(--text); }
+
+.pagefoot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; color: var(--dim); font-size: 13px; }
+
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--text); color: var(--bg); font-size: 14px; font-weight: 500; padding: 10px 16px; border-radius: 999px; z-index: 60; }
+@media (prefers-reduced-motion: reduce) { .live { animation: none; } * { transition: none !important; } }
+</style>
+
+<template id="wordmark"><!--WORDMARK--></template>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span id="wm" aria-label="muzmesh"></span>
+      <span class="sep" aria-hidden="true"></span>
+      <span class="micro">Internal tools</span>
+    </div>
+    <div class="status micro">
+      <span><i class="live" aria-hidden="true"></i><b id="nLive" class="num">0</b>&nbsp;live</span>
+      <span><b id="nPlanned" class="num">0</b>&nbsp;planned</span>
+      <span id="today" class="num"></span>
+    </div>
+  </header>
+
+  <section class="intro">
+    <span class="label">Studio workbench</span>
+    <h1><span class="dim">Everything we run the studio with.</span> One place to open it<span class="stop">.</span></h1>
+    <p class="lead">Every MuzMesh tool lives on this page. Pick one and it opens in a new tab with the team's shared data.</p>
+  </section>
+
+  <section class="section" aria-labelledby="toolsHead">
+    <div class="sechead">
+      <span class="label" id="toolsHead">Tools</span>
+      <span class="count num" id="toolCount"></span>
+    </div>
+    <div class="grid" id="tools"></div>
+  </section>
+
+  <section class="section" aria-labelledby="refHead">
+    <div class="sechead"><span class="label" id="refHead">Reference</span></div>
+    <div class="refs" id="refs"></div>
+  </section>
+
+  <footer class="pagefoot">
+    <span>MuzMesh Creative · designed by people</span>
+    <span class="micro">Brand v2</span>
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   Add a tool: add one object to TOOLS.
+   status: "live" (has a url) or "planned" (no url yet).
+   icon: one of the keys in ICONS below.
+   ============================================================ */
+const TOOLS = [
+  {
+    id: 'content-calendar',
+    name: 'Content Calendar',
+    status: 'live',
+    icon: 'calendar',
+    summary: 'Plan, write and design our LinkedIn posts in one shared calendar.',
+    features: [
+      'Month and list views, with open posting slots marked',
+      'Idea backlog you drag onto a day to schedule',
+      'Four post templates with a live 1080×1350 preview',
+      'PNG export at 1x and 2x, brand check on every post',
+    ],
+    meta: [['Channel', 'LinkedIn'], ['Post days', 'Mon · Wed · Fri'], ['Data', 'Shared with the team']],
+    url: 'https://claude.ai/artifact/YTfrz1fBQL7bbmr2Lt4B32',
+    cta: 'Open the calendar',
+  },
+  {
+    id: 'sanity-studio',
+    name: 'Sanity Studio',
+    status: 'live',
+    icon: 'studio',
+    summary: 'Edit the website: homepage copy, blog posts and case studies.',
+    features: [
+      'Change homepage sections without touching code',
+      'Write and edit blog posts and case studies',
+      'Drafts show on staging.muzmeshcreative.com first',
+      'Publish sends the change to muzmeshcreative.com',
+    ],
+    meta: [['Site', 'muzmeshcreative.com'], ['Sign in', 'Sanity account']],
+    url: 'https://muzmesh.sanity.studio',
+    cta: 'Open Sanity Studio',
+  },
+  {
+    id: 'sales-prospects',
+    name: 'Sales Prospects',
+    status: 'planned',
+    icon: 'pipeline',
+    summary: 'Every lead from first message to signed project.',
+    features: ['Pipeline by stage', 'Owner and next follow-up date', 'Notes from each conversation'],
+  },
+];
+
+const REFERENCES = [
+  { name: 'Brand guideline', note: 'Colours, type, logo and voice (v2)', url: 'https://claude.ai/artifact/NK3Tfrv2J1CZfGvVgevsRV' },
+  { name: 'Repository', note: 'Website, Studio and tool source on GitHub', url: 'https://github.com/muzamildev123/Muzmesh-Creative' },
+];
+
+const ICONS = {
+  calendar: '<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4M8 13.5h2M14 13.5h2M8 16.5h2"/></svg>',
+  studio: '<svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 8.5h17M8 12.5h8M8 15.5h5"/></svg>',
+  pipeline: '<svg viewBox="0 0 24 24"><path d="M4 6h16M6 12h12M9 18h6"/></svg>',
+  plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+  open: '<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
+  copy: '<svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>',
+  arrow: '<svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg>',
+};
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+$('#wm').innerHTML = $('#wordmark').innerHTML.trim();
+$('#today').textContent = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+
+function toolCard(t, first) {
+  const live = t.status === 'live';
+  const cls = live ? 'tool featured' : 'tool planned';
+  const feats = (t.features || []).map((f) => `<li>${esc(f)}</li>`).join('');
+  const meta = (t.meta || []).map(([k, v]) => `<span class="micro">${esc(k)} <b>${esc(v)}</b></span>`).join('');
+  const foot = live
+    ? `<div class="foot">
+         ${meta ? `<div class="meta">${meta}</div>` : ''}
+         <div class="actions">
+           <a class="btn ${first ? 'primary' : ''}" href="${esc(t.url)}" target="_blank" rel="noopener">${ICONS.open}${esc(t.cta || 'Open ' + t.name)}</a>
+           <button class="btn" type="button" data-copy="${esc(t.url)}" id="copy-${esc(t.id)}">${ICONS.copy}Copy link</button>
+         </div>
+       </div>`
+    : `<div class="foot"><p class="note">Not built yet. Ask Claude to build it and it gets a working card here.</p></div>`;
+  return `<article class="${cls}" id="tool-${esc(t.id)}">
+    <div class="toolhead">
+      <span class="glyph" aria-hidden="true">${ICONS[t.icon] || ICONS.plus}</span>
+      <span class="pill micro ${live ? 'on' : ''}">${live ? 'Live' : 'Planned'}</span>
+    </div>
+    <div class="toolname"><h3>${esc(t.name)}</h3><p>${esc(t.summary)}</p></div>
+    <ul class="feat">${feats}</ul>
+    ${foot}
+  </article>`;
+}
+
+const slot = `<article class="tool slot">
+  <div class="toolhead"><span class="glyph" aria-hidden="true">${ICONS.plus}</span><span class="pill micro">Open slot</span></div>
+  <div class="toolname"><h3>Next tool</h3><p>Proposals, invoices, client reports or anything else we do by hand every week.</p></div>
+  <ul class="feat"></ul>
+  <div class="foot"><p class="note">Tell Claude what it should do. It lands here with its own card.</p></div>
+</article>`;
+
+const live = TOOLS.filter((t) => t.status === 'live');
+const planned = TOOLS.filter((t) => t.status !== 'live');
+$('#tools').innerHTML = live.map((t, i) => toolCard(t, i === 0)).join('') + planned.map((t) => toolCard(t, false)).join('') + slot;
+$('#nLive').textContent = live.length;
+$('#nPlanned').textContent = planned.length;
+$('#toolCount').textContent = `${TOOLS.length} ${TOOLS.length === 1 ? 'tool' : 'tools'}`;
+
+$('#refs').innerHTML = REFERENCES.map((r) => `<a class="ref" href="${esc(r.url)}" target="_blank" rel="noopener"><strong>${esc(r.name)}</strong><span>${esc(r.note)}</span>${ICONS.arrow}</a>`).join('');
+
+let toastTimer;
+function toast(msg) {
+  let el = $('.toast');
+  if (!el) { el = document.createElement('div'); el.className = 'toast'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+  el.textContent = msg; el.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 2200);
+}
+
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-copy]');
+  if (!b) return;
+  const url = b.dataset.copy;
+  try {
+    await navigator.clipboard.writeText(url);
+    toast('Link copied');
+  } catch {
+    const box = document.createElement('input');
+    box.className = 'urlbox'; box.value = url; box.readOnly = true; box.id = b.id + '-url';
+    b.replaceWith(box); box.focus(); box.select();
+    toast('Press Cmd+C to copy the link');
+  }
+});
+</script>
