@@ -1,0 +1,151 @@
+<title>Facebook Page Refresh</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Brand v2, Launch theme only (single dark look by brand rule). Asset gallery: one row per Facebook slot. */
+  :root {
+    --mm-bg: #000000; --mm-surface: #0E0E10; --mm-surface-2: #141418;
+    --mm-text: #F4F4F1; --mm-text-muted: rgba(244,244,241,.74); --mm-text-faint: rgba(244,244,241,.56);
+    --mm-text-dim: #77777C; --mm-hair: rgba(244,244,241,.16); --mm-border: rgba(244,244,241,.30);
+    --mm-accent: #F2580F; --mm-on-accent: #0E0E10;
+    --mm-font-sans: "Inter Tight", "Inter", system-ui, sans-serif;
+    --mm-font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--mm-bg); color: var(--mm-text); font-family: var(--mm-font-sans); font-size: 15px; line-height: 1.55; font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-block: 56px 96px; display: flex; flex-direction: column; gap: 64px; }
+  .label { font-family: var(--mm-font-mono); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--mm-text-muted); display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
+  .label::before { content: ""; width: 5px; height: 5px; background: var(--mm-accent); }
+  .micro { font-family: var(--mm-font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--mm-text-faint); }
+  h1 { margin: 16px 0 0; font-weight: 500; font-size: clamp(40px, 4.6vw, 72px); line-height: 1.02; letter-spacing: -.035em; text-wrap: balance; }
+  h1 .dim { color: var(--mm-text-dim); }
+  h2 { margin: 12px 0 0; font-weight: 500; font-size: clamp(26px, 2.6vw, 40px); line-height: 1.08; letter-spacing: -.025em; }
+  .lead { margin: 20px 0 0; max-width: 40ch; font-size: 17px; line-height: 1.5; letter-spacing: -.01em; color: var(--mm-text-muted); text-wrap: pretty; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 24px; }
+  .meta span { font-family: var(--mm-font-mono); font-size: 12px; color: var(--mm-text-faint); }
+
+  .asset { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 40px; align-items: start; border-top: 1px solid var(--mm-hair); padding-top: 32px; }
+  .asset.square { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .frame { background: var(--mm-surface-2); border: 1px solid var(--mm-hair); border-radius: 12px; overflow: hidden; }
+  .frame img { display: block; width: 100%; height: auto; }
+  .frame.round { border-radius: 50%; max-width: 360px; }
+  .info { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .info p { margin: 0; color: var(--mm-text-muted); font-size: 15px; max-width: 46ch; }
+  dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; }
+  dt { font-family: var(--mm-font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--mm-text-faint); padding-top: 2px; }
+  dd { margin: 0; font-family: var(--mm-font-mono); font-size: 12px; color: var(--mm-text-muted); font-feature-settings: "tnum" 1, "lnum" 1; }
+  .btns { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 18px; border-radius: 999px; font-family: var(--mm-font-sans); font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer; border: 1px solid var(--mm-border); color: var(--mm-text); background: transparent; }
+  .btn:hover { border-color: var(--mm-text); }
+  .btn.primary { background: var(--mm-accent); border-color: var(--mm-accent); color: var(--mm-on-accent); }
+  .btn.primary:hover { background: #FF6A20; border-color: #FF6A20; }
+  .btn:focus-visible { outline: 2px solid var(--mm-accent); outline-offset: 2px; }
+
+  .copy { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--mm-hair); }
+  .row { display: grid; grid-template-columns: 200px minmax(0, 1fr) auto; gap: 24px; align-items: start; padding: 20px 0; border-bottom: 1px solid var(--mm-hair); }
+  .row .txt { font-size: 17px; line-height: 1.5; letter-spacing: -.01em; white-space: pre-line; min-width: 0; }
+  .row .btn { height: 34px; padding: 0 14px; font-size: 14px; }
+  .note { font-family: var(--mm-font-mono); font-size: 12px; color: var(--mm-text-faint); }
+  footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; border-top: 1px solid var(--mm-hair); padding-top: 24px; }
+  footer a { color: var(--mm-text-muted); font-family: var(--mm-font-mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--mm-accent); }
+
+  @media (max-width: 800px) {
+    .asset, .asset.square { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="label">Facebook · brand v2</span>
+    <h1><span class="dim">Old page out.</span> New page in.</h1>
+    <p class="lead">Cover, profile picture, pinned post and page text for the MuzMesh Creative Facebook page. Upload the 2x files.</p>
+    <div class="meta"><span>Updated 28 Nov 2026</span><span>Commit c67d282</span><span>usamasaleem/Social-Media-Posting</span></div>
+  </header>
+
+  <section class="asset">
+    <div class="frame"><img src="facebook-cover.png" alt="MuzMesh cover. The AI Starter Kit for AI startups. Every AI startup looks the same. Yours won't. Designed by people. $500 setup, $200 a month. muzmeshcreative.com"></div>
+    <div class="info">
+      <span class="label">Cover photo</span>
+      <h2>Every AI startup looks the same. Yours won’t.</h2>
+      <p>Desktop crops the top and bottom; all text sits in the middle band so nothing gets cut.</p>
+      <dl><dt>1x</dt><dd>1640 × 924</dd><dt>2x</dt><dd>3280 × 1848 (upload this)</dd></dl>
+      <div class="btns">
+        <a class="btn primary" href="https://raw.githubusercontent.com/muzamildev123/Muzmesh-Creative/usamasaleem/Social-Media-Posting/docs/assets/social/facebook-cover@2x.png" target="_blank" rel="noopener">Open 2x to save</a>
+        <a class="btn" href="https://raw.githubusercontent.com/muzamildev123/Muzmesh-Creative/usamasaleem/Social-Media-Posting/docs/assets/social/facebook-cover.png" target="_blank" rel="noopener">Open 1x</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="asset square">
+    <div class="frame round"><img src="facebook-profile-picture.png" alt="MuzMesh m. avatar"></div>
+    <div class="info">
+      <span class="label">Profile picture</span>
+      <h2>The “m.” avatar</h2>
+      <p>Replaces the old MESH CREATIVE badge. Fits inside Facebook’s circle crop.</p>
+      <dl><dt>1x</dt><dd>800 × 800</dd><dt>2x</dt><dd>1600 × 1600 (upload this)</dd></dl>
+      <div class="btns">
+        <a class="btn" href="https://raw.githubusercontent.com/muzamildev123/Muzmesh-Creative/usamasaleem/Social-Media-Posting/docs/assets/social/facebook-profile-picture@2x.png" target="_blank" rel="noopener">Open 2x to save</a>
+        <a class="btn" href="https://raw.githubusercontent.com/muzamildev123/Muzmesh-Creative/usamasaleem/Social-Media-Posting/docs/assets/social/facebook-profile-picture.png" target="_blank" rel="noopener">Open 1x</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="asset square">
+    <div class="frame"><img src="facebook-pinned-post.png" alt="The AI Starter Kit. One price. No surprises. Landing page, headless CMS, social media, tracking, AI search (AEO), CRM. $500 setup once, $200 a month."></div>
+    <div class="info">
+      <span class="label">Pinned post</span>
+      <h2>One price. No surprises.</h2>
+      <p>Post it with the caption below, then pin it to the top of the page.</p>
+      <dl><dt>1x</dt><dd>1080 × 1080</dd><dt>2x</dt><dd>2160 × 2160 (upload this)</dd></dl>
+      <div class="btns">
+        <a class="btn" href="https://raw.githubusercontent.com/muzamildev123/Muzmesh-Creative/usamasaleem/Social-Media-Posting/docs/assets/social/facebook-pinned-post@2x.png" target="_blank" rel="noopener">Open 2x to save</a>
+        <a class="btn" href="https://raw.githubusercontent.com/muzamildev123/Muzmesh-Creative/usamasaleem/Social-Media-Posting/docs/assets/social/facebook-pinned-post.png" target="_blank" rel="noopener">Open 1x</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="label">Page text</span>
+    <h2>Paste into Edit page</h2>
+    <div class="copy" style="margin-top:24px">
+      <div class="row"><span class="micro">Intro · 89 / 101</span><div class="txt" id="t-intro">The AI Starter Kit for AI startups. Landing page, social, AEO and CRM. Designed by people.</div><button class="btn" data-copy="t-intro">Copy</button></div>
+      <div class="row"><span class="micro">Categories</span><div class="txt" id="t-cat">Web designer, Graphic designer, Marketing agency</div><button class="btn" data-copy="t-cat">Copy</button></div>
+      <div class="row"><span class="micro">Website</span><div class="txt" id="t-web">https://muzmeshcreative.com</div><button class="btn" data-copy="t-web">Copy</button></div>
+      <div class="row"><span class="micro">Action button</span><div class="txt" id="t-cta">Send message (or Contact us → https://muzmeshcreative.com/contact)</div><button class="btn" data-copy="t-cta">Copy</button></div>
+      <div class="row"><span class="micro">About</span><div class="txt" id="t-about">MuzMesh makes the AI Starter Kit: everything an AI startup needs to launch online.
+
+A landing page that doesn’t look AI-generated, designed by people in Figma. Social profiles that don’t go quiet. A site set up so ChatGPT, Perplexity and Google AI answers can understand and cite you. Tracking that tells you where sign-ups come from, and every lead in a CRM.
+
+$500 to set up. $200 a month to keep it running, so you can ship the product.</div><button class="btn" data-copy="t-about">Copy</button></div>
+      <div class="row"><span class="micro">Pinned caption</span><div class="txt" id="t-caption">One price. No surprises.
+
+The AI Starter Kit is everything an AI startup needs to launch online: a landing page designed by people, a headless CMS you can edit yourself, social media, tracking, AI search (AEO) and a CRM.
+
+$500 to set up. $200 a month to keep it running.
+
+Building something in AI? Send us a message or start here: https://muzmeshcreative.com
+
+#AIStartups #Founders #AEO</div><button class="btn" data-copy="t-caption">Copy</button></div>
+    </div>
+    <p class="note" style="margin-top:16px">Remove: “Webflow Partner agency” wording and the Virtex cover. Don’t pin old yellow (v1) posts.</p>
+  </section>
+
+  <footer>
+    <a href="https://github.com/muzamildev123/Muzmesh-Creative/tree/usamasaleem/Social-Media-Posting/docs/assets/social" target="_blank" rel="noopener">Source files on GitHub</a>
+    <span class="note">MuzMesh Creative · designed by people</span>
+  </footer>
+</div>
+
+<script>
+  document.querySelectorAll('[data-copy]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var el = document.getElementById(b.dataset.copy);
+      var done = function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500); };
+      var select = function () { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selected'; };
+      try { navigator.clipboard.writeText(el.innerText).then(done, select); } catch (e) { select(); }
+    });
+  });
+</script>
